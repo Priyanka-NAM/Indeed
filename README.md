@@ -30,3 +30,9 @@
 8. Delete your individual branch.
  
 ## Note:- Please pull the latest code from develop branch whenever you start working on a new story/feature.
+
+## ____________***IMPORTANT****__________________
+     mongoDB Credentials:
+         connection URI -  mongodb+srv://team7:mypassword@indeeddb.awj0c.mongodb.net/test
+         DB - indeed_db
+         collections: user, admin,company
