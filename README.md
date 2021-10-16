@@ -36,3 +36,10 @@
          connection URI -  mongodb+srv://team7:mypassword@indeeddb.awj0c.mongodb.net/test
          DB - indeed_db
          collections: user, admin,company
+    
+    MySQL Credentials:
+         connection URI - indeed.ccz6fxp12byz.us-east-2.rds.amazonaws.com
+         DB - indeed
+         username - admin
+         password - mypassword
+    once you connect through MySQL WB, you can see the schema name indeed; no tables has been created yet.
