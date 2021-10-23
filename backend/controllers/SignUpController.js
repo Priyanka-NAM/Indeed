@@ -7,7 +7,7 @@ User Signup Route
 const User = require('../Models/UserModel')
 const bcrypt = require('bcryptjs')
 const createUser = async (req,res)=>{
-    
+    console.log("sdasd")
     const {firstName,lastName,email,password} = req.body // get the data from request body which is in json and put it in variables called user and password
     const userExists = await User.findOne({email})
     if(userExists)
