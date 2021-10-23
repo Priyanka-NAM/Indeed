@@ -1,4 +1,3 @@
-
 /* 
 @ POST
 /api/users/signup
@@ -34,17 +33,18 @@ const createUser = async (req,res)=>{
             firstName:user.firstName,
             
 
-             }
-         )
-     }
-     else{
-         res.status("400")
-         throw new Error ("400 Bad Request: Please try again later. ")
-     }
-     }
- 
-     
-    
- }
 
- module.exports = createUser
+    if (user) {
+      console.log("Created!");
+      res.status(201).json({
+        _id: user._id,
+        firstName: user.firstName,
+      });
+    } else {
+      res.status("400");
+      throw new Error("400 Bad Request: Please try again later. ");
+    }
+  }
+};
+
+module.exports = createUser;
