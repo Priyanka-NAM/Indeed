@@ -21,6 +21,7 @@ const createUser = async (req, res) => {
       password: Hashedpassword,
     });
 
+
     if (user) {
       console.log("Created!");
       res.status(201).json({
@@ -33,5 +34,6 @@ const createUser = async (req, res) => {
     }
   }
 };
+
 
 module.exports = createUser;
