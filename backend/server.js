@@ -8,4 +8,5 @@ connectDB()
 app.get('/',(req,res)=>{
     res.send("API Started..")
 })
+console.log("my first command")
 app.listen(5000,console.log("API Started.."))
