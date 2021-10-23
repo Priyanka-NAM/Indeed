@@ -1,3 +1,4 @@
+
 /* 
 @ POST
 /api/users/signup
@@ -6,7 +7,7 @@ User Signup Route
 const User = require('../Models/UserModel')
 const bcrypt = require('bcryptjs')
 const createUser = async (req,res)=>{
-    console.log("sdasd")
+    console.log("sdsa")
     const {firstName,lastName,email,password} = req.body // get the data from request body which is in json and put it in variables called user and password
     const userExists = await User.findOne({email})
     if(userExists)
@@ -33,18 +34,17 @@ const createUser = async (req,res)=>{
             firstName:user.firstName,
             
 
+             }
+         )
+     }
+     else{
+         res.status("400")
+         throw new Error ("400 Bad Request: Please try again later. ")
+     }
+     }
+ 
+     
+    
+ }
 
-    if (user) {
-      console.log("Created!");
-      res.status(201).json({
-        _id: user._id,
-        firstName: user.firstName,
-      });
-    } else {
-      res.status("400");
-      throw new Error("400 Bad Request: Please try again later. ");
-    }
-  }
-};
-
-module.exports = createUser;
+ module.exports = createUser
