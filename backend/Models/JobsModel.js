@@ -48,7 +48,7 @@ const jobsSchema = mongoose.Schema({
   },
   jobLocation: {
     address: {
-      type: Number,
+      type: String,
       required: true,
     },
     city: {
@@ -60,7 +60,7 @@ const jobsSchema = mongoose.Schema({
       required: true,
     },
     country: {
-      type: Number,
+      type: String,
       required: true,
     },
     zip: {
