@@ -1,7 +1,7 @@
 
 /* 
 @ POST
-/api/users/signup
+/api/employee/signup
 User Signup Route
  */
 const User = require('../Models/UserModel')
