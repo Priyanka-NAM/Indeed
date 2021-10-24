@@ -42,7 +42,7 @@ const jobsSchema = mongoose.Schema({
       required: true,
     },
     moreInfo: {
-      type: Number,
+      type: String,
       required: true,
     },
   },
@@ -63,7 +63,7 @@ const jobsSchema = mongoose.Schema({
       type: String,
       required: true,
     },
-    zip: {
+    zipcode: {
       type: String,
       required: true,
     },
