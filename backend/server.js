@@ -1,9 +1,11 @@
 const express = require('express')
 const app = express()
 const router = require('./routes/UserRoutes')
+const employerRoutes = require('./routes/EmployeeRoutes')
 const connectDB = require('./config/db')
 app.use(express.json())
 app.use('/api/users',router)
+app.use('/indeed/employer',employerRoutes)
 connectDB()
 app.get('/',(req,res)=>{
     res.send("API Started..")
