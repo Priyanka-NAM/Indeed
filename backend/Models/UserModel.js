@@ -20,8 +20,13 @@ const userSchema = mongoose.Schema({
         password:{
             type:String,
             required:true
+        },
+        savedJobs:{
+            type:Array
+        },
+        appliedJobs:{
+            type:Array
         }
-        
     },{timestamps:true})
 
     userSchema.methods.matchPassword = async function(enteredPassword){
