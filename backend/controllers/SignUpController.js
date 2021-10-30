@@ -7,8 +7,7 @@ User Signup Route
 const User = require("../Models/UserModel")
 const bcrypt = require("bcryptjs")
 const {pool} = require('../config/mysqldb')
-
-console.log(pool,"---")
+const createEmployer = require('../controllers/EmployeeController')
 const createUser = async (req, res) => {
   const { email, password, role } = req.body;
   
@@ -25,7 +24,8 @@ const createUser = async (req, res) => {
               "msg" : error
             });
           }
-          createMongoUser(req, res, insertResult.insertId)
+            createMongoUser(req, res, insertResult.insertId)
+          
           
           conn.release();
         },
