@@ -58,4 +58,11 @@ const createJob = async (req, res) => {
   }
 };
 
+
+/* 
+@ Update
+/indeed/employer/update-job
+Employer Update Job Route
+ */
+
 module.exports = createJob;

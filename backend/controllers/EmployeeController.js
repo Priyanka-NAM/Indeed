@@ -13,9 +13,11 @@ const createEmployer = async (req,res,insertId)=>{
       if (err) {
         res.send('Error occured');
       } else {
+          const salt = await bcrypt.genSalt(10);
+      const Hashedpassword = await bcrypt.hash(password, salt);
         conn.query(
           'INSERT INTO users (email, password, role) VALUES (?,?,?)',
-          [email, password, role],
+          [email, Hashedpassword, role],
           (error, insertResult) => {
             if (error) {
               return res.status(400).json({
