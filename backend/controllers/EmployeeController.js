@@ -1,37 +1,41 @@
 
 /* 
 @ POST
-/api/employee/signup
+/indedd/employer/addemployer
 User Signup Route
  */
-const User = require('../Models/UserModel')
-const bcrypt = require('bcryptjs')
-const createUser = async (req,res)=>{
-    console.log("kkk")
-    const {firstName,lastName,email,password} = req.body // get the data from request body which is in json and put it in variables called user and password
-    const userExists = await User.findOne({email})
-    if(userExists)
+const Employer = require('../Models/EmployerModel')
+const createEmployer = async (req,res)=>{
+    const {employerID,employerName,website,companyType,aboutTheCompany} = req.body // get the data from request body which is in json and put it in variables called user and password
+    const employerExists = await Employer.findOne({employerID})
+    //res.send(req.body)
+    if(employerExists)
      {
-         res.status("400")
-         throw new Error ("User Already exists")
+         res.status("400").send("Error")
+         //throw new Error ("Employer Already exists")
      }
      else
      {
-         const salt = await bcrypt.genSalt(10) 
-        const Hashedpassword = await bcrypt.hash(password,salt)
-        const user =  await User.create({
-            firstName,
-            lastName,
-            email,
-            password:Hashedpassword, 
+         //console.log("asas")
+         //res.status("200").json(req.body)
+         
+        const employer =  await Employer.create({
+            employerID,
+            employerName,
+            website,
+            companyType,
+            aboutTheCompany
         })
  
-        if(user){
-            console.log("Created!")
+        if(employer){
+            //console.log("Created!")
          res.status(201).json(
              {
-             _id:user._id,
-            firstName:user.firstName,
+             employerID,
+             employerName,
+             website,
+             companyType,
+             aboutTheCompany
             
 
              }
@@ -47,4 +51,4 @@ const createUser = async (req,res)=>{
     
  }
 
- module.exports = createUser
+ module.exports = createEmployer

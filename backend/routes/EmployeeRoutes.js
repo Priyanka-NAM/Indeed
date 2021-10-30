@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const createUser = require('../controllers/SignUpController')
+const addemployer = require('../controllers/EmployeeController')
 
 
-router.post('/signup',createUser) 
+router.post('/addemployer',addemployer) 
 module.exports = router 

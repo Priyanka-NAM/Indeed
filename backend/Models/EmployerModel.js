@@ -75,6 +75,10 @@ const employerSchema = mongoose.Schema({
       },
     },
   ],
+  timeStamp: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 const Employer = mongoose.model("Employer", employerSchema);
