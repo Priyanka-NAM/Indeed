@@ -1,12 +1,16 @@
 const express = require('express')
 const app = express()
-const router = require('./routes/UserRoutes')
+const userRouter = require('./routes/UserRoutes')
+const companyRouter = require('./routes/CompanyRoutes')
 const connectDB = require('./config/db')
+require('./config/mysqldb')
 app.use(express.json())
-app.use('/api/users',router)
+app.use('/indeed/users', userRouter)
+app.use('/indeed/company', companyRouter)
 connectDB()
 app.get('/',(req,res)=>{
     res.send("API Started..")
 })
 console.log("my first command")
 app.listen(5000,console.log("API Started.."))
+ 
