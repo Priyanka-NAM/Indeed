@@ -3,7 +3,6 @@ const app = express()
 
 const userRouter = require('./routes/UserRoutes')
 const companyRouter = require('./routes/CompanyRoutes')
-const router = require('./routes/UserRoutes')
 const employerRoutes = require('./routes/EmployeeRoutes')
 const jobRoutes=require('./routes/JobRoutes')
 
