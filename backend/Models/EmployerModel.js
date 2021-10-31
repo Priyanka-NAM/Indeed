@@ -7,59 +7,59 @@ const employerSchema = mongoose.Schema({
   },
   employerName: {
     type: String,
-    required: true,
+    /*required: true,*/
   },
   website: {
     type: String,
-    required: true,
+    /*required: true,*/
   },
   companyType: {
     type: String,
-    required: true,
+    /*required: true,*/
   },
   aboutTheCompany: {
     revenue: {
       type: Number,
-      required: true,
+      /*required: true,*/
     },
     headQuarters: {
       type: String,
-      required: true,
+      /*required: true,*/
     },
     industry: {
       type: String,
-      required: true,
+      /*required: true,*/
     },
     founded: {
       type: Number,
-      required: true,
+      /*required: true,*/
     },
     misssionandvisson: {
       type: String,
-      required: true,
+      /*required: true,*/
     },
     ceo: {
       type: String,
-      required: true,
+      /*required: true,*/
     },
     description: {
       type: String,
-      required: true,
+      /*required: true,*/
     },
     companySize: {
       type: Number,
-      required: true,
+      /*required: true,*/
     },
   },
   photos: [
     {
       path: {
         type: String,
-        required: true,
+        /*required: true,*/
       },
       status: {
         type: String,
-        required: true,
+        /*required: true,*/
       },
     },
   ],
@@ -71,7 +71,7 @@ const employerSchema = mongoose.Schema({
       },
       count: {
         type: Number,
-        required: true,
+        /*required: true,*/
       },
     },
   ],
