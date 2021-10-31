@@ -1,19 +1,17 @@
 const mongoose = require('mongoose') 
 
 const reviewSchema = mongoose.Schema({
-    // reviewId: {
-    //     type: String,
-    //     required: true
-    // },
     overallRating: {
         type: String
     },
-    // employerId: {
-    //     type: String
-    // },
-    // userId: {
-    //     type: String
-    // },
+    employer: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Employer',
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    },
     reviewSummary: {
         type: String
     },
@@ -27,7 +25,8 @@ const reviewSchema = mongoose.Schema({
         type: String
     },
     isApproved: {
-        type: String
+        type: String,
+        default:"NotApproved"
     },
     isHelpful: {
         type: Boolean
