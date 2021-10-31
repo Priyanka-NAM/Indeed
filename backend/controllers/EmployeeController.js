@@ -39,9 +39,8 @@ const createEmployer = async (req,res,insertId)=>{
  const createMongoEmployer = async(req,res,insertId) =>{
 
     
-    const {employerID,employerName,website,companyType,aboutTheCompany} = req.body // get the data from request body which is in json and put it in variables called user and password
+    const {employerID,employerName,website,companyType,aboutTheCompany} = req.body 
     const employerExists = await Employer.findOne({employerID})
-    //res.send(req.body)
     if(employerExists)
      {
          res.status("400").send("Error")
