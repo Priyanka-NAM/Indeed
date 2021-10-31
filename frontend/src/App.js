@@ -1,24 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import Header from "./Components/Layout/Header/Header";
+import { ThemeProvider } from "@material-ui/core";
+import theme from "./Utils/theme";
+import Routes from "./Routes/Routes";
+import { useSelector } from "react-redux";
+import "./App.css";
 
 function App() {
+  const isAuth = useSelector((state) => state.login.isAuth);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <div className="App">
+        {isAuth ? <Header /> : <></>}
+        <Routes />
+      </div>
+    </ThemeProvider>
   );
 }
 
