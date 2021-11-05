@@ -9,7 +9,19 @@ const userSchema = mongoose.Schema({
         userId: {
             type: Number,
             required: true
-        }
+        },
+        savedJobs: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Jobs'   
+            }
+        ],
+        appliedJobs: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Jobs'
+            }
+        ]
     },{timestamps:true})
 
 const User = mongoose.model('User',userSchema) 
