@@ -7,9 +7,10 @@ const User = require("../Models/UserModel")
 const bcrypt = require("bcryptjs")
 const {pool} = require('../config/mysqldb')
 
-console.log(pool)
+
 
 const createEmployer = require('../controllers/EmployerController')
+
 const createUser = async (req, res) => {
   const { email, password, role } = req.body;
   
