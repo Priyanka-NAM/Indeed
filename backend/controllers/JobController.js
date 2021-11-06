@@ -75,7 +75,7 @@ const updateJob = async (req, res) => {
   if (!jobExists) {
     res.status("400").send("Error");
   } else {
-    const job = await Jobs.updateOne({
+    const job = await jobExists.updateOne({
       jobId,
       jobTitle,
       employerID,
