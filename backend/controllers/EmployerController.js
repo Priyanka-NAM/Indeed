@@ -86,9 +86,9 @@ const createEmployer = async (req,res,insertId)=>{
     
   const {employerID,employerName,website,companyType,aboutTheCompany} = req.body 
   const employerExists = await Employer.findOne({employerID})
-  if(employerExists)
+  if(!employerExists)
    {
-       res.status("400").send("Error")
+       res.status("400").send("Error. Employer doesn't Exist.")
        //throw new Error ("Employer Already exists")
    }
    else
