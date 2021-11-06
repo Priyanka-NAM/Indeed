@@ -9,7 +9,8 @@ const jobsSchema = mongoose.Schema({
     required: true,
   },
   employerID: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Employer",
     required: true,
   },
   companyName: {
