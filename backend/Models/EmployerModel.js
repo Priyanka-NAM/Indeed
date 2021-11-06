@@ -50,6 +50,12 @@ const employerSchema = mongoose.Schema({
       type: Number,
       /*required: true,*/
     },
+    workCulture: {
+      type: String,
+    },
+    companyValues: {
+      type: String,
+    },
   },
   photos: [
     {
