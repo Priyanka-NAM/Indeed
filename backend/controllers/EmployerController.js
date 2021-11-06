@@ -80,4 +80,48 @@ const createEmployer = async (req,res,insertId)=>{
      }
  }
 
- module.exports = createEmployer
+
+ const updateEmployer = async(req,res,insertId) =>{
+
+    
+  const {employerID,employerName,website,companyType,aboutTheCompany} = req.body 
+  const employerExists = await Employer.findOne({employerID})
+  if(employerExists)
+   {
+       res.status("400").send("Error")
+       //throw new Error ("Employer Already exists")
+   }
+   else
+   {
+       //console.log("asas")
+       //res.status("200").json(req.body)
+       
+      const employer =  await Employer.updateOne({
+          employerName,
+          website,
+          companyType,
+          aboutTheCompany
+      })
+
+      if(employer){
+          //console.log("Created!")
+       res.status(201).json(
+           {
+           employerID,
+           employerName,
+           website,
+           companyType,
+           aboutTheCompany
+          
+
+           }
+       )
+   }
+   else{
+       res.status("400")
+       throw new Error ("400 Bad Request: Please try again later. ")
+   }
+   }
+}
+
+ module.exports = {createEmployer,updateEmployer}

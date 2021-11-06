@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const addemployer = require('../controllers/EmployeeController')
+const {createEmployer,updateEmployer} = require('../controllers/EmployerController')
 
-router.post('/signup',addemployer) 
-router.post('/addemployer',addemployer) 
+router.post('/signup',createEmployer) 
+router.post('/addemployer',updateEmployer) 
+router.post('/updateemployer',updateEmployer) 
 module.exports = router 
