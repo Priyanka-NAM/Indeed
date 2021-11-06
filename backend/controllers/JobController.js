@@ -127,6 +127,8 @@ const getAllJobs = async (req, res) => {
     }
     res.send(getJobs);
   }
+
+
 };
 
 module.exports = { createJob, updateJob, getAllJobs };
