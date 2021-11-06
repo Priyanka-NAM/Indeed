@@ -10,7 +10,11 @@ const Employer = require('../Models/EmployerModel')
 const bcrypt = require('bcryptjs')
 const createEmployer = async (req,res,insertId)=>{
     const { email, password, role } = req.body;
+<<<<<<< HEAD:backend/controllers/EmployerController.js
     pool.getConnection( async(err, conn) => {
+=======
+    pool.getConnection(async (err, conn) => {
+>>>>>>> 1c1b7a2f9007c42b16f19c56b90773249425153c:backend/controllers/EmployeeController.js
       if (err) {
         res.send('Error occured');
       } else {

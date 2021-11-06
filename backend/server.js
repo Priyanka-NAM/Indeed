@@ -5,9 +5,11 @@ const userRouter = require("./routes/UserRoutes");
 const companyRouter = require("./routes/CompanyRoutes");
 const employerRoutes = require("./routes/EmployerRoutes");
 const jobRoutes = require("./routes/JobRoutes");
+const cors = require('cors');
 
 const connectDB = require("./config/db");
 require("./config/mysqldb");
+app.use(cors());
 app.use(express.json());
 
 app.use("/indeed/users", userRouter);
