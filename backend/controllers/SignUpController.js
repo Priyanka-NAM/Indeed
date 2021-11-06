@@ -7,17 +7,22 @@ User Signup Route
 const User = require("../Models/UserModel")
 const bcrypt = require("bcryptjs")
 const {pool} = require('../config/mysqldb')
+
+console.log(pool)
+
 const createEmployer = require('../controllers/EmployeeController')
 const createUser = async (req, res) => {
   const { email, password, role } = req.body;
   
-  pool.getConnection((err, conn) => {
+  pool.getConnection(async (err, conn) => {
     if (err) {
-      res.send('Error occured');
+      res.send('Error occured!');
     } else {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
       conn.query(
         'INSERT INTO users (email, password, role) VALUES (?,?,?)',
-        [email, password, role],
+        [email, hashedPassword, role],
         (error, insertResult) => {
           if (error) {
             return res.status(400).json({
@@ -25,8 +30,6 @@ const createUser = async (req, res) => {
             });
           }
             createMongoUser(req, res, insertResult.insertId)
-          
-          
           conn.release();
         },
       );
@@ -42,8 +45,6 @@ const createUser = async (req, res) => {
       res.status("400");
       throw new Error("User Already exists");
     } else {
-      //const salt = await bcrypt.genSalt(10);
-      //const Hashedpassword = await bcrypt.hash(password, salt);
       const user = await User.create({
         userId : insertId,
         email
