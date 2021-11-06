@@ -8,13 +8,15 @@ const User = require("../Models/UserModel")
 const bcrypt = require("bcryptjs")
 const {pool} = require('../config/mysqldb')
 
+console.log(pool)
+
 const createEmployer = require('../controllers/EmployeeController')
 const createUser = async (req, res) => {
   const { email, password, role } = req.body;
   
   pool.getConnection(async (err, conn) => {
     if (err) {
-      res.send('Error occured');
+      res.send('Error occured!');
     } else {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -28,8 +30,6 @@ const createUser = async (req, res) => {
             });
           }
             createMongoUser(req, res, insertResult.insertId)
-          
-          
           conn.release();
         },
       );

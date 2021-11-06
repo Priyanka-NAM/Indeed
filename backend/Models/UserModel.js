@@ -10,6 +10,12 @@ const userSchema = mongoose.Schema({
             type: Number,
             required: true
         },
+        location: {
+            type: String,
+        },
+        resume: {
+            type: String,
+        },
         savedJobs: [
             {
                 type: mongoose.Schema.Types.ObjectId,
