@@ -7,9 +7,10 @@ User Signup Route
 
 const {pool} = require('../config/mysqldb')
 const Employer = require('../Models/EmployerModel')
+const bcrypt = require('bcryptjs')
 const createEmployer = async (req,res,insertId)=>{
     const { email, password, role } = req.body;
-    pool.getConnection((err, conn) => {
+    pool.getConnection( async(err, conn) => {
       if (err) {
         res.send('Error occured');
       } else {
