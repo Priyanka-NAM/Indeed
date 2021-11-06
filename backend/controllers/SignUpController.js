@@ -16,7 +16,7 @@ const createUser = async (req, res) => {
   
   pool.getConnection(async (err, conn) => {
     if (err) {
-      res.send('Error occured!');
+      res.send('Error occurred!');
     } else {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
