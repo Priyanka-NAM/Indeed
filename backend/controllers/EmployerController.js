@@ -97,7 +97,7 @@ const createEmployer = async (req,res,insertId)=>{
        //console.log("asas")
        //res.status("200").json(req.body)
        
-      const employer =  await Employer.updateOne({
+      const employer =  await employerExists.updateOne({
           employerName,
           website,
           companyType,
