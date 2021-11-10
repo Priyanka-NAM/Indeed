@@ -1,12 +1,11 @@
-import { Container } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+// import { Container } from '@material-ui/core';
+// import { makeStyles } from '@material-ui/styles';
 import React from 'react';
+import { Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 // import SearchForm from '../Layout/Forms/SearchForm/SearchForm';
 // import RecentSearch from '../Layout/RecentSearch';
-
-
-const useStyles = makeStyles((theme) => ({
+const styles = {
     container:{
         padding:'0px 10vw',
         marginTop:'80px'
@@ -17,18 +16,15 @@ const useStyles = makeStyles((theme) => ({
     },
     link:{
         fontWeight:'bolder',
-        color:theme.palette.primary.main
     }
-  }))
-
-function Home(props) {
-    const classes = useStyles();
+};
+const Home = (props) => {
     
     return (
-        <Container className={classes.container}>
+        <Container style={styles.container}>
             {/* <SearchForm /> */}
-            <div className={classes.linkContainer}>
-                <Link className={classes.link} to="/postjob" >
+            <div style={styles.linkContainer}>
+                <Link style={styles.link} to="/postjob">
                     {`Employers Yours next job is - `} 
                 </Link>
                 Your next hire is here

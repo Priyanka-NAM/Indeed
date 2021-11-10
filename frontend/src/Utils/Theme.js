@@ -1,6 +1,6 @@
-import { createTheme } from "@material-ui/core";
+import { createMuiTheme } from "@material-ui/core";
 
-export default createTheme({
+export default createMuiTheme({
     
     palette:{
         primary:{
