@@ -106,7 +106,7 @@ const HelperButton = withStyles((theme) => ({
 
 function Signup() {
    // const isAuth = useSelector(state=>state.login.isAuth)
-     const isAuth = true;
+    const isAuth = true;
     const classes = useStyles();
     const[email, setEmail] = useState("");
     const[password, setPassword] = useState("");
@@ -154,106 +154,14 @@ function Signup() {
                     <Grid item>
                         <Typography className = {classes.h5} variant = "h5">Create an Account (it's free)</Typography>
                     </Grid>
-                    <Grid container item spacing = {3}>
-                        <Grid item >
-                            <HelperButton style = {{border: "2px solid #a6a6a6"}} className = {classes.button} variant = "outlined">
-                                Sign in with Google
-                            </HelperButton>
-                        </Grid>
-                        <Grid item >
-                            <HelperButton style = {{border: "2px solid black"}} className = {classes.button} variant = "outlined">
-                                Sign in with Apple
-                            </HelperButton>
-                        </Grid>
-                        <Grid item >
-                            <HelperButton style = {{border: "2px solid #1877f2", color: "#1877f2"}} className = {classes.button} variant = "outlined">
-                                Sign in with Facebook
-                            </HelperButton>
-                        </Grid>
-                    </Grid>
-                    <Grid style = {{margin: "10px 0"}} container item>
-                        <Grid item>
-                            <hr className = {classes.divider} ></hr>
-                        </Grid>
-                        <Grid style = {{lineHeight : "0px"}} item> or</Grid>
-                        <Grid>
-                            <hr className = {classes.divider} ></hr>
-                        </Grid>
-                    </Grid>
-                    <Grid item>
-                        <form onSubmit = { handleSubmit }>
-                            <FormHelperText className = {classes.formhelperText}>Email Address</FormHelperText>
-                            <OutlinedInput  className = {classes.outlinedInput} onChange = { onEmailChange } value = { email } required type = "text" variant="outlined"/>
-                            <FormHelperText className = {classes.formhelperText}>Password</FormHelperText>
-                            <OutlinedInput  className = {classes.outlinedInput} onChange = { onPasswordChange } value = { password } required type = "password" variant="outlined"/>
-                            <FormControlLabel className = {classes.checkbox}
-                                control = {<GreenCheckbox  />}
-                                label = "Keep me signed in on this device."
-                            />
-                            <br/>
-                            <SignInButton type = "submit" className = {classes.button} variant = "contained">
-                                Create Account
-                            </SignInButton>
-                        </form>
-                    </Grid>
                     <hr className = {classes.pageBreak}></hr>
                 </Grid>
-                <Typography align = "left" variant = "caption">
-                    By creating an account, you agree to Indeed's <Link to="/" style = {{textDecoration: "none", color: "#085ff8"}} href = "">Terms of Service</Link>, <Link to="/" style = {{textDecoration: "none", color: "#085ff8"}} href = "">Cookie Policy</Link><br/>
-                    and <Link to="/" style = {{textDecoration: "none", color: "#085ff8"}} >Privacy Policy.</Link>. You consent to receiving marketing messages from Indeed <br/> 
-                    and may opt out from receiving such messages by following the unsubscribe link in our messages, or as detailed in our terms.
-                </Typography>
             </Box>
             <Grid container spacing = {3} style = {{ flexDirection : "column", alignContent: "center", margin: "20px 0", color: "#085ff7"}}>
                 <Grid item>
                     <Typography variant = "body2" component={Link} to="/login" style = {{cursor: "pointer",color: "#085ff7"}}>
                         Have an account? Sign in
                     </Typography>
-                </Grid>
-                <Grid item>
-                    <Typography variant = "body2" style = {{cursor: "pointer"}}>
-                        Forgot Your Password
-                    </Typography>
-                </Grid>
-                <Grid item>
-                    <Typography align = "center" variant = "body2" style = {{cursor: "pointer"}}>
-                        HelpCentre
-                    </Typography>
-                </Grid>
-            </Grid>
-            <Grid container spacing = {1} style = {{fontSize : "14px", backgroundColor: "white", padding: "15px 10px", margin : "0 -20px "}} >
-                <Grid item style = {{cursor: "pointer"}}>
-                © 2020 Indeed
-                </Grid>
-                <Grid item>
-                    -
-                </Grid>
-                <Grid item style = {{cursor: "pointer"}}>
-                    Accessibility at Indeed
-                </Grid>
-                <Grid item>
-                    -
-                </Grid>
-                <Grid item style = {{cursor: "pointer"}}>
-                    Privacy Center
-                </Grid>
-                <Grid item>
-                    -
-                </Grid>
-                <Grid item style = {{cursor: "pointer"}}>
-                    Cookies
-                </Grid>
-                <Grid item>
-                    -
-                </Grid>
-                <Grid item style = {{cursor: "pointer"}}>
-                    Privacy
-                </Grid>
-                <Grid item>
-                    -
-                </Grid>
-                <Grid item style = {{cursor: "pointer"}}>
-                    Terms
                 </Grid>
             </Grid>
             <Snackbar
