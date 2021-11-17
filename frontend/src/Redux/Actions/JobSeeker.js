@@ -2,7 +2,7 @@ import {
     CUSTOMER_SIGNUP_REQUEST,
     CUSTOMER_SIGNUP_FAIL,
     CUSTOMER_SIGNUP_SUCCESS,
-  } from '../Constants/JobSeeker';
+  } from '../Constants/UserConstants';
 import Axios from 'axios'; 
 import { API } from '../../config';
 

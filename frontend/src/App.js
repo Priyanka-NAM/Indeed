@@ -2,7 +2,7 @@ import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ThemeProvider } from "@material-ui/core";
 import Theme from "./Utils/Theme";
-import Landing from './components/LandingComponent/langingPage';
+import Landing from './components/LandingComponent/LangingPage';
 import Signup from './components/Signup/Signup';
 
 function App() {

@@ -102,16 +102,17 @@ const HelperButton = withStyles((theme) => ({
         backgroundColor: "#eeeeee",
       },
     },
-}))(Button);
+}))(Button); 
 
 function Signup() {
    // const isAuth = useSelector(state=>state.login.isAuth)
-    const isAuth = true;
+    //const isAuth = true;
     const classes = useStyles();
     const[email, setEmail] = useState("");
     const[password, setPassword] = useState("");
     const dispatch = useDispatch();
     const [snackBarOpen,setSnackBarOpen] = useState(false)
+    const isAuth = useSelector(state=>state.login.isAuth);
     
   //  const {success,isError,errorMsg} = useSelector(state=>state.register)
    const success = false;
@@ -130,6 +131,7 @@ function Signup() {
        dispatch(jobSeekerSignUp(email,password,1))
         
     }
+    console.log("isAuth",isAuth);
 
 
     return (
