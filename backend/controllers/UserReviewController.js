@@ -80,9 +80,8 @@ exports.getEmployerReviews = async (req, res) => {
 };
 
 exports.getAllReviews = async (req, res) => {
-  kafka.make_request("get_review", req.body, function (err, results) {
-    console.log("in result");
-    console.log("Results : ", results);
+  console.log("in get reviews")
+  kafka.make_request("get-reviews", req.body, function (err, results) {
     if (err) {
       console.log("Inside err");
       res.json({

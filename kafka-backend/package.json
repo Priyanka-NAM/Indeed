@@ -4,6 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "start": "nodemon server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -13,6 +14,7 @@
     "dotenv": "^10.0.0",
     "jsonwebtoken": "^8.5.1",
     "kafka-node": "^5.0.0",
-    "mongoose": "^6.0.12"
+    "mongoose": "^6.0.12",
+    "nodemon": "^2.0.15"
   }
 }

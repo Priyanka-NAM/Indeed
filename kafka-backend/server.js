@@ -1,50 +1,50 @@
-var connection = new require("./kafka/Connection");
-var db = require("./config/db");
+let connection = new require("./kafka/Connection");
+const db = require("./config/db");
+db()
 
-//topics files
-//var signin = require('./services/signin.js');
-var GetReviewService = require("./services/GetReviewService.js");
+let GetReviewService = require("./services/GetReviewService.js");
 
-dbconnect();
-async function dbconnect() {
-  await db();
-  handleTopicRequest("get_reviews", GetReviewService);
-}
 
-function handleTopicRequest(topic_name, fname) {
-  console.log("IN handle topic");
-  //var topic_name = 'root_topic';
+function handleTopicRequest(topic_name,fname) {
+  let consumer = connection.getConsumer(topic_name)
+  let producer = connection.getProducer()
+  console.log('server is running ')
+  consumer.on('message', function (message) {
+      console.log('message received for ' + topic_name +" ", fname)
+      console.log(JSON.stringify(message.value))
+      let data = JSON.parse(message.value)
+      var response_times = {}
+      response_times[data.correlationId] = {
+        "start_time": Date.now()
+        }
+      console.log(`${response_times[data.correlationId]["start_time"]} handling ${data.correlationId}`)   
+      fname.handle_request(data.data, function(err,res){
+          if (response_times[data.correlationId]){
+            console.log(`${Date.now()} completed ${data.correlationId}`) 
+            let time_taken = Date.now() - response_times[data.correlationId]["start_time"]
+            console.log(`${data.correlationId} took ${time_taken}`)
+            //console.log(res)
+            delete response_times[data.correlationId]
+          }
 
-  var consumer = connection.getConsumer(topic_name);
-  var producer = connection.getProducer();
-  console.log("server is running ");
-  consumer.on("message", function (message) {
-    console.log("message received for " + topic_name + " ", fname);
-
-    console.log(JSON.stringify(message.value));
-    var data = JSON.parse(message.value);
-
-    fname.handle_request(data.data, function (err, res) {
-      console.log("after handle" + res);
-      var payloads = [
-        {
-          topic: data.replyTo,
-          messages: JSON.stringify({
-            correlationId: data.correlationId,
-            data: res,
-          }),
-          partition: 0,
-        },
-      ];
-      producer.send(payloads, function (err, data) {
-        console.log(data);
+          let payloads = [
+                  { 
+                      topic: data.replyTo, 
+                      messages:JSON.stringify({
+                          correlationId:data.correlationId,
+                          data : res
+                      }),
+                      partition : 0,
+                  }
+              ]
+          producer.send(payloads, function(err, data){
+              if(err) console.log("error sending response: "+err)
+              console.log(data)
+          });
+          return;
       });
-      return;
-    });
+      
   });
 }
-// Add your TOPICs here
-//first argument is topic name
-//second argument is a function that will handle this topic request
-//handleTopicRequest("customer_signin", CustomerSignInService);
-module.exports = dbconnect;
+
+handleTopicRequest("get-reviews", GetReviewService)

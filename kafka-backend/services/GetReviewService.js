@@ -1,9 +1,8 @@
 const Reviews = require("../Models/ReviewsModel");
 
-function handle_request(msg, callback) {
+async function handle_request(msg, callback) {
   try {
-    const review = Reviews.find({});
-    msg.review = review;
+    const review = await Reviews.find({});
     if (!review) {
       return callback(error, { error: error });
     }
