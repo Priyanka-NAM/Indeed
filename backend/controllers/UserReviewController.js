@@ -1,5 +1,6 @@
 const Reviews = require("../Models/ReviewsModel");
 var kafka = require("../kafka/client");
+const redisClient = require('../config/redisClient');
 
 exports.postUserReview = async (req, res) => {
   const {
@@ -81,17 +82,69 @@ exports.getEmployerReviews = async (req, res) => {
 
 exports.getAllReviews = async (req, res) => {
   console.log("in get reviews")
-  kafka.make_request("get-reviews", req.body, function (err, results) {
-    if (err) {
-      console.log("Inside err");
-      res.json({
-        status: "error",
-        msg: "Could not fetch groups, Try Again.",
-      });
-    } else {
-      res.status(200).json(results);
-    }
-  });
+//   try {
+//     redisClient.get('getAllReviews', async (err, data) => {
+//         // If value for key is available in Redis
+//         if (data) {
+//             // send data as output
+//             res.send(JSON.parse(data));
+//         } 
+//         // If value for given key is not available in Redis
+//         else {
+//             // Fetch data from your database
+//         const review = await Reviews.find({});
+//         req.review = review;
+//         if(!review){
+//             return res.status(400).json({
+//                 error: error
+//             });
+//         }
+//           // store that in Redis
+//             // params: key, time-to-live, value
+//             redisClient.setex('getAllReviews', 36000, JSON.stringify(review));
+
+//             // send data as output
+//             res.send(JSON.parse(review));
+//         }
+//     })
+// } catch (error) {
+//     // Handle error
+//             return res.status(400).json({
+//               error: error
+//             });
+// }
+
+
+
+    try{
+        const review = await Reviews.find({});
+        req.review = review;
+        if(!review){
+            return res.status(400).json({
+                error: error
+            });
+        }
+        res.send(review);
+      }
+        catch(error){
+            return res.status(400).json({
+              error: error
+            });
+        }
+
+
+
+  // kafka.make_request("get-reviews", req.body, function (err, results) {
+  //   if (err) {
+  //     console.log("Inside err");
+  //     res.json({
+  //       status: "error",
+  //       msg: "Could not fetch groups, Try Again.",
+  //     });
+  //   } else {
+  //     res.status(200).json(results);
+  //   }
+  // });
 };
 
 exports.UpdateReviewStatus = async (req, res) => {
