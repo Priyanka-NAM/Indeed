@@ -1,4 +1,5 @@
 const Reviews = require('../Models/ReviewsModel')
+const redisClient = require('../config/redisClient');
 
 exports.postUserReview = async (req, res) => {
     const {overallRating, reviewSummary, yourReview, pros, cons, isApproved, isFeatured, interviewPreparation, user} = req.body
@@ -70,7 +71,17 @@ exports.getEmployerReviews = async (req, res) => {
 }
 
 exports.getAllReviews = async (req, res) => {
-    try{
+  console.log("getreviews");
+try {
+    redisClient.get('getReview', async (err, data) => {
+        // If value for key is available in Redis
+        if (data) {
+            // send data as output
+            res.send(JSON.parse(data));
+        } 
+        // If value for given key is not available in Redis
+        else {
+            // Fetch data from your database
         const review = await Reviews.find({});
         req.review = review;
         if(!review){
@@ -78,13 +89,34 @@ exports.getAllReviews = async (req, res) => {
                 error: error
             });
         }
-        res.send(review);
-      }
-        catch(error){
+            // store that in Redis
+            // params: key, time-to-live, value
+            redisClient.setex('getReview', 36000, JSON.stringify(review));
+
+            // send data as output
+        }
+    })
+} catch (error) {
+    // Handle error
             return res.status(400).json({
               error: error
             });
-        }
+}
+    // try{
+    //     const review = await Reviews.find({});
+    //     req.review = review;
+    //     if(!review){
+    //         return res.status(400).json({
+    //             error: error
+    //         });
+    //     }
+    //     res.send(review);
+    //   }
+    //     catch(error){
+    //         return res.status(400).json({
+    //           error: error
+    //         });
+    //     }
 }
 
 exports.UpdateReviewStatus = async (req, res) => {
