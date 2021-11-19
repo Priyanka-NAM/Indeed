@@ -12,7 +12,7 @@ function ConnectionProvider() {
         if (!this.kafkaProducerConnection) {
             this.client = new kafka.KafkaClient("localhost:2181")
             var HighLevelProducer = kafka.HighLevelProducer
-            this.kafkaProducerConnection = new HighLevelProducer(this.client)
+            this.kafkaProducerConnection = new HighLevelProducer(this.client, {fetchMaxBytes: 2000000000})
             console.log('producer ready')
         }
         return this.kafkaProducerConnection

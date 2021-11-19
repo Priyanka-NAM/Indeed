@@ -81,70 +81,68 @@ exports.getEmployerReviews = async (req, res) => {
 };
 
 exports.getAllReviews = async (req, res) => {
-  console.log("in get reviews")
-//   try {
-//     redisClient.get('getAllReviews', async (err, data) => {
-//         // If value for key is available in Redis
-//         if (data) {
-//             // send data as output
-//             res.send(JSON.parse(data));
-//         } 
-//         // If value for given key is not available in Redis
-//         else {
-//             // Fetch data from your database
-//         const review = await Reviews.find({});
-//         req.review = review;
-//         if(!review){
-//             return res.status(400).json({
-//                 error: error
-//             });
-//         }
-//           // store that in Redis
-//             // params: key, time-to-live, value
-//             redisClient.setex('getAllReviews', 36000, JSON.stringify(review));
+  console.log("getreviews");
+  // try {
+  //     redisClient.get('getReview', async (err, data) => {
+  //     // If value for key is available in Redis
+  //     if (data) {
+  //         // send data as output
+  //         res.send(JSON.parse(data));
+  //     } 
+  //     // If value for given key is not available in Redis
+  //     else {
+  //       let resp_time = Date.now()
+  //       console.log(`Before mongo query, time is ${resp_time}`)
+  //         // Fetch data from your database
+  //         kafka.make_request("get-reviews", req.body, function (err, results) {
+  //           if (err) {
+  //             console.log("Inside err");
+  //             res.json({
+  //               status: "error",
+  //               msg: "Could not fetch groups, Try Again.",
+  //             });
+  //           } else {
+  //             res.status(200).json(results);
+  //             redisClient.setex('getReview', 36000, JSON.stringify(results));
+  //           }
+  //         });
+  //     // const review = await Reviews.find({});
+  //     // if(!review){
+  //     //     return res.status(400).json({
+  //     //         error: error
+  //     //     });
+  //     // } else {
+  //     //   res.status(200).send(review)
+  //     //   console.log(`time taken = ${(Date.now() - resp_time)/1000}`)
+  //     //   // store that in Redis
+  //     //   // params: key, time-to-live, value
+  //     //   redisClient.setex('getReview', 36000, JSON.stringify(review));
+  //     //   // send data as output
+  //     // }
+  //     }
+  // })
+  // } catch (error) {
+  // // Handle error
+ 
+  // }
 
-//             // send data as output
-//             res.send(JSON.parse(review));
-//         }
-//     })
-// } catch (error) {
-//     // Handle error
-//             return res.status(400).json({
-//               error: error
-//             });
-// }
+  kafka.make_request("get-reviews", req.body, function (err, results) {
+    if (err) {
+      console.log("Inside err");
+      res.json({
+        status: "error",
+        msg: "Could not fetch groups, Try Again.",
+      });
+    } else {
+      res.status(200).json(results);
+    }
+  });
+    
 
 
 
-    try{
-        const review = await Reviews.find({});
-        req.review = review;
-        if(!review){
-            return res.status(400).json({
-                error: error
-            });
-        }
-        res.send(review);
-      }
-        catch(error){
-            return res.status(400).json({
-              error: error
-            });
-        }
 
-
-
-  // kafka.make_request("get-reviews", req.body, function (err, results) {
-  //   if (err) {
-  //     console.log("Inside err");
-  //     res.json({
-  //       status: "error",
-  //       msg: "Could not fetch groups, Try Again.",
-  //     });
-  //   } else {
-  //     res.status(200).json(results);
-  //   }
-  // });
+ 
 };
 
 exports.UpdateReviewStatus = async (req, res) => {
