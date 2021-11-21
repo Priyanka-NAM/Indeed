@@ -1,7 +1,7 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ThemeProvider } from "@material-ui/core";
-import Theme from "./Utils/Theme";
+import Theme from "./Utils/theme";
 import Landing from './components/LandingComponent/langingPage';
 import Signup from './components/Signup/Signup';
 

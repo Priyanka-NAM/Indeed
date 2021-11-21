@@ -1,6 +1,6 @@
 const Reviews = require('../Models/ReviewsModel')
 const redisClient = require('../config/redisClient');
-
+const kafka = require('../kafka/client');
 exports.postUserReview = async (req, res) => {
     const {overallRating, reviewSummary, yourReview, pros, cons, isApproved, isFeatured, interviewPreparation, user} = req.body
     const usersReview = await Reviews.create({
@@ -72,52 +72,67 @@ exports.getEmployerReviews = async (req, res) => {
 
 exports.getAllReviews = async (req, res) => {
   console.log("getreviews");
-try {
-    redisClient.get('getReview', async (err, data) => {
-        // If value for key is available in Redis
-        if (data) {
-            // send data as output
-            res.send(JSON.parse(data));
-        } 
-        // If value for given key is not available in Redis
-        else {
-            // Fetch data from your database
-        const review = await Reviews.find({});
-        req.review = review;
-        if(!review){
-            return res.status(400).json({
-                error: error
-            });
-        }
-            // store that in Redis
-            // params: key, time-to-live, value
-            redisClient.setex('getReview', 36000, JSON.stringify(review));
+// try {
+//     redisClient.get('getReviews', async (err, data) => {
+//         // If value for key is available in Redis
+//         if (data) {
+//             // send data as output
+//             res.send(JSON.parse(data));
+//         } 
+//         // If value for given key is not available in Redis
+//         else {
+//             // Fetch data from your database
+//         const review = await Reviews.find({});
+//         req.review = review;
+//         if(!review){
+//             return res.status(400).json({
+//                 error: error
+//             });
+//         }
+//             // store that in Redis
+//             // params: key, time-to-live, value
+//             redisClient.setex('getReviews', 36000, JSON.stringify(review));
 
-            // send data as output
-        }
-    })
-} catch (error) {
-    // Handle error
-            return res.status(400).json({
-              error: error
-            });
-}
-    // try{
-    //     const review = await Reviews.find({});
-    //     req.review = review;
-    //     if(!review){
-    //         return res.status(400).json({
-    //             error: error
-    //         });
-    //     }
-    //     res.send(review);
-    //   }
-    //     catch(error){
-    //         return res.status(400).json({
-    //           error: error
-    //         });
-    //     }
-}
+//             // send data as output
+//         }
+//     })
+// } catch (error) {
+//     // Handle error
+//             return res.status(400).json({
+//               error: error
+//             });
+// }
+
+
+
+
+//     try{
+//         const review = await Reviews.find({});
+//         req.review = review;
+//         if(!review){
+//             return res.status(400).json({
+//                 error: error
+//             });
+//         }
+//         res.send(review);
+//       }
+//         catch(error){
+//             return res.status(400).json({
+//               error: error
+//             });
+//         }
+
+
+kafka.make_request('get_reviews', req.body, (err, reviews) => {
+  if (err) {
+    console.log('Inside err');
+    return res.status(400).send({
+      error: 'Reviews not found',
+    });
+  }
+  res.json(reviews);
+});
+ }
 
 exports.UpdateReviewStatus = async (req, res) => {
     console.log(req.review);
