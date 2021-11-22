@@ -13,7 +13,7 @@ const createEmployer = require('../controllers/EmployerController')
 
 const createUser = async (req, res) => {
   const { email, password, role } = req.body;
-  
+  console.log("req data", email, password, role)
   pool.getConnection(async (err, conn) => {
     if (err) {
       res.send('Error occurred!');
@@ -25,7 +25,7 @@ const createUser = async (req, res) => {
         [email, hashedPassword, role],
         (error, insertResult) => {
           if (error) {
-            return res.status(400).json({
+            return res.status(500).json({
               msg: error,
             });
           }
@@ -42,7 +42,7 @@ const createUser = async (req, res) => {
     const {email} = req.body
     const userExists = await User.findOne({ email });
     if (userExists) {
-      res.status("400");
+      res.status(201).send("user already exists");
       throw new Error("User Already exists");
     } else {
       const user = await User.create({
@@ -52,12 +52,10 @@ const createUser = async (req, res) => {
 
     if (user) {
       console.log("Created!");
-      res.status(201).json({
-        user,
-      });
+      res.status(200).send("user created")
     } else {
-      res.status("400");
-      throw new Error("400 Bad Request: Please try again later. ");
+      res.status(500).send("database error");
+      throw new Error("Database error: Please try again later. ");
     }
   }
 };

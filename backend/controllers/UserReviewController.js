@@ -70,10 +70,12 @@ exports.getEmployerReviews = async (req, res) => {
 }
 
 exports.getAllReviews = async (req, res) => {
+  console.log("get all reviews")
     try{
         const review = await Reviews.find({});
         req.review = review;
         if(!review){
+          console.log("error")
             return res.status(400).json({
                 error: error
             });
@@ -81,6 +83,7 @@ exports.getAllReviews = async (req, res) => {
         res.send(review);
       }
         catch(error){
+          console.log("error")
             return res.status(400).json({
               error: error
             });

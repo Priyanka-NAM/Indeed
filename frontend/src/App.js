@@ -2,8 +2,9 @@ import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ThemeProvider } from "@material-ui/core";
 import Theme from "./Utils/Theme";
-import Landing from './components/LandingComponent/langingPage';
+import Landing from './components/Landing/LangingPage';
 import Signup from './components/Signup/Signup';
+import { Login } from './components/Login/Login';
 
 function App() {
   return (
@@ -13,7 +14,8 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/" component={Landing} />
-          <Route path="/Signup" component={Signup} />
+          <Route path="/signup" component={Signup} />
+          <Route path="/login" component={Login} />
         </Switch>
       </Router> 
       </div>
