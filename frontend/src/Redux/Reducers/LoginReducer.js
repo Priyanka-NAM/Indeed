@@ -1,5 +1,5 @@
 import {
-  CUSTOMER_LOGIN 
+  JOBSEEKER_LOGIN 
   } from '../Constants/UserConstants';
 
 const initialState = {
@@ -8,7 +8,8 @@ const initialState = {
 
 export const loginReducer = (state = initialState, action) => {
     switch (action.type) {
-      case CUSTOMER_LOGIN:
+      case JOBSEEKER_LOGIN:
+        console.log("login reducer : ", action.payload)
         return { 
           ...state,
           isAuth: true  
