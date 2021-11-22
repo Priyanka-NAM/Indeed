@@ -21,7 +21,6 @@ import {
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
-import { jobSeekerSignUp } from "../../Redux/Actions/JobSeeker";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -138,7 +137,6 @@ function EmployerSignup() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(jobSeekerSignUp(email, password, 1));
   };
 
   return (
