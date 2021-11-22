@@ -12,6 +12,34 @@ const reviewSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
+    reviewTitle: {
+        type: String
+    },
+    reviewerRole: {
+        type: String
+    },
+    city: {
+        type: String
+    },
+    state: {
+        type: String
+    },
+    workHappinessScore: {
+        type: String
+    },
+    learningScore: {
+        type: String
+    },
+    appreciationScore: {
+        type: String
+    },
+    postedDate: {
+        type : Date, 
+        default: Date.now
+    },
+    reviewerRole: {
+        type: String
+    },
     reviewSummary: {
         type: String
     },

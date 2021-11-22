@@ -1,26 +1,27 @@
 import React, { useState } from 'react';
-import { Container,Grid,OutlinedInput,Typography,InputLabel,MenuItem,Select,Button} from '@material-ui/core';
-// import InputLabel from '@mui/material/InputLabel';
-// import MenuItem from '@mui/material/MenuItem';
-// import Select from '@mui/material/Select';
-import {  IconButton, Snackbar } from '@material-ui/core';
-import CloseIcon from "@material-ui/icons/Close";
+import CircularProgress from '@material-ui/core/CircularProgress'
 import { 
     Box, 
+    Container, 
+    Grid, 
     makeStyles, 
     withStyles,
+    OutlinedInput, 
+    Typography,
     FormHelperText,
     FormControlLabel,
     Checkbox,
+    Button
 } from '@material-ui/core';
+
 import { useDispatch, useSelector } from 'react-redux';
+//import { makeLoginRequest } from '../../Redux/Login/actions';
 import { Link, Redirect } from 'react-router-dom';
-import { jobSeekerSignUp } from '../../Redux/Actions/SignUpAction';
+import { jobSeekerLogin } from '../../Redux/Actions/LoginAction';
 
 const useStyles = makeStyles((theme) => ({
     container: {
         backgroundColor: "#f2f2f2",
-        
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -52,12 +53,9 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: "600"
     },
     formhelperText: {
-        fontWeight: "700",
+        fontWeight: "900",
         fontSize: "14px",
         color: "black"
-    },
-    checkbox: {
-        marginBottom: "10px"
     },
     button: {
         width: "450px",
@@ -78,13 +76,6 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-const GreenCheckbox = withStyles({
-    root: {
-      color: "#085ff7",
-    },
-    checked: {},
-})((props) => <Checkbox color="default" {...props} />);
-
 const SignInButton = withStyles((theme) => ({
     root: {
         color: "#ffffff",
@@ -96,29 +87,14 @@ const SignInButton = withStyles((theme) => ({
     },
 }))(Button);
 
-const HelperButton = withStyles((theme) => ({
-    root: {
-        color: "#000000",
-        backgroundColor: "#ffffff",
-        cursor: "pointer",
-        '&:hover': {
-        backgroundColor: "#eeeeee",
-      },
-    },
-}))(Button); 
-
-function Signup() {
-   // const isAuth = useSelector(state=>state.login.isAuth)
-    //const isAuth = true;
+export function Login() {
+    
+    //const {isAuth,isLoading,isError,errorMsg} = useSelector(state=>state.login)
     const classes = useStyles();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [role, setRole] = useState(1);
-    const [redirectLogin, setLogin] = useState(false)
+    const [redirectHome, setHome] = useState(false);
     const dispatch = useDispatch();
-    const [snackBarOpen,setSnackBarOpen] = useState(false)
-    const isAuth = useSelector(state=>state.login.isAuth);
- 
     const onEmailChange = (e) => {
         setEmail(e.target.value)
     }
@@ -127,38 +103,43 @@ function Signup() {
         setPassword(e.target.value)
     }
 
-    const onRoleChange = (e) => {
-        setRole(e.target.value)
-    }
     const handleSubmit = (e) => {
         e.preventDefault();
         const data = {
             "email" : email,
-            "password" : password,
-            "role" : role
+            "password" : password 
         }
-        dispatch(jobSeekerSignUp(data))
-        setLogin(true)
+        dispatch(jobSeekerLogin(data))
+        setHome(true)
     }
-    console.log("isAuth",isAuth);
 
 
     return (
         <Container className = {classes.container} maxWidth = "xl">
             {
-                redirectLogin && <Redirect to="/login" />
+                redirectHome && <Redirect  to='/'/>
             }
             <Box className = {classes.boxImg}>
                 <img
                     className = {classes.imgLogo}
-                    src = {"/Images/Indeed_logo.png"}
+                    src = "/Images/Indeed_logo.png"
                     alt = "Indeed"
                 />
             </Box>
             <Box className = {classes.boxForm}>
                 <Grid container spacing = {3} >
                     <Grid item>
-                        <Typography className = {classes.h5} variant = "h5">Create an Account (it's free)</Typography>
+                        <Typography className = {classes.h5} variant = "h5">Sign In</Typography>
+                    </Grid>
+                    <Grid item>
+                        <Typography variant = "body2">
+                        By signing in to your account, you agree to Indeed's
+                        <Link to='/' style = {{textDecoration: "underline", color: "#085ff8"}} href = "">
+                            Terms of Service </Link> and consent to our 
+                            <Link to='/' style = {{textDecoration: "underline", color: "#085ff8"}} href = ""> Cookie Policy </Link>
+                                and  
+                            <Link to='/' style = {{textDecoration: "underline", color: "#085ff8"}} href = ""> Privacy Policy.</Link><br/>
+                        </Typography>
                     </Grid>
                     <Grid item>
                         <form onSubmit = { handleSubmit }>
@@ -166,51 +147,22 @@ function Signup() {
                             <OutlinedInput  className = {classes.outlinedInput} onChange = { onEmailChange } value = { email } required type = "text" variant="outlined"/>
                             <FormHelperText className = {classes.formhelperText}>Password</FormHelperText>
                             <OutlinedInput  className = {classes.outlinedInput} onChange = { onPasswordChange } value = { password } required type = "password" variant="outlined"/>
-                            <FormHelperText className = {classes.formhelperText}>Role</FormHelperText>
-                            <Select onChange={ onRoleChange } value={role}>
-                            <MenuItem value={1}>JobSeeker</MenuItem>
-                            <MenuItem value={2}>Employer</MenuItem>
-                            <MenuItem value={3}>Admin</MenuItem>
-                            </Select>
-                            <br/>
+                            <br />
                             <br />
                             <SignInButton type = "submit" className = {classes.button} variant = "contained">
-                                Create Account
+                                Sign In
                             </SignInButton>
                         </form>
                     </Grid>
                     <hr className = {classes.pageBreak}></hr>
+                    <Grid item>
+                            <Typography style = {{cursor: "pointer", color : "#085ff7", margin:"0 115px"}} variant = "subtitle2" component={Link} to="/signup">
+                                New to Indeed? Create an account
+                            </Typography>
+                        </Grid>
+
                 </Grid>
             </Box>
-            <Grid container spacing = {3} style = {{ flexDirection : "column", alignContent: "center", margin: "20px 0", color: "#085ff7"}}>
-                <Grid item>
-                    <Typography variant = "body2" component={Link} to="/login" style = {{cursor: "pointer",color: "#085ff7"}}>
-                        Have an account? Sign in
-                    </Typography>
-                </Grid>
-            </Grid>
-            <Snackbar
-                anchorOrigin={{vertical:'top',horizontal:'left'}}
-                open={snackBarOpen}
-                autoHideDuration={3000}
-                message={<span className="format__id">Regitered Succesfully</span>}
-                ContentProps={{
-                    'aria-describedby':'message-id'
-                }}
-                onClose={()=>setSnackBarOpen(false)}
-                action={[
-                    <IconButton
-                    onClick={()=>{setSnackBarOpen(false)}}
-                    color="inherit"
-                    key="close"
-                    aria-label="close">
-                        <CloseIcon/>
-                    </IconButton>
-                ]} />
-        </Container> 
-        // : <Redirect to="/" />
+        </Container>
     )
 }
-
-
-export default Signup;

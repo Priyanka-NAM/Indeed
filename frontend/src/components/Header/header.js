@@ -8,7 +8,8 @@ import ForumIcon from '@material-ui/icons/Forum';
 import { NavLink } from 'react-router-dom';
 import { Box, Container } from '@material-ui/core';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-// import UserMenu from '../Menu/UserMenu';
+import UserMenu from './UserMenu';
+import { useDispatch, useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   },
   header_right:{
     display:'flex',
-    width:'250px',
+    width:'350px',
     justifyContent:'space-between'
   },
   link:{
@@ -57,29 +58,30 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Header() {
   const classes = useStyles();
-
+  const isAuth = useSelector(state=>state.login.isAuth);
+  console.log("isauthhh", isAuth)
   return (
     <div className={classes.root}>
       <AppBar elevation={0} color={'secondary'} position="static">
         <Toolbar className={classes.toolbar} >
             <Container className={classes.header_container} disableGutters maxWidth={false}>
                 <Box className={classes.header_left}>
-                    <img className={classes.logo} src="/Images/logo.svg" alt=""/>
+                    <img className={classes.logo} src="/Images/Indeed_logo.png" alt=""/>
                     <Box className={classes.link} display={{ xs: 'none', sm: 'block', md: 'block' }}>
                         <Typography component={NavLink} variant='h6' to='/' >
                             Find Jobs
                         </Typography>
-                        <Typography component={NavLink} variant='h6' to='/companies' >
+                        <Typography component={NavLink} variant='h6' to='/' >
                             Company Reviews
                         </Typography>
-                        <Typography component={NavLink} variant='h6' to='/carrer/salary' >
+                        <Typography component={NavLink} variant='h6' to='/' >
                             Find Salary
                         </Typography>
                     </Box>
                 </Box>
-                <Box className={classes.header_right} >
-
-                        <IconButton
+                  {isAuth ? 
+                  <Box className={classes.header_right} >
+                    <IconButton
                         edge="start"
                         
                         color="inherit"
@@ -95,20 +97,24 @@ export default function Header() {
                         >
                             <NotificationsIcon />
                         </IconButton>
-
-                        
-                            {/* <UserMenu/> */}
-                        
-
-                        <Typography style={{display:'flex',alignItems:'center'}} component={NavLink} variant='h6' to='/postjob' >
+                        <UserMenu/>
+                        <Typography style={{display:'flex',alignItems:'center'}} component={NavLink} variant='h6' to='/' >
                             Employers/jobs
                         </Typography>
-                    
-                </Box>
+                        </Box> : <Box className={classes.header_right} >
+                        <Typography style={{display:'flex',alignItems:'center', color:"#0039C0"}} component={NavLink} variant='h6' to='/' >
+                            Upload your resume
+                        </Typography>
+                          <Typography style={{display:'flex',alignItems:'center', color:"#0039C0"}} component={NavLink} variant='h6' to='/' >
+                            Sign in
+                        </Typography>
+                        <Typography style={{display:'flex',alignItems:'center'}} component={NavLink} variant='h6' to='/' >
+                            Employers/jobs
+                        </Typography>
+                        </Box> }                    
             </Container>
         </Toolbar>
       </AppBar>
-      
     </div>
   );
 }
