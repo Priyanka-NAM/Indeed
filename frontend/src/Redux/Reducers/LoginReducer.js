@@ -3,7 +3,8 @@ import {
   } from '../Constants/UserConstants';
 
 const initialState = {
-  isAuth: false
+  isAuth: false,
+  userDetails: {}
 } 
 
 export const loginReducer = (state = initialState, action) => {
@@ -12,7 +13,8 @@ export const loginReducer = (state = initialState, action) => {
         console.log("login reducer : ", action.payload)
         return { 
           ...state,
-          isAuth: true  
+          isAuth: true,
+          userDetails: action.payload
         };
       default:
         return state;
