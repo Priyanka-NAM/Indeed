@@ -9,6 +9,14 @@ const employerSchema = mongoose.Schema({
     type: String,
     /*required: true,*/
   },
+  employerRole: {
+    type: String,
+    /*required: true,*/
+  },
+  companyName: {
+    type: String,
+    /*required: true,*/
+  },
   website: {
     type: String,
     /*required: true,*/
@@ -16,6 +24,21 @@ const employerSchema = mongoose.Schema({
   companyType: {
     type: String,
     /*required: true,*/
+  },
+  streetAddress: {
+    type: String,
+  },
+  city: {
+    type: String,
+  },
+  state: {
+    type: String,
+  },
+  zipCode: {
+    type: String,
+  },
+  country: {
+    type: String,
   },
   aboutTheCompany: {
     revenue: {
