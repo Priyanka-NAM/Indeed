@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from '../Header/header';
+import Header from '../Header/Header';
 import Home from '../Home/Home';
 import jwt_decode from "jwt-decode";
 import { useSelector } from 'react-redux';
