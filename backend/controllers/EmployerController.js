@@ -1,7 +1,7 @@
 
 /* 
 @ POST
-/indedd/employer/addemployer
+/indeed/employer/addemployer
 User Signup Route
  */
 
