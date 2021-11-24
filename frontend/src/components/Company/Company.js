@@ -6,6 +6,7 @@ import { ReviewBox } from "../Review/ReviewBox";
 import Header from '../Header/Header'; 
 import StarIcon from '@material-ui/icons/Star';
 import { Rating } from '@mui/material';
+import CameraAltIcon from '@material-ui/icons/CameraAltRounded';
 import { Grid, 
     Container,
     makeStyles,
@@ -16,6 +17,7 @@ import { Grid,
     FormControl,
     InputLabel,
     MenuItem,
+    ButtonGroup,
 
 } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
@@ -61,13 +63,13 @@ const FollowButton = withStyles((theme) => ({
 export default function Review(props) {
     const classes = useStyle();
     const {responseFromServer} = useSelector(state => state.companyDetails);
-    const companyDetails = responseFromServer ? responseFromServer: [];
+    const companyDetails = responseFromServer ? responseFromServer : [];
     const [values, setValues] = React.useState([
         "Helpfull Review",
         "Unhelpfull review",
         "Rating"
       ]);
-    console.log(companyDetails);
+    const [filterValue, setFilterValue] = React.useState(["Helpfull Review" ]);
     const [reviews, setReviews] = useState([]);
     const [rating, setRating] = useState(4);
     const query = new URLSearchParams(props.location.search);
@@ -75,18 +77,18 @@ export default function Review(props) {
     const dispatch = useDispatch()
     const {isAuth} = useSelector(state=>state.login)
     useEffect(()=>{
-        dispatch(getcompaniesDetails({ employerID: "6186e2d2bb051b8074e39e7f" }));
+        dispatch(getcompaniesDetails({ employerID: props.match.params.id}));
         setRating(companyDetails.noOfRatings);
     },[props.match])
     const changePathName = (pathName) => {
-        props.history.push(`/company/${pathName}`);
+        props.history.push(`/company/${props.match.params.id}/${pathName}`);
     }
 
      //SnapShot page strats here
      const showSnapShot = () => (
         <div>
         <Grid item style = {{marginTop: "20px", marginBottom: "30px"}} >
-                <Typography variant = "caption" >{companyDetails.employerName} Careers and Employment</Typography>
+                <Typography variant = "caption" >{companyDetails || companyDetails.employerName} Careers and Employment</Typography>
             </Grid>
             <Grid item style = {{marginTop: "20px", marginBottom: "50px"}}>
                 <Typography variant = "h4"><b>Work happiness</b></Typography>
@@ -105,7 +107,7 @@ export default function Review(props) {
                         </div>
                         <br/><br/>
                         <div>
-                            {companyDetails.aboutTheCompany.ceo}
+                            {companyDetails || companyDetails.aboutTheCompany.ceo}
                         </div>
                     </Grid>
                     <Grid item xl={5} lg={5} style = {{border: "2px solid #f2f2f2", borderRadius: "10px", padding: "20px"}}>
@@ -114,7 +116,7 @@ export default function Review(props) {
                         </div>
                         <br/><br/>
                         <div>
-                            {companyDetails.aboutTheCompany.revenue}
+                            {companyDetails || companyDetails.aboutTheCompany.revenue}
                         </div>
                     </Grid>
                     <Grid item xl={5} lg={5} style = {{border: "2px solid #f2f2f2", borderRadius: "10px", padding: "20px"}}>
@@ -123,7 +125,7 @@ export default function Review(props) {
                         </div>
                         <br/><br/>
                         <div style = {{}}>
-                            {companyDetails.aboutTheCompany.companySize}
+                            {companyDetails || companyDetails.aboutTheCompany.companySize}
                         </div>
                     </Grid>
                 <Grid item xl={5} lg={5} style = {{border: "2px solid #f2f2f2", borderRadius: "10px", padding: "20px"}}>
@@ -132,7 +134,7 @@ export default function Review(props) {
                         </div>
                         <br/><br/>
                         <div style = {{}}>
-                            {companyDetails.aboutTheCompany.industry}
+                            {companyDetails || companyDetails.aboutTheCompany.industry}
                         </div>
                     </Grid>
                     
@@ -144,7 +146,7 @@ export default function Review(props) {
                         </div>
                         <br/><br/>
                         <div style = {{}}>
-                            {companyDetails.aboutTheCompany.founded}
+                            {companyDetails || companyDetails.aboutTheCompany.founded}
                         </div>
                     </Grid>
                   
@@ -153,9 +155,9 @@ export default function Review(props) {
             </Grid>
             <Grid container style = {{ padding: "40px"}}>
                 <Typography variant = "body2" style = {{color: "#767676", textAlign: "left"}}>
-                    {companyDetails.aboutTheCompany.description}
+                    {companyDetails || companyDetails.aboutTheCompany.description}
                     <Typography variant = "body2" style = {{color: "#767676", textAlign: "left"}}>
-                    {companyDetails.aboutTheCompany.misssionandvisson}
+                    {companyDetails || companyDetails.aboutTheCompany.misssionandvisson}
                 </Typography>
                 </Typography>
             </Grid>
@@ -184,31 +186,39 @@ export default function Review(props) {
           <div class="container-fluid">
         <Grid item style = {{alignItems: "center", marginTop: "20px", marginBottom: "50px", backgroundColor: "#d3d3d34f", height: '100px'}}>
         <FormControl>
-       <InputLabel htmlFor="agent-simple">Filter</InputLabel>
-      <Select
-        value={"Rating"}
-        inputProps={{
-          name: "agent",
-          id: "age-simple"
-        }}
-      >
-        {values.map((value, index) => {
+        <ButtonGroup variant="outlined" aria-label="outlined button group" style={{padding: '35px'}}>
+  <Button>Rating</Button>
+  <Button>Helpfull</Button>
+  <Button>Unhelpfull</Button>
+</ButtonGroup>
+</FormControl>
+    <FormControl style={{padding: "35px", height: "17px"}}>
+    <Select
+                className={classes.outlinedInput}
+                variant='outlined'
+                value={filterValue}
+                name='filterVal'
+                onChange={(e)=> setFilterValue(e.target.value)}
+                >
+       {values.map((value, index) => {
           return <MenuItem value={value}>{value}</MenuItem>;
         })}
-      </Select>
+        </Select>
     </FormControl>
+    
         </Grid>
          <Grid item style = {{marginTop: "20px", marginBottom: "50px"}}>
-            <Typography variant = "h4"><b>{companyDetails.aboutTheCompany.industry} Employee Reviews</b></Typography>
+            <Typography variant = "h4"><b>{companyDetails || companyDetails.aboutTheCompany.industry} Employee Reviews</b></Typography>
         </Grid>
              
 
           </div>
       );
       const showPhotos = () => (
-        <div>
+        <div> 
+             
             <Grid item style = {{marginTop: "20px", marginBottom: "50px"}}>
-                <Typography variant = "h4"><b>Photos</b></Typography>
+             <span><CameraAltIcon></CameraAltIcon> <b>{companyDetails || companyDetails.companyName} Photos</b></span>
             </Grid>
         </div>
     );
@@ -271,9 +281,9 @@ export default function Review(props) {
                         <img src="https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80" alt='' width="100px" />
                     </Grid>
                     <Grid item style = {{paddingTop: "40px", paddingLeft: "20px"}}>
-                        <Typography variant="h5" >{ companyDetails.companyName}</Typography>
+                        <Typography variant="h5" >{ companyDetails || companyDetails.companyName}</Typography>
                         <Typography variant="h5" >
-                            { companyDetails.noOfRatings}
+                            {companyDetails|| companyDetails.noOfRatings}
                             {/* <StarIcon style = {{color: "#9d2b6b", paddingRight: "10px"}}/> */}
                             <Rating name="half-rating-read" style = {{color: "#9d2b6b", paddingRight: "10px"}} value={rating} precision={0.5} readOnly/>
                         <Typography variant="caption" >25 reviews</Typography>

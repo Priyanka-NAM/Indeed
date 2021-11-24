@@ -21,7 +21,7 @@ function App() {
           <Route path="/indeed" component={Header} />
           <Route path="/signup" component={Signup} />
           <Route path="/login" component={Login} />
-          <Route exact path="/company/:pathname" component={Company} />
+          <Route exact path="/company/:id/:pathname" component={Company} />
           <Route path="/indeed/profile" component={UserProfile} />
           <Route path="/indeed/jobs" component={JobsDisplay} />
           <Route path="/addemployer" component={EmployerSignup} />
