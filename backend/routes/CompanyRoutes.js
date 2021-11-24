@@ -5,6 +5,7 @@ const {
   postUserReview,
   getAllReviews,
   UpdateReviewStatus,
+  getCompanyReviews,
 } = require("../controllers/UserReviewController");
 const userSalary = require("../controllers/UserSalaryController");
 const getHomePage = require("../controllers/CompanyHomePage");
@@ -18,5 +19,6 @@ router.get("/reviews", getAllReviews);
 router.get("/home", getHomePage);
 router.get("/whyjoinus", getHomePage);
 router.put("/review/:reviewId", UpdateReviewStatus);
+router.get("/companyreviews", getCompanyReviews);
 
 module.exports = router;

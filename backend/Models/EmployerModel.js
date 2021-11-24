@@ -40,6 +40,7 @@ const employerSchema = mongoose.Schema({
   country: {
     type: String,
   },
+
   aboutTheCompany: {
     revenue: {
       type: Number,
@@ -107,6 +108,14 @@ const employerSchema = mongoose.Schema({
   timeStamp: {
     type: Date,
     default: Date.now(),
+  },
+  averageRating: {
+    type: Number,
+    default: 0,
+  },
+  noOfRatings: {
+    type: Number,
+    default: 0,
   },
 });
 
