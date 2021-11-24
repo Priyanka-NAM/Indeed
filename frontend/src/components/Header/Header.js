@@ -62,28 +62,30 @@ export default function Header() {
   console.log("isauthhh", isAuth);
   return (
     <div className={classes.root}>
-      <AppBar elevation={0} color={"secondary"} position='static'>
+      <AppBar elevation={0} color={"secondary"} position="static">
         <Toolbar className={classes.toolbar}>
           <Container
             className={classes.header_container}
             disableGutters
-            maxWidth={false}>
+            maxWidth={false}
+          >
             <Box className={classes.header_left}>
               <img
                 className={classes.logo}
-                src='/Images/Indeed_logo.png'
-                alt=''
+                src="/Images/Indeed_logo.png"
+                alt=""
               />
               <Box
                 className={classes.link}
-                display={{ xs: "none", sm: "block", md: "block" }}>
-                <Typography component={NavLink} variant='h6' to='/'>
+                display={{ xs: "none", sm: "block", md: "block" }}
+              >
+                <Typography component={NavLink} variant="h6" to="/">
                   Find Jobs
                 </Typography>
-                <Typography component={NavLink} variant='h6' to='/'>
+                <Typography component={NavLink} variant="h6" to="/">
                   Company Reviews
                 </Typography>
-                <Typography component={NavLink} variant='h6' to='/'>
+                <Typography component={NavLink} variant="h6" to="/">
                   Find Salary
                 </Typography>
               </Box>
@@ -91,24 +93,27 @@ export default function Header() {
             {isAuth ? (
               <Box className={classes.header_right}>
                 <IconButton
-                  edge='start'
-                  color='inherit'
-                  aria-label='open drawer'>
+                  edge="start"
+                  color="inherit"
+                  aria-label="open drawer"
+                >
                   <ForumIcon />
                 </IconButton>
 
                 <IconButton
-                  edge='start'
-                  color='inherit'
-                  aria-label='open drawer'>
+                  edge="start"
+                  color="inherit"
+                  aria-label="open drawer"
+                >
                   <NotificationsIcon />
                 </IconButton>
                 <UserMenu />
                 <Typography
                   style={{ display: "flex", alignItems: "center" }}
                   component={NavLink}
-                  variant='h6'
-                  to='/'>
+                  variant="h6"
+                  to="/"
+                >
                   Employers/jobs
                 </Typography>
               </Box>
@@ -121,8 +126,9 @@ export default function Header() {
                     color: "#0039C0",
                   }}
                   component={NavLink}
-                  variant='h6'
-                  to='/'>
+                  variant="h6"
+                  to="/"
+                >
                   Upload your resume
                 </Typography>
                 <Typography
@@ -132,15 +138,17 @@ export default function Header() {
                     color: "#0039C0",
                   }}
                   component={NavLink}
-                  variant='h6'
-                  to='/login'>
+                  variant="h6"
+                  to="/login"
+                >
                   Sign in
                 </Typography>
                 <Typography
                   style={{ display: "flex", alignItems: "center" }}
                   component={NavLink}
-                  variant='h6'
-                  to='/postjob'>
+                  variant="h6"
+                  to="/postjob"
+                >
                   Employers/jobs
                 </Typography>
               </Box>
