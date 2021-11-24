@@ -23,8 +23,6 @@ function App() {
           <Route path="/indeed/profile" component={UserProfile} />
           <Route path="/indeed/jobs" component={JobsDisplay} />
           <Route path='/addemployer' component={EmployerSignup} />
-
-        </Switch>
       </Router> 
       </div>
     </ThemeProvider>
