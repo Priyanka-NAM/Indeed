@@ -5,7 +5,7 @@ import Theme from "./Utils/Theme";
 import Landing from './components/Landing/LangingPage';
 import Signup from './components/Signup/Signup';
 import { Login } from './components/Login/Login';
-import EmployerSignup from './components/Employer/EmployerSignUp';
+import EmployerSignup from './components/Employer/EmployerDetails/EmployerSignUp';
 
 function App() {
   return (
@@ -17,7 +17,7 @@ function App() {
           <Route exact path="/" component={Landing} />
           <Route path="/signup" component={Signup} />
           <Route path="/login" component={Login} />
-          <Route path='/postjob' component={EmployerSignup} />
+          <Route path='/addemployer' component={EmployerSignup} />
 
         </Switch>
       </Router> 
