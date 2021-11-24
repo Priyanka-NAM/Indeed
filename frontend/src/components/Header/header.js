@@ -10,6 +10,8 @@ import { Box, Container } from '@material-ui/core';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import UserMenu from './UserMenu';
 import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllJobs } from '../../Redux/Actions/JobsAction';
+import { Link,Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,16 +59,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Header() {
+  const dispatch = useDispatch()
   const classes = useStyles();
-  const isAuth = useSelector(state=>state.login.isAuth);
-  console.log("isauthhh", isAuth)
+  //const isAuth = useSelector(state=>state.login.isAuth);
+  let isAuth = true;
+  // if(!localStorage.getItem('token')){
+  //   isAuth = false
+  // } else {
+  //   isAuth = true
+  // }
+  dispatch(fetchAllJobs())
   return (
     <div className={classes.root}>
       <AppBar elevation={0} color={'secondary'} position="static">
         <Toolbar className={classes.toolbar} >
             <Container className={classes.header_container} disableGutters maxWidth={false}>
                 <Box className={classes.header_left}>
-                    <img className={classes.logo} src="/Images/Indeed_logo.png" alt=""/>
+                    <Link to='/' style={{textDecoration:"none", color:"black"}}><img className={classes.logo} src="/Images/Indeed_logo.png" alt=""/></Link>
                     <Box className={classes.link} display={{ xs: 'none', sm: 'block', md: 'block' }}>
                         <Typography component={NavLink} variant='h6' to='/' >
                             Find Jobs
@@ -105,7 +114,7 @@ export default function Header() {
                         <Typography style={{display:'flex',alignItems:'center', color:"#0039C0"}} component={NavLink} variant='h6' to='/' >
                             Upload your resume
                         </Typography>
-                          <Typography style={{display:'flex',alignItems:'center', color:"#0039C0"}} component={NavLink} variant='h6' to='/' >
+                          <Typography style={{display:'flex',alignItems:'center', color:"#0039C0"}} component={NavLink} variant='h6' to='/login' >
                             Sign in
                         </Typography>
                         <Typography style={{display:'flex',alignItems:'center'}} component={NavLink} variant='h6' to='/' >
@@ -115,6 +124,7 @@ export default function Header() {
             </Container>
         </Toolbar>
       </AppBar>
+      <hr />
     </div>
   );
 }
