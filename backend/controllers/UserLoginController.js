@@ -22,6 +22,7 @@ const loginUser = (req, res) => {
                   }
                   if (result[0]) {
                         let isValid = false
+                        let results = {}
                         try {
                             isValid = await bcrypt.compare(password, result[0].password)
                         } catch(error) {
@@ -32,7 +33,10 @@ const loginUser = (req, res) => {
                             const token = jwt.sign(payload, process.env.secret, {
                                 expiresIn: 1008000
                             });
-                            res.send("JWT" + token)
+                            results["JWT"] = token
+                            results["email"] = result[0].email
+                            results["userId"] = result[0].userId
+                            res.status(200).send(results)
                         }
                         else {
                             res.send("Unauthorized")
