@@ -9,8 +9,13 @@ const employerSchema = mongoose.Schema({
     type: String,
     /*required: true,*/
   },
+  employerRole: {
+    type: String,
+    /*required: true,*/
+  },
   companyName: {
     type: String,
+    /*required: true,*/
   },
   website: {
     type: String,
@@ -35,9 +40,7 @@ const employerSchema = mongoose.Schema({
   country: {
     type: String,
   },
-  Rating: {
-    type: Number,
-  },
+
   aboutTheCompany: {
     revenue: {
       type: Number,

@@ -11,6 +11,10 @@ const connectDB = require("./config/db");
 require("./config/mysqldb");
 app.use(cors());
 app.use(express.json());
+app.use((req,res,next) => {
+  console.log(`${req.method} request for ${req.url}`)
+  next()
+})
 
 app.use("/indeed/users", userRouter);
 app.use("/indeed/company", companyRouter);

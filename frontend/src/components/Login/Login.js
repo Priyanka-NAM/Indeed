@@ -15,7 +15,6 @@ import {
 } from '@material-ui/core';
 
 import { useDispatch, useSelector } from 'react-redux';
-//import { makeLoginRequest } from '../../Redux/Login/actions';
 import { Link, Redirect } from 'react-router-dom';
 import { jobSeekerLogin } from '../../Redux/Actions/LoginAction';
 
@@ -88,8 +87,6 @@ const SignInButton = withStyles((theme) => ({
 }))(Button);
 
 export function Login() {
-    
-    //const {isAuth,isLoading,isError,errorMsg} = useSelector(state=>state.login)
     const classes = useStyles();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -112,7 +109,6 @@ export function Login() {
         dispatch(jobSeekerLogin(data))
         setHome(true)
     }
-
 
     return (
         <Container className = {classes.container} maxWidth = "xl">

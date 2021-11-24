@@ -82,11 +82,7 @@ export default function Header() {
                 <Typography component={NavLink} variant="h6" to="/">
                   Find Jobs
                 </Typography>
-                <Typography
-                  component={NavLink}
-                  variant="h6"
-                  to="/companyreviews"
-                >
+                <Typography component={NavLink} variant="h6" to="/">
                   Company Reviews
                 </Typography>
                 <Typography component={NavLink} variant="h6" to="/">
@@ -151,7 +147,7 @@ export default function Header() {
                   style={{ display: "flex", alignItems: "center" }}
                   component={NavLink}
                   variant="h6"
-                  to="/"
+                  to="/postjob"
                 >
                   Employers/jobs
                 </Typography>
