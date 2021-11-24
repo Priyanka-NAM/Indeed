@@ -150,6 +150,8 @@ exports.getCompanyReviews = async (req, res) => {
       companyNames.push({
         companyName: company.companyName,
         rating: company.averageRating,
+        id: company._id,
+        noOfRatings: company.noOfRatings,
       });
     });
     res.send({ companyNames });
