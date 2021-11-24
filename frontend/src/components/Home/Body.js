@@ -4,10 +4,9 @@ import {useDispatch, useSelector} from "react-redux"
 import { makeStyles } from '@material-ui/core/styles';
 import SearchGrid from './SearchGrid';
 import { useHistory } from 'react-router-dom';
+import { Redirect } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
-
-   
     input:{
         width:'100%',
         height:'45px',
@@ -53,14 +52,28 @@ const useStyles = makeStyles((theme) => ({
 
 function Home(props) {
     const classes = useStyles();
+    const [redirectJobs, setRedirectJobs] = useState(null)
+    const [job,setJob] = useState('');
+    const [location,setLocation] = useState('');
+    const handleJobs = () => {
+        const data = {
+            "job": job,
+            "location": location
+        }
+        setRedirectJobs(<Redirect to={{
+            pathname: '/indeed/jobs',
+            state: { query: data }
+        }} />)
+    }
     return (
         <>
-            <form  className={classes.searchForm}>
+        {redirectJobs}
+            <form  className={classes.searchForm} onSubmit={handleJobs}>
                 <Grid container spacing={1}>
                     
-                    <SearchGrid label={'What'} search={'Job Title, keywords, or company'} classes={classes} />
+                    <SearchGrid setQuery={setJob} label={'What'} search={'Job Title, keywords, or company'} classes={classes} />
 
-                    <SearchGrid label={'Where '} search={'location'} classes={classes} />
+                    <SearchGrid setQuery={setLocation} label={'Where '} search={'location'} classes={classes} />
 
                     <Grid item lg={2} md={2} sm={2} xs={12} className={classes.btn_Container}>
                         <Button color={'primary'} variant='contained' type='submit'>
