@@ -9,6 +9,9 @@ const employerSchema = mongoose.Schema({
     type: String,
     /*required: true,*/
   },
+  companyName: {
+    type: String,
+  },
   website: {
     type: String,
     /*required: true,*/
@@ -16,6 +19,24 @@ const employerSchema = mongoose.Schema({
   companyType: {
     type: String,
     /*required: true,*/
+  },
+  streetAddress: {
+    type: String,
+  },
+  city: {
+    type: String,
+  },
+  state: {
+    type: String,
+  },
+  zipCode: {
+    type: String,
+  },
+  country: {
+    type: String,
+  },
+  Rating: {
+    type: Number,
   },
   aboutTheCompany: {
     revenue: {
@@ -84,6 +105,14 @@ const employerSchema = mongoose.Schema({
   timeStamp: {
     type: Date,
     default: Date.now(),
+  },
+  averageRating: {
+    type: Number,
+    default: 0,
+  },
+  noOfRatings: {
+    type: Number,
+    default: 0,
   },
 });
 

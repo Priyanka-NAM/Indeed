@@ -1,71 +1,74 @@
-const mongoose = require('mongoose') 
+const mongoose = require("mongoose");
 
-const reviewSchema = mongoose.Schema({
+const reviewSchema = mongoose.Schema(
+  {
     overallRating: {
-        type: String
+      type: String,
     },
-    employer: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Employer',
+    employerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Employer",
     },
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
     reviewTitle: {
-        type: String
+      type: String,
     },
     reviewerRole: {
-        type: String
+      type: String,
     },
     city: {
-        type: String
+      type: String,
     },
     state: {
-        type: String
+      type: String,
     },
     workHappinessScore: {
-        type: String
+      type: String,
     },
     learningScore: {
-        type: String
+      type: String,
     },
     appreciationScore: {
-        type: String
+      type: String,
     },
     postedDate: {
-        type : Date, 
-        default: Date.now
+      type: Date,
+      default: Date.now,
     },
     reviewerRole: {
-        type: String
+      type: String,
     },
     reviewSummary: {
-        type: String
+      type: String,
     },
     yourReview: {
-        type: String
+      type: String,
     },
     pros: {
-        type: String
+      type: String,
     },
     cons: {
-        type: String
+      type: String,
     },
     isApproved: {
-        type: String,
-        default:"NotApproved"
+      type: String,
+      default: "NotApproved",
     },
     isHelpful: {
-        type: Boolean
+      type: Boolean,
     },
     isFeatured: {
-        type: Boolean
+      type: Boolean,
     },
     interviewPreparation: {
-        type: String
-    }
-    },{timestamps:true})
-    
-    const Reviews = mongoose.model('Reviews',reviewSchema) 
-    module.exports = Reviews
+      type: String,
+    },
+  },
+  { timestamps: true }
+);
+
+const Reviews = mongoose.model("Reviews", reviewSchema);
+module.exports = Reviews;
