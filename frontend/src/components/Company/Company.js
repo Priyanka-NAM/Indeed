@@ -81,12 +81,11 @@ export default function Review(props) {
   const { companySpecificReviews } = useSelector((state) => state.companyReviewList);
   const companyDetails = responseFromServer ? responseFromServer : {aboutTheCompany:{}};
   const [values, setValues] = React.useState([
-    "Helpfull Review",
-    "Unhelpfull review",
+    "Helpfullness",
     "Rating",
   ]);
-  const [filterValue, setFilterValue] = React.useState(["Helpfull Review"]);
-  const [sortValue, setSortValue] = React.useState(["Rating"]);
+  const [filterValue, setFilterValue] = React.useState(["Helpfullness"]);
+  const [sortValue, setSortValue] = React.useState(["Helpfullness"]);
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(4);
   const query = new URLSearchParams(props.location.search);
@@ -251,8 +250,8 @@ export default function Review(props) {
             style={{ padding: "35px" }}
           >
             <Button value="Rating">Rating</Button>
-            <Button value="Helpfull">Helpfull</Button>
-            <Button value="Unhelpfull">Unhelpfull</Button>
+            <Button value="Helpfullness">Helpfullness</Button>
+            <Button value="Date">Date</Button>
           </ButtonGroup>
         </FormControl>
         <FormControl style={{ padding: "37px" }} >
