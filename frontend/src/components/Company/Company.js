@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { styled } from '@mui/material/styles';
+
 import { getcompaniesDetails, getCompanySpecificReviews} from "../../Redux/Actions/Company";
 import axios from "axios";
 // import { ReviewBox } from "../Review/ReviewBox";
@@ -7,6 +9,8 @@ import Header from "../Header/Header";
 import StarIcon from "@material-ui/icons/Star";
 import { Rating } from "@mui/material";
 import { ReviewBox } from "./ReviewBox";
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+
 import CameraAltIcon from "@material-ui/icons/CameraAltRounded";
 import {
   Grid,
@@ -61,6 +65,20 @@ const FollowButton = withStyles((theme) => ({
   },
 }))(Button);
 
+const HtmlTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#ffffff',
+    color: 'rgba(0, 0, 0, 0.87)',
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: '1px solid #dadde9',
+    padding: '22px',
+    marginLeft: "50px"
+  },
+}));
+
 const UplaodButton = withStyles((theme) => ({
     root: {
       color: "#ffffff",
@@ -92,6 +110,7 @@ export default function Review(props) {
   const id = query.get("id");
   const dispatch = useDispatch();
   const { isAuth } = useSelector((state) => state.login);
+  const [tooltipopen, setTooltipopen] = React.useState(true);
 
   useEffect(() => {
     if(props.match.params.pathname === "snapshot")
@@ -113,13 +132,65 @@ export default function Review(props) {
           {companyDetails.employerName} Careers and Employment
         </Typography>
       </Grid>
-      <Grid item style={{ marginTop: "20px", marginBottom: "50px" }}>
-        <Typography variant="h4">
+      <Grid item style={{ marginTop: "20px", marginBottom: "20px" }}>
+        <Typography variant="h5">
           <b>Work happiness</b>
         </Typography>
       </Grid>
-      <Grid item style={{ marginTop: "20px", marginBottom: "50px" }}>
-        <Typography variant="h4">
+      <Grid item style={{ marginTop: "20px", marginBottom: "30px" }}>
+        <Typography variant="caption">
+        Scores based on about 3 responses to Indeed's survey on work happiness
+        </Typography>
+      </Grid>
+      <Grid container item style={{ flex: 3, flexDirection: "row" }}>
+      <Grid
+            item
+            xl={4}
+            lg={4}
+            style={{
+              padding: "20px",
+            }}
+          >
+          <Typography variant="">
+          <HtmlTooltip open={tooltipopen} title="Do people feel happy at work most of the time?" arrow>
+             <span><b>45</b></span> 
+           </HtmlTooltip>     
+          </Typography>
+            <b>Work Happiness Score</b>
+          </Grid>
+          <Grid
+            item
+            xl={4}
+            lg={4}
+            style={{
+              padding: "20px",
+            }}
+          >
+        <Typography variant="">
+        <HtmlTooltip open={tooltipopen} title="Do people feel they are achieving most of their goals at work?" arrow>
+           <b>63</b>   
+        </HtmlTooltip>      
+          </Typography>
+            <b>Achievement</b>   
+             </Grid>
+             <Grid
+            item
+            xl={4}
+            lg={4}
+            style={{
+              padding: "20px",
+            }}
+          >
+        <Typography variant="">
+        <HtmlTooltip open={tooltipopen} title="Do people feel they often learn something at work?" arrow>
+           <b>45</b>   
+        </HtmlTooltip>    
+          </Typography>
+            <b>Learning</b>     
+             </Grid>
+      </Grid>
+      <Grid item style={{ marginTop: "100px", marginBottom: "50px" }}>
+        <Typography variant="h5">
           <b>About the company</b>
         </Typography>
       </Grid>
@@ -349,6 +420,51 @@ export default function Review(props) {
       </Grid>
     </div>
   );
+  const showWhyJoinUs = () => (
+  <>
+    <Grid item style={{ marginTop: "20px", marginBottom: "30px" ,marginLeft: "100px"}}>
+    <Typography variant="caption">
+     About {companyDetails.companyName} 
+    </Typography>
+  </Grid>
+    <Grid item style={{ marginTop: "20px", marginBottom: "50px", marginLeft: "100px"}}>
+        <Typography variant="h5">
+          <b>About the company</b>
+        </Typography>
+        <Grid container style={{ padding: "40px" }}>
+        <Typography
+          variant="body2"
+          style={{ color: "#767676", textAlign: "left" }}
+        >
+          {companyDetails.aboutTheCompany.description}
+        </Typography>
+      </Grid>
+        <Typography variant="h5">
+          <b>Work Culture</b>
+        </Typography>
+        <Grid container style={{ padding: "40px" }}>
+        <Typography
+          variant="body2"
+          style={{ color: "#767676", textAlign: "left" }}
+        >
+          {companyDetails.aboutTheCompany.workCulture}
+        </Typography>
+      </Grid>
+        <Typography variant="h5">
+          <b>Company Values</b>
+        </Typography>
+        <Grid container style={{ padding: "40px" }}>
+        <Typography
+          variant="body2"
+          style={{ color: "#767676", textAlign: "left" }}
+        >
+          {companyDetails.aboutTheCompany.companyValues}
+        </Typography>
+      </Grid>
+      </Grid>
+  </>
+  );
+
   return (
     <div>
       <Header />
@@ -363,13 +479,6 @@ export default function Review(props) {
             backgroundPosition: "center center",
           }}
         >
-          {/* <h2 class="mb-4">
-                
-                </h2>
-                <p class="mb-4">
-                    
-                </p>
-                <a href="https://bootstrapious.com/snippets" class="btn btn-primary">Write a review</a> */}
         </div>
         <Grid
           container
@@ -507,6 +616,7 @@ export default function Review(props) {
         {props.match.params.pathname === "snapshot" && showSnapShot()}
         {props.match.params.pathname === "reviews" && showReviews()}
         {props.match.params.pathname === "photos" && showPhotos()}
+        {props.match.params.pathname === "whyjoinus" && showWhyJoinUs()}
         {showFooter()}
       </Container>
     </div>
