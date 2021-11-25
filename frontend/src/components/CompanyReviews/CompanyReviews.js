@@ -128,7 +128,6 @@ export function CompanyReviews() {
             <Grid item>
               <TextField
                 className={classes.outlinedInput}
-                required
                 type="text"
                 variant="outlined"
                 placeholder="Enter a company name"
@@ -150,8 +149,8 @@ export function CompanyReviews() {
                 variant="outlined"
                 placeholder="Enter Company Location"
                 value={location}
-                onChange={() => {
-                  setlocation(location);
+                onChange={(e) => {
+                  setlocation(e.target.value);
                 }}
                 InputProps={{
                   endAdornment: (
@@ -205,6 +204,7 @@ export function CompanyReviews() {
                   name={item.companyName}
                   rating={item.rating}
                   id={item.id}
+                  noOfRatings={item.noOfRatings}
                 />
               );
             })}
