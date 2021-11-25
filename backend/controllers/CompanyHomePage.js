@@ -2,7 +2,6 @@ const Employer = require("../Models/EmployerModel");
 const getHomePage = async (req, res) => {
   try {
     let employerID = req.query.employerID;
-    //As I aws getting database error , I have changed this line.
     //const companyDetails = await Employer.findOne({ employerID });
     const companyDetails = await Employer.findById(employerID);
     if (companyDetails) {

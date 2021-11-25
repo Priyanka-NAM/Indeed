@@ -82,7 +82,11 @@ export default function Header() {
                 <Typography component={NavLink} variant="h6" to="/">
                   Find Jobs
                 </Typography>
-                <Typography component={NavLink} variant="h6" to="/">
+                <Typography
+                  component={NavLink}
+                  variant="h6"
+                  to="/indeed/companyreviews"
+                >
                   Company Reviews
                 </Typography>
                 <Typography component={NavLink} variant="h6" to="/">
