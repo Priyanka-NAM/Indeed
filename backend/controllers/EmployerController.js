@@ -8,32 +8,6 @@ const { pool } = require("../config/mysqldb");
 const Employer = require("../Models/EmployerModel");
 const bcrypt = require("bcryptjs");
 
-const createMongoEmployer = async (req, res, id) => {
-  const employerExists = await Employer.findOne({
-    employerID: id, 
-  });
-  if (employerExists) {
-    console.log("Employer exists");
-    res.status("400").send("Error");
-  } else {
-    console.log("asas");
-
-    const employer = await Employer.create({
-      employerID: id,
-    });
-
-    if (employer) {
-      console.log("Created!");
-      res.status(201).json({
-        employerID: id,
-      });
-    } else {
-      res.status("400");
-      throw new Error("400 Bad Request: Please try again later. ");
-    }
-  }
-};
-
 const updateEmployer = async (req, res) => {
   const employerExists = await Employer.findOne({
     employerID: req.body.employerID,
@@ -56,4 +30,4 @@ const updateEmployer = async (req, res) => {
   }
 };
 
-module.exports = { createMongoEmployer, updateEmployer };
+module.exports = { updateEmployer };

@@ -1,6 +1,6 @@
 import {
   JOBSEEKER_SIGNUP,
-  ERROR
+  SIGNUP_ERROR
 } from '../Constants/UserConstants';
 
 const initialState = {
@@ -15,7 +15,7 @@ export const signUpReducer = (state = initialState, action) => {
           ...state,
           responseFromServer: action.payload, 
           };
-      case ERROR:
+      case SIGNUP_ERROR:
         return {
           ...state,
           errorResponse: action.payload

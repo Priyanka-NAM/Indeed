@@ -4,6 +4,7 @@
 Employer Post Job Route
  */
 const Jobs = require("../Models/JobsModel");
+const Reviews = require("../Models/ReviewsModel");
 const createJob = async (req, res) => {
   const {
     jobId,
@@ -16,7 +17,6 @@ const createJob = async (req, res) => {
     salary,
     jobDescription,
   } = req.body; // get the data from request body which is in json and put it in variables called user and password
-  console.log("requestis", req);
   const jobExists = await Jobs.findOne({ jobId });
   if (jobExists) {
     res.status("400").send("Error");
@@ -35,17 +35,8 @@ const createJob = async (req, res) => {
 
     if (job) {
       console.log("Created!");
-      res.status(201).json({
-        jobId,
-        jobTitle,
-        employerID,
-        companyName,
-        jobLocation,
-        jobType,
-        isRemote,
-        salary,
-        jobDescription,
-      });
+      console.log(job);
+      res.status(201).send(job);
     } else {
       res.status("400");
       throw new Error("400 Bad Request: Please try again later. ");
