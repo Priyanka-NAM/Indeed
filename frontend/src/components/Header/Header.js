@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from "@material-ui/core/IconButton";
@@ -68,7 +68,13 @@ export default function Header() {
   // } else {
   //   isAuth = true
   // }
-  dispatch(fetchAllJobs())
+  useEffect(() => {
+    const data = {
+        "job": '',
+        "location": ''
+    }
+    dispatch(fetchAllJobs(data))
+  },[])
   return (
     <div className={classes.root}>
       <AppBar elevation={0} color={'secondary'} position="static">

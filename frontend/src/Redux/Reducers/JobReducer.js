@@ -1,11 +1,13 @@
 import {
     FETCH_ALL_JOBS,
+    FETCH_QUERIED_JOBS,
     ERROR
 } from '../Constants/UserConstants';
   
 const initialState = {
     allJobs: null,
-    errorResponse: null
+    errorResponse: null,
+    queriedJobs: null
 } 
   
 export const jobReducer = (state = initialState, action) => {
@@ -15,6 +17,12 @@ export const jobReducer = (state = initialState, action) => {
           return { 
             ...state,
             allJobs: action.payload  
+          };
+        case FETCH_QUERIED_JOBS:
+          console.log("jobs reducer : ", action.payload)
+          return { 
+            ...state,
+            queriedJobs: action.payload  
           };
         case ERROR:
             return {
