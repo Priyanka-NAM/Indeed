@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { Container, Grid, Typography } from "@material-ui/core";
-import { Box, makeStyles, AppBar, Link, Toolbar } from "@material-ui/core";
+import { Box, makeStyles, AppBar, Toolbar } from "@material-ui/core";
 import { useDispatch } from "react-redux";
-import { NavLink } from "react-router-dom";
+import JobDetails1 from "./JobDetails1";
+import JobDetails2 from "./JobDetails2";
+import JobDetails3 from "./JobDetails3";
+
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: "#f2f2f2",
@@ -23,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
   },
   inddedLogo: {
     height: "40px",
-    paddingRight: "30px",
   },
   boxForm: {
     backgroundColor: "#ffffff",
@@ -78,13 +80,9 @@ const useStyles = makeStyles((theme) => ({
   formStyle: {
     width: "100%",
   },
-  link: {
-    paddingRight: "40px",
-    color: "white",
-  },
 }));
 
-function EmployerHomePage() {
+function EmployerJobPostingHome() {
   const isAuth = true;
   const classes = useStyles();
   const [jobDetails, setjobDetails] = useState({
@@ -108,93 +106,88 @@ function EmployerHomePage() {
   const errorMsg = false;
 
   function showStep(step, setStep, jobDetails, setjobDetails) {
-    // switch (step) {
-    //   case 1:
-    //     return (
-    //       <JobDetails1
-    //         setStep={setStep}
-    //         step={step}
-    //         jobDetails={jobDetails}
-    //         setjobDetails={setjobDetails}
-    //       />
-    //     );
-    //   case 2:
-    //     return (
-    //       <JobDetails2
-    //         setStep={setStep}
-    //         step={step}
-    //         jobDetails={jobDetails}
-    //         setjobDetails={setjobDetails}
-    //       />
-    //     );
-    //   case 3:
-    //     return (
-    //       <JobDetails3
-    //         setStep={setStep}
-    //         step={step}
-    //         jobDetails={jobDetails}
-    //         setjobDetails={setjobDetails}
-    //       />
-    //     );
-    //   default:
-    //     return (
-    //       <JobDetails1
-    //         setStep={setStep}
-    //         step={step}
-    //         jobDetails={jobDetails}
-    //         setjobDetails={setjobDetails}
-    //       />
-    //     );
-    // }
+    switch (step) {
+      case 1:
+        return (
+          <JobDetails1
+            setStep={setStep}
+            step={step}
+            jobDetails={jobDetails}
+            setjobDetails={setjobDetails}
+          />
+        );
+      case 2:
+        return (
+          <JobDetails2
+            setStep={setStep}
+            step={step}
+            jobDetails={jobDetails}
+            setjobDetails={setjobDetails}
+          />
+        );
+      case 3:
+        return (
+          <JobDetails3
+            setStep={setStep}
+            step={step}
+            jobDetails={jobDetails}
+            setjobDetails={setjobDetails}
+          />
+        );
+      default:
+        return (
+          <JobDetails1
+            setStep={setStep}
+            step={step}
+            jobDetails={jobDetails}
+            setjobDetails={setjobDetails}
+          />
+        );
+    }
   }
 
   return (
     <>
-      <AppBar position='static' style={{ background: "#2D2D2D" }}>
-        <Toolbar variant='dense'>
-          <img
-            className={classes.inddedLogo}
-            src='/Images/Indeed_Employer_logo.png'
-            alt=''
-          />
-          <div className={classes.navlinks}>
-            <Typography
-              to='/employer/jobs-posted/:12'
-              component={NavLink}
-              className={classes.link}>
-              Jobs
-            </Typography>
-            <Typography
-              to='/employer/applicants-page'
-              component={NavLink}
-              className={classes.link}>
-              Applicants
-            </Typography>
-            <Typography
-              to='/employer/analytics'
-              component={NavLink}
-              className={classes.link}>
-              Analytics
-            </Typography>
-            <Typography
-              to='/employer/reports'
-              component={NavLink}
-              className={classes.link}>
-              Reports
-            </Typography>
-          </div>
-        </Toolbar>
-      </AppBar>
       {success ? alert("User registered successfully") : <></>}
       {isError ? <Box>{errorMsg}</Box> : <></>}
       <Container className={classes.container} maxWidth='xl'>
         <br />
         <br />
-
+        <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
+          <Grid container justifyContent='center' alignItems='center'>
+            <Grid item xs={6}>
+              <Typography className={classes.h4} variant='h4'>
+                Create a job post
+              </Typography>
+            </Grid>
+            <br />
+            <Grid item xs={6}>
+              <img
+                className={classes.imgLogo}
+                src='/Images/Job_logo.png'
+                alt=''
+              />
+            </Grid>
+          </Grid>
+        </Box>
+        <br />
+        <br />
+        <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
+          <Grid container spacing={3}>
+            <Grid item>
+              <Typography className={classes.h5} variant='h5'>
+                Fill the below Job Details form to post the job.
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid item style={{ margin: "25px 0" }}>
+            {showStep(step, setStep, jobDetails, setjobDetails)}
+          </Grid>
+        </Box>
         <br />
         <br />
 
-        {/* <Grid
+        <Grid
           container
           spacing={1}
           style={{
@@ -226,11 +219,11 @@ function EmployerHomePage() {
           <Grid item style={{ cursor: "pointer" }}>
             Terms
           </Grid>
-        </Grid> */}
+        </Grid>
       </Container>
       {/* // : <Redirect to='/' /> */}
     </>
   );
 }
 
-export default EmployerHomePage;
+export default EmployerJobPostingHome;
