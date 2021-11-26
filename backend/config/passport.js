@@ -3,12 +3,12 @@ const { ExtractJwt } = require('passport-jwt');
 const passport = require('passport');
 require('dotenv').config();
 const User = require('../Models/UserModel');
-
+console.log(process.env.SECRET);
 // Setup work and export for the JWT passport strategy
 function auth() {
   const opts = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: process.env.SECRET,
+    secretOrKey: 'CMPE_273_Passport'
   };
   passport.use(
     new JwtStrategy(opts, (jwt_payload, callback) => {

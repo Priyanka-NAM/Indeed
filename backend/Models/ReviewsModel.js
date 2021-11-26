@@ -57,8 +57,8 @@ const reviewSchema = mongoose.Schema(
       type: String,
       default: "NotApproved",
     },
-    isHelpful: {
-      type: Boolean,
+    isHelpfulCount: {
+      type: Number,
     },
     isFeatured: {
       type: Boolean,

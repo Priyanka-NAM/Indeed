@@ -112,11 +112,9 @@ exports.getUserReviews = async (req, res) => {
   }
 };
 
-exports.getEmployerReviews = async (req, res) => {
+exports.getSpecificCompanyReviews = async (req, res) => {
   try {
-    const review = await Reviews.find({ employer: req.body.id }).populate(
-      "employer"
-    );
+    const review = await Reviews.find({ employerId: req.query.employerId });
     req.review = review;
     if (!review) {
       return res.status(400).json({
