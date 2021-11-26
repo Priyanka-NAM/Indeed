@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getcompaniesDetails } from "../../Redux/Actions/Company";
+import {
+  getcompaniesDetails,
+  getCompanySpecificReviews,
+} from "../../Redux/Actions/Company";
 import axios from "axios";
-import { ReviewBox } from "../Review/ReviewBox";
+// import { ReviewBox } from "../Review/ReviewBox";
 import Header from "../Header/Header";
 import StarIcon from "@material-ui/icons/Star";
 import { Rating } from "@mui/material";
+import { ReviewBox } from "./ReviewBox";
+import CameraAltIcon from "@material-ui/icons/CameraAltRounded";
 import {
   Grid,
   Container,
@@ -17,6 +22,7 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
+  ButtonGroup,
 } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 
@@ -58,28 +64,51 @@ const FollowButton = withStyles((theme) => ({
   },
 }))(Button);
 
+const UplaodButton = withStyles((theme) => ({
+  root: {
+    color: "#ffffff",
+    backgroundColor: "#085ff7",
+    cursor: "pointer",
+    width: "200px",
+    borderRadius: "200px",
+    height: "53px",
+    marginLeft: "50px",
+    "&:hover": {
+      backgroundColor: "#0542ac",
+    },
+  },
+}))(Button);
 export default function Review(props) {
   const classes = useStyle();
   const { responseFromServer } = useSelector((state) => state.companyDetails);
-  const companyDetails = responseFromServer ? responseFromServer : [];
-  const [values, setValues] = React.useState([
-    "Helpfull Review",
-    "Unhelpfull review",
-    "Rating",
-  ]);
-  console.log(companyDetails);
+  const { companySpecificReviews } = useSelector(
+    (state) => state.companyReviewList
+  );
+  const companyDetails = responseFromServer
+    ? responseFromServer
+    : { aboutTheCompany: {} };
+  const [values, setValues] = React.useState(["Helpfullness", "Rating"]);
+  const [filterValue, setFilterValue] = React.useState(["Helpfullness"]);
+  const [sortValue, setSortValue] = React.useState(["Helpfullness"]);
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(4);
   const query = new URLSearchParams(props.location.search);
   const id = query.get("id");
   const dispatch = useDispatch();
   const { isAuth } = useSelector((state) => state.login);
+
   useEffect(() => {
-    dispatch(getcompaniesDetails({ employerID: "6186e2d2bb051b8074e39e7f" }));
+    if (props.match.params.pathname === "snapshot")
+      dispatch(getcompaniesDetails({ employerID: props.match.params.id }));
+    else if (props.match.params.pathname === "reviews")
+      dispatch(
+        getCompanySpecificReviews({ employerId: props.match.params.id })
+      );
     setRating(companyDetails.noOfRatings);
   }, [props.match]);
+
   const changePathName = (pathName) => {
-    props.history.push(`/company/${pathName}`);
+    props.history.push(`/company/${props.match.params.id}/${pathName}`);
   };
 
   //SnapShot page strats here
@@ -195,29 +224,13 @@ export default function Review(props) {
           </Typography>
         </Typography>
       </Grid>
-      <Grid item style={{ marginTop: "30px", marginBottom: "50px" }}>
-        <Typography variant='h4'>
-          <b>Reviews</b>
-        </Typography>
-      </Grid>
-      <Grid container spacing={10}>
-        {reviews.map((item) => {
-          return (
-            <ReviewBox
-              key={item.id}
-              rating={item.rating}
-              job_position={item.job_position}
-              date={item.date}
-              title={item.title}
-              description={item.description}
-            />
-          );
-        })}
-      </Grid>
     </div>
   );
   const showReviews = () => (
     <div class='container-fluid'>
+      <Typography variant='h4'>
+        <b>{companyDetails.employerName} Employee Reviews</b>
+      </Typography>
       <Grid
         item
         style={{
@@ -226,35 +239,73 @@ export default function Review(props) {
           marginBottom: "50px",
           backgroundColor: "#d3d3d34f",
           height: "100px",
+          boxShadow:
+            "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)",
         }}>
         <FormControl>
-          <InputLabel htmlFor='agent-simple'>Filter</InputLabel>
+          <ButtonGroup
+            variant='outlined'
+            aria-label='outlined button group'
+            style={{ padding: "35px" }}>
+            <Button value='Rating'>Rating</Button>
+            <Button value='Helpfullness'>Helpfullness</Button>
+            <Button value='Date'>Date</Button>
+          </ButtonGroup>
+        </FormControl>
+        <FormControl style={{ padding: "37px" }}>
           <Select
-            value={"Rating"}
-            inputProps={{
-              name: "agent",
-              id: "age-simple",
-            }}>
+            className={classes.outlinedInput}
+            variant='outlined'
+            value={filterValue}
+            name='filterVal'
+            onChange={(e) => setFilterValue(e.target.value)}
+            style={{ height: "30px" }}>
             {values.map((value, index) => {
               return <MenuItem value={value}>{value}</MenuItem>;
             })}
           </Select>
         </FormControl>
       </Grid>
-      <Grid item style={{ marginTop: "20px", marginBottom: "50px" }}>
-        <Typography variant='h4'>
-          <b>{companyDetails.aboutTheCompany.industry} Employee Reviews</b>
-        </Typography>
-      </Grid>
+      {companySpecificReviews && (
+        <div>
+          <Grid item style={{ marginTop: "30px", marginBottom: "50px" }}>
+            <Typography>
+              Found <b>{companySpecificReviews.length}</b> reviews matching the
+              search
+            </Typography>
+          </Grid>
+          <Grid container spacing={10}>
+            {companySpecificReviews.map((item) => {
+              return (
+                <ReviewBox
+                  key={item.id}
+                  rating={item.overallRating}
+                  review_title={item.reviewTitle}
+                  date={item.date}
+                  yourReview={item.yourReview}
+                  pros={item.pros}
+                  cons={item.cons}
+                />
+              );
+            })}
+          </Grid>
+        </div>
+      )}
     </div>
   );
   const showPhotos = () => (
-    <div>
-      <Grid item style={{ marginTop: "20px", marginBottom: "50px" }}>
-        <Typography variant='h4'>
-          <b>Photos</b>
-        </Typography>
-      </Grid>
+    <div className='row'>
+      <div className='col-md-9'>
+        <Grid item style={{ marginTop: "20px", marginBottom: "50px" }}>
+          <span>
+            <CameraAltIcon></CameraAltIcon>{" "}
+            <b>{companyDetails.companyName} Photos</b>
+          </span>
+        </Grid>
+      </div>
+      <UplaodButton type='submit' variant='contained'>
+        Uplaod photo
+      </UplaodButton>
     </div>
   );
   const showFooter = () => (
@@ -269,7 +320,7 @@ export default function Review(props) {
           margin: "50px -20px 0",
         }}>
         <Grid item style={{ cursor: "pointer" }}>
-          © 2020 Indeed
+          ©️ 2020 Indeed
         </Grid>
         <Grid item>-</Grid>
         <Grid item style={{ cursor: "pointer" }}>
