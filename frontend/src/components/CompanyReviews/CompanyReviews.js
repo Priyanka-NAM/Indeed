@@ -5,6 +5,7 @@ import { CompanyBox } from "./CompanyBox";
 import { useHistory } from "react-router-dom";
 import { getCompanyReviews } from "../../Redux/Actions/CompanyReviewAction";
 import SearchIcon from "@material-ui/icons/Search";
+
 //import Rating from "@material-ui/lab/Rating";
 import {
   Container,
@@ -66,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SearchButton = withStyles((theme) => ({
+export const SearchButton = withStyles((theme) => ({
   root: {
     color: "#ffffff",
     backgroundColor: "#085ff7",

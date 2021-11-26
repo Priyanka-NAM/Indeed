@@ -5,6 +5,13 @@ exports.postUserReview = async (req, res) => {
   console.log("Post User Review");
   const {
     overallRating,
+    workHappinessScore,
+    learningScore,
+    appreciationScore,
+    reviewRole,
+    reviewTitle,
+    city,
+    state,
     reviewSummary,
     yourReview,
     pros,
@@ -18,6 +25,13 @@ exports.postUserReview = async (req, res) => {
   const newReview = new Reviews({
     overallRating,
     reviewSummary,
+    reviewTitle,
+    reviewRole,
+    workHappinessScore,
+    learningScore,
+    appreciationScore,
+    city,
+    state,
     yourReview,
     pros,
     cons,
@@ -32,6 +46,7 @@ exports.postUserReview = async (req, res) => {
       throw err;
     }
   });
+  console.log(employerId);
   let emp = await Employer.findById(employerId);
 
   emp.noOfRatings = emp.noOfRatings + 1;
@@ -39,6 +54,22 @@ exports.postUserReview = async (req, res) => {
   emp.averageRating =
     (emp.averageRating * (emp.noOfRatings - 1) + parseInt(overallRating)) /
     emp.noOfRatings;
+  emp.averageWorkHappinessScore =
+    (((emp.averageWorkHappinessScore / 20) * (emp.noOfRatings - 1) +
+      parseInt(workHappinessScore)) /
+      emp.noOfRatings) *
+    20;
+  emp.averageLearningScore =
+    (((emp.averageLearningScore / 20) * (emp.noOfRatings - 1) +
+      parseInt(learningScore)) /
+      emp.noOfRatings) *
+    20;
+  emp.averageAppreciationScore =
+    (((emp.averageAppreciationScore / 20) * (emp.noOfRatings - 1) +
+      parseInt(appreciationScore)) /
+      emp.noOfRatings) *
+    20;
+
   console.log(emp.averageRating);
 
   emp.save((err) => {

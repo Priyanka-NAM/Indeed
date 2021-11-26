@@ -43,7 +43,7 @@ const employerSchema = mongoose.Schema({
 
   aboutTheCompany: {
     revenue: {
-      type: Number,
+      type: String,
       /*required: true,*/
     },
     headQuarters: {
@@ -114,6 +114,18 @@ const employerSchema = mongoose.Schema({
     default: 0,
   },
   noOfRatings: {
+    type: Number,
+    default: 0,
+  },
+  averageWorkHappinessScore: {
+    type: Number,
+    default: 0,
+  },
+  averageLearningScore: {
+    type: Number,
+    default: 0,
+  },
+  averageAppreciationScore: {
     type: Number,
     default: 0,
   },
