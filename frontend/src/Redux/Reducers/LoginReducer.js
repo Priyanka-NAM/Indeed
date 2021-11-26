@@ -1,22 +1,35 @@
 import {
-  JOBSEEKER_LOGIN 
+  JOBSEEKER_LOGIN,
+  LOGIN_ERROR,
+  JOBSEEKER_LOGOUT
   } from '../Constants/UserConstants';
 
 const initialState = {
   isAuth: false,
-  userDetails: {}
+  userDetails: {},
+  responseFromServer: null,
+  errorResponse: null
 } 
 
 export const loginReducer = (state = initialState, action) => {
     switch (action.type) {
       case JOBSEEKER_LOGIN:
-        console.log("login reducer : ", action.payload)
         return { 
           ...state,
           isAuth: true,
           userDetails: action.payload
-        };
+        }
+        case LOGIN_ERROR:
+        return {
+          ...state,
+          errorResponse: action.payload
+        }
+        case JOBSEEKER_LOGOUT:
+          return {
+            ...state,
+            isAuth: false
+          }
       default:
         return state;
     }
-  };
+  }; 

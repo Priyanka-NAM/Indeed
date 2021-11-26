@@ -80,28 +80,29 @@ const HtmlTooltip = styled(({ className, ...props }) => (
 }));
 
 const UplaodButton = withStyles((theme) => ({
-    root: {
-      color: "#ffffff",
-      backgroundColor: "#085ff7",
-      cursor: "pointer",
-      width: "200px",
-      borderRadius: "200px",
-      height: "53px",
-      marginLeft: "50px",
-      "&:hover": {
-        backgroundColor: "#0542ac",
-      },
+  root: {
+    color: "#ffffff",
+    backgroundColor: "#085ff7",
+    cursor: "pointer",
+    width: "200px",
+    borderRadius: "200px",
+    height: "53px",
+    marginLeft: "50px",
+    "&:hover": {
+      backgroundColor: "#0542ac",
     },
-  }))(Button);
+  },
+}))(Button);
 export default function Review(props) {
   const classes = useStyle();
   const { responseFromServer } = useSelector((state) => state.companyDetails);
-  const { companySpecificReviews } = useSelector((state) => state.companyReviewList);
-  const companyDetails = responseFromServer ? responseFromServer : {aboutTheCompany:{}};
-  const [values, setValues] = React.useState([
-    "Helpfullness",
-    "Rating",
-  ]);
+  const { companySpecificReviews } = useSelector(
+    (state) => state.companyReviewList
+  );
+  const companyDetails = responseFromServer
+    ? responseFromServer
+    : { aboutTheCompany: {} };
+  const [values, setValues] = React.useState(["Helpfullness", "Rating"]);
   const [filterValue, setFilterValue] = React.useState(["Helpfullness"]);
   const [sortValue, setSortValue] = React.useState(["Helpfullness"]);
   const [reviews, setReviews] = useState([]);
@@ -113,10 +114,12 @@ export default function Review(props) {
   const [tooltipopen, setTooltipopen] = React.useState(true);
 
   useEffect(() => {
-    if(props.match.params.pathname === "snapshot")
-    dispatch(getcompaniesDetails({ employerID: props.match.params.id }));
-    else if(props.match.params.pathname === "reviews")
-    dispatch(getCompanySpecificReviews({ employerId: props.match.params.id }));
+    if (props.match.params.pathname === "snapshot")
+      dispatch(getcompaniesDetails({ employerID: props.match.params.id }));
+    else if (props.match.params.pathname === "reviews")
+      dispatch(
+        getCompanySpecificReviews({ employerId: props.match.params.id })
+      );
     setRating(companyDetails.noOfRatings);
   }, [props.match]);
 
@@ -128,7 +131,7 @@ export default function Review(props) {
   const showSnapShot = () => (
     <div>
       <Grid item style={{ marginTop: "20px", marginBottom: "30px" }}>
-        <Typography variant="caption">
+        <Typography variant='caption'>
           {companyDetails.employerName} Careers and Employment
         </Typography>
       </Grid>
@@ -198,7 +201,7 @@ export default function Review(props) {
       <Grid container spacing={1}>
         <Grid item style={{ flex: 1 }}>
           <img
-            src="https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80"
+            src='https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80'
             alt={companyDetails.employerName}
             style={{ height: "350px", borderRadius: "10px" }}
           />
@@ -212,8 +215,7 @@ export default function Review(props) {
               border: "2px solid #f2f2f2",
               borderRadius: "10px",
               padding: "20px",
-            }}
-          >
+            }}>
             <div style={{ fontWeight: "600" }}>CEO</div>
             <br />
             <br />
@@ -227,8 +229,7 @@ export default function Review(props) {
               border: "2px solid #f2f2f2",
               borderRadius: "10px",
               padding: "20px",
-            }}
-          >
+            }}>
             <div style={{ fontWeight: "600" }}>Revenue</div>
             <br />
             <br />
@@ -242,8 +243,7 @@ export default function Review(props) {
               border: "2px solid #f2f2f2",
               borderRadius: "10px",
               padding: "20px",
-            }}
-          >
+            }}>
             <div style={{ fontWeight: "600" }}>Company size</div>
             <br />
             <br />
@@ -257,8 +257,7 @@ export default function Review(props) {
               border: "2px solid #f2f2f2",
               borderRadius: "10px",
               padding: "20px",
-            }}
-          >
+            }}>
             <div style={{ fontWeight: "600" }}>Industry</div>
             <br />
             <br />
@@ -274,8 +273,7 @@ export default function Review(props) {
               border: "2px solid #f2f2f2",
               borderRadius: "10px",
               padding: "20px",
-            }}
-          >
+            }}>
             <div style={{ fontWeight: "600" }}>Founded</div>
             <br />
             <br />
@@ -285,14 +283,12 @@ export default function Review(props) {
       </Grid>
       <Grid container style={{ padding: "40px" }}>
         <Typography
-          variant="body2"
-          style={{ color: "#767676", textAlign: "left" }}
-        >
+          variant='body2'
+          style={{ color: "#767676", textAlign: "left" }}>
           {companyDetails.aboutTheCompany.description}
           <Typography
-            variant="body2"
-            style={{ color: "#767676", textAlign: "left" }}
-          >
+            variant='body2'
+            style={{ color: "#767676", textAlign: "left" }}>
             {companyDetails.aboutTheCompany.misssionandvisson}
           </Typography>
         </Typography>
@@ -300,10 +296,10 @@ export default function Review(props) {
     </div>
   );
   const showReviews = () => (
-    <div class="container-fluid">
-        <Typography variant="h4">
-          <b>{companyDetails.employerName} Employee Reviews</b>
-        </Typography>
+    <div class='container-fluid'>
+      <Typography variant='h4'>
+        <b>{companyDetails.employerName} Employee Reviews</b>
+      </Typography>
       <Grid
         item
         style={{
@@ -312,28 +308,27 @@ export default function Review(props) {
           marginBottom: "50px",
           backgroundColor: "#d3d3d34f",
           height: "100px",
-          boxShadow: '0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)'
-        }}
-      >
+          boxShadow:
+            "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)",
+        }}>
         <FormControl>
           <ButtonGroup
-            variant="outlined"
-            aria-label="outlined button group"
-            style={{ padding: "35px" }}
-          >
-            <Button value="Rating">Rating</Button>
-            <Button value="Helpfullness">Helpfullness</Button>
-            <Button value="Date">Date</Button>
+            variant='outlined'
+            aria-label='outlined button group'
+            style={{ padding: "35px" }}>
+            <Button value='Rating'>Rating</Button>
+            <Button value='Helpfullness'>Helpfullness</Button>
+            <Button value='Date'>Date</Button>
           </ButtonGroup>
         </FormControl>
-        <FormControl style={{ padding: "37px" }} >
+        <FormControl style={{ padding: "37px" }}>
           <Select
             className={classes.outlinedInput}
-            variant="outlined"
+            variant='outlined'
             value={filterValue}
-            name="filterVal"
+            name='filterVal'
             onChange={(e) => setFilterValue(e.target.value)}
-            style={{ height: "30px" }} >
+            style={{ height: "30px" }}>
             {values.map((value, index) => {
               return <MenuItem value={value}>{value}</MenuItem>;
             })}
@@ -343,44 +338,43 @@ export default function Review(props) {
       {companySpecificReviews && (
         <div>
           <Grid item style={{ marginTop: "30px", marginBottom: "50px" }}>
-        <Typography>
-          Found <b>{companySpecificReviews.length}</b> reviews matching the search
-        </Typography>
-      </Grid>
-      <Grid container spacing={10}>
-        {companySpecificReviews.map((item) => {
-          return (
-            <ReviewBox
-              key={item.id}
-              rating={item.overallRating}
-              review_title={item.reviewTitle}
-              date={item.date}
-              yourReview={item.yourReview}
-              pros={item.pros}
-              cons={item.cons}
-            />
-
-          );
-        })}
-      </Grid>
-          </div>
+            <Typography>
+              Found <b>{companySpecificReviews.length}</b> reviews matching the
+              search
+            </Typography>
+          </Grid>
+          <Grid container spacing={10}>
+            {companySpecificReviews.map((item) => {
+              return (
+                <ReviewBox
+                  key={item.id}
+                  rating={item.overallRating}
+                  review_title={item.reviewTitle}
+                  date={item.date}
+                  yourReview={item.yourReview}
+                  pros={item.pros}
+                  cons={item.cons}
+                />
+              );
+            })}
+          </Grid>
+        </div>
       )}
-      
     </div>
   );
   const showPhotos = () => (
-    <div className="row">
-          <div className="col-md-9">
-      <Grid item style={{ marginTop: "20px", marginBottom: "50px" }}>
-        <span>
-          <CameraAltIcon></CameraAltIcon>{" "}
-          <b>{companyDetails.companyName} Photos</b>
-        </span>
-      </Grid>
+    <div className='row'>
+      <div className='col-md-9'>
+        <Grid item style={{ marginTop: "20px", marginBottom: "50px" }}>
+          <span>
+            <CameraAltIcon></CameraAltIcon>{" "}
+            <b>{companyDetails.companyName} Photos</b>
+          </span>
+        </Grid>
       </div>
-      <UplaodButton type="submit" variant="contained">
-                Uplaod photo
-    </UplaodButton>    
+      <UplaodButton type='submit' variant='contained'>
+        Uplaod photo
+      </UplaodButton>
     </div>
   );
   const showFooter = () => (
@@ -393,8 +387,7 @@ export default function Review(props) {
           backgroundColor: "white",
           padding: "15px 10px",
           margin: "50px -20px 0",
-        }}
-      >
+        }}>
         <Grid item style={{ cursor: "pointer" }}>
           ©️ 2020 Indeed
         </Grid>
@@ -469,9 +462,9 @@ export default function Review(props) {
   return (
     <div>
       <Header />
-      <Container maxwidth="xl">
+      <Container maxwidth='xl'>
         <div
-          class="jumbotron text-white jumbotron-image shadow"
+          class='jumbotron text-white jumbotron-image shadow'
           style={{
             backgroundImage: `url(https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80)`,
             backgroundSize: "cover",
@@ -487,34 +480,33 @@ export default function Review(props) {
             justifyContent: "space-between",
             alignItems: "center",
             marginBottom: "20px",
-          }}
-        >
+          }}>
           <Grid container item lg={6} md={7} sm={8}>
             <Grid item className={classes.imgCont}>
               <img
-                src="https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80"
-                alt=""
-                width="100px"
+                src='https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80'
+                alt=''
+                width='100px'
               />
             </Grid>
             <Grid item style={{ paddingTop: "40px", paddingLeft: "20px" }}>
-              <Typography variant="h5">{companyDetails.companyName}</Typography>
-              <Typography variant="h5">
+              <Typography variant='h5'>{companyDetails.companyName}</Typography>
+              <Typography variant='h5'>
                 {companyDetails.noOfRatings}
                 {/* <StarIcon style = {{color: "#9d2b6b", paddingRight: "10px"}}/> */}
                 <Rating
-                  name="half-rating-read"
+                  name='half-rating-read'
                   style={{ color: "#9d2b6b", paddingRight: "10px" }}
                   value={rating}
                   precision={0.5}
                   readOnly
                 />
-                <Typography variant="caption">25 reviews</Typography>
+                <Typography variant='caption'>25 reviews</Typography>
               </Typography>
             </Grid>
           </Grid>
           <Grid item>
-            <Button color={"primary"} variant="contained" type="submit" >
+            <Button color={"primary"} variant='contained' type='submit'>
               {" "}
               Write a Review{" "}
             </Button>
@@ -531,8 +523,7 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("snapshot")}
-          >
+            onClick={() => changePathName("snapshot")}>
             SnapShot
           </Grid>
           <Grid
@@ -542,8 +533,7 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("whyjoinus")}
-          >
+            onClick={() => changePathName("whyjoinus")}>
             Why Join Us
           </Grid>
           <Grid
@@ -553,8 +543,7 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("reviews")}
-          >
+            onClick={() => changePathName("reviews")}>
             Reviews
           </Grid>
           <Grid
@@ -564,8 +553,7 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("salaries")}
-          >
+            onClick={() => changePathName("salaries")}>
             Salaries
           </Grid>
           <Grid
@@ -575,8 +563,7 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("photos")}
-          >
+            onClick={() => changePathName("photos")}>
             Photos
           </Grid>
           <Grid
@@ -586,8 +573,7 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("jobs")}
-          >
+            onClick={() => changePathName("jobs")}>
             Jobs
           </Grid>
           <Grid
@@ -597,8 +583,7 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("qanda")}
-          >
+            onClick={() => changePathName("qanda")}>
             Q&A
           </Grid>
           <Grid
@@ -608,8 +593,7 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("interviews")}
-          >
+            onClick={() => changePathName("interviews")}>
             Interviews
           </Grid>
         </Grid>

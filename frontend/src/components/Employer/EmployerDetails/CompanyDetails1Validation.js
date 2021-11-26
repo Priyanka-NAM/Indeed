@@ -12,7 +12,7 @@ export const isInfo = (values) => {
   if (!values.city) {
     errors.city = "city is required";
   }
-  if (!values.state) {
+  if (!values.state || values.state.value === "Select Region") {
     errors.state = "State is required";
   }
   if (!values.streetAddress) {
