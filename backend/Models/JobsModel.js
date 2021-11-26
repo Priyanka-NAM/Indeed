@@ -13,6 +13,10 @@ const jobsSchema = mongoose.Schema({
     ref: "Employer",
     required: true,
   },
+  reviews: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Reviews",
+  }],
   companyName: {
     type: String,
     required: true,

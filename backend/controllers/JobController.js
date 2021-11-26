@@ -16,7 +16,6 @@ const createJob = async (req, res) => {
     salary,
     jobDescription,
   } = req.body; // get the data from request body which is in json and put it in variables called user and password
-  console.log("requestis", req);
   const jobExists = await Jobs.findOne({ jobId });
   if (jobExists) {
     res.status("400").send("Error");
