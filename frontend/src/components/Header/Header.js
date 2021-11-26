@@ -61,13 +61,12 @@ const useStyles = makeStyles((theme) => ({
 export default function Header() {
   const dispatch = useDispatch()
   const classes = useStyles();
-  //const isAuth = useSelector(state=>state.login.isAuth);
-  let isAuth = true;
-  // if(!localStorage.getItem('token')){
-  //   isAuth = false
-  // } else {
-  //   isAuth = true
-  // }
+  let isAuth = useSelector(state=>state.login.isAuth);
+  if(!localStorage.getItem('token')){
+    isAuth = false
+  } else {
+    isAuth = true
+  }
   useEffect(() => {
     const data = {
         "job": '',

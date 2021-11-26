@@ -1,6 +1,6 @@
 import { 
     JOBSEEKER_LOGIN,
-    ERROR
+    LOGIN_ERROR
   } from '../Constants/UserConstants';
 import Axios from 'axios'; 
 import { API } from '../../config';
@@ -16,7 +16,7 @@ export const jobSeekerLogin = (data) => (dispatch) => {
     })
     .catch(error => {
         dispatch({
-            type: ERROR,
+            type: LOGIN_ERROR,
             payload: error
         })
     });

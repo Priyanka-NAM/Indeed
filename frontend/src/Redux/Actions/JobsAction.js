@@ -1,7 +1,7 @@
 import {
     FETCH_ALL_JOBS,
     FETCH_QUERIED_JOBS,
-    ERROR
+    JOB_ERROR
 } from '../Constants/UserConstants';
 import Axios from 'axios'; 
 import { API } from '../../config';
@@ -21,7 +21,7 @@ export const fetchAllJobs = (data) => (dispatch) => {
         })
         .catch(error => {
             dispatch({
-                type: ERROR,
+                type: JOB_ERROR,
                 payload: error
             })
         });
@@ -38,7 +38,7 @@ export const fetchAllJobs = (data) => (dispatch) => {
         })
         .catch(error => {
             dispatch({
-                type: ERROR,
+                type: JOB_ERROR,
                 payload: error
             })
         });

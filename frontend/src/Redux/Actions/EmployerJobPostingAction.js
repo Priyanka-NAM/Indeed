@@ -1,4 +1,4 @@
-import { EMPLOYER_JOB_POST, ERROR } from "../Constants/UserConstants";
+import { EMPLOYER_JOB_POST, EMPLOYER_JOB_ERROR } from "../Constants/UserConstants";
 
 import Axios from "axios";
 import { API } from "../../config";
@@ -21,7 +21,7 @@ export const employerJobPost = (data) => (dispatch) => {
     .catch((error) => {
       console.log("Error from backend", error);
       dispatch({
-        type: ERROR,
+        type: EMPLOYER_JOB_ERROR,
         payload: error,
       });
     });

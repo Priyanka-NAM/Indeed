@@ -1,7 +1,7 @@
 import {
     FETCH_ALL_JOBS,
     FETCH_QUERIED_JOBS,
-    ERROR
+    JOB_ERROR
 } from '../Constants/UserConstants';
   
 const initialState = {
@@ -24,7 +24,7 @@ export const jobReducer = (state = initialState, action) => {
             ...state,
             queriedJobs: action.payload  
           };
-        case ERROR:
+        case JOB_ERROR:
             return {
                 ...state,
                 errorResponse: action.payload
