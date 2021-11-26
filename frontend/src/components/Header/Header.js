@@ -85,11 +85,11 @@ export default function Header() {
             maxWidth={false}
           >
             <Box className={classes.header_left}>
-              <img
+              <Link to='/'><img
                 className={classes.logo}
                 src="/Images/Indeed_logo.png"
                 alt=""
-              />
+              /></Link>
               <Box
                 className={classes.link}
                 display={{ xs: "none", sm: "block", md: "block" }}

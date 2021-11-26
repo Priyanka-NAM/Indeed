@@ -23,7 +23,7 @@ const fetchJobs = async (req, res) => {
                     {"jobLocation.city": location}
                 ]
             }
-        ]})
+        ]}).populate('employerID')
         console.log("job list : ",jobList)
         if (jobList) {
             return res.status(200).send(jobList)
@@ -42,8 +42,7 @@ const fetchJobs = async (req, res) => {
             {
                 "companyName": job
             }
-        ]})
-        console.log("job list : ",jobList)
+        ]}).populate('employerID')
         if (jobList) {
             return res.status(200).send(jobList)
         } else {
@@ -54,7 +53,7 @@ const fetchJobs = async (req, res) => {
         }
     } else if (location) {
         try {
-            const jobList = await Jobs.find({"jobLocation.city":location})
+            const jobList = await Jobs.find({"jobLocation.city":location}).populate('employerID')
             if (jobList) {
                 return res.status(200).send(jobList)
             } else {
@@ -65,12 +64,7 @@ const fetchJobs = async (req, res) => {
         }
     } else {
         try {
-            let results = [{}];
-            const jobList = await Jobs.find()
-            for(let job of jobList) {
-                results
-            }
-            console.log("job list : ", jobList)
+            const jobList = await Jobs.find().populate('employerID')
             if (jobList) {
                 res.status(200).send(jobList)
             } else {
