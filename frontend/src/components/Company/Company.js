@@ -75,7 +75,7 @@ const HtmlTooltip = styled(({ className, ...props }) => (
     fontSize: theme.typography.pxToRem(12),
     border: '1px solid #dadde9',
     padding: '22px',
-    marginLeft: "50px"
+    marginLeft: "50px",
   },
 }));
 
@@ -154,9 +154,10 @@ export default function Review(props) {
           <Typography variant="">
           <HtmlTooltip open={tooltipopen} title="Do people feel happy at work most of the time?" arrow>
              <span><b>45</b></span> 
-           </HtmlTooltip>     
+           </HtmlTooltip> 
+            
           </Typography>
-            <b>Work Happiness Score</b>
+           {' '} <b>Work Happiness Score</b>
           </Grid>
           <Grid
             item
@@ -168,10 +169,10 @@ export default function Review(props) {
           >
         <Typography variant="">
         <HtmlTooltip open={tooltipopen} title="Do people feel they are achieving most of their goals at work?" arrow>
-           <b>63</b>   
+          <b>63</b>   
         </HtmlTooltip>      
           </Typography>
-            <b>Achievement</b>   
+          {' '}  <b>Achievement</b>   
              </Grid>
              <Grid
             item
@@ -183,10 +184,10 @@ export default function Review(props) {
           >
         <Typography variant="">
         <HtmlTooltip open={tooltipopen} title="Do people feel they often learn something at work?" arrow>
-           <b>45</b>   
+          <b>45</b>  
         </HtmlTooltip>    
           </Typography>
-            <b>Learning</b>     
+           {' '}   <b>Learning</b>     
              </Grid>
       </Grid>
       <Grid item style={{ marginTop: "100px", marginBottom: "50px" }}>
