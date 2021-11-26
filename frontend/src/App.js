@@ -13,6 +13,7 @@ import EmployerSignup from "./components/Employer/EmployerDetails/EmployerSignUp
 import { CompanyReviews } from "./components/CompanyReviews/CompanyReviews";
 import EmployerJobPost from "./components/Employer/EmployerJobPosting/EmployerJobPost";
 import EmployerHomePage from "./components/Employer/EmployerHomePage/EmployerHomePage";
+import EmployerJobPostingHome from "./components/Employer/EmployerJobPosting/EmployerJobPostingHome";
 
 function App() {
   return (
@@ -33,7 +34,12 @@ function App() {
             component={CompanyReviews}
           />
           <Route path='/postJob' component={EmployerJobPost} />
-          <Route path='/employer/home' component={EmployerHomePage} />
+          <Route path='/employer' component={EmployerHomePage} />
+          <Route
+            path='/employer/jobs-posted/:12'
+            component={EmployerJobPostingHome}
+          />
+          <Route path='/reports' component={EmployerHomePage} />
         </Router>
       </div>
     </ThemeProvider>
