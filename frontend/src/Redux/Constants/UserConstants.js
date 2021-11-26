@@ -6,3 +6,4 @@ export const LOGOUT = "LOGOUT";
 export const FETCH_ALL_JOBS = "FETCH_ALL_JOBS";
 export const ERROR = "ERROR";
 export const EMPLOYER_DETAILS_ADD = "EMPLOYER_DETAILS_ADD";
+export const EMPLOYER_JOB_POST = "EMPLOYER_JOB_POST";

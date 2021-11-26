@@ -1,23 +1,17 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-
 import { Container, Grid, OutlinedInput, Button } from "@material-ui/core";
 import {
   Box,
-  Card,
   makeStyles,
   withStyles,
   FormHelperText,
   Select,
   MenuItem,
 } from "@material-ui/core";
-import { useDispatch, useSelector } from "react-redux";
-// import { UserReducer, DefaultUser } from "./EmployerDetailsReducer";
-
-import { Link, Redirect } from "react-router-dom";
-import { isInfo } from "./CompanyDetails1Validation";
-import NativeSelect from "@material-ui/core/NativeSelect";
-import { employerDetailsAdd } from "../../../Redux/Actions/EmployerDetailsAction";
+import { useDispatch } from "react-redux";
+// import { isInfo } from "./CompanyDetails2Validation";
+import { employerJobPost } from "../../../Redux/Actions/EmployerJobPostingAction";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -45,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
     width: "650px",
     padding: "20px",
   },
+
   outlinedInput: {
     borderRadius: "10px",
     border: "0.5px solid #2D2D2D",
@@ -115,34 +110,28 @@ const SignInButton = withStyles((theme) => ({
   },
 }))(Button);
 
-function CompanyDetails3({
-  step,
-  setStep,
-  employerDetails,
-  setemployerDetails,
-}) {
+function JobDetails3({ step, setStep, jobDetails, setjobDetails }) {
   const classes = useStyles();
-  // const [[target.name: target.value ] = useState("");
-  const dispatch = useDispatch();
   const [errors, setErrors] = useState({});
+  const dispatch = useDispatch();
 
   const success = false;
   const isError = false;
   const errorMsg = false;
 
-  const onEmployerDetailsChange = (e) => {
-    setemployerDetails({
-      ...employerDetails,
+  const onjobDetailsChange = (e) => {
+    setjobDetails({
+      ...jobDetails,
       [e.target.name]: e.target.value,
     });
   };
 
-  const onAboutCompanyChange = (e) => {
-    const { aboutTheCompany } = employerDetails;
-    setemployerDetails({
-      ...employerDetails,
-      aboutTheCompany: {
-        ...aboutTheCompany,
+  const onJobDescription = (e) => {
+    const { jobDescription } = jobDetails;
+    setjobDetails({
+      ...jobDetails,
+      jobDescription: {
+        ...jobDescription,
         [e.target.name]: e.target.value,
       },
     });
@@ -150,12 +139,10 @@ function CompanyDetails3({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const errors = isInfo(employerDetails);
+    // const errors = isInfo(jobDetails);
     setErrors(errors);
     if (Object.keys(errors).length > 0) return;
-    // setStep(step + 1);
-    dispatch(employerDetailsAdd(employerDetails));
-    // setHome(true);
+    dispatch(employerJobPost(jobDetails));
   };
 
   return (
@@ -167,73 +154,54 @@ function CompanyDetails3({
           <Grid item style={{ margin: "25px 0" }}>
             <form className={classes.formStyle}>
               <FormHelperText className={classes.formhelperText}>
-                Company images*
-              </FormHelperText>
-
-              <br />
-              <br />
-              <FormHelperText className={classes.formhelperText}>
-                Mission and Vision*
+                Requirement*
               </FormHelperText>
               <OutlinedInput
                 className={classes.outlinedInputtextarea}
-                onChange={onAboutCompanyChange}
+                onChange={onJobDescription}
+                // error={errors.requirement}
+                value={jobDetails.jobDescription.requirement}
+                required
                 multiline
                 type='textarea'
                 rows={4}
-                value={employerDetails.aboutTheCompany.misssionandvisson}
-                required
                 variant='outlined'
-                name='misssionandvisson'
+                name='requirement'
               />
               <br />
               <br />
               <FormHelperText className={classes.formhelperText}>
-                Company Description*
+                Responsibilites*
               </FormHelperText>
               <OutlinedInput
                 className={classes.outlinedInputtextarea}
-                onChange={onAboutCompanyChange}
+                onChange={onJobDescription}
+                // error={errors.founded}
+                value={jobDetails.jobDescription.responsibilites}
+                required
                 multiline
                 type='textarea'
                 rows={4}
-                value={employerDetails.aboutTheCompany.description}
-                required
                 variant='outlined'
-                name='description'
-              />
-              <br />
-              <br />
-              <FormHelperText className={classes.formhelperText}>
-                Company Values*
-              </FormHelperText>
-              <OutlinedInput
-                className={classes.outlinedInputtextarea}
-                onChange={onAboutCompanyChange}
-                value={employerDetails.aboutTheCompany.companyValues}
-                required
-                multiline
-                rows={4}
-                type='textArea'
-                variant='outlined'
-                name='companyValues'
+                name='responsibilites'
               />
               <br />
               <br />
 
               <FormHelperText className={classes.formhelperText}>
-                Company Work Culture*
+                Information*
               </FormHelperText>
               <OutlinedInput
                 className={classes.outlinedInputtextarea}
-                onChange={onAboutCompanyChange}
-                value={employerDetails.aboutTheCompany.workCulture}
+                onChange={onJobDescription}
+                // error={errors.ceo}
+                value={jobDetails.jobDescription.moreInfo}
                 required
-                type='textArea'
                 multiline
+                type='textarea'
                 rows={4}
                 variant='outlined'
-                name='workCulture'
+                name='moreInfo'
               />
             </form>
           </Grid>
@@ -265,9 +233,9 @@ function CompanyDetails3({
   );
 }
 
-CompanyDetails3.propTypes = {
+JobDetails3.propTypes = {
   step: PropTypes.number,
   setStep: PropTypes.func,
 };
 
-export default CompanyDetails3;
+export default JobDetails3;
