@@ -1,128 +1,59 @@
-
 /* 
 @ POST
 /indeed/employer/addemployer
 User Signup Route
  */
 
-const {pool} = require('../config/mysqldb')
-const Employer = require('../Models/EmployerModel')
-const bcrypt = require('bcryptjs')
-const createEmployer = async (req,res,insertId)=>{
-    const { email, password, role } = req.body;
-    pool.getConnection(async (err, conn) => {
-      if (err) {
-        res.send('Error occured');
-      } else {
-          const salt = await bcrypt.genSalt(10);
-      const Hashedpassword = await bcrypt.hash(password, salt);
-        conn.query(
-          'INSERT INTO users (email, password, role) VALUES (?,?,?)',
-          [email, Hashedpassword, role],
-          (error, insertResult) => {
-            if (error) {
-              return res.status(400).json({
-                "msg" : error
-              });
-            }
-            
-            createMongoEmployer(req,res,insertResult.insertId)
-            
-            conn.release();
-          },
-        );
-      }
-    })
-     
-    
- }
+const { pool } = require("../config/mysqldb");
+const Employer = require("../Models/EmployerModel");
+const bcrypt = require("bcryptjs");
 
- const createMongoEmployer = async(req,res,insertId) =>{
+const createMongoEmployer = async (req, res, id) => {
+  const employerExists = await Employer.findOne({
+    employerID: id, 
+  });
+  if (employerExists) {
+    console.log("Employer exists");
+    res.status("400").send("Error");
+  } else {
+    console.log("asas");
 
-    
-    const {employerID,employerName,website,companyType,aboutTheCompany} = req.body 
-    const employerExists = await Employer.findOne({employerID})
-    if(employerExists)
-     {
-         res.status("400").send("Error")
-         //throw new Error ("Employer Already exists")
-     }
-     else
-     {
-         //console.log("asas")
-         //res.status("200").json(req.body)
-         
-        const employer =  await Employer.create({
-            employerID:insertId,
-            employerName,
-            website,
-            companyType,
-            aboutTheCompany
-        })
- 
-        if(employer){
-            //console.log("Created!")
-         res.status(201).json(
-             {
-             employerID,
-             employerName,
-             website,
-             companyType,
-             aboutTheCompany
-            
+    const employer = await Employer.create({
+      employerID: id,
+    });
 
-             }
-         )
-     }
-     else{
-         res.status("400")
-         throw new Error ("400 Bad Request: Please try again later. ")
-     }
-     }
- }
+    if (employer) {
+      console.log("Created!");
+      res.status(201).json({
+        employerID: id,
+      });
+    } else {
+      res.status("400");
+      throw new Error("400 Bad Request: Please try again later. ");
+    }
+  }
+};
 
+const updateEmployer = async (req, res) => {
+  const employerExists = await Employer.findOne({
+    employerID: req.body.employerID,
+  });
+  if (!employerExists) {
+    res.status("400").send("Error. Employer doesn't Exist.");
+  } else {
+    const employer = await employerExists.updateOne({
+      ...req.body,
+    });
 
- const updateEmployer = async(req,res,insertId) =>{
+    if (employer) {
+      res.status(201).json({
+        ...req.body,
+      });
+    } else {
+      res.status("400");
+      throw new Error("400 Bad Request: Please try again later. ");
+    }
+  }
+};
 
-    
-  const {employerID,employerName,website,companyType,aboutTheCompany} = req.body 
-  const employerExists = await Employer.findOne({employerID})
-  if(!employerExists)
-   {
-       res.status("400").send("Error. Employer doesn't Exist.")
-       //throw new Error ("Employer Already exists")
-   }
-   else
-   {
-       //console.log("asas")
-       //res.status("200").json(req.body)
-       
-      const employer =  await employerExists.updateOne({
-          employerName,
-          website,
-          companyType,
-          aboutTheCompany
-      })
-
-      if(employer){
-          //console.log("Created!")
-       res.status(201).json(
-           {
-           employerID,
-           employerName,
-           website,
-           companyType,
-           aboutTheCompany
-          
-
-           }
-       )
-   }
-   else{
-       res.status("400")
-       throw new Error ("400 Bad Request: Please try again later. ")
-   }
-   }
-}
-
- module.exports = {createEmployer,updateEmployer}
+module.exports = { createMongoEmployer, updateEmployer };
