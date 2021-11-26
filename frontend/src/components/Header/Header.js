@@ -77,33 +77,47 @@ export default function Header() {
   },[])
   return (
     <div className={classes.root}>
-      <AppBar elevation={0} color={'secondary'} position="static">
-        <Toolbar className={classes.toolbar} >
-            <Container className={classes.header_container} disableGutters maxWidth={false}>
-                <Box className={classes.header_left}>
-                    <Link to='/' style={{textDecoration:"none", color:"black"}}><img className={classes.logo} src="/Images/Indeed_logo.png" alt=""/></Link>
-                    <Box className={classes.link} display={{ xs: 'none', sm: 'block', md: 'block' }}>
-                        <Typography component={NavLink} variant='h6' to='/' >
-                            Find Jobs
-                        </Typography>
-                        <Typography component={NavLink} variant='h6' to='/' >
-                            Company Reviews
-                        </Typography>
-                        <Typography component={NavLink} variant='h6' to='/' >
-                            Find Salary
-                        </Typography>
-                    </Box>
-                </Box>
-                  {isAuth ? 
-                  <Box className={classes.header_right} >
-                    <IconButton
-                        edge="start"
-                        
-                        color="inherit"
-                        aria-label="open drawer"
-                        >
-                        <ForumIcon />
-                        </IconButton>
+      <AppBar elevation={0} color={"secondary"} position="static">
+        <Toolbar className={classes.toolbar}>
+          <Container
+            className={classes.header_container}
+            disableGutters
+            maxWidth={false}
+          >
+            <Box className={classes.header_left}>
+              <img
+                className={classes.logo}
+                src="/Images/Indeed_logo.png"
+                alt=""
+              />
+              <Box
+                className={classes.link}
+                display={{ xs: "none", sm: "block", md: "block" }}
+              >
+                <Typography component={NavLink} variant="h6" to="/">
+                  Find Jobs
+                </Typography>
+                <Typography
+                  component={NavLink}
+                  variant="h6"
+                  to="/indeed/companyreviews"
+                >
+                  Company Reviews
+                </Typography>
+                <Typography component={NavLink} variant="h6" to="/">
+                  Find Salary
+                </Typography>
+              </Box>
+            </Box>
+            {isAuth ? (
+              <Box className={classes.header_right}>
+                <IconButton
+                  edge="start"
+                  color="inherit"
+                  aria-label="open drawer"
+                >
+                  <ForumIcon />
+                </IconButton>
 
                         <IconButton
                         edge="start"
@@ -116,7 +130,7 @@ export default function Header() {
                         <Typography style={{display:'flex',alignItems:'center'}} component={NavLink} variant='h6' to='/' >
                             Employers/jobs
                         </Typography>
-                        </Box> : <Box className={classes.header_right} >
+                        </Box>) : <Box className={classes.header_right} >
                         <Typography style={{display:'flex',alignItems:'center', color:"#0039C0"}} component={NavLink} variant='h6' to='/' >
                             Upload your resume
                         </Typography>

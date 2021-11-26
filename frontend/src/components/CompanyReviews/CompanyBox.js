@@ -1,6 +1,7 @@
 import React from "react";
 import { Grid, Typography, makeStyles } from "@material-ui/core";
 import StarIcon from "@material-ui/icons/Star";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   cursorPointer: {
@@ -11,8 +12,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function CompanyBox({ logo, rating, name, handleClick, id }) {
+export function CompanyBox({
+  logo,
+  rating,
+  name,
+
+  id,
+  noOfRatings,
+}) {
   const classes = useStyles();
+  const history = useHistory();
+
+  const handleClick = (id) => {
+    history.push(`/company/${id}/snapshot`);
+  };
 
   return (
     <Grid
@@ -24,14 +37,14 @@ export function CompanyBox({ logo, rating, name, handleClick, id }) {
       xs={12}
       style={{ display: "flex", border: "1px solid #f2f2f2", padding: "20px" }}
     >
-      <Grid item>
+      {/* <Grid item>
         <img
           src={logo}
           alt={name}
           width="50px"
           style={{ marginLeft: "10px" }}
         />
-      </Grid>
+      </Grid> */}
 
       <Grid item container>
         <Grid item lg={4} md={4} sm={6} xs={12}>
@@ -57,7 +70,7 @@ export function CompanyBox({ logo, rating, name, handleClick, id }) {
             <StarIcon style={{ color: "#9d2b6b" }} />
           </Grid>
           <Grid item lg={6} md={6} sm={6} xs={6}>
-            4 reviews
+            {noOfRatings} Reviews
           </Grid>
         </Grid>
       </Grid>
@@ -80,7 +93,7 @@ export function CompanyBox({ logo, rating, name, handleClick, id }) {
           sm={4}
           xs={4}
         >
-          Questions
+          Reviews
         </Grid>
         <Grid
           className={classes.cursorPointer}
