@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import { Container, Grid, Typography } from "@material-ui/core";
 import { Box, makeStyles, AppBar, Toolbar } from "@material-ui/core";
 import { useDispatch } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
-
-import CompanyDetails1 from "./CompanyDetails1";
-import CompanyDetails2 from "./CompanyDetails2";
-import CompanyDetails3 from "./CompanyDetails3";
+import JobDetails1 from "./JobDetails1";
+import JobDetails2 from "./JobDetails2";
+import JobDetails3 from "./JobDetails3";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -84,82 +82,70 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function EmployerSignup() {
+function EmployerJobPost() {
   const isAuth = true;
   const classes = useStyles();
-  const [employerDetails, setemployerDetails] = useState({
-    employerID: "",
-    employerName: "",
-    employerRole: "",
+  const [jobDetails, setjobDetails] = useState({
+    jobTitle: "",
     companyName: "",
-    website: "",
-    companyType: "",
-    streetAddress: "",
-    city: "",
-    state: "",
-    zipCode: "",
-    country: "",
-    aboutTheCompany: {
-      revenue: "",
-      headQuarters: "",
-      industry: "",
-      founded: "",
-      misssionandvisson: "",
-      ceo: "",
-      description: "",
-      companySize: "",
-      workCulture: "",
-      companyValues: "",
+    industry: "",
+    jobLocation: { address: "", city: "", state: "", country: "", zipcode: "" },
+    jobType: "Full-Time",
+    isRemote: false,
+    salary: "",
+    jobDescription: {
+      compensation: "",
+      requirement: "",
+      moreInfo: "",
+      responsibilites: "",
     },
   });
-  const dispatch = useDispatch();
   let [step, setStep] = useState(1);
-  //   const [user, setUser] = useReducer(UserReducer, DefaultUser);
   const success = false;
   const isError = false;
   const errorMsg = false;
 
-  function showStep(step, setStep, employerDetails, setemployerDetails) {
+  function showStep(step, setStep, jobDetails, setjobDetails) {
     switch (step) {
       case 1:
         return (
-          <CompanyDetails1
+          <JobDetails1
             setStep={setStep}
             step={step}
-            employerDetails={employerDetails}
-            setemployerDetails={setemployerDetails}
+            jobDetails={jobDetails}
+            setjobDetails={setjobDetails}
           />
         );
       case 2:
         return (
-          <CompanyDetails2
+          <JobDetails2
             setStep={setStep}
             step={step}
-            employerDetails={employerDetails}
-            setemployerDetails={setemployerDetails}
+            jobDetails={jobDetails}
+            setjobDetails={setjobDetails}
           />
         );
       case 3:
         return (
-          <CompanyDetails3
+          <JobDetails3
             setStep={setStep}
             step={step}
-            employerDetails={employerDetails}
-            setemployerDetails={setemployerDetails}
+            jobDetails={jobDetails}
+            setjobDetails={setjobDetails}
           />
         );
       default:
         return (
-          <CompanyDetails1
+          <JobDetails1
             setStep={setStep}
             step={step}
-            employerDetails={employerDetails}
-            setemployerDetails={setemployerDetails}
+            jobDetails={jobDetails}
+            setjobDetails={setjobDetails}
           />
         );
     }
   }
-  console.log("Step Value in Employer Signup ", step);
+  console.log("Step Value in Job Post ", step);
 
   return (
     <>
@@ -181,14 +167,14 @@ function EmployerSignup() {
           <Grid container justifyContent='center' alignItems='center'>
             <Grid item xs={6}>
               <Typography className={classes.h4} variant='h4'>
-                Create an employer account
+                Create a job post
               </Typography>
             </Grid>
             <br />
             <Grid item xs={6}>
               <img
                 className={classes.imgLogo}
-                src='/Images/Employer_Details_logo.png'
+                src='/Images/Job_logo.png'
                 alt=''
               />
             </Grid>
@@ -200,13 +186,12 @@ function EmployerSignup() {
           <Grid container spacing={3}>
             <Grid item>
               <Typography className={classes.h5} variant='h5'>
-                You haven't posted a job before, so you'll need to create an
-                employer account.
+                Fill the below Job Details form to post the job.
               </Typography>
             </Grid>
           </Grid>
           <Grid item style={{ margin: "25px 0" }}>
-            {showStep(step, setStep, employerDetails, setemployerDetails)}
+            {showStep(step, setStep, jobDetails, setjobDetails)}
           </Grid>
         </Box>
         <br />
@@ -251,4 +236,4 @@ function EmployerSignup() {
   );
 }
 
-export default EmployerSignup;
+export default EmployerJobPost;

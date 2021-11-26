@@ -1,20 +1,14 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-import {
-  Container,
-  Grid,
-  OutlinedInput,
-  Button,
-  TextField,
-} from "@material-ui/core";
-import Alert from "react-bootstrap/Alert";
+import { Container, Grid, OutlinedInput, Button } from "@material-ui/core";
 import { Box, makeStyles, withStyles, FormHelperText } from "@material-ui/core";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { Link, Redirect } from "react-router-dom";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 
 import NativeSelect from "@material-ui/core/NativeSelect";
-import { isInfo } from "./CompanyDetails1Validation";
+// import { isInfo } from "./CompanyDetails1Validation";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -103,42 +97,56 @@ const SignInButton = withStyles((theme) => ({
   },
 }))(Button);
 
-function CompanyDetails1({
-  step,
-  setStep,
-  employerDetails,
-  setemployerDetails,
-}) {
+function JobDetails1({ step, setStep, jobDetails, setjobDetails }) {
   console.log("Step Value in Company Details 1 ", step);
   const classes = useStyles();
-  const dispatch = useDispatch();
   const [errors, setErrors] = useState({});
   const success = false;
-  let isError = false;
+  const isError = false;
   const errorMsg = false;
 
-  const onEmployerDetailsChange = (e) => {
-    setemployerDetails({
-      ...employerDetails,
+  const onJobDetailsChange = (e) => {
+    setjobDetails({
+      ...jobDetails,
       [e.target.name]: e.target.value,
+    });
+  };
+  const onJobLocationChange = (e) => {
+    const { jobLocation } = jobDetails;
+    setjobDetails({
+      ...jobDetails,
+      jobLocation: {
+        ...jobLocation,
+        [e.target.name]: e.target.value,
+      },
     });
   };
 
   const selectCountry = (val) => {
-    setemployerDetails({ ...employerDetails, country: val });
+    const { jobLocation } = jobDetails;
+    setjobDetails({
+      ...jobDetails,
+      jobLocation: {
+        ...jobLocation,
+        country: val,
+      },
+    });
   };
 
   const selectRegion = (val) => {
-    setemployerDetails({ ...employerDetails, state: val });
+    const { jobLocation } = jobDetails;
+    setjobDetails({
+      ...jobDetails,
+      jobLocation: {
+        ...jobLocation,
+        state: val,
+      },
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const errors = isInfo(employerDetails);
-    if (errors) {
-      isError = true;
-      console.log("Error is set");
-    }
+    // const errors = isInfo(jobDetails);
     setErrors(errors);
     if (Object.keys(errors).length > 0) return;
     setStep(step + 1);
@@ -146,70 +154,52 @@ function CompanyDetails1({
 
   return (
     <>
-      {success ? alert("") : <></>}
+      {success ? alert("User registered successfully") : <></>}
       {isError ? <Box>{errorMsg}</Box> : <></>}
       <Container className={classes.container} maxWidth='xl'>
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
           <Grid item style={{ margin: "25px 0" }}>
             <form className={classes.formStyle}>
               <FormHelperText className={classes.formhelperText}>
-                Your company's name*
+                Job title*
               </FormHelperText>
               <OutlinedInput
                 className={classes.outlinedInput}
-                onChange={onEmployerDetailsChange}
-                value={employerDetails.companyName}
-                error={errors.companyName}
+                onChange={onJobDetailsChange}
+                value={jobDetails.jobTitle}
+                name='jobTitle'
+                required
+                placeholder='Please enter job title'
+                type='text'
+              />
+              <br />
+              <br />
+              <FormHelperText className={classes.formhelperText}>
+                Company Name*
+              </FormHelperText>
+              <OutlinedInput
+                className={classes.outlinedInput}
+                onChange={onJobDetailsChange}
+                value={jobDetails.companyName}
                 name='companyName'
+                placeholder='Please enter Company Name'
                 required
                 type='text'
               />
               <br />
               <br />
+
               <FormHelperText className={classes.formhelperText}>
-                Your first and last name*
+                Address*
               </FormHelperText>
               <OutlinedInput
                 className={classes.outlinedInput}
-                onChange={onEmployerDetailsChange}
-                value={employerDetails.employerName}
-                name='employerName'
+                onChange={onJobLocationChange}
+                value={jobDetails.jobLocation.address}
                 required
+                placeholder='Address Location of job'
                 type='text'
-                error={errors.employerName}
-              />
-              <br />
-              <br />
-              <FormHelperText className={classes.formhelperText}>
-                Your role in the hiring process*
-              </FormHelperText>
-              <NativeSelect
-                className={classes.outlinedInput}
-                name='employerRole'
-                onChange={onEmployerDetailsChange}
-                value={employerDetails.employerRole}
-                error={errors.employerRole}>
-                <option aria-label='None' />
-                <option value={1}>Human Resources Generalist</option>
-                <option value={2}>Owner / CEO</option>
-                <option value={3}>Hiring Manager</option>
-                <option value={4}>Recruiter or Talent Acquisition</option>
-                <option value={5}>Assistant or Office Manager</option>
-                <option value={6}>Other</option>
-              </NativeSelect>
-              <br />
-              <br />
-              <FormHelperText className={classes.formhelperText}>
-                Street address*
-              </FormHelperText>
-              <OutlinedInput
-                className={classes.outlinedInput}
-                onChange={onEmployerDetailsChange}
-                value={employerDetails.streetAddress}
-                error={errors.streetAddress}
-                required
-                type='text'
-                name='streetAddress'
+                name='address'
               />
               <br />
               <br />
@@ -220,10 +210,11 @@ function CompanyDetails1({
                   </FormHelperText>
                   <OutlinedInput
                     className={classes.outlinedInput}
-                    onChange={onEmployerDetailsChange}
-                    value={employerDetails.city}
+                    onChange={onJobLocationChange}
+                    value={jobDetails.jobLocation.city}
                     error={errors.city}
                     required
+                    placeholder='Please enter city'
                     type='text'
                     variant='outlined'
                     name='city'
@@ -233,16 +224,25 @@ function CompanyDetails1({
                   <FormHelperText className={classes.formhelperText}>
                     State*
                   </FormHelperText>
-
                   <RegionDropdown
                     className={classes.outlinedInput}
                     disableWhenEmpty
-                    country={employerDetails.country}
-                    value={employerDetails.state}
+                    country={jobDetails.jobLocation.country}
+                    value={jobDetails.jobLocation.state}
                     name='state'
                     error={errors.state}
                     onChange={(val) => selectRegion(val)}
                   />
+                  {/* <OutlinedInput
+                    className={classes.outlinedInput}
+                    onChange={onJobLocationChange}
+                    value={jobDetails.jobLocation.state}
+                    error={errors.state}
+                    required
+                    type='text'
+                    variant='outlined'
+                    name='state'
+                  /> */}
                 </Grid>
                 <Grid item xs>
                   <FormHelperText className={classes.formhelperText}>
@@ -250,13 +250,14 @@ function CompanyDetails1({
                   </FormHelperText>
                   <OutlinedInput
                     className={classes.outlinedInput}
-                    onChange={onEmployerDetailsChange}
-                    value={employerDetails.zipCode}
-                    error={errors.zipCode}
+                    onChange={onJobLocationChange}
+                    value={jobDetails.jobLocation.zipcode}
+                    error={errors.zipcode}
                     required
                     type='text'
+                    placeholder='Please enter zip code'
                     variant='outlined'
-                    name='zipCode'
+                    name='zipcode'
                   />
                 </Grid>
               </Grid>
@@ -264,24 +265,29 @@ function CompanyDetails1({
               <FormHelperText className={classes.formhelperText}>
                 Country*
               </FormHelperText>
-
               <CountryDropdown
                 name='country'
-                value={employerDetails.country}
+                value={jobDetails.jobLocation.country}
                 error={errors.country}
                 className={classes.outlinedInput}
                 onChange={(val) => selectCountry(val)}
               />
+              {/* <OutlinedInput
+                className={classes.outlinedInput}
+                onChange={onJobLocationChange}
+                value={jobDetails.jobLocation.country}
+                error={errors.country}
+                required
+                type='text'
+                variant='outlined'
+                name='country'
+              /> */}
             </form>
           </Grid>
         </Box>
-        {/* {isError && (
-          <Alert variant='danger'>
-            Oops!One or More mandatory fields are missing.
-          </Alert>
-        )} */}
+
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
-          <Grid item xs={2} justify='flex-end' style={{ paddingLeft: "50%" }}>
+          <Grid item xs={2} style={{ paddingLeft: "50%" }}>
             <SignInButton
               onClick={handleSubmit}
               className={classes.button}
@@ -296,9 +302,9 @@ function CompanyDetails1({
   );
 }
 
-CompanyDetails1.propTypes = {
+JobDetails1.propTypes = {
   step: PropTypes.number,
   setStep: PropTypes.func,
 };
 
-export default CompanyDetails1;
+export default JobDetails1;
