@@ -16,9 +16,7 @@ const loginUser = (req, res) => {
                 "SELECT * FROM users where email=?",[email],
                 async (error, result) => {
                   if (error) {
-                    return res.status(500).json({
-                      "msg" : error
-                    });
+                    return res.status(404).send("Resource not found")
                   }
                   if (result[0]) {
                         let isValid = false
@@ -39,10 +37,10 @@ const loginUser = (req, res) => {
                             res.status(200).send(results)
                         }
                         else {
-                            res.send("Unauthorized")
+                            res.status(401).send("Unauthorized")
                         }
                   } else {
-                      res.send("Resource not found")
+                      res.status(404).send("Resource not found")
                   }
                   conn.release();
                 },
