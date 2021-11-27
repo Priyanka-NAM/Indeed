@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const reviewSchema = mongoose.Schema(
   {
     overallRating: {
-      type: String,
+      type: Number,
     },
     employerId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -16,7 +16,7 @@ const reviewSchema = mongoose.Schema(
     reviewTitle: {
       type: String,
     },
-    reviewerRole: {
+    reviewRole: {
       type: String,
     },
     city: {
@@ -26,13 +26,13 @@ const reviewSchema = mongoose.Schema(
       type: String,
     },
     workHappinessScore: {
-      type: String,
+      type: Number,
     },
     learningScore: {
-      type: String,
+      type: Number,
     },
     appreciationScore: {
-      type: String,
+      type: Number,
     },
     postedDate: {
       type: Date,
