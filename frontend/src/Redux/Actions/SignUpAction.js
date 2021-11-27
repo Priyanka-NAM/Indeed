@@ -1,6 +1,6 @@
 import { 
     JOBSEEKER_SIGNUP,
-    ERROR
+    SIGNUP_ERROR
   } from '../Constants/UserConstants';
 import Axios from 'axios'; 
 import { API } from '../../config';
@@ -20,7 +20,7 @@ export const jobSeekerSignUp = (data) => (dispatch) => {
     })
     .catch(error => {
         dispatch({
-            type: ERROR,
+            type: SIGNUP_ERROR,
             payload: error
         })
     });

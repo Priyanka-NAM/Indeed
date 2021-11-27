@@ -142,6 +142,7 @@ function CompanyDetails2({
   const handleSubmit = (e) => {
     e.preventDefault();
     const errors = isInfo(employerDetails);
+    console.log("handle submit", errors);
     setErrors(errors);
     if (Object.keys(errors).length > 0) return;
     setStep(step + 1);
@@ -162,7 +163,7 @@ function CompanyDetails2({
                 className={classes.outlinedInput}
                 onChange={onEmployerDetailsChange}
                 value={employerDetails.website}
-                // error={errors.website}
+                error={errors.website}
                 required
                 type='text'
                 variant='outlined'
@@ -177,7 +178,7 @@ function CompanyDetails2({
                 className={classes.outlinedInput}
                 onChange={onEmployerDetailsChange}
                 value={employerDetails.companyType}
-                // error={errors.companyType}
+                error={errors.companyType}
                 type='text'
                 variant='outlined'
                 name='companyType'
@@ -192,10 +193,12 @@ function CompanyDetails2({
                 className={classes.outlinedInput}
                 variant='outlined'
                 onChange={onAboutCompanyChange}
-                // error={errors.companySize}
+                error={errors.companySize}
                 value={employerDetails.aboutTheCompany.companySize}
                 name='companySize'>
-                <MenuItem aria-label='None' value={0} />
+                <MenuItem aria-label='None' value={0}>
+                  Choose the Company Size
+                </MenuItem>
                 <MenuItem value={1}>1 to 49</MenuItem>
                 <MenuItem value={2}>50 to 149</MenuItem>
                 <MenuItem value={3}>150 to 249</MenuItem>
@@ -214,9 +217,10 @@ function CompanyDetails2({
                 className={classes.outlinedInput}
                 onChange={onAboutCompanyChange}
                 value={employerDetails.aboutTheCompany.revenue}
-                // error={errors.revenue}
+                error={errors.revenue}
                 required
-                type='number'
+                placeholder='Eg:$300M'
+                type='text'
                 variant='outlined'
                 name='revenue'
               />
@@ -229,7 +233,7 @@ function CompanyDetails2({
                 className={classes.outlinedInput}
                 onChange={onAboutCompanyChange}
                 value={employerDetails.aboutTheCompany.headQuarters}
-                // error={errors.headQuarters}
+                error={errors.headQuarters}
                 required
                 type='text'
                 variant='outlined'
@@ -243,7 +247,7 @@ function CompanyDetails2({
               <OutlinedInput
                 className={classes.outlinedInput}
                 onChange={onAboutCompanyChange}
-                // error={errors.industry}
+                error={errors.industry}
                 value={employerDetails.aboutTheCompany.industry}
                 required
                 type='text'
@@ -258,10 +262,11 @@ function CompanyDetails2({
               <OutlinedInput
                 className={classes.outlinedInput}
                 onChange={onAboutCompanyChange}
-                // error={errors.founded}
+                error={errors.founded}
                 value={employerDetails.aboutTheCompany.founded}
                 required
-                type='text'
+                type='number'
+                placeholder='Eg:1947'
                 variant='outlined'
                 name='founded'
               />
