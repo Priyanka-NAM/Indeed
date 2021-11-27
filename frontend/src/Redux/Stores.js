@@ -5,8 +5,9 @@ import { loginReducer } from "./Reducers/LoginReducer";
 import { CompanyDetailsReducer, CompanyListReviewReducer } from "./Reducers/CompanyReducer";
 import { companyReviewReducer } from "./Reducers/CompanyReviewReducer";
 import { jobReducer } from "./Reducers/JobReducer";
+import { JOBSEEKER_LOGOUT } from "./Constants/UserConstants";
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
   signup: signUpReducer,
   login: loginReducer,
   jobs: jobReducer,
@@ -14,6 +15,13 @@ const rootReducer = combineReducers({
   companyDetails: CompanyDetailsReducer,
   companyReviewList: CompanyListReviewReducer,
 });
+
+const rootReducer = (state, action) => {
+  if (action.type === JOBSEEKER_LOGOUT) {
+    state = undefined;
+  }
+  return appReducer(state, action);
+};
 
 const createComposer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 export const store = createStore(

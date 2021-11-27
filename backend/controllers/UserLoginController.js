@@ -40,7 +40,7 @@ const loginUser = (req, res) => {
               results["JWT"] = token;
               results["email"] = result[0].email;
               results["userId"] = moongoresults._id;
-
+              results["role"] = result[0].role
               res.status(200).send(results);
             } else {
               res.status(401).send("Unauthorized");

@@ -14,8 +14,7 @@ import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router";
-
-import { JOBSEEKER_LOGOUT } from "../../Redux/Constants/UserConstants";
+import { jobSeekerLogout } from "../../Redux/Actions/LogoutAction";
 
 const StyledMenu = withStyles({
   paper: {
@@ -47,10 +46,11 @@ const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem);
 
 export default function UserMenu() {
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const [redirectLanding, setLanding] = useState(null);
   const userDetails = useSelector((state) => state.login.userDetails);
-  const dispatch = useDispatch();
+
   const handleClick = (event) => {
     console.log(event.currentTarget);
     setAnchorEl(event.currentTarget);
@@ -62,9 +62,7 @@ export default function UserMenu() {
 
   const handleLogout = () => {
     window.localStorage.clear();
-    dispatch({
-      type: JOBSEEKER_LOGOUT,
-    });
+    dispatch(jobSeekerLogout());
     setLanding(<Redirect to="/login" />);
   };
 

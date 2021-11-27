@@ -95,7 +95,6 @@ export function Login() {
   let isAuth = useSelector((state) => state.login.isAuth);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  //const [accountError, setAccountError] = useState("");
   const [accErr, setAccErr] = useState(false);
   const [errors, setErrors] = useState({});
 
@@ -142,7 +141,9 @@ export function Login() {
       <Box className={classes.boxForm}>
         <div style={{ textAlign: "center", fontWeight: "700" }}>
           {accErr && (
-            <p className={classes.errorDisplay}>{"Account not found"}</p>
+            <p className={classes.errorDisplay}>
+              {"Account not found or Invalid credentials"}
+            </p>
           )}
         </div>
         <Grid container spacing={3}>
