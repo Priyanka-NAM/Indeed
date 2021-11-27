@@ -127,7 +127,7 @@ export default function Review(props) {
   const { responseFromServer } = useSelector((state) => state.companyDetails);
   const loginReducer = useSelector((state) => state.login);
   const { isAuth, userDetails } = loginReducer;
-  const companyDetails = responseFromServer ? responseFromServer : [];
+
   const [newRating, setnewRating] = useState(0);
   const [reviewSummary, setReviewSummary] = useState("");
   const [pros, setPros] = useState("");
@@ -141,11 +141,7 @@ export default function Review(props) {
   const [st, setState] = useState("");
 
   const [interviewPrep, setinterviewPrep] = useState("");
-  const [values, setValues] = React.useState([
-    "Helpfull Review",
-    "Unhelpfull review",
-    "Rating",
-  ]);
+
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -156,8 +152,6 @@ export default function Review(props) {
     setOpen(false);
   };
 
-  const [filterValue, setFilterValue] = React.useState(["Helpfull Review"]);
-  console.log(companyDetails);
   const { companySpecificReviews } = useSelector(
     (state) => state.companyReviewList
   );
@@ -172,7 +166,6 @@ export default function Review(props) {
   const query = new URLSearchParams(props.location.search);
   const id = query.get("id");
   const dispatch = useDispatch();
-  const { isAuth } = useSelector((state) => state.login);
 
   useEffect(() => {
     if (props.match.params.pathname === "snapshot")

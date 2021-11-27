@@ -111,9 +111,9 @@ export function CompanyReviews() {
           item
           container
           className={classes.outerSearchGrid}
-          xs={12}
-          sm={12}
-          md={9}
+          xs={6}
+          sm={6}
+          md={10}
           lg={10}
           xl={7}
         >
