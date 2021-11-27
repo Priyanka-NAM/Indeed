@@ -132,9 +132,6 @@ function Signup() {
         console.log(data)
         setErrors(validateSignUp(data));
         await dispatch(jobSeekerSignUp(data));
-        if(!isValid) {
-            setAccErr(true);
-        }
         //setLogin(true)
     }
     
