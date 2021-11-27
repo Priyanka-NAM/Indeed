@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const reviewSchema = mongoose.Schema(
   {
     overallRating: {
-      type: String,
+      type: Number,
     },
     employerId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -59,6 +59,7 @@ const reviewSchema = mongoose.Schema(
     },
     isHelpfulCount: {
       type: Number,
+      default: 0,
     },
     isFeatured: {
       type: Boolean,
