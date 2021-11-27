@@ -5,6 +5,7 @@ import { loginReducer } from "./Reducers/LoginReducer";
 import { CompanyDetailsReducer, CompanyListReviewReducer } from "./Reducers/CompanyReducer";
 import { companyReviewReducer } from "./Reducers/CompanyReviewReducer";
 import { jobReducer } from "./Reducers/JobReducer";
+import { sendMessageReducer } from "./Reducers/MessageReducer";
 
 const rootReducer = combineReducers({
   signup: signUpReducer,
@@ -13,6 +14,8 @@ const rootReducer = combineReducers({
   companyReview: companyReviewReducer,
   companyDetails: CompanyDetailsReducer,
   companyReviewList: CompanyListReviewReducer,
+  sendMessage: sendMessageReducer
+
 });
 
 const createComposer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

@@ -6,7 +6,6 @@ const Messages = require('../Models/MessageModel')
     /indeed/messages/send-message
     Employer Send Message to Job Seeker
  */
-
 const sendMessage = async(req, res) => {
 
     const { messageId, employerId, userId, messageText, isReply } = req.body;
