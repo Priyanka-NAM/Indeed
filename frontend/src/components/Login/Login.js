@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { jobSeekerLogin } from "../../Redux/Actions/LoginAction";
 import validateLogin from "./ValidateLogin";
+import { validatelogin } from "./ValidateLogin";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -97,8 +98,7 @@ export function Login() {
   //const [accountError, setAccountError] = useState("");
   const [accErr, setAccErr] = useState(false);
   const [errors, setErrors] = useState({});
-  const [redirectHome, setHome] = useState(false);
-  const [isSubmitting, setSubmitting] = useState(false);
+
   const dispatch = useDispatch();
   const onEmailChange = (e) => {
     setEmail(e.target.value);
@@ -114,32 +114,24 @@ export function Login() {
       email: email,
       password: password,
     };
-    setErrors(validateLogin(data));
-    await dispatch(jobSeekerLogin(data));
-    if (!isAuth) {
-      //setAccountError("Account not found")
-      setAccErr(true);
-    }
-    // const values = {
-    //     "accountError": accErr
-    // }
-    // if (!isAuth) {
-    //     setErrors(values)
-    // }
-    setSubmitting(true);
-  };
 
-  useEffect(() => {
-    debugger;
-    console.log("isauth: ", isAuth, errors);
-    if (Object.keys(errors).length === 0 && isSubmitting && isAuth) {
-      setHome(true);
+    const error = await validatelogin(data);
+    console.log(error);
+    if (Object.keys(error).length !== 0) {
+      setErrors(error);
+    } else {
+      setErrors({});
+      await dispatch(jobSeekerLogin(data));
+
+      if (!isAuth) {
+        setAccErr(true);
+      }
     }
-  }, [errors, redirectHome]);
+  };
 
   return (
     <Container className={classes.container} maxWidth="xl">
-      {redirectHome && <Redirect to="/" />}
+      {isAuth && <Redirect to="/" />}
       <Box className={classes.boxImg}>
         <img
           className={classes.imgLogo}

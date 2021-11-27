@@ -1,36 +1,37 @@
-import React, { useState } from 'react';
-import {Link} from 'react-router-dom';
-import { withStyles } from '@material-ui/core/styles';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import RateReviewIcon from '@material-ui/icons/RateReview';
-import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
-import PersonIcon from '@material-ui/icons/Person';
-import { IconButton, Typography } from '@material-ui/core';
-import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
-import { useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router';
-// import { logout } from '../../../Redux/Login/actions';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { withStyles } from "@material-ui/core/styles";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import RateReviewIcon from "@material-ui/icons/RateReview";
+import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
+import PersonIcon from "@material-ui/icons/Person";
+import { IconButton, Typography } from "@material-ui/core";
+import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
+import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Redirect } from "react-router";
+
+import { JOBSEEKER_LOGOUT } from "../../Redux/Constants/UserConstants";
 
 const StyledMenu = withStyles({
   paper: {
-    border: '1px solid #d3d4d5',
+    border: "1px solid #d3d4d5",
   },
 })((props) => (
   <Menu
     elevation={0}
     getContentAnchorEl={null}
     anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'center',
+      vertical: "bottom",
+      horizontal: "center",
     }}
     transformOrigin={{
-      vertical: 'top',
-      horizontal: 'center',
+      vertical: "top",
+      horizontal: "center",
     }}
     {...props}
   />
@@ -38,12 +39,9 @@ const StyledMenu = withStyles({
 
 const StyledMenuItem = withStyles((theme) => ({
   root: {
-      width:'400px',
-    '&:focus': {
-      
-      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-        
-      },
+    width: "400px",
+    "&:focus": {
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {},
     },
   },
 }))(MenuItem);
@@ -51,9 +49,10 @@ const StyledMenuItem = withStyles((theme) => ({
 export default function UserMenu() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [redirectLanding, setLanding] = useState(null);
-  const userDetails = useSelector(state=>state.login.userDetails)
+  const userDetails = useSelector((state) => state.login.userDetails);
+  const dispatch = useDispatch();
   const handleClick = (event) => {
-    console.log(event.currentTarget)
+    console.log(event.currentTarget);
     setAnchorEl(event.currentTarget);
   };
 
@@ -63,40 +62,56 @@ export default function UserMenu() {
 
   const handleLogout = () => {
     window.localStorage.clear();
-    setLanding(<Redirect to = '/login' />)
+    dispatch({
+      type: JOBSEEKER_LOGOUT,
+    });
+    setLanding(<Redirect to="/login" />);
   };
 
   return (
     <div>
       {redirectLanding}
-        <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleClick}
-                >
-            <PersonIcon/>
-        </IconButton>
+      <IconButton
+        edge="start"
+        color="inherit"
+        aria-label="open drawer"
+        onClick={handleClick}
+      >
+        <PersonIcon />
+      </IconButton>
       <StyledMenu
         id="customized-menu"
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
-        onClose={handleClose}>
-        <Typography variant={'h5'} style={{fontSize:'20px',marginLeft:'15px'}}>
-            {userDetails.email}
+        onClose={handleClose}
+      >
+        <Typography
+          variant={"h5"}
+          style={{ fontSize: "20px", marginLeft: "15px" }}
+        >
+          {userDetails.email}
         </Typography>
-        <Link to = "/indeed/profile" style={{ textDecoration: "none", color: "black" }}>
-        <StyledMenuItem onClick={()=>{
-            handleClose()}}>
-          <ListItemIcon>
-            <PersonOutlineIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="My Profile" />
-        </StyledMenuItem>
+        <Link
+          to="/indeed/profile"
+          style={{ textDecoration: "none", color: "black" }}
+        >
+          <StyledMenuItem
+            onClick={() => {
+              handleClose();
+            }}
+          >
+            <ListItemIcon>
+              <PersonOutlineIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary="My Profile" />
+          </StyledMenuItem>
         </Link>
-        <StyledMenuItem onClick={()=>{
-            handleClose()}}>
+        <StyledMenuItem
+          onClick={() => {
+            handleClose();
+          }}
+        >
           <ListItemIcon>
             <FavoriteIcon fontSize="small" />
           </ListItemIcon>
@@ -108,8 +123,11 @@ export default function UserMenu() {
           </ListItemIcon>
           <ListItemText primary="My Reviews" />
         </StyledMenuItem>
-        <StyledMenuItem onClick={()=>{
-            handleLogout()}}>
+        <StyledMenuItem
+          onClick={() => {
+            handleLogout();
+          }}
+        >
           <ListItemIcon>
             <PowerSettingsNewIcon fontSize="small" />
           </ListItemIcon>
@@ -118,4 +136,4 @@ export default function UserMenu() {
       </StyledMenu>
     </div>
   );
-} 
+}

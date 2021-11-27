@@ -43,10 +43,10 @@ const loginUser = (req, res) => {
 
               res.status(200).send(results);
             } else {
-              res.send("Unauthorized");
+              res.status(401).send("Unauthorized");
             }
           } else {
-            res.send("Resource not found");
+            res.status(404).send("Resource not found");
           }
           conn.release();
         }
