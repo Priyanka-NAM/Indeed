@@ -14,7 +14,7 @@ import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router';
-// import { logout } from '../../../Redux/Login/actions';
+import { jobSeekerLogout } from '../../Redux/Actions/LogoutAction';
 
 const StyledMenu = withStyles({
   paper: {
@@ -49,6 +49,7 @@ const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem);
 
 export default function UserMenu() {
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const [redirectLanding, setLanding] = useState(null);
   const userDetails = useSelector(state=>state.login.userDetails)
@@ -63,6 +64,7 @@ export default function UserMenu() {
 
   const handleLogout = () => {
     window.localStorage.clear();
+    dispatch(jobSeekerLogout());
     setLanding(<Redirect to = '/login' />)
   };
 
