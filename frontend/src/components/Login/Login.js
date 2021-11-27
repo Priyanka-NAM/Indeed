@@ -121,7 +121,6 @@ export function Login() {
     } else {
       setErrors({});
       await dispatch(jobSeekerLogin(data));
-
       if (!isAuth) {
         setAccErr(true);
       }
