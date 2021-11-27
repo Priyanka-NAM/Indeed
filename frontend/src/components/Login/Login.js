@@ -94,7 +94,6 @@ export function Login() {
   let isAuth = useSelector((state) => state.login.isAuth);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  //const [accountError, setAccountError] = useState("");
   const [accErr, setAccErr] = useState(false);
   const [errors, setErrors] = useState({});
   const [redirectHome, setHome] = useState(false);
@@ -117,21 +116,12 @@ export function Login() {
     setErrors(validateLogin(data));
     await dispatch(jobSeekerLogin(data));
     if (!isAuth) {
-      //setAccountError("Account not found")
       setAccErr(true);
     }
-    // const values = {
-    //     "accountError": accErr
-    // }
-    // if (!isAuth) {
-    //     setErrors(values)
-    // }
     setSubmitting(true);
   };
-
   useEffect(() => {
-    debugger;
-    console.log("isauth: ", isAuth, errors);
+    console.log("isauth: ", isAuth, errors, isSubmitting);
     if (Object.keys(errors).length === 0 && isSubmitting && isAuth) {
       setHome(true);
     }
@@ -150,7 +140,7 @@ export function Login() {
       <Box className={classes.boxForm}>
         <div style={{ textAlign: "center", fontWeight: "700" }}>
           {accErr && (
-            <p className={classes.errorDisplay}>{"Account not found"}</p>
+            <p className={classes.errorDisplay}>{"Account not found or Invalid credentials"}</p>
           )}
         </div>
         <Grid container spacing={3}>
