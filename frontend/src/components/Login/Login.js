@@ -120,6 +120,7 @@ export function Login() {
     }
     setSubmitting(true);
   };
+  
   useEffect(() => {
     console.log("isauth: ", isAuth, errors, isSubmitting);
     if (Object.keys(errors).length === 0 && isSubmitting && isAuth) {
