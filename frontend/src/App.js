@@ -14,6 +14,7 @@ import { CompanyReviews } from "./components/CompanyReviews/CompanyReviews";
 import EmployerJobPost from "./components/Employer/EmployerJobPosting/EmployerJobPost";
 import EmployerHomePage from "./components/Employer/EmployerHomePage/EmployerHomePage";
 import EmployerJobPostingHome from "./components/Employer/EmployerJobPosting/EmployerJobPostingHome";
+import StickyHeadTable from "./components/Employer/EmployerJobPosting/delete";
 
 function App() {
   return (
@@ -33,8 +34,9 @@ function App() {
             exact
             component={CompanyReviews}
           />
-          <Route path='/postJob' component={EmployerJobPost} />
           <Route path='/employer' component={EmployerHomePage} />
+          <Route path='/employer/postJob' component={EmployerJobPost} />
+
           <Route
             path='/employer/jobs-posted/:12'
             component={EmployerJobPostingHome}

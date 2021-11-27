@@ -145,11 +145,10 @@ function EmployerJobPost() {
         );
     }
   }
-  console.log("Step Value in Job Post ", step);
 
   return (
     <>
-      <AppBar position='static' style={{ background: "#2D2D2D" }}>
+      {/* <AppBar position='static' style={{ background: "#2D2D2D" }}>
         <Toolbar variant='dense'>
           <img
             className={classes.inddedLogo}
@@ -157,7 +156,7 @@ function EmployerJobPost() {
             alt=''
           />
         </Toolbar>
-      </AppBar>
+      </AppBar> */}
       {success ? alert("User registered successfully") : <></>}
       {isError ? <Box>{errorMsg}</Box> : <></>}
       <Container className={classes.container} maxWidth='xl'>

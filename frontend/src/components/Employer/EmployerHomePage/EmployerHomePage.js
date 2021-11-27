@@ -187,14 +187,9 @@ function EmployerHomePage() {
       </AppBar>
       {success ? alert("User registered successfully") : <></>}
       {isError ? <Box>{errorMsg}</Box> : <></>}
-      <Container className={classes.container} maxWidth='xl'>
-        <br />
-        <br />
+      {/* <Container className={classes.container} maxWidth='xl'> */}
 
-        <br />
-        <br />
-
-        {/* <Grid
+      {/* <Grid
           container
           spacing={1}
           style={{
@@ -227,7 +222,7 @@ function EmployerHomePage() {
             Terms
           </Grid>
         </Grid> */}
-      </Container>
+      {/* </Container> */}
       {/* // : <Redirect to='/' /> */}
     </>
   );
