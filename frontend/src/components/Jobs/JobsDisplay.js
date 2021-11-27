@@ -1,7 +1,12 @@
+import React, { useEffect, useState } from 'react';
 import { Container, Box, Typography, Grid } from "@material-ui/core";
 import Body from "../Home/Body";
 import { makeStyles } from '@material-ui/core/styles';
-import {useDispatch, useSelector} from "react-redux"
+import {useDispatch, useSelector} from "react-redux";
+import { fetchAllJobs } from '../../Redux/Actions/JobsAction';
+import { Link } from 'react-router-dom';
+import StarIcon from '@material-ui/icons/Star';
+import JobDetails from './JobDetails';
 
 const useStyles = makeStyles(theme=>({
     job_section:{
@@ -40,50 +45,68 @@ const useStyles = makeStyles(theme=>({
 }))
 
 function JobsDisplay(props) {
+    // const query = new URLSearchParams(props.location.search)
+    // console.log("-----", query.get('q'), query.get('location'))
     const classes = useStyles()
-    const jobDetails = useSelector(state=>state.jobs.allJobs)
-    console.log("props : ",props.location.state.query)
-    const data = {
-        "job": props.location.state.query.job,
-        "location": props.location.state.query.location
+    const dispatch = useDispatch()
+    const jobDetails = useSelector(state=>state.jobs.queriedJobs)
+    const [jobData,setJobData] = useState(null)
+    useEffect(() => {
+        const data = {
+            "job": props.location.state.query.job,
+            "location": props.location.state.query.location
+        }
+        console.log("jobs dis : ", data)
+        dispatch(fetchAllJobs(data))
+    },[])
+
+    const getJobDetails = (job) => {
+        console.log(";;;;", job)
+        setJobData(job)
     }
+
     return ( 
         <Container className={classes.job_section}>
-            <Box style={{transform:"scale(0.8) translateX(-12%)"}}>
+            {/* <Box style={{transform:"scale(0.8) translateX(-12%)"}}>
                 <Body />
-            </Box>
+            </Box> */}
             <Box style={{display:'flex'}}>
-                    <Grid className={classes.jobContainer}  container>  {
-                            jobDetails.map((job,index)=>
-                            <Grid className={classes.card}  item key={index} lg={12} md={12} sm={12} xs={12} >
-                                <Box>
-                                    <Typography  className={classes.job_title}>
-                                        {job.jobTitle}
-                                    </Typography>
-                                    <Typography className={classes.job_subTitle}>
-                                        {job.companyName}
-                                    </Typography>
-                                    <Typography className={classes.job_subTitle}>
-                                        {job.jobLocation.city}
-                                    </Typography>
-                                    {/* <Typography className={classes.job_subTitle}>
-                                    ₹ {Number(job.startSalary).toLocaleString('en-IN')} - ₹ {Number(job.endSalary).toLocaleString('en-IN')}
-                                    </Typography> */}
-                                    <div className={classes.job_snippet} >
-                                        {job.jobDescription.moreInfo}
-                                    </div>
-                                    {/* <Typography className={classes.greyText}>
-                                        {timeDifference(job.date)}
-                                    </Typography> */}
-                                </Box>
-                                {/* <JobMenu 
-                                job={job} 
-                                handelSave={handelSave}
-                                removeFromSaved={removeFromSaved}/> */}
-                            </Grid>)
-                        }
-                        
-                    </Grid>
+                {
+                    jobDetails && <Grid className={classes.jobContainer}  container>  {
+                        jobDetails.map((job,index)=>
+                        <Grid className={classes.card}  item key={index} lg={12} md={12} sm={12} xs={12} >
+                            <Box onClick={() => getJobDetails(job)}>
+                                <Typography  className={classes.job_title}>
+                                    {job.jobTitle}
+                                </Typography>
+                                <Typography className={classes.job_subTitle}>
+                                    <Link to='/'>{job.companyName}</Link> {' '} 
+                                    <label style={{fontSize:"14px", fontWeight:"700"}}>{job.employerID.averageRating} <StarIcon fontSize="small" style={{height:"12px"}} /></label>
+                                </Typography>
+                                <Typography className={classes.job_subTitle}>
+                                    {job.jobLocation.address}{' '}
+                                    {job.jobLocation.city}{' '}{job.jobLocation.state}{' '}
+                                    {job.jobLocation.country}{' '}{job.jobLocation.zipcode}
+                                </Typography>
+                                <br />
+                                <Typography className={classes.job_subTitle} style={{fontSize:"15px", fontWeight:"500", fontStyle:"italic"}}>
+                                    {'Salary $'}{job.salary}
+                                </Typography>
+                                <div className={classes.job_snippet} >
+                                    <ul style={{marginLeft:"10px"}}>
+                                    {job.jobDescription.moreInfo.split(".").map((info,index) => 
+                                    <li key={index} style={{listStyleType:"circle"}}>{info}{'.'}</li>
+                                    )}
+                                    </ul>
+                                </div>
+                            </Box>
+                        </Grid>)
+                    }
+                </Grid>
+                }
+                {
+                    jobData ? <JobDetails jobData={jobData}/> : <></>
+                }
                 </Box>
         </Container>
     );

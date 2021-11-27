@@ -8,7 +8,7 @@ const styles = {
         marginTop:'80px'
     },
     linkContainer:{
-        textAlign:'center',
+        marginLeft: '150px',
         marginTop:'30px'
     },
     link:{
