@@ -19,10 +19,15 @@ import Paper from "@material-ui/core/Paper";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import TablePagination from "@material-ui/core/TablePagination";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
 import PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
+  body: {
+    backgroundColor: "black",
+  },
   container: {
     display: "flex",
     flexDirection: "column",
@@ -132,13 +137,21 @@ function EmployerJobPostingHome() {
       responsibilites: "",
     },
   });
+
+  const theme = createMuiTheme({
+    palette: {
+      background: {
+        default: "#303030",
+      },
+    },
+  });
   let [step, setStep] = useState(1);
   const success = false;
   const isError = false;
   const errorMsg = false;
 
-  function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
+  function createData(name, protein) {
+    return { name, protein };
   }
 
   const rows = [
@@ -169,8 +182,8 @@ function EmployerJobPostingHome() {
   const columns = [
     { id: "Job Title", label: "Job Title" },
     {
-      id: "population",
-      label: "Population",
+      id: "Action",
+      label: "Action",
       minWidth: 170,
       align: "right",
       format: (value) => value.toLocaleString("en-US"),
@@ -179,7 +192,13 @@ function EmployerJobPostingHome() {
 
   return (
     <div
-      style={{ paddingTop: "3%", backgroundColor: "#f2f2f2", height: "100%" }}>
+      style={{
+        paddingTop: "3%",
+        backgroundColor: "#f2f2f2",
+        height: "100%",
+      }}>
+      <MuiThemeProvider theme={theme} />
+      <CssBaseline />
       {success ? alert("User registered successfully") : <></>}
       {isError ? <Box>{errorMsg}</Box> : <></>}
       <Container className={classes.container} maxWidth='xl'>

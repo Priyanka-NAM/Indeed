@@ -148,15 +148,6 @@ function EmployerJobPost() {
 
   return (
     <>
-      {/* <AppBar position='static' style={{ background: "#2D2D2D" }}>
-        <Toolbar variant='dense'>
-          <img
-            className={classes.inddedLogo}
-            src='/Images/Indeed_Employer_logo.png'
-            alt=''
-          />
-        </Toolbar>
-      </AppBar> */}
       {success ? alert("User registered successfully") : <></>}
       {isError ? <Box>{errorMsg}</Box> : <></>}
       <Container className={classes.container} maxWidth='xl'>

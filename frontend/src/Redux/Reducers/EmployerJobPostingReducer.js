@@ -1,4 +1,9 @@
-import { EMPLOYER_JOB_POST, EMPLOYER_JOB_ERROR } from "../Constants/UserConstants";
+import {
+  EMPLOYER_JOB_POST,
+  EMPLOYER_JOB_ERROR,
+  EMPLOYER_ALL_JOBS,
+  EMPLOYER_ALL_JOBS_ERROR,
+} from "../Constants/UserConstants";
 
 const initialState = {
   responseFromServer: null,
@@ -26,6 +31,16 @@ export const employerJobPostingReducer = (state = initialState, action) => {
         responseFromServer: action.payload,
       };
     case EMPLOYER_JOB_ERROR:
+      return {
+        ...state,
+        errorResponse: action.payload,
+      };
+    case EMPLOYER_ALL_JOBS:
+      return {
+        ...state,
+        responseFromServer: action.payload,
+      };
+    case EMPLOYER_ALL_JOBS_ERROR:
       return {
         ...state,
         errorResponse: action.payload,

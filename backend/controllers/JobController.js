@@ -6,42 +6,26 @@ Employer Post Job Route
 const Jobs = require("../Models/JobsModel");
 const Reviews = require("../Models/ReviewsModel");
 const createJob = async (req, res) => {
-  const {
-    jobId,
-    jobTitle,
-    employerID,
-    companyName,
-    jobLocation,
-    jobType,
-    isRemote,
-    salary,
-    jobDescription,
-  } = req.body; // get the data from request body which is in json and put it in variables called user and password
-  const jobExists = await Jobs.findOne({ jobId });
-  if (jobExists) {
-    res.status("400").send("Error");
-  } else {
-    const job = await Jobs.create({
-      jobId,
-      jobTitle,
-      employerID,
-      companyName,
-      jobLocation,
-      jobType,
-      isRemote,
-      salary,
-      jobDescription,
-    });
+  // get the data from request body which is in json and put it in variables called user and password
+  // const jobExists = await Jobs.findOne({ jobId });
+  console.log("req.body for jobs", req.body);
 
-    if (job) {
-      console.log("Created!");
-      console.log(job);
-      res.status(201).send(job);
-    } else {
-      res.status("400");
-      throw new Error("400 Bad Request: Please try again later. ");
-    }
+  // if (jobExists) {
+  //   res.status("400").send("Error");
+  // } else {
+  const job = await Jobs.create({
+    ...req.body,
+  });
+
+  if (job) {
+    console.log("Created!");
+    console.log(job);
+    res.status(201).send(job);
+  } else {
+    res.status("400");
+    throw new Error("400 Bad Request: Please try again later. ");
   }
+  //}
 };
 
 /* 
@@ -118,8 +102,6 @@ const getAllJobs = async (req, res) => {
     }
     res.send(getJobs);
   }
-
-
 };
 
 module.exports = { createJob, updateJob, getAllJobs };
