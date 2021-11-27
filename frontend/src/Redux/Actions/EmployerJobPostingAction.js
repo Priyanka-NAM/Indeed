@@ -32,15 +32,15 @@ export const employerJobPost = (data) => (dispatch) => {
     });
 };
 
-export const employerAllJob = (data) => (dispatch) => {
-  const { employerID } = JSON.parse(localStorage.getItem("user"));
+export const employerAllJob = (employerID) => (dispatch) => {
+  // const { employerID } = JSON.parse(localStorage.getItem("user"));
   const config = {
     headers: {
       "Content-Type": "application/json",
     },
   };
   // const newdata = { ...data, employerID: "61a07e89e5d016c47d56338a" };
-  // console.log("data", newdata);
+  console.log("data", employerID);
   Axios.get(`${API}/employer/jobs-posted/${employerID}`, config)
     .then((response) => {
       dispatch({

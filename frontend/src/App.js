@@ -38,7 +38,7 @@ function App() {
           <Route path='/employer/postJob' component={EmployerJobPost} />
 
           <Route
-            path='/employer/jobs-posted/:12'
+            path='/employer/jobs-posted/:61a07e89e5d016c47d56338a'
             component={EmployerJobPostingHome}
           />
           <Route path='/reports' component={EmployerHomePage} />

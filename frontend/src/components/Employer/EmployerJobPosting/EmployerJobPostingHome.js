@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Grid, Typography } from "@material-ui/core";
 import {
   Box,
@@ -8,6 +8,8 @@ import {
   Button,
   Checkbox,
 } from "@material-ui/core";
+import { useDispatch, useSelector } from "react-redux";
+
 import { Link } from "react-router-dom";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -23,6 +25,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
 import PropTypes from "prop-types";
+import { employerAllJob } from "../../../Redux/Actions/EmployerJobPostingAction";
 
 const useStyles = makeStyles((theme) => ({
   body: {
@@ -119,7 +122,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function EmployerJobPostingHome() {
+function EmployerJobPostingHome(props) {
   const isAuth = true;
   const classes = useStyles();
   const [jobDetails, setjobDetails] = useState({
@@ -153,6 +156,15 @@ function EmployerJobPostingHome() {
   function createData(name, protein) {
     return { name, protein };
   }
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(employerAllJob({ employerID: "61a07e89e5d016c47d56338a" }));
+    console.log(
+      "rm",
+      dispatch(employerAllJob({ employerID: "61a07e89e5d016c47d56338a" }))
+    );
+  });
 
   const rows = [
     createData("Gingerbread", 356, 16.0, 49, 3.9),
