@@ -7,8 +7,6 @@ const User = require("../Models/UserModel")
 const bcrypt = require("bcryptjs")
 const {pool} = require('../config/mysqldb')
 
-
-
 const createEmployer = require('../controllers/EmployerController')
 
 const createUser = async (req, res) => {
@@ -29,7 +27,11 @@ const createUser = async (req, res) => {
               msg: error,
             });
           }
+          if (role === 0) {
             createMongoUser(req, res, insertResult.insertId)
+          } else {
+            createMongoEmployer(req, res, insertResult.insertId)
+          }
           conn.release();
         }
       );
@@ -56,6 +58,32 @@ const createUser = async (req, res) => {
     } else {
       res.status(500).send("database error");
       throw new Error("Database error: Please try again later. ");
+    }
+  }
+};
+
+const createMongoEmployer = async (req, res, id) => {
+  const employerExists = await Employer.findOne({
+    employerID: id, 
+  });
+  if (employerExists) {
+    console.log("Employer exists");
+    res.status("400").send("Error");
+  } else {
+    console.log("asas");
+
+    const employer = await Employer.create({
+      employerID: id,
+    });
+
+    if (employer) {
+      console.log("Created!");
+      res.status(201).json({
+        employerID: id,
+      });
+    } else {
+      res.status("400");
+      throw new Error("400 Bad Request: Please try again later. ");
     }
   }
 };

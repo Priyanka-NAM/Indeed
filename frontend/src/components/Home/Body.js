@@ -1,65 +1,98 @@
-import {  Box, Button, Grid} from '@material-ui/core';
-import React, { useState } from 'react';
+import {  Box, Button, Grid, OutlinedInput, Typography} from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
 import {useDispatch, useSelector} from "react-redux"
 import { makeStyles } from '@material-ui/core/styles';
 import SearchGrid from './SearchGrid';
 import { useHistory } from 'react-router-dom';
 import { Redirect } from 'react-router';
+import { fetchAllJobs } from '../../Redux/Actions/JobsAction';
 
 const useStyles = makeStyles((theme) => ({
-    input:{
-        width:'100%',
-        height:'45px',
-        
+    autoComplete: {
+        border: '1px solid #2D5DCE',
+        borderRadius: '10px'
     },
-    removeMargin:{
-        margin:'0'
+    keywordSearch: {
+        outline: 'none',
+        width: '100%',
+        border: 'none',
+        borderRadius: '10px',
+        height: '45px'
     },
-    searchForm:{
-        display:'flex',
-        justifyContent:'center'
-    },
-    btn_Container:{
-        display:'flex',
-        alignItems:'flex-end',
-        
-        '& button':{
-            width:'100%',
-            height:"45px",
-            fontSize:'13px',
-            fontWeight:'bold',
-            borderRadius:'10px'
+    suggestions: {
+        cursor: 'pointer',
+        border: 'none',
+        '&:hover': {
+          backgroundColor: '#C9CACC'
         }
-    },
-    suggestionInput:{
-        position:'relative'
-    },
-    autocontainer:{
-        border:`1px solid ${theme.palette.primary.main}`,
-        width:'99%',
-        backgroundColor:"white",
-        borderBottomLeftRadius:'5px',
-        borderBottomRightRadius:'5px',
-        zIndex:'10',
-        paddingBottom:'30px',
-        position:'absolute',
-        '& div':{
-            marginTop:'30px'
-        },
-        
-    },
+      }
   }))
 
 function Home(props) {
     const classes = useStyles();
+    const history = useHistory()
+    const dispatch = useDispatch()
+    // useEffect(() => {
+    //     const data = {
+    //         "job": '',
+    //         "location": ''
+    //     }
+    //     dispatch(fetchAllJobs(data))
+    // },[])
+
     const [redirectJobs, setRedirectJobs] = useState(null)
     const [job,setJob] = useState('');
     const [location,setLocation] = useState('');
+    const [isTitle,setTitle] = useState(false);
+    const [isLoc,setLoc] = useState(false);
+    const [suggestions, setSuggestions] = useState([]);
+    const allJobs = useSelector(state => state.jobs.allJobs);
+
+    const handleTitleText = (e) => {
+        setTitle(true);
+        setJob(e.target.value);
+        let matches = [];
+        if ((e.target.value).length > 0) {
+          matches = allJobs.filter(job => {
+            const regex = new RegExp(`${e.target.value}`, "gi");
+            return job.jobTitle.match(regex);
+          })
+        }
+        setSuggestions(matches);
+      }
+
+      const handleLocText = (e) => {
+        setLoc(true);
+        setLocation(e.target.value);
+        let matches = [];
+        if ((e.target.value).length > 0) {
+          matches = allJobs.filter(job => {
+            const regex = new RegExp(`${e.target.value}`, "gi");
+            return job.jobLocation.city.match(regex);
+          })
+        }
+        setSuggestions(matches);
+      }
+    
+    const handleTitleSelect = (item) => {
+        setTitle(false);
+        setJob(item);
+        setSuggestions([]);
+    }
+
+    const handleLocSelect = (item) => {
+        setLoc(false);
+        setLocation(item);
+        setSuggestions([]);
+    }
+
     const handleJobs = () => {
         const data = {
             "job": job,
             "location": location
         }
+        console.log("data : ", data)
+        //history.push(`/indeed/jobs?q=${job}&location=${location}`)
         setRedirectJobs(<Redirect to={{
             pathname: '/indeed/jobs',
             state: { query: data }
@@ -70,15 +103,40 @@ function Home(props) {
         {redirectJobs}
             <form  className={classes.searchForm} onSubmit={handleJobs}>
                 <Grid container spacing={1}>
-                    
-                    <SearchGrid setQuery={setJob} label={'What'} search={'Job Title, keywords, or company'} classes={classes} />
-
-                    <SearchGrid setQuery={setLocation} label={'Where '} search={'location'} classes={classes} />
-
-                    <Grid item lg={2} md={2} sm={2} xs={12} className={classes.btn_Container}>
-                        <Button color={'primary'} variant='contained' type='submit'>
+                    <Grid item xs={4}>
+                    <label style={{fontSize:"24px", fontWeight:"600"}}>What</label>
+                    <div className={classes.autoComplete}>
+                    <input type="text" onChange={handleTitleText} value={job} onBlur={() => {
+                  setTimeout(() => {
+                    setSuggestions([])
+                  }, 100)}} className={classes.keywordSearch} placeholder="Job Title, keywords, or company" />
+                    {
+                    suggestions.length !== 0 && suggestions.map((suggestion, index) =>
+                    <div key={index} className={classes.suggestions} onClick={() => handleTitleSelect(suggestion.jobTitle)}>
+                        {isTitle && suggestion.jobTitle}
+                    </div>
+                    )}
+                    </div>
+                    </Grid>
+                    <Grid item xs={4}>
+                    <label style={{fontSize:"24px", fontWeight:"600"}}>Where</label>
+                    <div className={classes.autoComplete}>
+                    <input type="text" onChange={handleLocText} value={location} onBlur={() => {
+                  setTimeout(() => {
+                    setSuggestions([])
+                  }, 100)}} className={classes.keywordSearch} placeholder="location" />
+                  {
+                    suggestions.length !== 0 && suggestions.map((suggestion, index) =>
+                    <div key={index} className={classes.suggestions} onClick={() => handleLocSelect(suggestion.jobLocation.city)}>
+                        {isLoc && suggestion.jobLocation.city}
+                    </div>
+                    )}
+                    </div>
+                    </Grid>
+                    <Grid item xs={4}>
+                    <Button style={{marginTop:"45px", height:"45px"}} color={'primary'} variant='contained' type='submit'>
                             Find Jobs
-                        </Button>
+                    </Button>
                     </Grid>
                 </Grid>
             </form>

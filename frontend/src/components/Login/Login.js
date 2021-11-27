@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { 
     Box, 
@@ -17,6 +17,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import { jobSeekerLogin } from '../../Redux/Actions/LoginAction';
+import validateLogin from './ValidateLogin';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -43,9 +44,8 @@ const useStyles = makeStyles((theme) => ({
         padding: "20px"
     },
     outlinedInput: {
-        border: "1px solid #cccccc",
         height: "48px",
-        width: "450px",
+        width: "400px",
         margin: "7px 0",
     },
     h5: {
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
         color: "black"
     },
     button: {
-        width: "450px",
+        width: "400px",
         borderRadius: "20px",
         height: "40px"
     },
@@ -72,6 +72,10 @@ const useStyles = makeStyles((theme) => ({
         heigth: "10px",
         width: "440px",
         margin: "30px 30px 20px"
+    },
+    errorDisplay: {
+        color: "red",
+        fontWeight:"700"
     }
 }))
 
@@ -88,9 +92,14 @@ const SignInButton = withStyles((theme) => ({
 
 export function Login() {
     const classes = useStyles();
+    let isAuth = useSelector(state=>state.login.isAuth);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    //const [accountError, setAccountError] = useState("");
+    const [accErr, setAccErr] = useState(false);
+    const [errors, setErrors] = useState({});
     const [redirectHome, setHome] = useState(false);
+    const [isSubmitting, setSubmitting] = useState(false);    
     const dispatch = useDispatch();
     const onEmailChange = (e) => {
         setEmail(e.target.value)
@@ -100,15 +109,35 @@ export function Login() {
         setPassword(e.target.value)
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const data = {
             "email" : email,
             "password" : password 
         }
-        dispatch(jobSeekerLogin(data))
-        setHome(true)
+        setErrors(validateLogin(data))
+        await dispatch(jobSeekerLogin(data))
+        if (!isAuth) {
+            //setAccountError("Account not found")
+            setAccErr(true)
+        }
+        // const values = {
+        //     "accountError": accErr
+        // }
+        // if (!isAuth) {
+        //     setErrors(values)
+        // }
+        setSubmitting(true)
     }
+
+    useEffect(() => {
+        console.log("isauth: ", isAuth, errors);
+          if (Object.keys(errors).length === 0 && isSubmitting && isAuth) {
+            setHome(true);
+          }
+        },
+        [errors]
+      );
 
     return (
         <Container className = {classes.container} maxWidth = "xl">
@@ -123,6 +152,9 @@ export function Login() {
                 />
             </Box>
             <Box className = {classes.boxForm}>
+            <div style={{textAlign:"center", fontWeight:"700"}}>
+                    {accErr && <p className={classes.errorDisplay}>{"Account not found"}</p>}
+                </div>
                 <Grid container spacing = {3} >
                     <Grid item>
                         <Typography className = {classes.h5} variant = "h5">Sign In</Typography>
@@ -140,9 +172,11 @@ export function Login() {
                     <Grid item>
                         <form onSubmit = { handleSubmit }>
                             <FormHelperText className = {classes.formhelperText}>Email Address</FormHelperText>
-                            <OutlinedInput  className = {classes.outlinedInput} onChange = { onEmailChange } value = { email } required type = "text" variant="outlined"/>
+                            <OutlinedInput  className = {classes.outlinedInput} onChange = { onEmailChange } value = { email } type = "text" variant="outlined"/>
+                            {errors.email && <p className={classes.errorDisplay}>{errors.email}</p>}
                             <FormHelperText className = {classes.formhelperText}>Password</FormHelperText>
-                            <OutlinedInput  className = {classes.outlinedInput} onChange = { onPasswordChange } value = { password } required type = "password" variant="outlined"/>
+                            <OutlinedInput  className = {classes.outlinedInput} onChange = { onPasswordChange } value = { password } type = "password" variant="outlined"/>
+                            {errors.password && <p className={classes.errorDisplay}>{errors.password}</p>}
                             <br />
                             <br />
                             <SignInButton type = "submit" className = {classes.button} variant = "contained">
@@ -152,11 +186,12 @@ export function Login() {
                     </Grid>
                     <hr className = {classes.pageBreak}></hr>
                     <Grid item>
-                            <Typography style = {{cursor: "pointer", color : "#085ff7", margin:"0 115px"}} variant = "subtitle2" component={Link} to="/signup">
+                            <Typography style = {{cursor: "pointer", color : "#085ff7", margin:"0 80px"}} variant = "subtitle2" component={Link} to="/signup">
                                 New to Indeed? Create an account
                             </Typography>
-                        </Grid>
-
+                    </Grid>
+                    <Grid item style={{marginTop:"40px"}}>
+                    </Grid>
                 </Grid>
             </Box>
         </Container>
