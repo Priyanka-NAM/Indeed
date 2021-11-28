@@ -1,14 +1,14 @@
 import {
     FETCH_ALL_JOBS,
     FETCH_QUERIED_JOBS,
-    JOB_ERROR
+    JOB_ERROR,
+    POST_SAVED_JOBS,
+    SAVED_JOB_ERROR
 } from '../Constants/UserConstants';
 import Axios from 'axios'; 
 import { API } from '../../config';
 
 export const fetchAllJobs = (data) => (dispatch) => {
-    //console.log(data.job.length, data.location.length )
-    console.log("action job  : ", data)
     if (data.job || data.location) {
         Axios.get(`${API}/users/public/jobs`,{
             params:data
@@ -43,4 +43,25 @@ export const fetchAllJobs = (data) => (dispatch) => {
             })
         });
     }
+}
+
+export const postSavedJobs = (data) => (dispatch) => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }
+    Axios.post(`${API}/users/user-details`, data, config)
+    .then((response) => {
+        dispatch({
+            type: POST_SAVED_JOBS,
+            payload: response.data
+        })
+    })
+    .catch((error) => {
+        dispatch({
+            type: SAVED_JOB_ERROR,
+            payload: error
+        })
+    })
 }
