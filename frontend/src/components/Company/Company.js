@@ -1,21 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 
-import { getcompaniesDetails, getCompanySpecificReviews} from "../../Redux/Actions/Company";
+import {
+  getcompaniesDetails,
+  getCompanySpecificReviews,
+} from "../../Redux/Actions/Company";
 import axios from "axios";
 // import { ReviewBox } from "../Review/ReviewBox";
 import Header from "../Header/Header";
 import StarIcon from "@material-ui/icons/Star";
 import { Rating } from "@mui/material";
 import { ReviewBox } from "./ReviewBox";
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 
 import CameraAltIcon from "@material-ui/icons/CameraAltRounded";
+import Modal from "@material-ui/core/Modal";
+import { TextField } from "@material-ui/core";
+import { SearchButton } from "../CompanyReviews/CompanyReviews";
+import { API } from "../../config";
+
 import {
   Grid,
   Container,
   makeStyles,
+  FormHelperText,
+  Box,
   Typography,
   Button,
   withStyles,
@@ -28,6 +38,19 @@ import {
 import { Redirect } from "react-router-dom";
 
 const useStyle = makeStyles((theme) => ({
+  formhelperText: {
+    color: "#085ff7",
+    paddingLeft: "20px",
+    cursor: "pointer",
+    fontSize: "17px",
+  },
+  outlinedInput: {
+    width: "700px",
+  },
+  formStyle: {
+    width: "100%",
+  },
+
   imgCont: {
     padding: "5px",
     borderRadius: "5px",
@@ -43,6 +66,19 @@ const useStyle = makeStyles((theme) => ({
     margin: "0 40px 0 40px",
     fontWeight: "bold",
     borderBottom: "5px solid #000000",
+  },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    position: "relative",
+    height: 700,
+    width: 768,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
   },
 }));
 
@@ -61,16 +97,25 @@ const FollowButton = withStyles((theme) => ({
   },
 }))(Button);
 
+function getModalStyle() {
+  const top = 50;
+  const left = 50;
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: '#ffffff',
-    color: 'rgba(0, 0, 0, 0.87)',
+    backgroundColor: "#ffffff",
+    color: "rgba(0, 0, 0, 0.87)",
     maxWidth: 220,
     fontSize: theme.typography.pxToRem(12),
-    border: '1px solid #dadde9',
-    padding: '22px',
+    border: "1px solid #dadde9",
+    padding: "22px",
     marginLeft: "50px",
   },
 }));
@@ -93,7 +138,35 @@ const UplaodButton = withStyles((theme) => ({
 
 export default function Review(props) {
   const classes = useStyle();
+  const [modalStyle] = React.useState(getModalStyle);
   const { responseFromServer } = useSelector((state) => state.companyDetails);
+  const loginReducer = useSelector((state) => state.login);
+  const { isAuth, userDetails } = loginReducer;
+
+  const [newRating, setnewRating] = useState(0);
+  const [reviewSummary, setReviewSummary] = useState("");
+  const [pros, setPros] = useState("");
+  const [cons, setCons] = useState("");
+  const [workHappinessScore, setWorkHappinessScore] = useState(0);
+  const [learningScore, setLearningScore] = useState(0);
+  const [appreciationScore, setAppreciationScore] = useState(0);
+  const [reviewRole, setReviewRole] = useState("");
+  const [reviewTitle, setReviewTitle] = useState("");
+  const [city, setCity] = useState("");
+  const [st, setState] = useState("");
+
+  const [interviewPrep, setinterviewPrep] = useState("");
+
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    isAuth ? setOpen(true) : props.history.push("/login");
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const { companySpecificReviews } = useSelector(
     (state) => state.companyReviewList
   ); 
@@ -109,7 +182,7 @@ export default function Review(props) {
   const query = new URLSearchParams(props.location.search);
   const id = query.get("id");
   const dispatch = useDispatch();
-  const { isAuth } = useSelector((state) => state.login);
+
   const [tooltipopen, setTooltipopen] = React.useState(true);
 
   useEffect(() => {
@@ -130,11 +203,50 @@ export default function Review(props) {
     setSortValue(val);
   
   }
+  const reviewSubmithandler = async (event) => {
+    event.preventDefault();
+    console.log(cons);
+    await axios
+      .post(`${API}/company/user-review`, {
+        overallRating: newRating,
+        workHappinessScore,
+        learningScore,
+        appreciationScore,
+        reviewRole,
+        reviewTitle,
+        city,
+        state: st,
+        yourReview: reviewSummary,
+        employerId: props.match.params.id,
+        userId: userDetails.userId,
+        pros: pros,
+        cons: cons,
+        interviewPreparation: interviewPrep,
+      })
+      .then((response) => {
+        console.log(response.data);
+        setOpen(false);
+        setnewRating(0);
+        setReviewSummary("");
+        setPros("");
+        setCons("");
+        setWorkHappinessScore(0);
+        setLearningScore(0);
+        setAppreciationScore(0);
+        setReviewRole("");
+        setReviewTitle("");
+        setCity("");
+        setState("");
+        setinterviewPrep("");
+      })
+      .catch((error) => {});
+  };
+
   //SnapShot page strats here
   const showSnapShot = () => (
     <div>
       <Grid item style={{ marginTop: "20px", marginBottom: "30px" }}>
-        <Typography variant='caption'>
+        <Typography variant="caption">
           {companyDetails.employerName} Careers and Employment
         </Typography>
       </Grid>
@@ -145,18 +257,18 @@ export default function Review(props) {
       </Grid>
       <Grid item style={{ marginTop: "20px", marginBottom: "30px" }}>
         <Typography variant="caption">
-        Scores based on about 3 responses to Indeed's survey on work happiness
+          Scores based on about 3 responses to Indeed's survey on work happiness
         </Typography>
       </Grid>
       <Grid container item style={{ flex: 3, flexDirection: "row" }}>
-      <Grid
-            item
-            xl={4}
-            lg={4}
-            style={{
-              padding: "20px",
-            }}
-          >
+        <Grid
+          item
+          xl={4}
+          lg={4}
+          style={{
+            padding: "20px",
+          }}
+        >
           <Typography variant="">
           <HtmlTooltip open={tooltipopen} title="Do people feel happy at work most of the time?" arrow>
              <span><b>{companyDetails.averageWorkHappinessScore}</b></span> 
@@ -204,7 +316,7 @@ export default function Review(props) {
       <Grid container spacing={1}>
         <Grid item style={{ flex: 1 }}>
           <img
-            src='https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80'
+            src="https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80"
             alt={companyDetails.employerName}
             style={{ height: "350px", borderRadius: "10px" }}
           />
@@ -218,7 +330,8 @@ export default function Review(props) {
               border: "2px solid #f2f2f2",
               borderRadius: "10px",
               padding: "20px",
-            }}>
+            }}
+          >
             <div style={{ fontWeight: "600" }}>CEO</div>
             <br />
             <br />
@@ -232,7 +345,8 @@ export default function Review(props) {
               border: "2px solid #f2f2f2",
               borderRadius: "10px",
               padding: "20px",
-            }}>
+            }}
+          >
             <div style={{ fontWeight: "600" }}>Revenue</div>
             <br />
             <br />
@@ -246,7 +360,8 @@ export default function Review(props) {
               border: "2px solid #f2f2f2",
               borderRadius: "10px",
               padding: "20px",
-            }}>
+            }}
+          >
             <div style={{ fontWeight: "600" }}>Company size</div>
             <br />
             <br />
@@ -260,7 +375,8 @@ export default function Review(props) {
               border: "2px solid #f2f2f2",
               borderRadius: "10px",
               padding: "20px",
-            }}>
+            }}
+          >
             <div style={{ fontWeight: "600" }}>Industry</div>
             <br />
             <br />
@@ -276,7 +392,8 @@ export default function Review(props) {
               border: "2px solid #f2f2f2",
               borderRadius: "10px",
               padding: "20px",
-            }}>
+            }}
+          >
             <div style={{ fontWeight: "600" }}>Founded</div>
             <br />
             <br />
@@ -286,12 +403,14 @@ export default function Review(props) {
       </Grid>
       <Grid container style={{ padding: "40px" }}>
         <Typography
-          variant='body2'
-          style={{ color: "#767676", textAlign: "left" }}>
+          variant="body2"
+          style={{ color: "#767676", textAlign: "left" }}
+        >
           {companyDetails.aboutTheCompany.description}
           <Typography
-            variant='body2'
-            style={{ color: "#767676", textAlign: "left" }}>
+            variant="body2"
+            style={{ color: "#767676", textAlign: "left" }}
+          >
             {companyDetails.aboutTheCompany.misssionandvisson}
           </Typography>
         </Typography>
@@ -299,8 +418,8 @@ export default function Review(props) {
     </div>
   );
   const showReviews = () => (
-    <div class='container-fluid'>
-      <Typography variant='h4'>
+    <div class="container-fluid">
+      <Typography variant="h4">
         <b>{companyDetails.employerName} Employee Reviews</b>
       </Typography>
       <Grid
@@ -313,7 +432,8 @@ export default function Review(props) {
           height: "100px",
           boxShadow:
             "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)",
-        }}>
+        }}
+      >
         <FormControl>
           <ButtonGroup
             variant='outlined'
@@ -327,11 +447,12 @@ export default function Review(props) {
         <FormControl style={{ padding: "37px" }}>
           <Select
             className={classes.outlinedInput}
-            variant='outlined'
+            variant="outlined"
             value={filterValue}
-            name='filterVal'
+            name="filterVal"
             onChange={(e) => setFilterValue(e.target.value)}
-            style={{ height: "30px" }}>
+            style={{ height: "30px" }}
+          >
             {values.map((value, index) => {
               return <MenuItem value={value}>{value}</MenuItem>;
             })}
@@ -368,8 +489,8 @@ export default function Review(props) {
     </div>
   );
   const showPhotos = () => (
-    <div className='row'>
-      <div className='col-md-9'>
+    <div className="row">
+      <div className="col-md-9">
         <Grid item style={{ marginTop: "20px", marginBottom: "50px" }}>
           <span>
             <CameraAltIcon></CameraAltIcon>{" "}
@@ -377,7 +498,7 @@ export default function Review(props) {
           </span>
         </Grid>
       </div>
-      <UplaodButton type='submit' variant='contained'>
+      <UplaodButton type="submit" variant="contained">
         Uplaod photo
       </UplaodButton>
     </div>
@@ -392,7 +513,8 @@ export default function Review(props) {
           backgroundColor: "white",
           padding: "15px 10px",
           margin: "50px -20px 0",
-        }}>
+        }}
+      >
         <Grid item style={{ cursor: "pointer" }}>
           ©️ 2020 Indeed
         </Grid>
@@ -420,56 +542,62 @@ export default function Review(props) {
     </div>
   );
   const showWhyJoinUs = () => (
-  <>
-    <Grid item style={{ marginTop: "20px", marginBottom: "30px" ,marginLeft: "100px"}}>
-    <Typography variant="caption">
-     About {companyDetails.companyName} 
-    </Typography>
-  </Grid>
-    <Grid item style={{ marginTop: "20px", marginBottom: "50px", marginLeft: "100px"}}>
+    <>
+      <Grid
+        item
+        style={{ marginTop: "20px", marginBottom: "30px", marginLeft: "100px" }}
+      >
+        <Typography variant="caption">
+          About {companyDetails.companyName}
+        </Typography>
+      </Grid>
+      <Grid
+        item
+        style={{ marginTop: "20px", marginBottom: "50px", marginLeft: "100px" }}
+      >
         <Typography variant="h5">
           <b>About the company</b>
         </Typography>
         <Grid container style={{ padding: "40px" }}>
-        <Typography
-          variant="body2"
-          style={{ color: "#767676", textAlign: "left" }}
-        >
-          {companyDetails.aboutTheCompany.description}
-        </Typography>
-      </Grid>
+          <Typography
+            variant="body2"
+            style={{ color: "#767676", textAlign: "left" }}
+          >
+            {companyDetails.aboutTheCompany.description}
+          </Typography>
+        </Grid>
         <Typography variant="h5">
           <b>Work Culture</b>
         </Typography>
         <Grid container style={{ padding: "40px" }}>
-        <Typography
-          variant="body2"
-          style={{ color: "#767676", textAlign: "left" }}
-        >
-          {companyDetails.aboutTheCompany.workCulture}
-        </Typography>
-      </Grid>
+          <Typography
+            variant="body2"
+            style={{ color: "#767676", textAlign: "left" }}
+          >
+            {companyDetails.aboutTheCompany.workCulture}
+          </Typography>
+        </Grid>
         <Typography variant="h5">
           <b>Company Values</b>
         </Typography>
         <Grid container style={{ padding: "40px" }}>
-        <Typography
-          variant="body2"
-          style={{ color: "#767676", textAlign: "left" }}
-        >
-          {companyDetails.aboutTheCompany.companyValues}
-        </Typography>
+          <Typography
+            variant="body2"
+            style={{ color: "#767676", textAlign: "left" }}
+          >
+            {companyDetails.aboutTheCompany.companyValues}
+          </Typography>
+        </Grid>
       </Grid>
-      </Grid>
-  </>
+    </>
   );
 
   return (
     <div>
       <Header />
-      <Container maxwidth='xl'>
+      <Container maxwidth="xl">
         <div
-          class='jumbotron text-white jumbotron-image shadow'
+          class="jumbotron text-white jumbotron-image shadow"
           style={{
             backgroundImage: `url(https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80)`,
             backgroundSize: "cover",
@@ -477,30 +605,30 @@ export default function Review(props) {
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center center",
           }}
-        >
-        </div>
+        ></div>
         <Grid
           container
           style={{
             justifyContent: "space-between",
             alignItems: "center",
             marginBottom: "20px",
-          }}>
+          }}
+        >
           <Grid container item lg={6} md={7} sm={8}>
             <Grid item className={classes.imgCont}>
               <img
-                src='https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80'
-                alt=''
-                width='100px'
+                src="https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80"
+                alt=""
+                width="100px"
               />
             </Grid>
             <Grid item style={{ paddingTop: "40px", paddingLeft: "20px" }}>
-              <Typography variant='h5'>{companyDetails.companyName}</Typography>
-              <Typography variant='h5'>
+              <Typography variant="h5">{companyDetails.companyName}</Typography>
+              <Typography variant="h5">
                 {companyDetails.noOfRatings}
                 {/* <StarIcon style = {{color: "#9d2b6b", paddingRight: "10px"}}/> */}
                 <Rating
-                  name='half-rating-read'
+                  name="half-rating-read"
                   style={{ color: "#9d2b6b", paddingRight: "10px" }}
                   value={rating}
                   precision={0.5}
@@ -514,9 +642,14 @@ export default function Review(props) {
             </Grid>
           </Grid>
           <Grid item>
-            <Button color={"primary"} variant='contained' type='submit'>
+            <Button
+              color={"primary"}
+              variant="contained"
+              type="submit"
+              onClick={handleOpen}
+            >
               {" "}
-              Write a Review{" "}
+              Review this Company{" "}
             </Button>
             <br />
             {/* <Typography variant="caption" >Get weekly updates, new jobs, and reviews</Typography> */}
@@ -531,7 +664,8 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("snapshot")}>
+            onClick={() => changePathName("snapshot")}
+          >
             SnapShot
           </Grid>
           <Grid
@@ -541,7 +675,8 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("whyjoinus")}>
+            onClick={() => changePathName("whyjoinus")}
+          >
             Why Join Us
           </Grid>
           <Grid
@@ -551,7 +686,8 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("reviews")}>
+            onClick={() => changePathName("reviews")}
+          >
             Reviews
           </Grid>
           <Grid
@@ -561,7 +697,8 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("salaries")}>
+            onClick={() => changePathName("salaries")}
+          >
             Salaries
           </Grid>
           <Grid
@@ -571,7 +708,8 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("photos")}>
+            onClick={() => changePathName("photos")}
+          >
             Photos
           </Grid>
           <Grid
@@ -581,7 +719,8 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("jobs")}>
+            onClick={() => changePathName("jobs")}
+          >
             Jobs
           </Grid>
           <Grid
@@ -591,7 +730,8 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("qanda")}>
+            onClick={() => changePathName("qanda")}
+          >
             Q&A
           </Grid>
           <Grid
@@ -601,7 +741,8 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("interviews")}>
+            onClick={() => changePathName("interviews")}
+          >
             Interviews
           </Grid>
         </Grid>
@@ -612,6 +753,196 @@ export default function Review(props) {
         {props.match.params.pathname === "whyjoinus" && showWhyJoinUs()}
         {showFooter()}
       </Container>
+
+      <Modal
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        open={open}
+        onClose={handleClose}
+      >
+        <div style={modalStyle} className={classes.paper}>
+          <form className={classes.formStyle} onSubmit={reviewSubmithandler}>
+            <Grid>
+              <FormHelperText className={classes.formhelperText}>
+                <span style={{ margin: "0px 15px" }}>Overall Rating </span>
+                <span style={{ margin: "0px 15px" }}>Work Happiness Score</span>
+                <span style={{ margin: "0px 15px" }}>Learning Score</span>
+                <span style={{ margin: "0px 15px" }}>Appreciation</span>
+              </FormHelperText>
+              <span style={{ margin: "0px 25px" }}>
+                <Rating
+                  name="simple-controlled"
+                  value={newRating}
+                  onChange={(event, newValue) => {
+                    setnewRating(newValue);
+                  }}
+                />
+              </span>
+              <span style={{ margin: "0px 25px" }}>
+                <Rating
+                  name="simple-controlled"
+                  value={workHappinessScore}
+                  onChange={(event, newValue) => {
+                    setWorkHappinessScore(newValue);
+                  }}
+                />
+              </span>
+              <span style={{ margin: "0px 45px" }}>
+                <Rating
+                  name="simple-controlled"
+                  value={learningScore}
+                  onChange={(event, newValue) => {
+                    setLearningScore(newValue);
+                  }}
+                />
+              </span>
+              <span>
+                <Rating
+                  name="simple-controlled"
+                  value={appreciationScore}
+                  onChange={(event, newValue) => {
+                    setAppreciationScore(newValue);
+                  }}
+                />
+              </span>
+            </Grid>
+            <Grid>
+              <FormHelperText className={classes.formhelperText}>
+                <span style={{ margin: "0px 10px" }}>Review Title </span>
+                <span style={{ margin: "0px 50px" }}>Review Role</span>
+                <span style={{ margin: "0px 60px" }}>City</span>
+                <span style={{ margin: "0px 70px" }}>State</span>
+              </FormHelperText>
+              <TextField
+                type="text"
+                style={{ width: "150px" }}
+                value={reviewTitle}
+                required
+                onChange={(event) => {
+                  setReviewTitle(event.target.value);
+                }}
+                variant="outlined"
+                placeholder="Review Title"
+              />
+              <TextField
+                type="text"
+                required
+                style={{ width: "150px", margin: "0px 35px" }}
+                value={reviewRole}
+                onChange={(event) => {
+                  setReviewRole(event.target.value);
+                }}
+                variant="outlined"
+                placeholder="Review Role"
+              />
+              <TextField
+                type="text"
+                required
+                style={{ width: "150px", margin: "0px 10px" }}
+                value={city}
+                onChange={(event) => {
+                  setCity(event.target.value);
+                }}
+                variant="outlined"
+                placeholder="City"
+              />
+              <TextField
+                type="text"
+                required
+                style={{ width: "150px" }}
+                value={st}
+                onChange={(event) => {
+                  setState(event.target.value);
+                }}
+                variant="outlined"
+                placeholder="State"
+              />
+            </Grid>
+            <Grid>
+              <FormHelperText className={classes.formhelperText}>
+                Review Summary
+              </FormHelperText>
+              <TextField
+                className={classes.outlinedInput}
+                required
+                type="text"
+                multiline
+                rows={3}
+                rowsMax={4}
+                value={reviewSummary}
+                onChange={(event) => {
+                  setReviewSummary(event.target.value);
+                }}
+                variant="outlined"
+                placeholder="Review Summary"
+              />
+            </Grid>
+            <Grid>
+              <FormHelperText className={classes.formhelperText}>
+                Pros
+              </FormHelperText>
+              <TextField
+                className={classes.outlinedInput}
+                required
+                multiline
+                rows={2}
+                rowsMax={4}
+                value={pros}
+                onChange={(event) => {
+                  setPros(event.target.value);
+                }}
+                type="text"
+                variant="outlined"
+                placeholder="Pros"
+              />
+            </Grid>
+            <Grid>
+              <FormHelperText className={classes.formhelperText}>
+                Cons
+              </FormHelperText>
+              <TextField
+                className={classes.outlinedInput}
+                required
+                multiline
+                rows={2}
+                rowsMax={4}
+                type="text"
+                value={cons}
+                onChange={(event) => {
+                  setCons(event.target.value);
+                }}
+                variant="outlined"
+                placeholder="Cons"
+              />
+            </Grid>
+            <Grid>
+              <FormHelperText className={classes.formhelperText}>
+                Interview Preparation
+              </FormHelperText>
+              <TextField
+                className={classes.outlinedInput}
+                required
+                multiline
+                rows={2}
+                rowsMax={4}
+                type="text"
+                value={interviewPrep}
+                onChange={(event) => {
+                  setinterviewPrep(event.target.value);
+                }}
+                variant="outlined"
+                placeholder="   Interview Preparation"
+              />
+            </Grid>
+            <br />
+            <Grid>
+              <SearchButton type="submit" variant="contained">
+                Post
+              </SearchButton>
+            </Grid>
+          </form>
+        </div>
+      </Modal>
     </div>
   );
 }

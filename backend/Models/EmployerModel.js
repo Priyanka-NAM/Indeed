@@ -117,6 +117,18 @@ const employerSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
+  averageWorkHappinessScore: {
+    type: Number,
+    default: 0,
+  },
+  averageLearningScore: {
+    type: Number,
+    default: 0,
+  },
+  averageAppreciationScore: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const Employer = mongoose.model("Employer", employerSchema);

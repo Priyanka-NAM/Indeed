@@ -16,7 +16,7 @@ const reviewSchema = mongoose.Schema(
     reviewTitle: {
       type: String,
     },
-    reviewerRole: {
+    reviewRole: {
       type: String,
     },
     city: {
@@ -26,13 +26,13 @@ const reviewSchema = mongoose.Schema(
       type: String,
     },
     workHappinessScore: {
-      type: String,
+      type: Number,
     },
     learningScore: {
-      type: String,
+      type: Number,
     },
     appreciationScore: {
-      type: String,
+      type: Number,
     },
     postedDate: {
       type: Date,
