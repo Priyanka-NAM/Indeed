@@ -5,6 +5,8 @@ import {
     ADMIN_TOP_MOST_RATING_FAIL,
     ADMIN_TOP_MOST_JOBSEEKER_SUCCESS,
     ADMIN_TOP_MOST_JOBSEEKER_FAIL,
+    ADMIN_GET_ALL_REVIEWS_SUCCESS,
+    ADMIN_GET_ALL_REVIEWS_FAIL,
 
   } from '../Constants/AdminConstants';
 
@@ -62,3 +64,21 @@ import {
         });
         
         }
+
+        export const getAllReviews = (data) => (dispatch) => {
+   
+            Axios.get(`${API}/company/reviews`)
+            .then((response) => {
+                dispatch({
+                    type : ADMIN_GET_ALL_REVIEWS_SUCCESS,
+                    payload : response.data 
+                })
+            })
+            .catch(error => {
+                dispatch({
+                    type: ADMIN_GET_ALL_REVIEWS_FAIL,
+                    payload: error
+                })
+            });
+            
+            }

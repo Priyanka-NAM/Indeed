@@ -6,6 +6,8 @@ import {
     ADMIN_TOP_MOST_RATING_FAIL,
     ADMIN_TOP_MOST_JOBSEEKER_SUCCESS,
     ADMIN_TOP_MOST_JOBSEEKER_FAIL,
+    ADMIN_GET_ALL_REVIEWS_SUCCESS,
+    ADMIN_GET_ALL_REVIEWS_FAIL,
 
   } from '../Constants/AdminConstants';
 
@@ -68,6 +70,29 @@ const initialState1 = {
           return {
               ...state,
               topAcceptedJobseekerError: action.payload
+            };
+      default:
+        return { ...state };
+    }
+  };
+
+
+  const initialState3 = {
+    AllReviews: null,
+    AllReviewsError: null
+  }
+
+  export const getAllReviewsReducer = (state = initialState3, action) => {
+    switch (action.type) {
+      case ADMIN_GET_ALL_REVIEWS_SUCCESS:
+          return { 
+              ...state,
+              AllReviews: action.payload, 
+              };
+      case ADMIN_GET_ALL_REVIEWS_FAIL:
+          return {
+              ...state,
+              AllReviewsError: action.payload
             };
       default:
         return { ...state };

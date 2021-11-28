@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     getTopRatedCompanies,
   } from "../../Redux/Actions/AdminAction";
-
+import LineGraph from './LineGraph'
 
 
 function Admindashboard() {
@@ -35,7 +35,6 @@ function Admindashboard() {
       }
      
     useEffect(() => {
-        // BarChart(400, 600);
        dispatch(getTopRatedCompanies());
     }, [])
     return (
@@ -43,25 +42,27 @@ function Admindashboard() {
             <Header />
             <div class="container" style={{ minHeight: '45rem'}}>
             <div className="row">
-               <div className="col md-3 lg-3">
+               <div className="col md-2 lg-2">
                     <DonutChart />
                  </div>
-                 <div className="col md-3 lg-3">
-                    <DonutChart1 />
+                 <div className="col md-2 lg-2">
+                 <h6>Top 5 companies based on average rating</h6>
+                 <BarChart
+        data={data}
+        width={350}
+        height={350}
+        margin={{ top: 10, bottom: 50, left: 50, right: 10 }}
+      />
+                   
                  </div>
             </div>
             <div className="row">
-               <div className="col md-3 lg-3" id="chart">
-               <BarChart
-        data={data}
-        width={500}
-        height={500}
-        margin={{ top: 10, bottom: 50, left: 50, right: 10 }}
-      />
+               <div className="col md-2 lg-2" id="chart">
+               <DonutChart1 />
 
                  </div>
                  <div className="col md-3 lg-3">
-                    
+                    <LineGraph />
                  </div>
             </div>
             </div>
