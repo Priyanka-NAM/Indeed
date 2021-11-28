@@ -124,21 +124,6 @@ const useStyles = makeStyles((theme) => ({
 
 function EmployerJobPostingHome(props) {
   const classes = useStyles();
-  const [jobDetails, setjobDetails] = useState({
-    jobTitle: "",
-    companyName: "",
-    industry: "",
-    jobLocation: { address: "", city: "", state: "", country: "", zipcode: "" },
-    jobType: "Full-Time",
-    isRemote: false,
-    salary: "",
-    jobDescription: {
-      compensation: "",
-      requirement: "",
-      moreInfo: "",
-      responsibilites: "",
-    },
-  });
 
   const theme = createMuiTheme({
     palette: {

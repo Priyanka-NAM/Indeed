@@ -1,9 +1,7 @@
-import React, { useState } from "react";
-import { Container, Grid, Typography, Button } from "@material-ui/core";
-import { Box, makeStyles, AppBar, Toolbar } from "@material-ui/core";
+import React from "react";
+import { makeStyles, Button } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { NavLink } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -67,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
 
 function EmployerLandingPage() {
   const classes = useStyles();
+
   const isAuth = useSelector((state) => state.login.isAuth);
 
   return (
@@ -100,7 +99,7 @@ function EmployerLandingPage() {
                 <br />
                 <Link
                   style={{ textDecoration: "none" }}
-                  to={{ pathname: "/employer/postJob", state: "" }}>
+                  to={{ pathname: "/login", state: "" }}>
                   <Button className={classes.button1} variant='contained'>
                     Post a Job
                   </Button>
