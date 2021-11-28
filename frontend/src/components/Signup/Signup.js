@@ -77,13 +77,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-const GreenCheckbox = withStyles({
-    root: {
-      color: "#085ff7",
-    },
-    checked: {},
-})((props) => <Checkbox color="default" {...props} />);
-
 const SignInButton = withStyles((theme) => ({
     root: {
         color: "#ffffff",
@@ -103,6 +96,7 @@ function Signup() {
     const [role, setRole] = useState(-1);
     const [errors, setErrors] = useState({});
     const [accErr, setAccErr] = useState(false);
+    const [isLogin, setLogin] = useState(false);
     const dispatch = useDispatch();
  
     const onEmailChange = (e) => {
@@ -130,16 +124,21 @@ function Signup() {
         } else {
             setErrors({});
             await dispatch(jobSeekerSignUp(data));
-            if (!isValid) {
-              setAccErr(true);
-            }
+            setTimeout(() => {
+                if (!isValid) {
+                  setAccErr(true);
+                } else {
+                    setLogin(true)
+                }
+              }, 5000);
+            console.log("is : ", isValid)
         }
     }
 
     return (
         <Container className = {classes.container} maxWidth = "xl">
             {
-                isValid && <Redirect to="/login" />
+                isLogin && <Redirect to="/login" />
             }
             <Box className = {classes.boxImg}>
                 <img
@@ -201,6 +200,5 @@ function Signup() {
         </Container>
     )
 }
-
 
 export default Signup;

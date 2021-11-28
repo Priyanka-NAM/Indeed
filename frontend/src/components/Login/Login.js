@@ -16,7 +16,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { jobSeekerLogin } from "../../Redux/Actions/LoginAction";
-import validateLogin from "./ValidateLogin";
 import { validatelogin } from "./ValidateLogin";
 
 const useStyles = makeStyles((theme) => ({
@@ -119,12 +118,10 @@ export function Login() {
       setErrors(error);
     } else {
       setErrors({});
-      await dispatch(jobSeekerLogin(data))
-      setTimeout(() => {
-        if (!isAuth) {
-          setAccErr(true);
-        }
-      }, 3000);
+      dispatch(jobSeekerLogin(data))
+      if (!isAuth) {
+        setAccErr(true);
+      }
     }
   };
 
