@@ -5,6 +5,9 @@ import { useDispatch } from "react-redux";
 import JobDetails1 from "./JobDetails1";
 import JobDetails2 from "./JobDetails2";
 import JobDetails3 from "./JobDetails3";
+import { useSelector } from "react-redux";
+import { Link, Redirect } from "react-router-dom";
+import EmployerHeader from "../EmployerHomePage/EmployerHeader";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -144,11 +147,11 @@ function EmployerJobPost() {
         );
     }
   }
+  const isAuth = useSelector((state) => state.login.isAuth);
 
   return (
     <>
-      {success ? alert("User registered successfully") : <></>}
-      {isError ? <Box>{errorMsg}</Box> : <></>}
+      {/* {isAuth && <Redirect to='/login' />} */}
       <Container className={classes.container} maxWidth='xl'>
         <br />
         <br />

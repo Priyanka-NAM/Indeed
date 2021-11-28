@@ -15,6 +15,8 @@ import EmployerJobPost from "./components/Employer/EmployerJobPosting/EmployerJo
 import EmployerHomePage from "./components/Employer/EmployerHomePage/EmployerHomePage";
 import EmployerJobPostingHome from "./components/Employer/EmployerJobPosting/EmployerJobPostingHome";
 import StickyHeadTable from "./components/Employer/EmployerJobPosting/delete";
+import EmployerHeader from "./components/Employer/EmployerHomePage/EmployerHeader";
+import EmployerLandingPage from "./components/Employer/EmployerHomePage/EmployerLandingPage";
 
 function App() {
   return (
@@ -34,14 +36,15 @@ function App() {
             exact
             component={CompanyReviews}
           />
-          <Route path='/employer' component={EmployerHomePage} />
+          <Route path='/employer' component={EmployerHeader} />
           <Route path='/employer/postJob' component={EmployerJobPost} />
 
           <Route
-            path='/employer/jobs-posted/:61a07e89e5d016c47d56338a'
+            path='/employer/jobs-posted'
             component={EmployerJobPostingHome}
           />
           <Route path='/reports' component={EmployerHomePage} />
+          <Route exact path='/employer/' component={EmployerLandingPage} />
         </Router>
       </div>
     </ThemeProvider>

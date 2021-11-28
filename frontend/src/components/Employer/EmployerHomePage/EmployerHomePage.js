@@ -3,6 +3,7 @@ import { Container, Grid, Typography, Button } from "@material-ui/core";
 import { Box, makeStyles, AppBar, Toolbar } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import EmployerHeader from "./EmployerHeader";
 
 import { NavLink } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
@@ -102,29 +103,9 @@ function EmployerHomePage() {
   const classes = useStyles();
   const isAuth = useSelector((state) => state.login.isAuth);
 
-  const [jobDetails, setjobDetails] = useState({
-    jobTitle: "",
-    companyName: "",
-    industry: "",
-    jobLocation: { address: "", city: "", state: "", country: "", zipcode: "" },
-    jobType: "Full-Time",
-    isRemote: false,
-    salary: "",
-    jobDescription: {
-      compensation: "",
-      requirement: "",
-      moreInfo: "",
-      responsibilites: "",
-    },
-  });
-  let [step, setStep] = useState(1);
-  const success = false;
-  const isError = false;
-  const errorMsg = false;
-
   return (
     <>
-      <AppBar position='static' style={{ background: "#2D2D2D" }}>
+      {/* <AppBar position='static' style={{ background: "#2D2D2D" }}>
         <Toolbar variant='dense'>
           <img
             className={classes.inddedLogo}
@@ -165,57 +146,8 @@ function EmployerHomePage() {
             )}
           </div>
         </Toolbar>
-      </AppBar>
+      </AppBar> */}
 
-      {success ? alert("User registered successfully") : <></>}
-      {isError ? <Box>{errorMsg}</Box> : <></>}
-      <Container className={classes.container} maxWidth='xl'>
-        <Link
-          style={{ textDecoration: "none" }}
-          to={{ pathname: "/employer/postJob", state: "" }}>
-          <Button className={classes.button1} variant='contained'>
-            Post a Job
-          </Button>
-        </Link>
-        <img
-          className={classes.homeLogo}
-          src='/Images/Employer_Home_logo.png'
-          alt=''
-        />
-        {/* <Grid
-          container
-          spacing={1}
-          style={{
-            fontSize: "14px",
-            backgroundColor: "white",
-            padding: "15px 10px",
-            margin: "0 -20px ",
-          }}>
-          <Grid item style={{ cursor: "pointer" }}>
-            © 2020 Indeed
-          </Grid>
-          <Grid item>-</Grid>
-          <Grid item style={{ cursor: "pointer" }}>
-            Accessibility at Indeed
-          </Grid>
-          <Grid item>-</Grid>
-          <Grid item style={{ cursor: "pointer" }}>
-            Privacy Center
-          </Grid>
-          <Grid item>-</Grid>
-          <Grid item style={{ cursor: "pointer" }}>
-            Cookies
-          </Grid>
-          <Grid item>-</Grid>
-          <Grid item style={{ cursor: "pointer" }}>
-            Privacy
-          </Grid>
-          <Grid item>-</Grid>
-          <Grid item style={{ cursor: "pointer" }}>
-            Terms
-          </Grid>
-        </Grid> */}
-      </Container>
       {/* // : <Redirect to='/' /> */}
     </>
   );

@@ -123,7 +123,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function EmployerJobPostingHome(props) {
-  const isAuth = true;
   const classes = useStyles();
   const [jobDetails, setjobDetails] = useState({
     jobTitle: "",
@@ -153,31 +152,43 @@ function EmployerJobPostingHome(props) {
   const isError = false;
   const errorMsg = false;
 
-  function createData(name, protein) {
-    return { name, protein };
+  function createData(title, city, country) {
+    return { title, city, country };
   }
   const dispatch = useDispatch();
+  const { responseFromServer } = useSelector((state) => state.employerJobs);
+  const { userDetails } = useSelector((state) => state.login);
 
   useEffect(() => {
-    dispatch(employerAllJob({ employerID: "61a07e89e5d016c47d56338a" }));
-    console.log(
-      "rm",
-      dispatch(employerAllJob({ employerID: "61a07e89e5d016c47d56338a" }))
-    );
-  });
-
-  const rows = [
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-  ];
+    // if (userDetails.userId && userDetails.userId !== "") {
+    //   dispatch(employerAllJob(userDetails.userId));
+    // }
+    dispatch(employerAllJob("61a07e89e5d016c47d56338a"));
+    console.log("test data");
+  }, [props]);
+  console.log("respone data", responseFromServer);
+  let rows = [];
+  if (responseFromServer.length > 0) {
+    rows = responseFromServer.map((eachjob) => {
+      return createData(
+        eachjob.jobTitle,
+        eachjob.jobLocation.city,
+        eachjob.jobLocation.country
+      );
+    });
+  }
+  // const rows = [
+  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  // ];
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(2);
@@ -270,17 +281,17 @@ function EmployerJobPostingHome(props) {
                           <Card className={classes.cardlook}>
                             <CardContent>
                               <Typography variant='h5' component='h2'>
-                                Software Engineer
+                                {row.title}
                               </Typography>
                               <Typography
                                 className={classes.pos}
                                 color='textSecondary'>
-                                New York City
+                                {row.city}
                               </Typography>
                               <Typography
                                 className={classes.pos}
                                 color='textSecondary'>
-                                Created: 24th July 2021
+                                {row.country}
                               </Typography>
                             </CardContent>
                           </Card>
