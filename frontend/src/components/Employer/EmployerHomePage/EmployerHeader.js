@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { Container, Grid, Typography, Button } from "@material-ui/core";
-import { Box, makeStyles, AppBar, Toolbar } from "@material-ui/core";
+import { Typography, Button } from "@material-ui/core";
+import { makeStyles, AppBar, Toolbar } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 
+import { useDispatch } from "react-redux";
+import { Redirect } from "react-router";
 import { NavLink } from "react-router-dom";
+import { employerLogout } from "../../../Redux/Actions/EmployerSignOutAction";
+
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
@@ -52,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
   link: {
     paddingRight: "30px",
     color: "white",
+    textDecoration: "none",
   },
   header_container: {
     display: "flex",
@@ -75,7 +78,14 @@ const useStyles = makeStyles((theme) => ({
 function EmployerHeader() {
   const classes = useStyles();
   const isAuth = useSelector((state) => state.login.isAuth);
+  const [redirectLanding, setLanding] = useState(null);
 
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    window.localStorage.clear();
+    dispatch(employerLogout());
+    setLanding(<Redirect to='/employer/' />);
+  };
   return (
     <AppBar
       position='static'
@@ -84,6 +94,7 @@ function EmployerHeader() {
         display: "flex",
         flexDirection: "row",
       }}>
+      {redirectLanding}
       <Toolbar
         variant='dense'
         style={{
@@ -125,98 +136,39 @@ function EmployerHeader() {
         </div>
         <div style={{ flex: 1 }}>
           {!isAuth ? (
-            <Typography
-              to='/login'
-              component={NavLink}
-              className={classes.button2}>
-              <Button className={classes.button} variant='contained'>
-                Sign In
-              </Button>
-            </Typography>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Typography
+                to='/login'
+                component={NavLink}
+                className={classes.button2}
+                style={{ textDecoration: "none" }}>
+                <Button className={classes.button} variant='contained'>
+                  Sign In
+                </Button>
+              </Typography>
+              <Typography
+                to='/'
+                component={NavLink}
+                className={classes.link}
+                style={{ paddingRight: "0%" }}>
+                Find Jobs
+              </Typography>
+            </div>
           ) : (
-            <Typography to='/' component={NavLink} className={classes.button2}>
-              <Button className={classes.button} variant='contained'>
-                Sign out
-              </Button>
-            </Typography>
+            // <Typography component={NavLink} className={classes.button2}>
+            <Button
+              className={classes.button}
+              variant='contained'
+              onClick={() => {
+                handleLogout();
+              }}>
+              Sign out
+            </Button>
+            // </Typography>
           )}
         </div>
       </Toolbar>
     </AppBar>
-    // </Box>
-    // <div className={classes.root}>
-    //   <AppBar elevation={0} style={{ background: "#2D2D2D" }} position='static'>
-    //     <Toolbar className={classes.toolbar}>
-    //       <Container
-    //         className={classes.header_container}
-    //         disableGutters
-    //         maxWidth={false}>
-    //         <Box className={classes.navlinks}>
-    //           <Box
-    //             className={classes.navlinks}
-    //             display={{ xs: "none", sm: "block", md: "block" }}>
-    //             <Link to='/'>
-    //               <img
-    //                 className={classes.inddedLogo}
-    //                 src='/Images/Indeed_Employer_logo.png'
-    //                 alt=''
-    //               />
-    //             </Link>
-    //             <Typography
-    //               to='/employer/jobs-posted/:12'
-    //               component={NavLink}
-    //               className={classes.link}>
-    //               Jobs
-    //             </Typography>
-    //             <Typography
-    //               to='/employer/applicants-page'
-    //               component={NavLink}
-    //               className={classes.link}>
-    //               Applicants
-    //             </Typography>
-    //             <Typography
-    //               to='/employer/analytics'
-    //               component={NavLink}
-    //               className={classes.link}>
-    //               Analytics
-    //             </Typography>
-    //             <Typography
-    //               to='/employer/reports'
-    //               component={NavLink}
-    //               className={classes.link}>
-    //               Reports
-    //             </Typography>
-    //           </Box>
-    //         </Box>
-    //         {!isAuth ? (
-    //           <Box className={classes.header_right}>
-    //             <Typography
-    //               style={{ display: "flex", alignItems: "end" }}
-    //               to='/'
-    //               component={NavLink}
-    //               className={classes.link}>
-    //               <Button className={classes.button} variant='contained'>
-    //                 Sign In
-    //               </Button>
-    //             </Typography>
-    //           </Box>
-    //         ) : (
-    //           <Box className={classes.header_right}>
-    //             <Typography
-    //               style={{ display: "flex", alignItems: "end" }}
-    //               to='/'
-    //               component={NavLink}
-    //               className={classes.link}>
-    //               <Button className={classes.button} variant='contained'>
-    //                 Sign out
-    //               </Button>
-    //             </Typography>
-    //           </Box>
-    //         )}
-    //       </Container>
-    //     </Toolbar>
-    //   </AppBar>
-    // </div>
   );
 }
 
