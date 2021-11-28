@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 console.log("message");
 const messageSchema = mongoose.Schema({
-    messageId: {
-        type: Number,
-        required: true
-    },
     employerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Employer",
@@ -13,14 +9,25 @@ const messageSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
-    messageText: {
-        type: String,
-        required: true
-    },
-    isReply: {
-        type: Boolean,
-        required: true
-    }
+    messages: [{
+        from: {
+            type: String,
+        },
+        to: {
+            type: String,
+        },
+        messageText: {
+            type: String,
+        },
+        attachment:{
+            type: String
+        },
+        date: {
+            type: Date,
+            default: Date.now
+        }
+    }]
+
 },{
     timestamps: true
 })

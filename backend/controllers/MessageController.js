@@ -8,27 +8,51 @@ const Messages = require('../Models/MessageModel')
  */
 const sendMessage = async(req, res) => {
 
-    const { messageId, employerId, userId, messageText, isReply } = req.body;
-
     try{
+
         const newMessage = await Messages.create({
-            messageId, employerId, userId, messageText, isReply
-        });
+            employerId: req.body.employerId,
+            userId: req.body.userId
+        })
+
+        newMessage.messages.push(
+            {from : req.body.message.from,
+                to: req.body.message.to,
+                messageText: req.body.message.messageText
+            })
+
+        await newMessage.save()
 
         if(newMessage){
-            console.log('Message Posted!');
-            res.status(201).json({
-                _id : newMessage._id,
-                messageId: newMessage.messageId,
-                employerId: newMessage.employerId,
-                userId: newMessage.userId,
-                messageText: newMessage.messageText,
-                isReply: newMessage.isReply
-            })
+            res.status(200).send(newMessage)
         }
         else{
-            res.status(400);
-            throw new Error('400 Bad request: Please try again later. ')
+            res.status(400).send("Error while sending Message")
+        }
+    }
+    catch(error){
+        res.status(500);
+        throw new Error('500 Internal Server Error');
+    }
+}
+
+const replyMessage = async(req, res) => {
+    try{
+        const getMessage = await Messages.findById({_id: req.body._id})
+
+        getMessage.messages.push({
+            from: req.body.message.from,
+            to: req.body.message.to,
+            messageText: req.body.message.messageText
+        })
+
+        await getMessage.save()
+
+        if(getMessage){
+            res.status(200).send(getMessage)
+        }
+        else{
+            res.status(400).send('Unable to reply for the message!')
         }
     }
     catch(error){
@@ -70,4 +94,4 @@ const getJobSeekerMessages = async(req, res) => {
     }
 }
 
-module.exports = { sendMessage, getEmployerMessages, getJobSeekerMessages };
+module.exports = { sendMessage, getEmployerMessages, getJobSeekerMessages, replyMessage };
