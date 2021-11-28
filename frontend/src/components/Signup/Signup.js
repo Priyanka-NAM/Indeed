@@ -149,12 +149,14 @@ function Signup() {
                 />
             </Box>
             <Box className = {classes.boxForm}>
-            {accErr && (
-            <p className={classes.errorDisplay}>
-              {"Account not found or Invalid credentials"}
-            </p>
-          )}
-                <Grid container spacing = {3} >
+                    <div style={{ textAlign: "center", fontWeight: "700" }}>
+                    {accErr && (
+                            <p className={classes.errorDisplay}>
+                            {"User already exists"}
+                            </p>
+                    )}
+                    </div>
+                    <Grid container spacing = {3} >
                     <Grid item>
                         <Typography className = {classes.h5} variant = "h5">Create an Account (it's free)</Typography>
                     </Grid>

@@ -52,8 +52,7 @@ const createUser = async (req, res) => {
     const {email} = req.body
     const userExists = await User.findOne({ email });
     if (userExists) {
-      res.status(409).send("User already exists");
-      throw new Error("User Already exists");
+      return res.status(409).send("User already exists");
     } else {
       const user = await User.create({
         userId : insertId,

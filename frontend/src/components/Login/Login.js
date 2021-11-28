@@ -119,6 +119,7 @@ export function Login() {
     } else {
       setErrors({});
       await dispatch(jobSeekerLogin(data));
+      console.log("isA : ",isAuth);
       if (!isAuth) {
         setAccErr(true);
       }
