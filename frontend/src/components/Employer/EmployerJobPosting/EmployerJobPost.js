@@ -83,7 +83,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function EmployerJobPost() {
-  const isAuth = true;
   const classes = useStyles();
   const [jobDetails, setjobDetails] = useState({
     jobTitle: "",
