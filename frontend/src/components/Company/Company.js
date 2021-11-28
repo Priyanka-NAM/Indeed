@@ -60,10 +60,6 @@ const useStyle = makeStyles((theme) => ({
   optionTab: {
     cursor: "pointer",
     margin: "0 40px 0 40px",
-    // '&:hover': {
-    //     borderBottom: "5px solid #397ff8",
-    //     fontWeight: "bold"
-    // }
   },
   activeTab: {
     cursor: "pointer",
@@ -138,6 +134,8 @@ const UplaodButton = withStyles((theme) => ({
     },
   },
 }))(Button);
+
+
 export default function Review(props) {
   const classes = useStyle();
   const [modalStyle] = React.useState(getModalStyle);
@@ -171,13 +169,14 @@ export default function Review(props) {
 
   const { companySpecificReviews } = useSelector(
     (state) => state.companyReviewList
-  );
+  ); 
   const companyDetails = responseFromServer
     ? responseFromServer
     : { aboutTheCompany: {} };
+    console.log(companySpecificReviews);
   const [values, setValues] = React.useState(["Helpfullness", "Rating"]);
   const [filterValue, setFilterValue] = React.useState(["Helpfullness"]);
-  const [sortValue, setSortValue] = React.useState(["Helpfullness"]);
+  const [sortValue, setSortValue] = React.useState("overallRating");
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(4);
   const query = new URLSearchParams(props.location.search);
@@ -187,18 +186,23 @@ export default function Review(props) {
   const [tooltipopen, setTooltipopen] = React.useState(true);
 
   useEffect(() => {
+    console.log(sortValue);
     if (props.match.params.pathname === "snapshot")
       dispatch(getcompaniesDetails({ employerID: props.match.params.id }));
     else if (props.match.params.pathname === "reviews")
       dispatch(
-        getCompanySpecificReviews({ employerId: props.match.params.id })
+        getCompanySpecificReviews({ employerId: props.match.params.id, sort: sortValue})
       );
     setRating(companyDetails.noOfRatings);
-  }, [props.match]);
+  }, [props.match,sortValue]);
 
   const changePathName = (pathName) => {
     props.history.push(`/company/${props.match.params.id}/${pathName}`);
   };
+  const handleSort = (val) => {
+    setSortValue(val);
+  
+  }
   const reviewSubmithandler = async (event) => {
     event.preventDefault();
     console.log(cons);
@@ -266,56 +270,43 @@ export default function Review(props) {
           }}
         >
           <Typography variant="">
-            <HtmlTooltip
-              open={tooltipopen}
-              title="Do people feel happy at work most of the time?"
-              arrow
-            >
-              <span>
-                <b>45</b>
-              </span>
-            </HtmlTooltip>
-          </Typography>{" "}
-          <b>Work Happiness Score</b>
-        </Grid>
-        <Grid
-          item
-          xl={4}
-          lg={4}
-          style={{
-            padding: "20px",
-          }}
-        >
-          <Typography variant="">
-            <HtmlTooltip
-              open={tooltipopen}
-              title="Do people feel they are achieving most of their goals at work?"
-              arrow
-            >
-              <b>63</b>
-            </HtmlTooltip>
-          </Typography>{" "}
-          <b>Achievement</b>
-        </Grid>
-        <Grid
-          item
-          xl={4}
-          lg={4}
-          style={{
-            padding: "20px",
-          }}
-        >
-          <Typography variant="">
-            <HtmlTooltip
-              open={tooltipopen}
-              title="Do people feel they often learn something at work?"
-              arrow
-            >
-              <b>45</b>
-            </HtmlTooltip>
-          </Typography>{" "}
-          <b>Learning</b>
-        </Grid>
+          <HtmlTooltip open={tooltipopen} title="Do people feel happy at work most of the time?" arrow>
+             <span><b>{companyDetails.averageWorkHappinessScore}</b></span> 
+           </HtmlTooltip> 
+            
+          </Typography>
+           {' '} <b>Work Happiness Score</b>
+          </Grid>
+          <Grid
+            item
+            xl={4}
+            lg={4}
+            style={{
+              padding: "20px",
+            }}
+          >
+        <Typography variant="">
+        <HtmlTooltip open={tooltipopen} title="Do people feel they are achieving most of their goals at work?" arrow>
+          <b>{companyDetails.averageAppreciationScore}</b>   
+        </HtmlTooltip>      
+          </Typography>
+          {' '}  <b>Achievement Score</b>   
+             </Grid>
+             <Grid
+            item
+            xl={4}
+            lg={4}
+            style={{
+              padding: "20px",
+            }}
+          >
+        <Typography variant="">
+        <HtmlTooltip open={tooltipopen} title="Do people feel they often learn something at work?" arrow>
+          <b>{companyDetails.averageLearningScore}</b>  
+        </HtmlTooltip>    
+          </Typography>
+           {' '}   <b>Learning</b>     
+             </Grid>
       </Grid>
       <Grid item style={{ marginTop: "100px", marginBottom: "50px" }}>
         <Typography variant="h5">
@@ -445,13 +436,12 @@ export default function Review(props) {
       >
         <FormControl>
           <ButtonGroup
-            variant="outlined"
-            aria-label="outlined button group"
-            style={{ padding: "35px" }}
-          >
-            <Button value="Rating">Rating</Button>
-            <Button value="Helpfullness">Helpfullness</Button>
-            <Button value="Date">Date</Button>
+            variant='outlined'
+            aria-label='outlined button group'
+            style={{ padding: "35px" }}>
+            <Button value='Rating' onClick={(e)=> handleSort("overallRating")}>Rating</Button>
+            <Button value='Helpfullness' onClick={(e)=> handleSort("isHelpfulCount")} >Helpfullness</Button>
+            <Button value='Date' onClick={(e)=> handleSort("createdAt")}>Date</Button>
           </ButtonGroup>
         </FormControl>
         <FormControl style={{ padding: "37px" }}>
@@ -474,7 +464,7 @@ export default function Review(props) {
           <Grid item style={{ marginTop: "30px", marginBottom: "50px" }}>
             <Typography>
               Found <b>{companySpecificReviews.length}</b> reviews matching the
-              search
+              search  
             </Typography>
           </Grid>
           <Grid container spacing={10}>
@@ -488,8 +478,10 @@ export default function Review(props) {
                   yourReview={item.yourReview}
                   pros={item.pros}
                   cons={item.cons}
+                  helpfulCount = {item.isHelpfulCount}     
+
                 />
-              );
+        );
             })}
           </Grid>
         </div>
@@ -642,7 +634,10 @@ export default function Review(props) {
                   precision={0.5}
                   readOnly
                 />
-                <Typography variant="caption">25 reviews</Typography>
+                {companySpecificReviews && (
+                <Typography variant='caption'> { companySpecificReviews.length} reviews</Typography>
+
+                )}
               </Typography>
             </Grid>
           </Grid>

@@ -8,7 +8,7 @@ console.log(process.env.SECRET);
 function auth() {
   const opts = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: 'CMPE_273_Passport'
+    secretOrKey: process.env.SECRET
   };
   passport.use(
     new JwtStrategy(opts, (jwt_payload, callback) => {
