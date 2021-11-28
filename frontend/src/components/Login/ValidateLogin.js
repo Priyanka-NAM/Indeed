@@ -11,7 +11,6 @@ export const validatelogin = (values) => {
     } else if (values.password.length < 1) {
       errors.password = "Password needs to be 6 characters or more";
     }
-
     resolve(errors);
   });
 };

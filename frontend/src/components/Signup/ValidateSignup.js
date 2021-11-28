@@ -1,5 +1,5 @@
 export default function ValidateSign(values) {
-    console.log("values: ", values)
+    return new Promise((resolve, reject) => {
     let errors = {};
     if (!values.email) {
       errors.email = 'Email required';
@@ -14,5 +14,6 @@ export default function ValidateSign(values) {
     if (values.role === -1) {
         errors.role = "Role is required";
     }
-    return errors;
+    resolve(errors);
+    });
 }

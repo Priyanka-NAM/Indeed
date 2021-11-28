@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Container,Grid,OutlinedInput,Typography,InputLabel,MenuItem,Select,Button} from '@material-ui/core';
-// import InputLabel from '@mui/material/InputLabel';
-// import MenuItem from '@mui/material/MenuItem';
-// import Select from '@mui/material/Select';
-import {  IconButton, Snackbar } from '@material-ui/core';
-import CloseIcon from "@material-ui/icons/Close";
 import { 
     Box, 
     makeStyles, 
@@ -107,7 +102,7 @@ function Signup() {
     const [password, setPassword] = useState("");
     const [role, setRole] = useState(-1);
     const [errors, setErrors] = useState({});
-    const [redirectLogin, setLogin] = useState(false)
+    const [accErr, setAccErr] = useState(false);
     const dispatch = useDispatch();
  
     const onEmailChange = (e) => {
@@ -129,20 +124,22 @@ function Signup() {
             "password" : password,
             "role" : role
         }
-        console.log(data)
-        setErrors(validateSignUp(data));
-        await dispatch(jobSeekerSignUp(data));
-        //setLogin(true)
+        const error = await validateSignUp(data);
+        if (Object.keys(error).length !== 0) {
+            setErrors(error);
+        } else {
+            setErrors({});
+            await dispatch(jobSeekerSignUp(data));
+            if (!isValid) {
+              setAccErr(true);
+            }
+        }
     }
-    
-    useEffect(() => {
-
-    })
 
     return (
         <Container className = {classes.container} maxWidth = "xl">
             {
-                redirectLogin && <Redirect to="/login" />
+                isValid && <Redirect to="/login" />
             }
             <Box className = {classes.boxImg}>
                 <img
@@ -152,6 +149,11 @@ function Signup() {
                 />
             </Box>
             <Box className = {classes.boxForm}>
+            {accErr && (
+            <p className={classes.errorDisplay}>
+              {"Account not found or Invalid credentials"}
+            </p>
+          )}
                 <Grid container spacing = {3} >
                     <Grid item>
                         <Typography className = {classes.h5} variant = "h5">Create an Account (it's free)</Typography>
