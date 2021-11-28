@@ -6,7 +6,7 @@ import { Rating } from "@mui/material";
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 
 
-export function ReviewBox({ rating, review_title, date, yourReview, pros, cons }) {
+export function ReviewBox({ rating, review_title, date, yourReview, pros, cons ,helpfulCount}) {
     return (
             <Grid item container spacing={4} style={{borderBottom: '#00000029 solid 1px'}}>
             <Grid item container spacing={1}>
@@ -55,7 +55,7 @@ export function ReviewBox({ rating, review_title, date, yourReview, pros, cons }
             </Grid>
             <span style={{fontSize: "small"}}>Was this review helpfull?</span>
             <Grid item container spacing={3}>
-            <div><ThumbUpAltIcon></ThumbUpAltIcon></div>
+            <div><ThumbUpAltIcon></ThumbUpAltIcon></div>{helpfulCount}
              </Grid>
          
 

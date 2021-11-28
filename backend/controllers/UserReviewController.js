@@ -113,8 +113,19 @@ exports.getUserReviews = async (req, res) => {
 };
 
 exports.getSpecificCompanyReviews = async (req, res) => {
+  const sortVal = req.query.sort ? req.query.sort : 'createdAt';
   try {
-    const review = await Reviews.find({ employerId: req.query.employerId });
+    let review;
+    if(sortVal === "overallRating")
+       review = await Reviews.find({ employerId: req.query.employerId }).sort({overallRating:-1});
+      else if(sortVal === "isHelpfulCount")
+       review = await Reviews.find({ employerId: req.query.employerId }).sort({isHelpfulCount: -1});
+       else
+       review = await Reviews.find({ employerId: req.query.employerId }).sort({createdAt: -1});
+
+      
+
+
     req.review = review;
     if (!review) {
       return res.status(400).json({
