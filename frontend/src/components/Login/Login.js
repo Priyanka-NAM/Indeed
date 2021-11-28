@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   Box,
   Container,
@@ -18,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { jobSeekerLogin } from "../../Redux/Actions/LoginAction";
 import validateLogin from "./ValidateLogin";
+import { validatelogin } from "./ValidateLogin";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -91,17 +91,12 @@ const SignInButton = withStyles((theme) => ({
 
 export function Login() {
   const classes = useStyles();
-  let isAuth = useSelector((state) => state.login.isAuth);
-  let role = useSelector((state) => state.login.userDetails.role);
-
+  let { isAuth, accErr, userDetails } = useSelector((state) => state.login);
+  const { role } = userDetails;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [accErr, setAccErr] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [redirectHome, setHome] = useState(false);
-  const [redirectEmployerHome, setEmployerHome] = useState(false);
 
-  const [isSubmitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
   const onEmailChange = (e) => {
     setEmail(e.target.value);
@@ -117,42 +112,20 @@ export function Login() {
       email: email,
       password: password,
     };
-    setErrors(validateLogin(data));
-    await dispatch(jobSeekerLogin(data));
-    if (!isAuth) {
-      setAccErr(true);
+
+    const error = await validatelogin(data);
+    if (Object.keys(error).length !== 0) {
+      setErrors(error);
+    } else {
+      setErrors({});
+      dispatch(jobSeekerLogin(data));
     }
-    setSubmitting(true);
   };
-  useEffect(() => {
-    console.log("isauth: ", isAuth, errors, isSubmitting);
-    if (
-      Object.keys(errors).length === 0 &&
-      isSubmitting &&
-      isAuth &&
-      role === 0
-    ) {
-      setHome(true);
-    } else if (
-      Object.keys(errors).length === 0 &&
-      isSubmitting &&
-      isAuth &&
-      role === 1
-    ) {
-      setEmployerHome(true);
-    } else if (
-      Object.keys(errors).length === 0 &&
-      isSubmitting &&
-      isAuth &&
-      role === 2
-    ) {
-    }
-  }, [errors, redirectHome]);
 
   return (
     <Container className={classes.container} maxWidth='xl'>
-      {redirectHome && <Redirect to='/' />}
-      {redirectEmployerHome && <Redirect to='/employer/home' />}
+      {isAuth && role === 0 && <Redirect to='/' />}
+      {isAuth && role === 1 && <Redirect to='/employer/home' />}
       <Box className={classes.boxImg}>
         <img
           className={classes.imgLogo}

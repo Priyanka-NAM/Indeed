@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Grid,
@@ -9,11 +9,6 @@ import {
   Select,
   Button,
 } from "@material-ui/core";
-// import InputLabel from '@mui/material/InputLabel';
-// import MenuItem from '@mui/material/MenuItem';
-// import Select from '@mui/material/Select';
-import { IconButton, Snackbar } from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
 import {
   Box,
   makeStyles,
@@ -25,6 +20,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { jobSeekerSignUp } from "../../Redux/Actions/SignUpAction";
+import validateSignUp from "./ValidateSignup";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -51,9 +47,8 @@ const useStyles = makeStyles((theme) => ({
     padding: "20px",
   },
   outlinedInput: {
-    border: "1px solid #cccccc",
     height: "48px",
-    width: "450px",
+    width: "400px",
     margin: "7px 0",
   },
   h5: {
@@ -68,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "10px",
   },
   button: {
-    width: "450px",
+    width: "350px",
     borderRadius: "20px",
     height: "40px",
   },
@@ -83,6 +78,10 @@ const useStyles = makeStyles((theme) => ({
     heigth: "10px",
     width: "440px",
     margin: "30px 30px 20px",
+  },
+  errorDisplay: {
+    color: "red",
+    fontWeight: "700",
   },
 }));
 
@@ -104,30 +103,15 @@ const SignInButton = withStyles((theme) => ({
   },
 }))(Button);
 
-const HelperButton = withStyles((theme) => ({
-  root: {
-    color: "#000000",
-    backgroundColor: "#ffffff",
-    cursor: "pointer",
-    "&:hover": {
-      backgroundColor: "#eeeeee",
-    },
-  },
-}))(Button);
-
 function Signup() {
-  // const isAuth = useSelector(state=>state.login.isAuth)
-  //const isAuth = true;
+  const isValid = useSelector((state) => state.signup.isValid);
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState(1);
-  const [redirectLogin, setLogin] = useState(false);
-  const [redirectEmployerDetails, setEmployerDetails] = useState(false);
-
+  const [role, setRole] = useState(-1);
+  const [errors, setErrors] = useState({});
+  const [accErr, setAccErr] = useState(false);
   const dispatch = useDispatch();
-  const [snackBarOpen, setSnackBarOpen] = useState(false);
-  const isAuth = useSelector((state) => state.login.isAuth);
 
   const onEmailChange = (e) => {
     setEmail(e.target.value);
@@ -140,25 +124,30 @@ function Signup() {
   const onRoleChange = (e) => {
     setRole(e.target.value);
   };
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
       email: email,
       password: password,
       role: role,
     };
-    dispatch(jobSeekerSignUp(data));
-    if (role === 0) setLogin(true);
-    else if (role === 1) {
-      setEmployerDetails(true);
+    const error = await validateSignUp(data);
+    if (Object.keys(error).length !== 0) {
+      setErrors(error);
+    } else {
+      setErrors({});
+      await dispatch(jobSeekerSignUp(data));
+      if (!isValid) {
+        setAccErr(true);
+      }
     }
   };
-  console.log("isAuth", isAuth);
 
   return (
     <Container className={classes.container} maxWidth='xl'>
-      {redirectLogin && <Redirect to='/login' />}
-      {redirectEmployerDetails && <Redirect to='/addemployer' />}
+      {isValid && <Redirect to='/login' />}
+
       <Box className={classes.boxImg}>
         <img
           className={classes.imgLogo}
@@ -167,6 +156,11 @@ function Signup() {
         />
       </Box>
       <Box className={classes.boxForm}>
+        <div style={{ textAlign: "center", fontWeight: "700" }}>
+          {accErr && (
+            <p className={classes.errorDisplay}>{"User already exists"}</p>
+          )}
+        </div>
         <Grid container spacing={3}>
           <Grid item>
             <Typography className={classes.h5} variant='h5'>
@@ -182,10 +176,12 @@ function Signup() {
                 className={classes.outlinedInput}
                 onChange={onEmailChange}
                 value={email}
-                required
                 type='text'
                 variant='outlined'
               />
+              {errors.email && (
+                <p className={classes.errorDisplay}>{errors.email}</p>
+              )}
               <FormHelperText className={classes.formhelperText}>
                 Password
               </FormHelperText>
@@ -193,18 +189,23 @@ function Signup() {
                 className={classes.outlinedInput}
                 onChange={onPasswordChange}
                 value={password}
-                required
                 type='password'
                 variant='outlined'
               />
+              {errors.password && (
+                <p className={classes.errorDisplay}>{errors.password}</p>
+              )}
               <FormHelperText className={classes.formhelperText}>
                 Role
               </FormHelperText>
               <Select onChange={onRoleChange} value={role}>
                 <MenuItem value={0}>JobSeeker</MenuItem>
                 <MenuItem value={1}>Employer</MenuItem>
-                <MenuItem value={3}>Admin</MenuItem>
+                <MenuItem value={2}>Admin</MenuItem>
               </Select>
+              {errors.role && (
+                <p className={classes.errorDisplay}>{errors.role}</p>
+              )}
               <br />
               <br />
               <SignInButton
@@ -237,29 +238,7 @@ function Signup() {
           </Typography>
         </Grid>
       </Grid>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "left" }}
-        open={snackBarOpen}
-        autoHideDuration={3000}
-        message={<span className='format__id'>Regitered Succesfully</span>}
-        ContentProps={{
-          "aria-describedby": "message-id",
-        }}
-        onClose={() => setSnackBarOpen(false)}
-        action={[
-          <IconButton
-            onClick={() => {
-              setSnackBarOpen(false);
-            }}
-            color='inherit'
-            key='close'
-            aria-label='close'>
-            <CloseIcon />
-          </IconButton>,
-        ]}
-      />
     </Container>
-    // : <Redirect to="/" />
   );
 }
 

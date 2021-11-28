@@ -114,7 +114,7 @@ export function CompanyReviews() {
           xs={6}
           sm={6}
           md={10}
-          lg={10}
+          lg={11}
           xl={7}
         >
           <Grid item>

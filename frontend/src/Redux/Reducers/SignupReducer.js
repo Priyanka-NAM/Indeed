@@ -4,6 +4,7 @@ import {
 } from '../Constants/UserConstants';
 
 const initialState = {
+  isValid: false,
   responseFromServer: null,
   errorResponse: null
 }
@@ -13,6 +14,7 @@ export const signUpReducer = (state = initialState, action) => {
       case JOBSEEKER_SIGNUP:
         return { 
           ...state,
+          isValid: true,
           responseFromServer: action.payload, 
           };
       case SIGNUP_ERROR:
