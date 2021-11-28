@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   Box,
   Container,
@@ -18,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { jobSeekerLogin } from "../../Redux/Actions/LoginAction";
 import validateLogin from "./ValidateLogin";
+import { validatelogin } from "./ValidateLogin";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -96,8 +96,7 @@ export function Login() {
   const [password, setPassword] = useState("");
   const [accErr, setAccErr] = useState(false);
   const [errors, setErrors] = useState({});
-  const [redirectHome, setHome] = useState(false);
-  const [isSubmitting, setSubmitting] = useState(false);
+
   const dispatch = useDispatch();
   const onEmailChange = (e) => {
     setEmail(e.target.value);
@@ -113,23 +112,23 @@ export function Login() {
       email: email,
       password: password,
     };
-    setErrors(validateLogin(data));
-    await dispatch(jobSeekerLogin(data));
-    if (!isAuth) {
-      setAccErr(true);
+
+    const error = await validatelogin(data);
+    if (Object.keys(error).length !== 0) {
+      setErrors(error);
+    } else {
+      setErrors({});
+      await dispatch(jobSeekerLogin(data));
+      console.log("isA : ",isAuth);
+      if (!isAuth) {
+        setAccErr(true);
+      }
     }
-    setSubmitting(true);
   };
-  useEffect(() => {
-    console.log("isauth: ", isAuth, errors, isSubmitting);
-    if (Object.keys(errors).length === 0 && isSubmitting && isAuth) {
-      setHome(true);
-    }
-  }, [errors, redirectHome]);
 
   return (
     <Container className={classes.container} maxWidth="xl">
-      {redirectHome && <Redirect to="/" />}
+      {isAuth && <Redirect to="/" />}
       <Box className={classes.boxImg}>
         <img
           className={classes.imgLogo}
@@ -140,7 +139,9 @@ export function Login() {
       <Box className={classes.boxForm}>
         <div style={{ textAlign: "center", fontWeight: "700" }}>
           {accErr && (
-            <p className={classes.errorDisplay}>{"Account not found or Invalid credentials"}</p>
+            <p className={classes.errorDisplay}>
+              {"Account not found or Invalid credentials"}
+            </p>
           )}
         </div>
         <Grid container spacing={3}>
