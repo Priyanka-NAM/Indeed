@@ -113,8 +113,8 @@ export function CompanyReviews() {
           className={classes.outerSearchGrid}
           xs={6}
           sm={6}
-          md={10}
-          lg={10}
+          md={8}
+          lg={11}
           xl={7}
         >
           <Grid item>
