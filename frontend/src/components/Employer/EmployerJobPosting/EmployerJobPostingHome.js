@@ -1,19 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Grid, Typography } from "@material-ui/core";
-import { Box, makeStyles, AppBar, Toolbar } from "@material-ui/core";
-import { useDispatch } from "react-redux";
-import JobDetails1 from "./JobDetails1";
-import JobDetails2 from "./JobDetails2";
-import JobDetails3 from "./JobDetails3";
+import {
+  Box,
+  makeStyles,
+  AppBar,
+  Toolbar,
+  Button,
+  Checkbox,
+} from "@material-ui/core";
+import { useDispatch, useSelector } from "react-redux";
+
+import { Link } from "react-router-dom";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import TablePagination from "@material-ui/core/TablePagination";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+
+import PropTypes from "prop-types";
+import { employerAllJob } from "../../../Redux/Actions/EmployerJobPostingAction";
 
 const useStyles = makeStyles((theme) => ({
+  body: {
+    backgroundColor: "black",
+  },
   container: {
-    backgroundColor: "#f2f2f2",
-
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
+    alignItems: "left",
   },
+
   boxImg: {
     width: "450px",
     display: "flex",
@@ -60,10 +83,11 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "10px",
   },
   button: {
-    width: "450px",
+    width: "200px",
     borderRadius: "20px",
-    height: "40px",
-    backgroundColor: "#164081",
+    height: "50px",
+    color: "white",
+    backgroundColor: "#065FF7",
   },
   divider: {
     backgroundColor: "#f2f2f2",
@@ -80,10 +104,25 @@ const useStyles = makeStyles((theme) => ({
   formStyle: {
     width: "100%",
   },
+  cardlook: {
+    width: "80%",
+    marginLeft: "2%",
+  },
+  tableHeader: {
+    fontSize: "20px",
+    fontWeight: "bold",
+  },
+  root: {
+    marginLeft: "2%",
+    marginRight: "2%",
+  },
+  tableBody: {
+    marginLeft: "2%",
+    marginRight: "2%",
+  },
 }));
 
-function EmployerJobPostingHome() {
-  const isAuth = true;
+function EmployerJobPostingHome(props) {
   const classes = useStyles();
   const [jobDetails, setjobDetails] = useState({
     jobTitle: "",
@@ -100,94 +139,184 @@ function EmployerJobPostingHome() {
       responsibilites: "",
     },
   });
+
+  const theme = createMuiTheme({
+    palette: {
+      background: {
+        default: "#303030",
+      },
+    },
+  });
   let [step, setStep] = useState(1);
   const success = false;
   const isError = false;
   const errorMsg = false;
 
-  function showStep(step, setStep, jobDetails, setjobDetails) {
-    switch (step) {
-      case 1:
-        return (
-          <JobDetails1
-            setStep={setStep}
-            step={step}
-            jobDetails={jobDetails}
-            setjobDetails={setjobDetails}
-          />
-        );
-      case 2:
-        return (
-          <JobDetails2
-            setStep={setStep}
-            step={step}
-            jobDetails={jobDetails}
-            setjobDetails={setjobDetails}
-          />
-        );
-      case 3:
-        return (
-          <JobDetails3
-            setStep={setStep}
-            step={step}
-            jobDetails={jobDetails}
-            setjobDetails={setjobDetails}
-          />
-        );
-      default:
-        return (
-          <JobDetails1
-            setStep={setStep}
-            step={step}
-            jobDetails={jobDetails}
-            setjobDetails={setjobDetails}
-          />
-        );
-    }
+  function createData(title, city, country) {
+    return { title, city, country };
   }
+  const dispatch = useDispatch();
+  const { responseFromServer } = useSelector((state) => state.employerJobs);
+  const { userDetails } = useSelector((state) => state.login);
+
+  useEffect(() => {
+    // if (userDetails.userId && userDetails.userId !== "") {
+    //   dispatch(employerAllJob(userDetails.userId));
+    // }
+    dispatch(employerAllJob("61a07e89e5d016c47d56338a"));
+    console.log("test data");
+  }, [props]);
+  console.log("respone data", responseFromServer);
+  let rows = [];
+  if (responseFromServer.length > 0) {
+    rows = responseFromServer.map((eachjob) => {
+      return createData(
+        eachjob.jobTitle,
+        eachjob.jobLocation.city,
+        eachjob.jobLocation.country
+      );
+    });
+  }
+  // const rows = [
+  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
+  // ];
+
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(2);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  const columns = [
+    { id: "Job Title", label: "Job Title" },
+    {
+      id: "Action",
+      label: "Action",
+      minWidth: 170,
+      align: "right",
+      format: (value) => value.toLocaleString("en-US"),
+    },
+  ];
 
   return (
-    <>
+    <div
+      style={{
+        paddingTop: "3%",
+        backgroundColor: "#f2f2f2",
+        height: "100%",
+      }}>
+      <MuiThemeProvider theme={theme} />
+      <CssBaseline />
       {success ? alert("User registered successfully") : <></>}
       {isError ? <Box>{errorMsg}</Box> : <></>}
       <Container className={classes.container} maxWidth='xl'>
-        <br />
-        <br />
-        <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
-          <Grid container justifyContent='center' alignItems='center'>
-            <Grid item xs={6}>
-              <Typography className={classes.h4} variant='h4'>
-                Create a job post
-              </Typography>
-            </Grid>
-            <br />
-            <Grid item xs={6}>
-              <img
-                className={classes.imgLogo}
-                src='/Images/Job_logo.png'
-                alt=''
-              />
-            </Grid>
+        <Grid
+          item
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            paddingLeft: "3%",
+          }}>
+          <Grid>
+            <Typography className={classes.h4} variant='h4'>
+              Jobs
+            </Typography>
           </Grid>
-        </Box>
-        <br />
-        <br />
-        <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
-          <Grid container spacing={3}>
-            <Grid item>
-              <Typography className={classes.h5} variant='h5'>
-                Fill the below Job Details form to post the job.
-              </Typography>
-            </Grid>
+          <Grid style={{ paddingLeft: "75%" }}>
+            <Link
+              style={{ textDecoration: "none" }}
+              to={{ pathname: "/employer/postJob", state: "" }}>
+              <Button className={classes.button} variant='contained'>
+                Post a Job
+              </Button>
+            </Link>
           </Grid>
-          <Grid item style={{ margin: "25px 0" }}>
-            {showStep(step, setStep, jobDetails, setjobDetails)}
-          </Grid>
-        </Box>
+        </Grid>
+
+        <Grid item xs={2} style={{ paddingLeft: "80%" }}></Grid>
+        <br />
+        <div style={{ height: 400, width: "100%" }}>
+          <Paper className={classes.root}>
+            <TableContainer className={classes.tablecontainer}>
+              <Table stickyHeader>
+                <TableHead>
+                  <TableRow>
+                    {columns.map((column) => (
+                      <TableCell
+                        key={column.id}
+                        align={column.align}
+                        className={classes.tableHeader}
+                        style={{ minWidth: column.minWidth }}>
+                        {column.label}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <br />
+                <TableBody className={classes.tableBody}>
+                  {rows
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row) => {
+                      return (
+                        <TableRow
+                          role='checkbox'
+                          tabIndex={-1}
+                          key={row.code}
+                          className={classes.eachrow}>
+                          <Card className={classes.cardlook}>
+                            <CardContent>
+                              <Typography variant='h5' component='h2'>
+                                {row.title}
+                              </Typography>
+                              <Typography
+                                className={classes.pos}
+                                color='textSecondary'>
+                                {row.city}
+                              </Typography>
+                              <Typography
+                                className={classes.pos}
+                                color='textSecondary'>
+                                {row.country}
+                              </Typography>
+                            </CardContent>
+                          </Card>
+                          <br />
+                        </TableRow>
+                      );
+                    })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[2, 5, 10]}
+              component='div'
+              count={rows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Paper>
+        </div>
         <br />
         <br />
 
-        <Grid
+        {/* <Grid
           container
           spacing={1}
           style={{
@@ -219,10 +348,10 @@ function EmployerJobPostingHome() {
           <Grid item style={{ cursor: "pointer" }}>
             Terms
           </Grid>
-        </Grid>
+        </Grid> */}
       </Container>
       {/* // : <Redirect to='/' /> */}
-    </>
+    </div>
   );
 }
 

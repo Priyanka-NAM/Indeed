@@ -2,10 +2,15 @@ import { applyMiddleware, combineReducers, createStore, compose } from "redux";
 import thunk from "redux-thunk";
 import { signUpReducer } from "./Reducers/SignupReducer";
 import { loginReducer } from "./Reducers/LoginReducer";
-import { CompanyDetailsReducer, CompanyListReviewReducer } from "./Reducers/CompanyReducer";
+import {
+  CompanyDetailsReducer,
+  CompanyListReviewReducer,
+} from "./Reducers/CompanyReducer";
 import { companyReviewReducer } from "./Reducers/CompanyReviewReducer";
 import { jobReducer } from "./Reducers/JobReducer";
 import { JOBSEEKER_LOGOUT } from "./Constants/UserConstants";
+import { employerJobPostingReducer } from "./Reducers/EmployerJobPostingReducer";
+import { employerJobsReducer } from "./Reducers/EmployerJobsReducer";
 
 const appReducer = combineReducers({
   signup: signUpReducer,
@@ -14,6 +19,8 @@ const appReducer = combineReducers({
   companyReview: companyReviewReducer,
   companyDetails: CompanyDetailsReducer,
   companyReviewList: CompanyListReviewReducer,
+  employerJobPosting: employerJobPostingReducer,
+  employerJobs: employerJobsReducer,
 });
 
 const rootReducer = (state, action) => {
