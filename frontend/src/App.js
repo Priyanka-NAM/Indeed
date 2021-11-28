@@ -14,6 +14,7 @@ import { CompanyReviews } from "./components/CompanyReviews/CompanyReviews";
 import EmployerJobPost from "./components/Employer/EmployerJobPosting/EmployerJobPost";
 import EmployerHomePage from "./components/Employer/EmployerHomePage/EmployerHomePage";
 import EmployerJobPostingHome from "./components/Employer/EmployerJobPosting/EmployerJobPostingHome";
+import Admindashboard from "./components/Admin/Dashboard";
 import StickyHeadTable from "./components/Employer/EmployerJobPosting/delete";
 import EmployerHeader from "./components/Employer/EmployerHomePage/EmployerHeader";
 import EmployerLandingPage from "./components/Employer/EmployerHomePage/EmployerLandingPage";
@@ -44,6 +45,7 @@ function App() {
             component={EmployerJobPostingHome}
           />
           <Route path='/reports' component={EmployerHomePage} />
+          <Route path='/admindashboard' component={Admindashboard} />
           <Route exact path='/employer/' component={EmployerLandingPage} />
         </Router>
       </div>

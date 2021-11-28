@@ -7,6 +7,7 @@ import {
   CompanyListReviewReducer,
 } from "./Reducers/CompanyReducer";
 import { companyReviewReducer } from "./Reducers/CompanyReviewReducer";
+import { TopCompanyListReviewReducer,TopCompanyListRatingReducer,TopAcceptedJobSeekerReducer } from './Reducers/AdminReducers';
 import { jobReducer } from "./Reducers/JobReducer";
 import { JOBSEEKER_LOGOUT } from "./Constants/UserConstants";
 import { employerJobPostingReducer } from "./Reducers/EmployerJobPostingReducer";
@@ -19,6 +20,9 @@ const appReducer = combineReducers({
   companyReview: companyReviewReducer,
   companyDetails: CompanyDetailsReducer,
   companyReviewList: CompanyListReviewReducer,
+  TopReviewedCompanies:TopCompanyListReviewReducer,
+  TopRatingCompanies: TopCompanyListRatingReducer,
+  TopAcceptedJobseekers: TopAcceptedJobSeekerReducer,
   employerJobPosting: employerJobPostingReducer,
   employerJobs: employerJobsReducer,
 });
