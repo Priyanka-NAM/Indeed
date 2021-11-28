@@ -4,17 +4,25 @@
 User Signup Route
  */ 
 const User = require("../Models/UserModel")
+const Employer = require("../Models/EmployerModel")
 const bcrypt = require("bcryptjs")
 const {pool} = require('../config/mysqldb')
 
-const createEmployer = require('../controllers/EmployerController')
-
 const createUser = async (req, res) => {
   const { email, password, role } = req.body;
+  if (!email) {
+    return res.status(404).send("email is required")
+  }
+  if (!password) {
+    return res.status(404).send("password is required")
+  }
+  if (role === -1) {
+    return res.status(404).send("role is required")
+  }
   console.log("req data", email, password, role)
   pool.getConnection(async (err, conn) => {
     if (err) {
-      res.send('Error occurred!');
+      res.status(500).send('Error occurred!');
     } else {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -44,14 +52,12 @@ const createUser = async (req, res) => {
     const {email} = req.body
     const userExists = await User.findOne({ email });
     if (userExists) {
-      res.status(201).send("user already exists");
-      throw new Error("User Already exists");
+      return res.status(409).send("User already exists");
     } else {
       const user = await User.create({
         userId : insertId,
         email
       });
-
     if (user) {
       console.log("Created!");
       res.status(200).send("user created")

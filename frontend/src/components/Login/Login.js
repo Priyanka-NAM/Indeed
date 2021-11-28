@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   Box,
   Container,
@@ -115,13 +114,12 @@ export function Login() {
     };
 
     const error = await validatelogin(data);
-    console.log(error);
     if (Object.keys(error).length !== 0) {
       setErrors(error);
     } else {
       setErrors({});
       await dispatch(jobSeekerLogin(data));
-
+      console.log("isA : ",isAuth);
       if (!isAuth) {
         setAccErr(true);
       }
