@@ -1,99 +1,98 @@
-import React, { useEffect, useState } from "react";
-import {
-  Container,
-  Grid,
-  OutlinedInput,
-  Typography,
-  InputLabel,
-  MenuItem,
-  Select,
-  Button,
-} from "@material-ui/core";
-import {
-  Box,
-  makeStyles,
-  withStyles,
-  FormHelperText,
-  FormControlLabel,
-  Checkbox,
-} from "@material-ui/core";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
-import { jobSeekerSignUp } from "../../Redux/Actions/SignUpAction";
+import React, { useEffect, useState } from 'react';
+import { Container,Grid,OutlinedInput,Typography,InputLabel,MenuItem,Select,Button} from '@material-ui/core';
+import { 
+    Box, 
+    makeStyles, 
+    withStyles,
+    FormHelperText,
+    FormControlLabel,
+    Checkbox,
+} from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, Redirect } from 'react-router-dom';
+import { jobSeekerSignUp } from '../../Redux/Actions/SignUpAction';
 import validateSignUp from "./ValidateSignup";
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    backgroundColor: "#f2f2f2",
+    container: {
+        backgroundColor: "#f2f2f2",
+        
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        
+    },
+    boxImg: {
+        width: "450px",
+        display: "flex",
+        height: "40px",
+        justifyContent: "center",
+        margin: "60px 0 30px"
+    },
+    imgLogo: {
+        height: "30px",
+        cursor: "pointer"
+    },
+    boxForm: {
+        backgroundColor: "#ffffff",
+        width: "450px",
+        padding: "20px"
+    },
+    outlinedInput: {
+        height: "48px",
+        width: "400px",
+        margin: "7px 0",
+    },
+    h5: {
+        fontWeight: "600"
+    },
+    formhelperText: {
+        fontWeight: "700",
+        fontSize: "14px",
+        color: "black"
+    },
+    checkbox: {
+        marginBottom: "10px"
+    },
+    button: {
+        width: "350px",
+        borderRadius: "20px",
+        height: "40px"
+    },
+    divider: {
+        backgroundColor: "#f2f2f2",
+        heigth: "10px",
+        width: "150px",
+        margin: "0 30px"
+    },
+    pageBreak: {
+        backgroundColor: "#f2f2f2",
+        heigth: "10px",
+        width: "440px",
+        margin: "30px 30px 20px"
+    },
+    errorDisplay: {
+        color: "red",
+        fontWeight: "700",
+    },
+}))
 
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  boxImg: {
-    width: "450px",
-    display: "flex",
-    height: "40px",
-    justifyContent: "center",
-    margin: "60px 0 30px",
-  },
-  imgLogo: {
-    height: "30px",
-    cursor: "pointer",
-  },
-  boxForm: {
-    backgroundColor: "#ffffff",
-    width: "450px",
-    padding: "20px",
-  },
-  outlinedInput: {
-    height: "48px",
-    width: "400px",
-    margin: "7px 0",
-  },
-  h5: {
-    fontWeight: "600",
-  },
-  formhelperText: {
-    fontWeight: "700",
-    fontSize: "14px",
-    color: "black",
-  },
-  checkbox: {
-    marginBottom: "10px",
-  },
-  button: {
-    width: "350px",
-    borderRadius: "20px",
-    height: "40px",
-  },
-  divider: {
-    backgroundColor: "#f2f2f2",
-    heigth: "10px",
-    width: "150px",
-    margin: "0 30px",
-  },
-  pageBreak: {
-    backgroundColor: "#f2f2f2",
-    heigth: "10px",
-    width: "440px",
-    margin: "30px 30px 20px",
-  },
-  errorDisplay: {
-    color: "red",
-    fontWeight: "700",
-  },
-}));
+const GreenCheckbox = withStyles({
+    root: {
+      color: "#085ff7",
+    },
+    checked: {},
+})((props) => <Checkbox color="default" {...props} />);
 
 const SignInButton = withStyles((theme) => ({
-  root: {
-    color: "#ffffff",
-    backgroundColor: "#085ff7",
-    cursor: "pointer",
-    "&:hover": {
-      backgroundColor: "#0542ac",
+    root: {
+        color: "#ffffff",
+      backgroundColor: "#085ff7",
+      cursor: "pointer",
+      '&:hover': {
+        backgroundColor: "#0542ac",
+      },
     },
-  },
 }))(Button);
 
 function Signup() {
@@ -104,24 +103,19 @@ function Signup() {
     const [role, setRole] = useState(-1);
     const [errors, setErrors] = useState({});
     const [accErr, setAccErr] = useState(false);
-    const [isLogin, setLogin] = useState(false);
     const dispatch = useDispatch();
  
     const onEmailChange = (e) => {
         setEmail(e.target.value)
     }
 
-  const onEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
+    const onPasswordChange = (e) => {
+        setPassword(e.target.value)
+    }
 
-  const onPasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const onRoleChange = (e) => {
-    setRole(e.target.value);
-  };
+    const onRoleChange = (e) => {
+        setRole(e.target.value)
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -136,22 +130,16 @@ function Signup() {
         } else {
             setErrors({});
             await dispatch(jobSeekerSignUp(data));
-            setTimeout(() => {
-                if (!isValid) {
-                  setAccErr(true);
-                } else {
-                    setLogin(true)
-                }
-              }, 5000);
-            console.log("is : ", isValid)
+            if (!isValid) {
+              setAccErr(true);
+            }
         }
     }
-  };
 
     return (
         <Container className = {classes.container} maxWidth = "xl">
             {
-                isLogin && <Redirect to="/login" />
+                isValid && <Redirect to="/login" />
             }
             <Box className = {classes.boxImg}>
                 <img
@@ -212,5 +200,7 @@ function Signup() {
             </Grid>
         </Container>
     )
+}
+
 
 export default Signup;
