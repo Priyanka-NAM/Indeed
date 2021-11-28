@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   Box,
   Container,
@@ -18,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { jobSeekerLogin } from "../../Redux/Actions/LoginAction";
 import validateLogin from "./ValidateLogin";
+import { validatelogin } from "./ValidateLogin";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -92,13 +92,12 @@ const SignInButton = withStyles((theme) => ({
 export function Login() {
   const classes = useStyles();
   let isAuth = useSelector((state) => state.login.isAuth);
+  const [isValid, setValid] = useState(isAuth);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  //const [accountError, setAccountError] = useState("");
   const [accErr, setAccErr] = useState(false);
   const [errors, setErrors] = useState({});
-  const [redirectHome, setHome] = useState(false);
-  const [isSubmitting, setSubmitting] = useState(false);
+
   const dispatch = useDispatch();
   const onEmailChange = (e) => {
     setEmail(e.target.value);
@@ -114,32 +113,24 @@ export function Login() {
       email: email,
       password: password,
     };
-    setErrors(validateLogin(data));
-    await dispatch(jobSeekerLogin(data));
-    if (!isAuth) {
-      //setAccountError("Account not found")
-      setAccErr(true);
-    }
-    // const values = {
-    //     "accountError": accErr
-    // }
-    // if (!isAuth) {
-    //     setErrors(values)
-    // }
-    setSubmitting(true);
-  };
 
-  useEffect(() => {
-    debugger;
-    console.log("isauth: ", isAuth, errors);
-    if (Object.keys(errors).length === 0 && isSubmitting && isAuth) {
-      setHome(true);
+    const error = await validatelogin(data);
+    if (Object.keys(error).length !== 0) {
+      setErrors(error);
+    } else {
+      setErrors({});
+      await dispatch(jobSeekerLogin(data))
+      setTimeout(() => {
+        if (!isAuth) {
+          setAccErr(true);
+        }
+      }, 3000);
     }
-  }, [errors, redirectHome]);
+  };
 
   return (
     <Container className={classes.container} maxWidth="xl">
-      {redirectHome && <Redirect to="/" />}
+      {isAuth && <Redirect to="/" />}
       <Box className={classes.boxImg}>
         <img
           className={classes.imgLogo}
@@ -150,7 +141,9 @@ export function Login() {
       <Box className={classes.boxForm}>
         <div style={{ textAlign: "center", fontWeight: "700" }}>
           {accErr && (
-            <p className={classes.errorDisplay}>{"Account not found"}</p>
+            <p className={classes.errorDisplay}>
+              {"Account not found or Invalid credentials"}
+            </p>
           )}
         </div>
         <Grid container spacing={3}>

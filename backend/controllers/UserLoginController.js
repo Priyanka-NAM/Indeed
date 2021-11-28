@@ -7,6 +7,12 @@ const { pool } = require("../config/mysqldb");
 
 const loginUser = (req, res) => {
   const { email, password } = req.body;
+  if (!email) {
+    return res.status(404).send("email is required")
+  }
+  if (!password) {
+    return res.status(404).send("password is required")
+  }
   console.log(email);
   pool.getConnection(async (err, conn) => {
     if (err) {
@@ -31,7 +37,7 @@ const loginUser = (req, res) => {
             }
             if (isValid) {
               const payload = { _id: result[0].userId, email: result[0].email };
-              const token = jwt.sign(payload, process.env.secret, {
+              const token = jwt.sign(payload, process.env.SECRET, {
                 expiresIn: 1008000,
               });
               let moongoresults = await User.findOne({
@@ -40,13 +46,13 @@ const loginUser = (req, res) => {
               results["JWT"] = token;
               results["email"] = result[0].email;
               results["userId"] = moongoresults._id;
-
+              results["role"] = result[0].role
               res.status(200).send(results);
             } else {
-              res.send("Unauthorized");
+              res.status(401).send("Unauthorized");
             }
           } else {
-            res.send("Resource not found");
+            res.status(404).send("Resource not found");
           }
           conn.release();
         }

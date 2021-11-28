@@ -13,6 +13,7 @@ function Landing() {
         localStorage.setItem("email", decoded.email)
         localStorage.setItem("userid", decoded._id)
         localStorage.setItem("token", token)
+        localStorage.setItem("role", userDetails.role)
     }
     return (
         <div>
