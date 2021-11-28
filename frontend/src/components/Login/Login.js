@@ -91,10 +91,10 @@ const SignInButton = withStyles((theme) => ({
 
 export function Login() {
   const classes = useStyles();
-  let isAuth = useSelector((state) => state.login.isAuth);
+  let { isAuth, accErr } = useSelector((state) => state.login);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [accErr, setAccErr] = useState(false);
+
   const [errors, setErrors] = useState({});
 
   const dispatch = useDispatch();
@@ -118,11 +118,7 @@ export function Login() {
       setErrors(error);
     } else {
       setErrors({});
-      await dispatch(jobSeekerLogin(data));
-      console.log("isA : ",isAuth);
-      if (!isAuth) {
-        setAccErr(true);
-      }
+      dispatch(jobSeekerLogin(data));
     }
   };
 

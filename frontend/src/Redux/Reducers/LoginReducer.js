@@ -9,6 +9,7 @@ const initialState = {
   userDetails: {},
   responseFromServer: null,
   errorResponse: null,
+  accErr: false,
 };
 
 export const loginReducer = (state = initialState, action) => {
@@ -17,12 +18,14 @@ export const loginReducer = (state = initialState, action) => {
       return {
         ...state,
         isAuth: true,
+        accErr: false,
         userDetails: action.payload,
       };
     case LOGIN_ERROR:
       return {
         ...state,
         isAuth: false,
+        accErr: true,
         errorResponse: action.payload,
       };
     case JOBSEEKER_LOGOUT:
