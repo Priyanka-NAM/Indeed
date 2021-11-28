@@ -14,6 +14,7 @@ import { CompanyReviews } from "./components/CompanyReviews/CompanyReviews";
 import EmployerJobPost from "./components/Employer/EmployerJobPosting/EmployerJobPost";
 import EmployerHomePage from "./components/Employer/EmployerHomePage/EmployerHomePage";
 import EmployerJobPostingHome from "./components/Employer/EmployerJobPosting/EmployerJobPostingHome";
+import Admindashboard from "./components/Admin/Dashboard";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
             component={EmployerJobPostingHome}
           />
           <Route path='/reports' component={EmployerHomePage} />
+          <Route path='/admindashboard' component={Admindashboard} />
         </Router>
       </div>
     </ThemeProvider>

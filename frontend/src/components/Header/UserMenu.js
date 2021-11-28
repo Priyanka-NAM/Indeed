@@ -50,6 +50,7 @@ export default function UserMenu() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [redirectLanding, setLanding] = useState(null);
   const userDetails = useSelector((state) => state.login.userDetails);
+  const role = useSelector((state) => state.login.userDetails.role);
 
   const handleClick = (event) => {
     console.log(event.currentTarget);
@@ -65,6 +66,9 @@ export default function UserMenu() {
     dispatch(jobSeekerLogout());
     setLanding(<Redirect to="/login" />);
   };
+  const handleDashboard = () => {
+    setLanding(<Redirect to="/admindashboard" />);
+  }
 
   return (
     <div>
@@ -77,7 +81,8 @@ export default function UserMenu() {
       >
         <PersonIcon />
       </IconButton>
-      <StyledMenu
+      {role != 2 ? (
+        <StyledMenu
         id="customized-menu"
         anchorEl={anchorEl}
         keepMounted
@@ -132,6 +137,34 @@ export default function UserMenu() {
           <ListItemText primary="Sign Out" />
         </StyledMenuItem>
       </StyledMenu>
+      ): <StyledMenu
+        id="customized-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+          <StyledMenuItem
+          onClick={() => {
+            handleDashboard();
+          }}
+        >
+       <ListItemIcon>
+              <PersonOutlineIcon fontSize="small" />
+            </ListItemIcon>
+          <ListItemText primary="Analystics Dashboard" />
+        </StyledMenuItem>
+         <StyledMenuItem
+          onClick={() => {
+            handleLogout();
+          }}
+        >
+          <ListItemIcon>
+            <PowerSettingsNewIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Sign Out" />
+        </StyledMenuItem>
+      </StyledMenu>}
     </div>
   );
 }
