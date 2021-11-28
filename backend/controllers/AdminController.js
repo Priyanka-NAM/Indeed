@@ -48,3 +48,19 @@ exports.getTopRatedCompanies = async (req, res) => {
       });
     }
   };
+
+  exports.getTopRatedCEOs = async (req, res) => {
+    try {
+      const review = await Employer.find({}).sort({averageRating : -1}).limit(10);
+      if (!review) {
+        return res.status(400).json({
+          error: error,
+        });
+      }
+      res.send(review);
+    } catch (error) {
+      return res.status(400).json({
+        error: error,
+      });
+    }
+  };
