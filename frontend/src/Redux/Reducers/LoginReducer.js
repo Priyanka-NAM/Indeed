@@ -2,6 +2,7 @@ import {
   JOBSEEKER_LOGIN,
   LOGIN_ERROR,
   JOBSEEKER_LOGOUT,
+  EMPLOYER_LOGOUT,
 } from "../Constants/UserConstants";
 
 const initialState = {
@@ -29,6 +30,11 @@ export const loginReducer = (state = initialState, action) => {
         errorResponse: action.payload,
       };
     case JOBSEEKER_LOGOUT:
+      return {
+        ...state,
+        ...initialState,
+      };
+    case EMPLOYER_LOGOUT:
       return {
         ...state,
         ...initialState,

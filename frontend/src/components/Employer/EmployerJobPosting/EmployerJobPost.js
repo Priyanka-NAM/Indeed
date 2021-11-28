@@ -5,6 +5,9 @@ import { useDispatch } from "react-redux";
 import JobDetails1 from "./JobDetails1";
 import JobDetails2 from "./JobDetails2";
 import JobDetails3 from "./JobDetails3";
+import { useSelector } from "react-redux";
+import { Link, Redirect } from "react-router-dom";
+import EmployerHeader from "../EmployerHomePage/EmployerHeader";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -83,7 +86,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function EmployerJobPost() {
-  const isAuth = true;
   const classes = useStyles();
   const [jobDetails, setjobDetails] = useState({
     jobTitle: "",
@@ -145,21 +147,11 @@ function EmployerJobPost() {
         );
     }
   }
-  console.log("Step Value in Job Post ", step);
+  const isAuth = useSelector((state) => state.login.isAuth);
 
   return (
     <>
-      <AppBar position='static' style={{ background: "#2D2D2D" }}>
-        <Toolbar variant='dense'>
-          <img
-            className={classes.inddedLogo}
-            src='/Images/Indeed_Employer_logo.png'
-            alt=''
-          />
-        </Toolbar>
-      </AppBar>
-      {success ? alert("User registered successfully") : <></>}
-      {isError ? <Box>{errorMsg}</Box> : <></>}
+      {/* {isAuth && <Redirect to='/login' />} */}
       <Container className={classes.container} maxWidth='xl'>
         <br />
         <br />

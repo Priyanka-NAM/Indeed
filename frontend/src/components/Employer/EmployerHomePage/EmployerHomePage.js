@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import { Container, Grid, Typography } from "@material-ui/core";
-import { Box, makeStyles, AppBar, Link, Toolbar } from "@material-ui/core";
-import { useDispatch } from "react-redux";
+import { Container, Grid, Typography, Button } from "@material-ui/core";
+import { Box, makeStyles, AppBar, Toolbar } from "@material-ui/core";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import EmployerHeader from "./EmployerHeader";
+
 import { NavLink } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
   container: {
-    backgroundColor: "#f2f2f2",
-
     display: "flex",
-    flexDirection: "column",
+    justifyContent: "flex-end",
+
+    flexDirection: "row",
     alignItems: "center",
   },
   boxImg: {
@@ -20,6 +23,10 @@ const useStyles = makeStyles((theme) => ({
   },
   imgLogo: {
     height: "130px",
+  },
+  homeLogo: {
+    height: "400px",
+    width: "500px",
   },
   inddedLogo: {
     height: "40px",
@@ -58,10 +65,18 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "10px",
   },
   button: {
-    width: "450px",
-    borderRadius: "20px",
+    width: "100px",
+    borderRadius: "15px",
     height: "40px",
-    backgroundColor: "#164081",
+    backgroundColor: "#2557A7",
+    color: "white",
+  },
+  button1: {
+    width: "140px",
+    borderRadius: "15px",
+    height: "60px",
+    backgroundColor: "#2557A7",
+    color: "white",
   },
   divider: {
     backgroundColor: "#f2f2f2",
@@ -85,72 +100,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function EmployerHomePage() {
-  const isAuth = true;
   const classes = useStyles();
-  const [jobDetails, setjobDetails] = useState({
-    jobTitle: "",
-    companyName: "",
-    industry: "",
-    jobLocation: { address: "", city: "", state: "", country: "", zipcode: "" },
-    jobType: "Full-Time",
-    isRemote: false,
-    salary: "",
-    jobDescription: {
-      compensation: "",
-      requirement: "",
-      moreInfo: "",
-      responsibilites: "",
-    },
-  });
-  let [step, setStep] = useState(1);
-  const success = false;
-  const isError = false;
-  const errorMsg = false;
-
-  function showStep(step, setStep, jobDetails, setjobDetails) {
-    // switch (step) {
-    //   case 1:
-    //     return (
-    //       <JobDetails1
-    //         setStep={setStep}
-    //         step={step}
-    //         jobDetails={jobDetails}
-    //         setjobDetails={setjobDetails}
-    //       />
-    //     );
-    //   case 2:
-    //     return (
-    //       <JobDetails2
-    //         setStep={setStep}
-    //         step={step}
-    //         jobDetails={jobDetails}
-    //         setjobDetails={setjobDetails}
-    //       />
-    //     );
-    //   case 3:
-    //     return (
-    //       <JobDetails3
-    //         setStep={setStep}
-    //         step={step}
-    //         jobDetails={jobDetails}
-    //         setjobDetails={setjobDetails}
-    //       />
-    //     );
-    //   default:
-    //     return (
-    //       <JobDetails1
-    //         setStep={setStep}
-    //         step={step}
-    //         jobDetails={jobDetails}
-    //         setjobDetails={setjobDetails}
-    //       />
-    //     );
-    // }
-  }
+  const isAuth = useSelector((state) => state.login.isAuth);
 
   return (
     <>
-      <AppBar position='static' style={{ background: "#2D2D2D" }}>
+      {/* <AppBar position='static' style={{ background: "#2D2D2D" }}>
         <Toolbar variant='dense'>
           <img
             className={classes.inddedLogo}
@@ -182,52 +137,17 @@ function EmployerHomePage() {
               className={classes.link}>
               Reports
             </Typography>
+            {!isAuth && (
+              <Typography to='/' component={NavLink} className={classes.link}>
+                <Button className={classes.button} variant='contained'>
+                  Sign In
+                </Button>
+              </Typography>
+            )}
           </div>
         </Toolbar>
-      </AppBar>
-      {success ? alert("User registered successfully") : <></>}
-      {isError ? <Box>{errorMsg}</Box> : <></>}
-      <Container className={classes.container} maxWidth='xl'>
-        <br />
-        <br />
+      </AppBar> */}
 
-        <br />
-        <br />
-
-        {/* <Grid
-          container
-          spacing={1}
-          style={{
-            fontSize: "14px",
-            backgroundColor: "white",
-            padding: "15px 10px",
-            margin: "0 -20px ",
-          }}>
-          <Grid item style={{ cursor: "pointer" }}>
-            © 2020 Indeed
-          </Grid>
-          <Grid item>-</Grid>
-          <Grid item style={{ cursor: "pointer" }}>
-            Accessibility at Indeed
-          </Grid>
-          <Grid item>-</Grid>
-          <Grid item style={{ cursor: "pointer" }}>
-            Privacy Center
-          </Grid>
-          <Grid item>-</Grid>
-          <Grid item style={{ cursor: "pointer" }}>
-            Cookies
-          </Grid>
-          <Grid item>-</Grid>
-          <Grid item style={{ cursor: "pointer" }}>
-            Privacy
-          </Grid>
-          <Grid item>-</Grid>
-          <Grid item style={{ cursor: "pointer" }}>
-            Terms
-          </Grid>
-        </Grid> */}
-      </Container>
       {/* // : <Redirect to='/' /> */}
     </>
   );

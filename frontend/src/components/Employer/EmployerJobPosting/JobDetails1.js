@@ -154,8 +154,6 @@ function JobDetails1({ step, setStep, jobDetails, setjobDetails }) {
 
   return (
     <>
-      {success ? alert("User registered successfully") : <></>}
-      {isError ? <Box>{errorMsg}</Box> : <></>}
       <Container className={classes.container} maxWidth='xl'>
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
           <Grid item style={{ margin: "25px 0" }}>
