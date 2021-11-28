@@ -5,6 +5,7 @@ const userRouter = require("./routes/UserRoutes");
 const companyRouter = require("./routes/CompanyRoutes");
 const employerRoutes = require("./routes/EmployerRoutes");
 const jobRoutes = require("./routes/JobRoutes");
+const AdminRoutes = require("./routes/AdminRoutes");
 const cors = require('cors');
 
 const connectDB = require("./config/db");
@@ -20,6 +21,7 @@ app.use("/indeed/users", userRouter);
 app.use("/indeed/company", companyRouter);
 app.use("/indeed/employer", employerRoutes);
 app.use("/indeed/employer", jobRoutes);
+app.use("/indeed/admin", AdminRoutes);
 
 connectDB();
 app.get("/", (req, res) => {

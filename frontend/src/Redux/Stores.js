@@ -4,6 +4,7 @@ import { signUpReducer } from "./Reducers/SignupReducer";
 import { loginReducer } from "./Reducers/LoginReducer";
 import { CompanyDetailsReducer, CompanyListReviewReducer } from "./Reducers/CompanyReducer";
 import { companyReviewReducer } from "./Reducers/CompanyReviewReducer";
+import { TopCompanyListReviewReducer,TopCompanyListRatingReducer,TopAcceptedJobSeekerReducer } from './Reducers/AdminReducers';
 import { jobReducer } from "./Reducers/JobReducer";
 import { JOBSEEKER_LOGOUT } from "./Constants/UserConstants";
 
@@ -14,6 +15,9 @@ const appReducer = combineReducers({
   companyReview: companyReviewReducer,
   companyDetails: CompanyDetailsReducer,
   companyReviewList: CompanyListReviewReducer,
+  TopReviewedCompanies:TopCompanyListReviewReducer,
+  TopRatingCompanies: TopCompanyListRatingReducer,
+  TopAcceptedJobseekers: TopAcceptedJobSeekerReducer,
 });
 
 const rootReducer = (state, action) => {
