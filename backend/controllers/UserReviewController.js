@@ -144,7 +144,6 @@ exports.getAllReviews = async (req, res) => {
   console.log("get all reviews");
   try {
     const review = await Reviews.find({});
-    req.review = review;
     if (!review) {
       console.log("error");
       return res.status(400).json({
