@@ -8,6 +8,8 @@ import {
     ADMIN_TOP_MOST_JOBSEEKER_FAIL,
     ADMIN_GET_ALL_REVIEWS_SUCCESS,
     ADMIN_GET_ALL_REVIEWS_FAIL,
+    ADMIN_TOP_MOST_CEOS_SUCCESS,
+    ADMIN_TOP_MOST_CEOS_FAIL,
 
   } from '../Constants/AdminConstants';
 
@@ -93,6 +95,29 @@ const initialState1 = {
           return {
               ...state,
               AllReviewsError: action.payload
+            };
+      default:
+        return { ...state };
+    }
+  };
+
+
+  const initialState4 = {
+    TopRatedCeos: null,
+    TopRatedCeosError: null
+  }
+
+  export const getTopRatedCeosReducer = (state = initialState4 , action) => {
+    switch (action.type) {
+      case ADMIN_TOP_MOST_CEOS_SUCCESS:
+          return { 
+              ...state,
+              TopRatedCeos: action.payload, 
+              };
+      case ADMIN_TOP_MOST_CEOS_FAIL:
+          return {
+              ...state,
+              TopRatedCeosError: action.payload
             };
       default:
         return { ...state };
