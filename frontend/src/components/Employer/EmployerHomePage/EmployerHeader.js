@@ -121,12 +121,12 @@ function EmployerHeader() {
             className={classes.link}>
             Applicants
           </Typography>
-          <Typography
+          {/* <Typography
             to='/employer/analytics'
             component={NavLink}
             className={classes.link}>
             Analytics
-          </Typography>
+          </Typography> */}
           <Typography
             to='/employer/reports'
             component={NavLink}

@@ -84,23 +84,12 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     width: "200px",
-    borderRadius: "20px",
+    borderRadius: "9px",
     height: "50px",
     color: "white",
     backgroundColor: "#065FF7",
   },
-  divider: {
-    backgroundColor: "#f2f2f2",
-    heigth: "10px",
-    width: "150px",
-    margin: "0 30px",
-  },
-  pageBreak: {
-    backgroundColor: "#f2f2f2",
-    heigth: "10px",
-    width: "440px",
-    margin: "30px 30px 20px",
-  },
+
   formStyle: {
     width: "100%",
   },
@@ -111,6 +100,7 @@ const useStyles = makeStyles((theme) => ({
   tableHeader: {
     fontSize: "20px",
     fontWeight: "bold",
+    color: "#065FF7",
   },
   root: {
     marginLeft: "2%",
@@ -148,7 +138,7 @@ function EmployerJobPostingHome(props) {
     // if (userDetails.userId && userDetails.userId !== "") {
     //   dispatch(employerAllJob(userDetails.userId));
     // }
-    dispatch(employerAllJob("61a07e89e5d016c47d56338a"));
+    dispatch(employerAllJob("619f0cdd8188bc6c174294cf"));
     console.log("test data");
   }, [props]);
   console.log("respone data", responseFromServer);
@@ -162,18 +152,6 @@ function EmployerJobPostingHome(props) {
       );
     });
   }
-  // const rows = [
-  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
-  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
-  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
-  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
-  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
-  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
-  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
-  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
-  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
-  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
-  // ];
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(2);
@@ -194,7 +172,6 @@ function EmployerJobPostingHome(props) {
       label: "Action",
       minWidth: 170,
       align: "right",
-      format: (value) => value.toLocaleString("en-US"),
     },
   ];
 
@@ -207,8 +184,6 @@ function EmployerJobPostingHome(props) {
       }}>
       <MuiThemeProvider theme={theme} />
       <CssBaseline />
-      {success ? alert("User registered successfully") : <></>}
-      {isError ? <Box>{errorMsg}</Box> : <></>}
       <Container className={classes.container} maxWidth='xl'>
         <Grid
           item
