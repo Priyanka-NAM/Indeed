@@ -90,13 +90,12 @@ const SignInButton = withStyles((theme) => ({
 
 export function Login() {
   const classes = useStyles();
-  let isAuth = useSelector((state) => state.login.isAuth);
-  const [isValid, setValid] = useState(isAuth);
+  let { isAuth, accErr, userDetails } = useSelector((state) => state.login);
+  const { role } = userDetails;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [accErr, setAccErr] = useState(false);
-  const [errors, setErrors] = useState({});
 
+  const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
   const onEmailChange = (e) => {
     setEmail(e.target.value);
@@ -126,13 +125,14 @@ export function Login() {
   };
 
   return (
-    <Container className={classes.container} maxWidth="xl">
-      {isAuth && <Redirect to="/" />}
+    <Container className={classes.container} maxWidth='xl'>
+      {isAuth && role === 0 && <Redirect to='/' />}
+      {isAuth && role === 1 && <Redirect to='/employer/home' />}
       <Box className={classes.boxImg}>
         <img
           className={classes.imgLogo}
-          src="/Images/Indeed_logo.png"
-          alt="Indeed"
+          src='/Images/Indeed_logo.png'
+          alt='Indeed'
         />
       </Box>
       <Box className={classes.boxForm}>
@@ -145,35 +145,32 @@ export function Login() {
         </div>
         <Grid container spacing={3}>
           <Grid item>
-            <Typography className={classes.h5} variant="h5">
+            <Typography className={classes.h5} variant='h5'>
               Sign In
             </Typography>
           </Grid>
           <Grid item>
-            <Typography variant="body2">
+            <Typography variant='body2'>
               By signing in to your account, you agree to Indeed's
               <Link
-                to="/"
+                to='/'
                 style={{ textDecoration: "underline", color: "#085ff8" }}
-                href=""
-              >
+                href=''>
                 Terms of Service{" "}
               </Link>{" "}
               and consent to our
               <Link
-                to="/"
+                to='/'
                 style={{ textDecoration: "underline", color: "#085ff8" }}
-                href=""
-              >
+                href=''>
                 {" "}
                 Cookie Policy{" "}
               </Link>
               and
               <Link
-                to="/"
+                to='/'
                 style={{ textDecoration: "underline", color: "#085ff8" }}
-                href=""
-              >
+                href=''>
                 {" "}
                 Privacy Policy.
               </Link>
@@ -189,8 +186,8 @@ export function Login() {
                 className={classes.outlinedInput}
                 onChange={onEmailChange}
                 value={email}
-                type="text"
-                variant="outlined"
+                type='text'
+                variant='outlined'
               />
               {errors.email && (
                 <p className={classes.errorDisplay}>{errors.email}</p>
@@ -202,8 +199,8 @@ export function Login() {
                 className={classes.outlinedInput}
                 onChange={onPasswordChange}
                 value={password}
-                type="password"
-                variant="outlined"
+                type='password'
+                variant='outlined'
               />
               {errors.password && (
                 <p className={classes.errorDisplay}>{errors.password}</p>
@@ -211,10 +208,9 @@ export function Login() {
               <br />
               <br />
               <SignInButton
-                type="submit"
+                type='submit'
                 className={classes.button}
-                variant="contained"
-              >
+                variant='contained'>
                 Sign In
               </SignInButton>
             </form>
@@ -223,10 +219,9 @@ export function Login() {
           <Grid item>
             <Typography
               style={{ cursor: "pointer", color: "#085ff7", margin: "0 80px" }}
-              variant="subtitle2"
+              variant='subtitle2'
               component={Link}
-              to="/signup"
-            >
+              to='/signup'>
               New to Indeed? Create an account
             </Typography>
           </Grid>
