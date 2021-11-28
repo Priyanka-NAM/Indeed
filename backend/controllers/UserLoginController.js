@@ -31,7 +31,7 @@ const loginUser = (req, res) => {
             }
             if (isValid) {
               const payload = { _id: result[0].userId, email: result[0].email };
-              const token = jwt.sign(payload, process.env.secret, {
+              const token = jwt.sign(payload, process.env.SECRET, {
                 expiresIn: 1008000,
               });
               let moongoresults = await User.findOne({
