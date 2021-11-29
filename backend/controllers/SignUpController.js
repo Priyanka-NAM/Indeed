@@ -49,7 +49,7 @@ const createUser = async (req, res) => {
   
   // get the data from request body which is in json and put it in variables called user and password
   const createMongoUser = async (req, res, insertId) => {
-    const {email} = req.body
+    const {email, role} = req.body
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(409).send("User already exists");
@@ -60,7 +60,7 @@ const createUser = async (req, res) => {
       });
     if (user) {
       console.log("Created!");
-      res.status(200).send("user created")
+      res.status(200).json({"role":role})
     } else {
       res.status(500).send("database error");
       throw new Error("Database error: Please try again later. ");
@@ -69,6 +69,7 @@ const createUser = async (req, res) => {
 };
 
 const createMongoEmployer = async (req, res, id) => {
+  const {role} = req.body
   const employerExists = await Employer.findOne({
     employerID: id, 
   });
@@ -86,6 +87,7 @@ const createMongoEmployer = async (req, res, id) => {
       console.log("Created!");
       res.status(201).json({
         employerID: id,
+        "role": role
       });
     } else {
       res.status("400");

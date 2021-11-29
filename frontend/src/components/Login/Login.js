@@ -95,7 +95,6 @@ export function Login() {
   const { role } = userDetails;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [errors, setErrors] = useState({});
 
   const dispatch = useDispatch();
@@ -119,7 +118,7 @@ export function Login() {
       setErrors(error);
     } else {
       setErrors({});
-      dispatch(jobSeekerLogin(data));
+      await dispatch(jobSeekerLogin(data));
     }
   };
 

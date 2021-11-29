@@ -16,6 +16,9 @@ const userSchema = mongoose.Schema({
         resume: {
             type: String,
         },
+        noOfAcceptedReviews: {
+            type: Number,
+        },
         savedJobs: [
             {
                 type: mongoose.Schema.Types.ObjectId,

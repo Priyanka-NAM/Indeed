@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
-import { jobSeekerSignUp } from '../../Redux/Actions/SignUpAction';
+import { allUsersSignUp } from '../../Redux/Actions/SignUpAction';
 import validateSignUp from "./ValidateSignup";
 
 const useStyles = makeStyles((theme) => ({
@@ -77,13 +77,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-const GreenCheckbox = withStyles({
-    root: {
-      color: "#085ff7",
-    },
-    checked: {},
-})((props) => <Checkbox color="default" {...props} />);
-
 const SignInButton = withStyles((theme) => ({
     root: {
         color: "#ffffff",
@@ -97,12 +90,13 @@ const SignInButton = withStyles((theme) => ({
 
 function Signup() {
     const isValid = useSelector(state=>state.signup.isValid);
+    const isError = useSelector(state=>state.signup.isError);
+    const response = useSelector(state=>state.signup.responseFromServer);
     const classes = useStyles();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [role, setRole] = useState(-1);
     const [errors, setErrors] = useState({});
-    const [accErr, setAccErr] = useState(false);
     const dispatch = useDispatch();
  
     const onEmailChange = (e) => {
@@ -129,17 +123,17 @@ function Signup() {
             setErrors(error);
         } else {
             setErrors({});
-            await dispatch(jobSeekerSignUp(data));
-            if (!isValid) {
-              setAccErr(true);
-            }
+            await dispatch(allUsersSignUp(data));
         }
     }
 
     return (
         <Container className = {classes.container} maxWidth = "xl">
             {
-                isValid && <Redirect to="/login" />
+                response && (isValid & response.role === 0)  && <Redirect to="/login" />
+            }
+            {
+                response && (isValid & response.role === 1)  && <Redirect to="/addemployer" />
             }
             <Box className = {classes.boxImg}>
                 <img
@@ -150,7 +144,7 @@ function Signup() {
             </Box>
             <Box className = {classes.boxForm}>
                     <div style={{ textAlign: "center", fontWeight: "700" }}>
-                    {accErr && (
+                    {isError && (
                             <p className={classes.errorDisplay}>
                             {"User already exists"}
                             </p>

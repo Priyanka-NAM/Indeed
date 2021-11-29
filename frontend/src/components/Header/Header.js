@@ -62,6 +62,7 @@ export default function Header() {
   const dispatch = useDispatch()
   const classes = useStyles();
   let isAuth = useSelector(state=>state.login.isAuth);
+  let role = useSelector(state=>state.login.userDetails.role);
   if(!localStorage.getItem('token')){
     isAuth = false
   } else {
@@ -108,7 +109,7 @@ export default function Header() {
                 </Typography>
               </Box>
             </Box>
-            {isAuth ? (
+            {(isAuth || role === 2) ? (
               <Box className={classes.header_right}>
                 <IconButton
                   edge="start"

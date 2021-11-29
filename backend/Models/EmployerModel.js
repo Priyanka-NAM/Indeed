@@ -98,7 +98,7 @@ const employerSchema = mongoose.Schema({
       },
     },
   ],
-  Views: [
+  views: [
     {
       date: {
         type: Date,
