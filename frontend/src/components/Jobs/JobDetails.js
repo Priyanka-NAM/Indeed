@@ -1,12 +1,12 @@
-import { Box, makeStyles, Typography, Grid } from '@material-ui/core';
+import { makeStyles, Container, Grid, Box, Typography, Button, OutlinedInput } from '@material-ui/core';
 import React , {useEffect, useReducer,useState} from 'react';
-import { Button } from '@material-ui/core';
 import  FullJobDescription  from './FullJobDescription';
 import { useSelector,useDispatch } from 'react-redux';
 import StarIcon from '@material-ui/icons/Star';
 import { Link } from 'react-router-dom';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import { postSavedJobs, deleteSavedJobs } from '../../Redux/Actions/JobsAction';
+import Modal from '@material-ui/core/Modal';
+import { postSavedJobs, deleteSavedJobs, applyJobs } from '../../Redux/Actions/JobsAction';
 
 const useStyles = makeStyles(theme=>({
     container:{
@@ -36,15 +36,28 @@ const useStyles = makeStyles(theme=>({
             border:`1px solid ${theme.palette.primary.main}`
 
         }
+    },
+    applyJob: {
+        boxSizing:'border-box',
+        width: "600px",
+        borderRadius:"10px", 
+        height: "100vh", 
+        backgroundColor: "white",
+        outline:'none',
+        padding:'40px',
     }
 })) 
 function JobDetails({jobData, index}) {
     console.log("index : ", index)
     const classes = useStyles();
     const dispatch = useDispatch();
-    const userId = useSelector(state=>state.login.userDetails.userId)
+    const {userId, email} = useSelector(state=>state.login.userDetails)
     const [viewUndo, setViewUndo] = useState([])
     const [display, setDisplay] = useState(false)
+    const [open, setOpen] = React.useState(false);
+    
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     useEffect(() => {
         console.log("view undo", viewUndo)
@@ -76,6 +89,20 @@ function JobDetails({jobData, index}) {
         dispatch(deleteSavedJobs(data))
     }
 
+    const handleResume = (e) => {
+        console.log(e.target.value)
+    }
+
+    const handleApplyJob = (jobId, employerId) => {
+        const data = {
+            "userId": userId,
+            "jobId": jobId,
+            "employerId": employerId
+        }
+        dispatch(applyJobs(data))
+        setOpen(false)
+    }
+
     return (
         <Box className={classes.container}>
             <Typography variant={'h5'} style={{marginBottom:'10px'}}>
@@ -99,9 +126,56 @@ function JobDetails({jobData, index}) {
             </Box>
             <Grid container>
                 <Grid item xs={4}>
-                <Button className={classes.link} style={{marginTop:'10px', marginBottom:'30px'}}>
+                <Button className={classes.link} onClick={handleOpen} style={{marginTop:'10px', marginBottom:'30px'}}>
                     Apply Now
                 </Button>
+                <Modal style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center"
+                    }}
+                    open={open}
+                    onClose={handleClose}>
+                    <Box className={classes.applyJob}>
+                    <Typography variant="h4" component="h2">
+                        Apply for Job
+                    </Typography>
+                    <hr />
+                    <Grid item>
+                            <Typography style={{ fontWeight:"600", marginTop:"10px"}}>
+                                Name
+                            </Typography>
+                            <OutlinedInput type="text" style={{width:"300px", height:"40px"}} placeholder="Enter name"/>
+                            <Typography style={{fontWeight:"600", marginTop:"10px"}}>
+                                Email
+                            </Typography>
+                            <OutlinedInput type="email" value={email} style={{width:"300px", height:"40px"}} placeholder="Enter email"/>
+                            <Typography style={{fontWeight:"600", marginTop:"10px"}}>
+                                Contact
+                            </Typography>
+                            <OutlinedInput type="text" style={{width:"300px", height:"40px"}} placeholder="Enter contact"/>
+                            <Typography style={{fontWeight:"600", marginTop:"10px"}}>
+                                Location
+                            </Typography>
+                            <OutlinedInput type="text" style={{width:"300px", height:"40px"}} placeholder="Enter location"/>
+                            <Typography style={{fontWeight:"600", marginTop:"10px"}}>
+                                Resume
+                            </Typography>
+                            <br  />
+                            <form onSubmit={handleResume}>
+                                <input type="file" name="resumeUpload" />
+                                <br />
+                                <br />
+                                <input type='submit' value='Upload!' />
+                            </form>
+                            <br />
+                            <Button onClick={() => handleApplyJob(jobData._id,jobData.employerID._id)}
+                             style={{ color:"black", backgroundColor:"#2D5DCE", width:"100px"}} 
+                            variant="contained">Submit</Button>
+                    </Grid>
+                    </Box>
+                </Modal>
                 </Grid>
                 <Grid item xs={4}>
                 <Button className={classes.link} onClick={() => displayUndo(jobData._id, index)} style={{marginTop:'10px', marginBottom:'30px', backgroundColor:'#A4A7AD'}}>
