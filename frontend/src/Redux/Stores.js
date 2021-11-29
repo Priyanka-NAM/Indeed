@@ -7,16 +7,13 @@ import {
   CompanyListReviewReducer,
 } from "./Reducers/CompanyReducer";
 import { companyReviewReducer } from "./Reducers/CompanyReviewReducer";
-<<<<<<< HEAD
 import {
   TopCompanyListReviewReducer,
   TopCompanyListRatingReducer,
   TopAcceptedJobSeekerReducer,
+  getAllReviewsReducer,
+  getTopRatedCeosReducer,
 } from "./Reducers/AdminReducers";
-=======
-import { TopCompanyListReviewReducer,TopCompanyListRatingReducer,TopAcceptedJobSeekerReducer,
-  getAllReviewsReducer,getTopRatedCeosReducer } from './Reducers/AdminReducers';
->>>>>>> 67dee5575cae15a30b00825f5df27b4eaab43ec2
 import { jobReducer } from "./Reducers/JobReducer";
 import { JOBSEEKER_LOGOUT } from "./Constants/UserConstants";
 import { employerJobPostingReducer } from "./Reducers/EmployerJobPostingReducer";
@@ -36,7 +33,7 @@ const appReducer = combineReducers({
   employerJobPosting: employerJobPostingReducer,
   employerJobs: employerJobsReducer,
   employerDetails: employerDetailsReducer,
-  AdminAllReviews:getAllReviewsReducer,
+  AdminAllReviews: getAllReviewsReducer,
   TopRatedCeos: getTopRatedCeosReducer,
 });
 
