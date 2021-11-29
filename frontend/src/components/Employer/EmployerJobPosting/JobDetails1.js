@@ -231,16 +231,6 @@ function JobDetails1({ step, setStep, jobDetails, setjobDetails }) {
                     error={errors.state}
                     onChange={(val) => selectRegion(val)}
                   />
-                  {/* <OutlinedInput
-                    className={classes.outlinedInput}
-                    onChange={onJobLocationChange}
-                    value={jobDetails.jobLocation.state}
-                    error={errors.state}
-                    required
-                    type='text'
-                    variant='outlined'
-                    name='state'
-                  /> */}
                 </Grid>
                 <Grid item xs>
                   <FormHelperText className={classes.formhelperText}>
@@ -270,16 +260,6 @@ function JobDetails1({ step, setStep, jobDetails, setjobDetails }) {
                 className={classes.outlinedInput}
                 onChange={(val) => selectCountry(val)}
               />
-              {/* <OutlinedInput
-                className={classes.outlinedInput}
-                onChange={onJobLocationChange}
-                value={jobDetails.jobLocation.country}
-                error={errors.country}
-                required
-                type='text'
-                variant='outlined'
-                name='country'
-              /> */}
             </form>
           </Grid>
         </Box>
