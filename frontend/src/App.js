@@ -23,7 +23,7 @@ import EmployerProfile from "./components/Employer/EmployerProfile/EmployerProfi
 import EmployerCompanyDetailsUpdate from "./components/Employer/EmployerDetails/EmployerCompanyDetailsUpdate";
 import AdminListCompanies from "./components/AdminCompany/AdminCompany";
 import EachJobDetails from "./components/Employer/EmployerJobPosting/EachJobDetailsPage";
-
+import EmployerReviews from "./components/Employer/EmployerReviews/EmployerReviews";
 function App() {
   return (
     <ThemeProvider theme={Theme}>
@@ -62,6 +62,8 @@ function App() {
             component={EmployerCompanyDetailsUpdate}
           />
           <Route path='/employer/showJobDetails' component={EachJobDetails} />
+          <Route path='/employer/reviews' component={EmployerReviews} />
+
           <Route path='/indeed/allcompanies' component={AdminListCompanies} />
         </Router>
       </div>

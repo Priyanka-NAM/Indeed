@@ -63,6 +63,7 @@ const reviewSchema = mongoose.Schema(
     },
     isFeatured: {
       type: Boolean,
+      default: false,
     },
     interviewPreparation: {
       type: String,
