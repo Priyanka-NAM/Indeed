@@ -51,6 +51,7 @@ function JobsDisplay(props) {
     const dispatch = useDispatch()
     const jobDetails = useSelector(state=>state.jobs.queriedJobs)
     const [jobData,setJobData] = useState(null)
+    const [index,setIndex] = useState(null)
     useEffect(() => {
         const data = {
             "job": props.location.state.query.job,
@@ -60,8 +61,8 @@ function JobsDisplay(props) {
         dispatch(fetchAllJobs(data))
     },[])
 
-    const getJobDetails = (job) => {
-        console.log(";;;;", job)
+    const getJobDetails = (job, index) => {
+        setIndex(index)
         setJobData(job)
     }
 
@@ -75,7 +76,7 @@ function JobsDisplay(props) {
                     jobDetails && <Grid className={classes.jobContainer}  container>  {
                         jobDetails.map((job,index)=>
                         <Grid className={classes.card}  item key={index} lg={12} md={12} sm={12} xs={12} >
-                            <Box onClick={() => getJobDetails(job)}>
+                            <Box onClick={() => getJobDetails(job, index)}>
                                 <Typography  className={classes.job_title}>
                                     {job.jobTitle}
                                 </Typography>
@@ -105,7 +106,7 @@ function JobsDisplay(props) {
                 </Grid>
                 }
                 {
-                    jobData ? <JobDetails jobData={jobData}/> : <></>
+                    jobData ? <JobDetails jobData={jobData} index={index}/> : <></>
                 }
                 </Box>
         </Container>

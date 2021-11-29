@@ -18,6 +18,7 @@ import Admindashboard from "./components/Admin/Dashboard";
 import StickyHeadTable from "./components/Employer/EmployerJobPosting/delete";
 import EmployerHeader from "./components/Employer/EmployerHomePage/EmployerHeader";
 import EmployerLandingPage from "./components/Employer/EmployerHomePage/EmployerLandingPage";
+import SavedJobs from "./components/Profile/SavedJobs";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path='/login' component={Login} />
           <Route exact path='/company/:id/:pathname' component={Company} />
           <Route path='/indeed/profile' component={UserProfile} />
+          <Route path='/indeed/saved-jobs' component={SavedJobs} />
           <Route path='/indeed/jobs' component={JobsDisplay} />
           <Route path='/addemployer' component={EmployerSignup} />
           <Route

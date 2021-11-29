@@ -110,6 +110,7 @@ export default function UserMenu() {
             <ListItemText primary="My Profile" />
           </StyledMenuItem>
         </Link>
+        <Link to = '/indeed/saved-jobs'>
         <StyledMenuItem
           onClick={() => {
             handleClose();
@@ -120,6 +121,7 @@ export default function UserMenu() {
           </ListItemIcon>
           <ListItemText primary="My Jobs" />
         </StyledMenuItem>
+        </Link>
         <StyledMenuItem>
           <ListItemIcon>
             <RateReviewIcon fontSize="small" />
