@@ -1,6 +1,7 @@
 import {
   FETCH_COMPANY_SUCCESS,
   FETCH_COMPANY_FAILURE,
+  FETCH_COMPANY_DONE,
 } from "../Constants/CompanyReviewConstants";
 
 const initialState = {
@@ -20,6 +21,11 @@ export const companyReviewReducer = (state = initialState, action) => {
       return {
         ...state,
         success: false,
+      };
+    case FETCH_COMPANY_DONE:
+      return {
+        ...state,
+        ...initialState,
       };
     default:
       return state;

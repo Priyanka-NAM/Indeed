@@ -31,15 +31,15 @@ const appReducer = combineReducers({
   AdminListAllCompanies: getAllCompaniesReducer,
 });
 
-const rootReducer = (state, action) => {
-  if (action.type === JOBSEEKER_LOGOUT) {
-    state = undefined;
-  }
-  return appReducer(state, action);
-};
+// const rootReducer = (state, action) => {
+//   //   if (action.type === JOBSEEKER_LOGOUT) {
+//   //     /state = undefined;
+//   //   }
+//   return appReducer(state, action);
+// };
 
 const createComposer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 export const store = createStore(
-  rootReducer,
+  appReducer,
   createComposer(applyMiddleware(thunk))
 );
