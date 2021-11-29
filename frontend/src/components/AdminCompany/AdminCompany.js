@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FETCH_COMPANY_DONE } from "../../Redux/Constants/CompanyReviewConstants";
+
 import { CompanyBox } from "./CompanyBox";
 import { useHistory } from "react-router-dom";
-import { getCompanyReviews } from "../../Redux/Actions/CompanyReviewAction";
+import { getAllCompanies } from "../../Redux/Actions/AdminAction";
 import SearchIcon from "@material-ui/icons/Search";
 
 //import Rating from "@material-ui/lab/Rating";
@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
   },
   h5: {
     color: "#6f78a5",
-    fontWeight: "400",
+    fontWeight: "300",
     marginBottom: "70px",
   },
   outlinedInput: {
@@ -82,31 +82,39 @@ export const SearchButton = withStyles((theme) => ({
   },
 }))(Button);
 
-export function CompanyReviews() {
+export default function AdminListCompanies() {
   const classes = useStyles();
-  const dispatch = useDispatch();
 
   const [companyName, setcompanyName] = useState("");
   const [location, setlocation] = useState("");
+  let [searchName, setSearchName] = useState("");
 
-  const companyReviewReducer = useSelector((state) => state.companyReview);
+  const companyReviewReducer = useSelector((state) => state.AdminListAllCompanies);
 
-  let { companyNames } = companyReviewReducer;
-  useEffect(() => {
-    dispatch({
-      type: FETCH_COMPANY_DONE,
-    });
-  }, []);
-
+  let { ListAllCompanies } = companyReviewReducer;
+ 
+ 
+  const dispatch = useDispatch();
   const history = useHistory();
+  
+  if(searchName){
+    ListAllCompanies = ListAllCompanies.filter(
+      (row) => row.companyName && row.companyName.toLowerCase().indexOf((companyName).toLowerCase()) > -1
+    );
+  }
 
   const onTextChange = (e) => {
     setcompanyName(e.target.value);
+    setSearchName(e.target.value);
   };
+
+  useEffect(() => {
+    dispatch(getAllCompanies());
+  },[]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(getCompanyReviews(companyName, location));
+    setSearchName(companyName);
   };
 
   return (
@@ -119,15 +127,12 @@ export function CompanyReviews() {
           xs={6}
           sm={6}
           md={10}
-          lg={11}
+          lg={6}
           xl={7}
         >
           <Grid item>
-            <Typography className={classes.h3} variant="h3">
-              Find great places to work
-            </Typography>
             <Typography className={classes.h5} variant="h5">
-              Discover millions of company reviews
+              Search Companies here.....
             </Typography>
           </Grid>
           <form onSubmit={handleSubmit} style={{ display: "flex" }}>
@@ -148,35 +153,24 @@ export function CompanyReviews() {
                 }}
               />
             </Grid>
-            <Grid item>
-              <TextField
-                className={classes.outlinedInput}
-                type="text"
-                variant="outlined"
-                placeholder="Enter Company Location"
-                value={location}
-                onChange={(e) => {
-                  setlocation(e.target.value);
-                }}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                }}
-              />
+            <Grid>
+            <Button style={{ marginTop: "5px",marginLeft:"5px" ,height:"50px"}} color={'primary'} variant='contained' type='submit'>
+                      Search
+            </Button>
+            </Grid>
+            
+            {/* <Grid item>
             </Grid>
             <Grid item>
               <SearchButton type="submit" variant="contained">
                 Search
               </SearchButton>
-            </Grid>
+            </Grid> */}
           </form>
         </Grid>
       </Grid>
 
-      {companyNames.length !== 0 ? (
+      {ListAllCompanies && ListAllCompanies.length !== 0 ? (
         <Grid
           className={classes.companiesHiring}
           item
@@ -196,20 +190,17 @@ export function CompanyReviews() {
               />
             </Grid>
             <Grid item>
-              <Typography style={{ paddingTop: "15px" }} variant="h5">
-                Companies
-              </Typography>
             </Grid>
           </Grid>
           <Grid container style={{ width: "1000px" }}>
-            {companyNames.map((item) => {
+            {ListAllCompanies && ListAllCompanies.map((item) => {
               return (
                 <CompanyBox
-                  key={item.id}
+                  key={item._id}
                   logo={item.logo}
                   name={item.companyName}
                   rating={item.rating}
-                  id={item.id}
+                  id={item._id}
                   noOfRatings={item.noOfRatings}
                 />
               );

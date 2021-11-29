@@ -29,7 +29,8 @@ export const loginReducer = (state = initialState, action) => {
     case JOBSEEKER_LOGOUT:
       return {
         ...state,
-        ...initialState,
+        userDetails: {},
+        isAuth: false,
       };
     case EMPLOYER_LOGOUT:
       return {

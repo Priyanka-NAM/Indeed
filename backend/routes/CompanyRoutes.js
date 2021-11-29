@@ -10,6 +10,7 @@ const {
 } = require("../controllers/UserReviewController");
 const userSalary = require("../controllers/UserSalaryController");
 const getHomePage = require("../controllers/CompanyHomePage");
+const { uploadPhoto } = require("../controllers/UserPhotoController");
 const router = express.Router();
 
 router.param("reviewId", findReviewById);
@@ -22,5 +23,5 @@ router.get("/home", getHomePage);
 router.get("/whyjoinus", getHomePage);
 router.put("/review/:reviewId", UpdateReviewStatus);
 router.get("/companyreviews", getCompanyReviews);
-
+router.post("/uploadphoto", uploadPhoto);
 module.exports = router;

@@ -20,7 +20,7 @@ export const employerJobPost = (data) => (dispatch) => {
     .then((response) => {
       dispatch({
         type: EMPLOYER_JOB_POST,
-        payload: response.newdata,
+        payload: response.data,
       });
     })
     .catch((error) => {
