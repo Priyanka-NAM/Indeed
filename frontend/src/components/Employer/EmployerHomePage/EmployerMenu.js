@@ -64,7 +64,7 @@ export default function EmployerMenu() {
   const handleLogout = () => {
     window.localStorage.clear();
     dispatch(employerLogout());
-    setLanding(<Redirect to='/employer/' />);
+    setLanding(<Redirect exact to='/employer/' />);
   };
 
   return (
@@ -102,14 +102,16 @@ export default function EmployerMenu() {
               <ListItemText primary='My Profile' />
             </StyledMenuItem>
           </Link>
-          <StyledMenuItem
-            onClick={() => {
-              handleLogout();
-            }}>
+          <StyledMenuItem>
             <ListItemIcon>
               <PowerSettingsNewIcon fontSize='small' />
             </ListItemIcon>
-            <ListItemText primary='Sign Out' />
+            <ListItemText
+              onClick={() => {
+                handleLogout();
+              }}
+              primary='Sign Out'
+            />
           </StyledMenuItem>
         </StyledMenu>
       )}

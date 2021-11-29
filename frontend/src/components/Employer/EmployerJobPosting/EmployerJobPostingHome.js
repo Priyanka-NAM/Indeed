@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Grid, Typography } from "@material-ui/core";
-import {
-  Box,
-  makeStyles,
-  AppBar,
-  Toolbar,
-  Button,
-  Checkbox,
-} from "@material-ui/core";
+import { makeStyles, Button } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -23,8 +15,6 @@ import CardContent from "@material-ui/core/CardContent";
 import TablePagination from "@material-ui/core/TablePagination";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-
-import PropTypes from "prop-types";
 import { employerAllJob } from "../../../Redux/Actions/EmployerJobPostingAction";
 
 const useStyles = makeStyles((theme) => ({
@@ -95,7 +85,6 @@ const useStyles = makeStyles((theme) => ({
   },
   cardlook: {
     width: "100%",
-    // marginLeft: "2%",
   },
   tableHeader: {
     fontSize: "20px",
@@ -128,17 +117,12 @@ function EmployerJobPostingHome(props) {
       },
     },
   });
-  let [step, setStep] = useState(1);
-  const success = false;
-  const isError = false;
-  const errorMsg = false;
 
   function createData(eachjob, title, city, country) {
     return { eachjob, title, city, country };
   }
   const dispatch = useDispatch();
   const { responseFromServer } = useSelector((state) => state.employerJobs);
-  const { userDetails } = useSelector((state) => state.login);
 
   useEffect(() => {
     // if (userDetails.userId && userDetails.userId !== "") {

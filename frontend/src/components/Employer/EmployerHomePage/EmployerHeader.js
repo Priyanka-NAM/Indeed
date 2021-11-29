@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 
   inddedLogo: {
     height: "45px",
-    paddingRight: "30px",
+    paddingRight: "1%",
   },
   button: {
     width: "100px",
@@ -118,7 +118,7 @@ function EmployerHeader() {
             to='/employer/jobs-posted/'
             component={NavLink}
             className={classes.link}>
-            Jobs
+            Post a Job
           </Typography>
           <Typography
             to='/employer/company/update'
@@ -132,25 +132,28 @@ function EmployerHeader() {
             className={classes.link}>
             Applicants
           </Typography> */}
-
-          <Typography
-            to='/employer/reports'
-            component={NavLink}
-            className={classes.link}>
-            Reports
-          </Typography>
-          <Typography
-            to='/employer/analytics'
-            component={NavLink}
-            className={classes.link}>
-            Reviews
-          </Typography>
-          <Typography
-            to='/employer/'
-            component={NavLink}
-            className={classes.link}>
-            Photos
-          </Typography>
+          {isAuth && (
+            <>
+              <Typography
+                to='/employer/reports'
+                component={NavLink}
+                className={classes.link}>
+                Reports
+              </Typography>
+              <Typography
+                to='/employer/reviews'
+                component={NavLink}
+                className={classes.link}>
+                Reviews
+              </Typography>
+              <Typography
+                to='/employer/'
+                component={NavLink}
+                className={classes.link}>
+                Photos
+              </Typography>
+            </>
+          )}
         </div>
         <div style={{ flex: 1 }}>
           {!isAuth ? (
