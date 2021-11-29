@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Link } from "react-router-dom";
+import { BrowserRouter as Router, Link } from "react-router-dom";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -94,8 +94,8 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
   cardlook: {
-    width: "80%",
-    marginLeft: "2%",
+    width: "100%",
+    // marginLeft: "2%",
   },
   tableHeader: {
     fontSize: "20px",
@@ -107,8 +107,14 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "2%",
   },
   tableBody: {
+    width: "100%",
     marginLeft: "2%",
     marginRight: "2%",
+    display: "flex",
+    flexDirection: "row",
+  },
+  eachrow: {
+    flex: "1",
   },
 }));
 
@@ -127,8 +133,8 @@ function EmployerJobPostingHome(props) {
   const isError = false;
   const errorMsg = false;
 
-  function createData(title, city, country) {
-    return { title, city, country };
+  function createData(eachjob, title, city, country) {
+    return { eachjob, title, city, country };
   }
   const dispatch = useDispatch();
   const { responseFromServer } = useSelector((state) => state.employerJobs);
@@ -146,6 +152,7 @@ function EmployerJobPostingHome(props) {
   if (responseFromServer.length > 0) {
     rows = responseFromServer.map((eachjob) => {
       return createData(
+        eachjob,
         eachjob.jobTitle,
         eachjob.jobLocation.city,
         eachjob.jobLocation.country
@@ -168,10 +175,14 @@ function EmployerJobPostingHome(props) {
   const columns = [
     { id: "Job Title", label: "Job Title" },
     {
+      id: "Applicants",
+      label: "Applicants",
+      minWidth: 100,
+    },
+    {
       id: "Action",
       label: "Action",
-      minWidth: 170,
-      align: "right",
+      minWidth: 100,
     },
   ];
 
@@ -192,12 +203,12 @@ function EmployerJobPostingHome(props) {
             flexDirection: "row",
             paddingLeft: "3%",
           }}>
-          <Grid>
+          <Grid style={{ paddingLeft: "10%" }}>
             <Typography className={classes.h4} variant='h4'>
               Jobs
             </Typography>
           </Grid>
-          <Grid style={{ paddingLeft: "75%" }}>
+          <Grid style={{ paddingLeft: "65%" }}>
             <Link
               style={{ textDecoration: "none" }}
               to={{ pathname: "/employer/postJob", state: "" }}>
@@ -207,10 +218,11 @@ function EmployerJobPostingHome(props) {
             </Link>
           </Grid>
         </Grid>
-
+        <br />
+        <br />
         <Grid item xs={2} style={{ paddingLeft: "80%" }}></Grid>
         <br />
-        <div style={{ height: 400, width: "100%" }}>
+        <div style={{ height: 400, width: "80%", marginLeft: "10%" }}>
           <Paper className={classes.root}>
             <TableContainer className={classes.tablecontainer}>
               <Table stickyHeader>
@@ -228,38 +240,60 @@ function EmployerJobPostingHome(props) {
                   </TableRow>
                 </TableHead>
                 <br />
-                <TableBody className={classes.tableBody}>
-                  {rows
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => {
-                      return (
-                        <TableRow
-                          role='checkbox'
-                          tabIndex={-1}
-                          key={row.code}
-                          className={classes.eachrow}>
-                          <Card className={classes.cardlook}>
-                            <CardContent>
-                              <Typography variant='h5' component='h2'>
-                                {row.title}
-                              </Typography>
-                              <Typography
-                                className={classes.pos}
-                                color='textSecondary'>
-                                {row.city}
-                              </Typography>
-                              <Typography
-                                className={classes.pos}
-                                color='textSecondary'>
-                                {row.country}
-                              </Typography>
-                            </CardContent>
-                          </Card>
-                          <br />
+                {rows
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => {
+                    return (
+                      <TableBody>
+                        <TableRow role='checkbox' tabIndex={-1} key={row.code}>
+                          <TableCell style={{ flex: 3 }}>
+                            <Card className={classes.cardlook}>
+                              <CardContent>
+                                <Typography variant='h5' component='h2'>
+                                  {row.title}
+                                </Typography>
+                                <Typography
+                                  className={classes.pos}
+                                  color='textSecondary'>
+                                  {row.city}
+                                </Typography>
+                                <Typography
+                                  className={classes.pos}
+                                  color='textSecondary'>
+                                  {row.country}
+                                </Typography>
+                              </CardContent>
+                            </Card>
+                          </TableCell>
+                          <TableCell style={{ flex: 1 }}>
+                            <Typography
+                              style={{ color: "#065FF7", fontWeight: "bold" }}
+                              to={{
+                                pathname: "/employer/showJobDetails",
+                                state: { row },
+                              }}>
+                              3 <span>Applicants</span>
+                            </Typography>
+                          </TableCell>
+                          <TableCell style={{ flex: 1 }}>
+                            <Button
+                              variant='outlined'
+                              color='#065FF7'
+                              style={{ color: "#065FF7" }}>
+                              <Link
+                                style={{ textDecoration: "none" }}
+                                to={{
+                                  pathname: "/employer/showJobDetails",
+                                  state: { row },
+                                }}>
+                                Job Details
+                              </Link>
+                            </Button>
+                          </TableCell>
                         </TableRow>
-                      );
-                    })}
-                </TableBody>
+                      </TableBody>
+                    );
+                  })}
               </Table>
             </TableContainer>
             <TablePagination
