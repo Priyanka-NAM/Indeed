@@ -21,6 +21,7 @@ import EmployerLandingPage from "./components/Employer/EmployerHomePage/Employer
 import EmployerProfile from "./components/Employer/EmployerProfile/EmployerProfile";
 import EmployerCompanyDetailsUpdate from "./components/Employer/EmployerDetails/EmployerCompanyDetailsUpdate";
 import AdminListCompanies from "./components/AdminCompany/AdminCompany";
+import EachJobDetails from "./components/Employer/EmployerJobPosting/EachJobDetailsPage";
 
 function App() {
   return (
@@ -58,6 +59,7 @@ function App() {
             path='/employer/company/update'
             component={EmployerCompanyDetailsUpdate}
           />
+          <Route path='/employer/showJobDetails' component={EachJobDetails} />
           <Route path='/indeed/allcompanies' component={AdminListCompanies} />
         </Router>
       </div>
