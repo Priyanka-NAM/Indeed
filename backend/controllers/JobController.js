@@ -4,7 +4,9 @@
 Employer Post Job Route
  */
 const Jobs = require("../Models/JobsModel");
+const Users = require("../Models/UserModel");
 const Reviews = require("../Models/ReviewsModel");
+
 const createJob = async (req, res) => {
   // get the data from request body which is in json and put it in variables called user and password
   // const jobExists = await Jobs.findOne({ jobId });
@@ -104,4 +106,26 @@ const getAllJobs = async (req, res) => {
   }
 };
 
-module.exports = { createJob, updateJob, getAllJobs };
+const getJobApplicants = async (req, res) => {
+  try{
+    const jobApplicants = await Jobs.findById({_id: req.params.id});
+
+    if(jobApplicants){
+      const applicants = []
+
+      for(let i=0; i<jobApplicants.applicants.length; i++){
+        applicants.push(await Users.findById({_id: jobApplicants.applicants[i]}));
+      }
+
+      res.status(200).send(applicants)
+    }
+    else{
+      res.status(400).send("Error: Unable to get Job Applicants")
+    }
+  }
+  catch(error){
+    res.status(500).send("Internal Server Error")
+  }
+}
+
+module.exports = { createJob, updateJob, getAllJobs, getJobApplicants };

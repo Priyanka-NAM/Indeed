@@ -23,6 +23,7 @@ import EmployerProfile from "./components/Employer/EmployerProfile/EmployerProfi
 import EmployerCompanyDetailsUpdate from "./components/Employer/EmployerDetails/EmployerCompanyDetailsUpdate";
 import AdminListCompanies from "./components/AdminCompany/AdminCompany";
 import EachJobDetails from "./components/Employer/EmployerJobPosting/EachJobDetailsPage";
+import EmployerJobApplicants from "./components/Employer/EmployerApplicants/EmployerJobApplicants";
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
           />
           <Route path='/employer/showJobDetails' component={EachJobDetails} />
           <Route path='/indeed/allcompanies' component={AdminListCompanies} />
+          <Route path='/employer/applicant-page/:id' exact component={EmployerJobApplicants}/>
         </Router>
       </div>
     </ThemeProvider>
