@@ -13,6 +13,7 @@ import {
   TopAcceptedJobSeekerReducer,
   getAllReviewsReducer,
   getTopRatedCeosReducer,
+  getAllCompaniesReducer,
 } from "./Reducers/AdminReducers";
 import { jobReducer } from "./Reducers/JobReducer";
 import { JOBSEEKER_LOGOUT } from "./Constants/UserConstants";
@@ -35,6 +36,7 @@ const appReducer = combineReducers({
   employerDetails: employerDetailsReducer,
   AdminAllReviews: getAllReviewsReducer,
   TopRatedCeos: getTopRatedCeosReducer,
+  AdminListAllCompanies: getAllCompaniesReducer,
 });
 
 // const rootReducer = (state, action) => {
