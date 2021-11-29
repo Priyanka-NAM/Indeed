@@ -3,9 +3,9 @@ import {
     FETCH_QUERIED_JOBS,
     JOB_ERROR,
     POST_SAVED_JOBS,
-    SAVED_JOB_ERROR,
     DELETE_SAVED_JOBS,
-    DELETE_JOB_ERROR
+    GET_SAVED_JOBS,
+    APPLY_JOB
 } from '../Constants/UserConstants';
 import Axios from 'axios'; 
 import { API } from '../../config';
@@ -28,7 +28,6 @@ export const fetchAllJobs = (data) => (dispatch) => {
             })
         });
     } else {
-        console.log("here")
         Axios.get(`${API}/users/public/jobs`,{
             params:data
         })
@@ -53,7 +52,7 @@ export const postSavedJobs = (data) => (dispatch) => {
             'Content-Type': 'application/json',
         },
     }
-    Axios.post(`${API}/users/user-details`, data, config)
+    Axios.post(`${API}/users/saved-jobs`, data, config)
     .then((response) => {
         dispatch({
             type: POST_SAVED_JOBS,
@@ -62,7 +61,7 @@ export const postSavedJobs = (data) => (dispatch) => {
     })
     .catch((error) => {
         dispatch({
-            type: SAVED_JOB_ERROR,
+            type: JOB_ERROR,
             payload: error
         })
     })
@@ -74,7 +73,7 @@ export const deleteSavedJobs = (data) => (dispatch) => {
             'Content-Type': 'application/json',
         },
     }
-    Axios.delete(`${API}/users/user-details`, {data : data}, config)
+    Axios.delete(`${API}/users/saved-jobs`, {data : data}, config)
     .then((response) => {
         dispatch({
             type: DELETE_SAVED_JOBS,
@@ -83,7 +82,51 @@ export const deleteSavedJobs = (data) => (dispatch) => {
     })
     .catch((error) => {
         dispatch({
-            type: DELETE_JOB_ERROR,
+            type: JOB_ERROR,
+            payload: error
+        })
+    })
+}
+
+export const getSavedJobs = (data) => (dispatch) => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }
+    Axios.get(`${API}/users/saved-jobs`, {
+        params:data
+    }, config)
+    .then((response) => {
+        dispatch({
+            type: GET_SAVED_JOBS,
+            payload: response.data
+        })
+    })
+    .catch((error) => {
+        dispatch({
+            type: JOB_ERROR,
+            payload: error
+        })
+    })
+}
+
+export const applyJobs = (data) => (dispatch) => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }
+    Axios.post(`${API}/users/apply-job`, data, config)
+    .then((response) => {
+        dispatch({
+            type: APPLY_JOB,
+            payload: response.data
+        })
+    })
+    .catch((error) => {
+        dispatch({
+            type: JOB_ERROR,
             payload: error
         })
     })

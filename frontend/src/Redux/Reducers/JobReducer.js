@@ -3,16 +3,17 @@ import {
     FETCH_QUERIED_JOBS,
     JOB_ERROR,
     POST_SAVED_JOBS,
-    SAVED_JOB_ERROR,
     DELETE_SAVED_JOBS,
-    DELETE_JOB_ERROR
+    GET_SAVED_JOBS,
+    APPLY_JOB
 } from '../Constants/UserConstants';
   
 const initialState = {
     allJobs: null,
     successResponse: null, 
     errorResponse: null,
-    queriedJobs: null
+    queriedJobs: null,
+    savedJobs: null
 } 
   
 export const jobReducer = (state = initialState, action) => {
@@ -29,27 +30,27 @@ export const jobReducer = (state = initialState, action) => {
             ...state,
             queriedJobs: action.payload  
           };
-        case JOB_ERROR:
-            return {
-                ...state,
-                serverResponse: action.payload
-            }
         case POST_SAVED_JOBS:
           return {
             ...state,
             successResponse: action.payload
           }
-        case SAVED_JOB_ERROR:
+        case GET_SAVED_JOBS:
           return {
             ...state,
-            errorResponse: action.payload
+            savedJobs: action.payload
           }
-          case DELETE_SAVED_JOBS:
+        case DELETE_SAVED_JOBS:
           return {
             ...state,
             successResponse: action.payload
           }
-        case DELETE_JOB_ERROR:
+        case APPLY_JOB:
+          return {
+            ...state,
+            successResponse: action.payload
+          }
+        case JOB_ERROR:
           return {
             ...state,
             errorResponse: action.payload
