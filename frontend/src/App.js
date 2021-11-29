@@ -20,6 +20,8 @@ import EmployerHeader from "./components/Employer/EmployerHomePage/EmployerHeade
 import EmployerLandingPage from "./components/Employer/EmployerHomePage/EmployerLandingPage";
 import EmployerProfile from "./components/Employer/EmployerProfile/EmployerProfile";
 import EmployerCompanyDetailsUpdate from "./components/Employer/EmployerDetails/EmployerCompanyDetailsUpdate";
+import AdminListCompanies from "./components/AdminCompany/AdminCompany";
+
 
 function App() {
   return (
@@ -57,6 +59,7 @@ function App() {
             path='/employer/company/update'
             component={EmployerCompanyDetailsUpdate}
           />
+          <Route path='/indeed/allcompanies' component={AdminListCompanies} />
         </Router>
       </div>
     </ThemeProvider>

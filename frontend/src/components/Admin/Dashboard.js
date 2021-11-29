@@ -19,7 +19,8 @@ function Admindashboard() {
     const { topCompanyRatings } = useSelector(
         (state) => state.TopRatingCompanies
       );
-      let data; 
+      let data;
+      let data1; 
       console.log(topCompanyRatings);
       if(topCompanyRatings){
         data = [
@@ -43,7 +44,8 @@ function Admindashboard() {
         <div>
             <Header />
             <div class="container" style={{ backgroundColor: 'ghostwhite', minHeight: '45rem'}}>
-              <h3 style={{textAlign: "center", color : "blue"}}> Analystics DashBoard</h3>
+              <h3 style={{textAlign: "center", color : "blue"}}> Analystics</h3>
+             
               <div className="row">
                 <div className="col md-12 lg-12">
                 <LineGraph1 />
@@ -83,6 +85,18 @@ function Admindashboard() {
                  <div className="col md-3 lg-3">
                  </div>
             </div>
+            <div class="row"> 
+            <div className="col md-11 lg-11">
+            <h6 style={{textAlign: "center"}}> Top 10 companies based on number of views</h6>
+            <BarChart
+        data={data}
+        width={600}
+        height={300}
+        margin={{ top: 10, bottom: 50, left: 50, right: 10 }}
+      />
+                </div>
+            </div>
+           
             </div>
 
 

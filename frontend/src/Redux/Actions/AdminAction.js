@@ -9,6 +9,8 @@ import {
     ADMIN_GET_ALL_REVIEWS_FAIL,
     ADMIN_TOP_MOST_CEOS_SUCCESS,
     ADMIN_TOP_MOST_CEOS_FAIL,
+    ADMIN_LIST_ALL_COMPANIES_SUCCESS,
+    ADMIN_LIST_ALL_COMPANIES_FAIL,
 
   } from '../Constants/AdminConstants';
 
@@ -103,3 +105,21 @@ import {
                 });
                 
                 }
+
+                export const getAllCompanies = (data) => (dispatch) => {
+   
+                    Axios.get(`${API}/admin/get-all-companies`)
+                    .then((response) => {
+                        dispatch({
+                            type : ADMIN_LIST_ALL_COMPANIES_SUCCESS,
+                            payload : response.data 
+                        })
+                    })
+                    .catch(error => {
+                        dispatch({
+                            type: ADMIN_LIST_ALL_COMPANIES_FAIL,
+                            payload: error
+                        })
+                    });
+                    
+                    }
