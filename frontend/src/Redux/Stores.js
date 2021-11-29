@@ -40,6 +40,15 @@ const appReducer = combineReducers({
 //   return appReducer(state, action);
 // };
 
+
+// const customerSignInfoFromStorage = localStorage.getItem('login')
+//   ? JSON.parse(localStorage.getItem('login'))
+//   : {};
+
+
+// const initialState = {
+//   login: { userDetails: customerSignInfoFromStorage },
+// };
 const createComposer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 export const store = createStore(
   appReducer,

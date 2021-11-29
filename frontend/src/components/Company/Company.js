@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
@@ -152,6 +153,7 @@ export default function Review(props) {
   const loginReducer = useSelector((state) => state.login);
   const { isAuth, userDetails } = loginReducer;
   const [images, setImage] = useState([]);
+  const [updatePage, setupdatePage] = useState(false);
   const [imageUrl, setImageUrl] = useState([]);
 
   const [newRating, setnewRating] = useState(0);
@@ -186,13 +188,29 @@ export default function Review(props) {
     setOpen(false);
   };
 
-  const { companySpecificReviews } = useSelector(
+  let { companySpecificReviews } = useSelector(
     (state) => state.companyReviewList
   );
+  
+  //Filtering reviews Based on the approved and user reviews.
+  if(companySpecificReviews){
+    if(!isAuth){
+    let approvedReviews = companySpecificReviews.filter((review)=> review.isApproved === "Approved");
+    companySpecificReviews = approvedReviews;
+    }
+    else{
+      debugger;
+      let approvedReviewsFromOtherUsers = [];
+      let userReviews = [];
+       approvedReviewsFromOtherUsers = companySpecificReviews.filter((review)=> (review.isApproved === "Approved" && review.userId !== userDetails.userId));
+       userReviews = companySpecificReviews.filter((review)=> (review.userId == userDetails.userId));
+       companySpecificReviews = userReviews.concat(approvedReviewsFromOtherUsers);
+    }
+    
+  }
   const companyDetails = responseFromServer
     ? responseFromServer
     : { aboutTheCompany: {} };
-  console.log(companySpecificReviews);
   const [values, setValues] = React.useState(["Helpfullness", "Rating"]);
   const [filterValue, setFilterValue] = React.useState(["Helpfullness"]);
   const [sortValue, setSortValue] = React.useState("overallRating");
@@ -205,6 +223,7 @@ export default function Review(props) {
   const [tooltipopen, setTooltipopen] = React.useState(true);
 
   useEffect(() => {
+    debugger;
     console.log(sortValue);
     if (props.match.params.pathname === "snapshot")
       dispatch(getcompaniesDetails({ employerID: props.match.params.id }));
@@ -216,7 +235,7 @@ export default function Review(props) {
         })
       );
     setRating(companyDetails.noOfRatings);
-  }, [props.match, sortValue]);
+  }, [props.match, sortValue, updatePage]);
 
   const changePathName = (pathName) => {
     props.history.push(`/company/${props.match.params.id}/${pathName}`);
@@ -260,6 +279,7 @@ export default function Review(props) {
   };
 
   const reviewSubmithandler = async (event) => {
+    setupdatePage(!updatePage);
     event.preventDefault();
     console.log(cons);
     await axios
@@ -296,6 +316,8 @@ export default function Review(props) {
         setinterviewPrep("");
       })
       .catch((error) => {});
+
+     // window.location.reload();
   };
 
   //SnapShot page strats here
@@ -558,6 +580,7 @@ export default function Review(props) {
                   pros={item.pros}
                   cons={item.cons}
                   helpfulCount={item.isHelpfulCount}
+                  isApproved = {item.isApproved}
                 />
               );
             })}
@@ -742,7 +765,7 @@ export default function Review(props) {
             <Grid item style={{ paddingTop: "40px", paddingLeft: "20px" }}>
               <Typography variant="h5">{companyDetails.companyName}</Typography>
               <Typography variant="h5">
-                {companyDetails.noOfRatings}
+                {companyDetails.averageRating}
                 {/* <StarIcon style = {{color: "#9d2b6b", paddingRight: "10px"}}/> */}
                 <Rating
                   name="half-rating-read"

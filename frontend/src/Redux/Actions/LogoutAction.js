@@ -9,4 +9,5 @@ export const jobSeekerLogout = () => (dispatch) => {
     dispatch({
         type : JOBSEEKER_LOGOUT 
     })
+    //localStorage.removeItem('login');
 }
