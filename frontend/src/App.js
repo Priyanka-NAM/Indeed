@@ -22,7 +22,6 @@ import EmployerProfile from "./components/Employer/EmployerProfile/EmployerProfi
 import EmployerCompanyDetailsUpdate from "./components/Employer/EmployerDetails/EmployerCompanyDetailsUpdate";
 import AdminListCompanies from "./components/AdminCompany/AdminCompany";
 
-
 function App() {
   return (
     <ThemeProvider theme={Theme}>
