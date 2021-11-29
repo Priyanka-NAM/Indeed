@@ -9,6 +9,7 @@ const Employer = require("../Models/EmployerModel");
 const bcrypt = require("bcryptjs");
 
 const updateEmployer = async (req, res) => {
+  console.log("req", req);
   const employerExists = await Employer.findOne({
     employerID: req.body.employerID,
   });
