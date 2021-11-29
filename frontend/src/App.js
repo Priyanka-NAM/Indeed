@@ -18,6 +18,7 @@ import Admindashboard from "./components/Admin/Dashboard";
 import StickyHeadTable from "./components/Employer/EmployerJobPosting/delete";
 import EmployerHeader from "./components/Employer/EmployerHomePage/EmployerHeader";
 import EmployerLandingPage from "./components/Employer/EmployerHomePage/EmployerLandingPage";
+import AdminListCompanies from "./components/AdminCompany/AdminCompany";
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
           <Route path='/reports' component={EmployerHomePage} />
           <Route path='/admindashboard' component={Admindashboard} />
           <Route exact path='/employer/' component={EmployerLandingPage} />
+          <Route path='/indeed/allcompanies' component={AdminListCompanies} />
         </Router>
       </div>
     </ThemeProvider>

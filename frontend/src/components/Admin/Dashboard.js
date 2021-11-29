@@ -43,7 +43,7 @@ function Admindashboard() {
         <div>
             <Header />
             <div class="container" style={{ backgroundColor: 'ghostwhite', minHeight: '45rem'}}>
-              <h3 style={{textAlign: "center", color : "blue"}}> Analystics DashBoard</h3>
+              <h3 style={{textAlign: "center", color : "blue"}}> Analystics</h3>
               <div className="row">
                 <div className="col md-12 lg-12">
                 <LineGraph1 />
