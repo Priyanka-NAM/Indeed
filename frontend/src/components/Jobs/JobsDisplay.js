@@ -7,6 +7,7 @@ import { fetchAllJobs } from '../../Redux/Actions/JobsAction';
 import { Link } from 'react-router-dom';
 import StarIcon from '@material-ui/icons/Star';
 import JobDetails from './JobDetails';
+import Pagination from '@mui/material/Pagination';
 
 const useStyles = makeStyles(theme=>({
     job_section:{
@@ -60,10 +61,19 @@ function JobsDisplay(props) {
         console.log("jobs dis : ", data)
         dispatch(fetchAllJobs(data))
     },[])
-
+    let page = 0
+    let boundary = 0
     const getJobDetails = (job, index) => {
         setIndex(index)
         setJobData(job)
+    }
+
+    const handlePage = (e) => {
+        console.log(e.target.value)
+    }
+    
+    const handleLimit = (e) => {
+        console.log(e.target.value)
     }
 
     return ( 
@@ -109,6 +119,22 @@ function JobsDisplay(props) {
                     jobData ? <JobDetails jobData={jobData} index={index}/> : <></>
                 }
                 </Box>
+                <Grid container>
+                    <Grid item xs={3}>
+                        <label>Rows per page</label>&nbsp;&nbsp;
+                    <select onChange={handleLimit}>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                    </select>
+                    </Grid>
+                    <Grid item xs={9}>
+                        <Pagination count={boundary} page={page} onChange={handlePage} />
+                    </Grid>
+                </Grid>
         </Container>
     );
 }
