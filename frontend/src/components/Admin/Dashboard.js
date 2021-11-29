@@ -43,7 +43,7 @@ function Admindashboard() {
     return (
         <div>
             <Header />
-            <div class="container" style={{ backgroundColor: 'ghostwhite', minHeight: '45rem', border: '1px solid #d0d0e1'}}>
+            <div class="container" style={{ backgroundColor: 'rgb(181 183 245)', minHeight: '45rem', border: '1px solid #d0d0e1'}}>
               <h3 style={{textAlign: "center", color: 'darkslategrey', fontFamily: "cursive"}}> Analystics</h3>
              
               <div className="row">
