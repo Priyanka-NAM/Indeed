@@ -6,7 +6,7 @@ import { Rating } from "@mui/material";
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 
 
-export function ReviewBox({ rating, review_title, date, yourReview, pros, cons ,helpfulCount}) {
+export function ReviewBox({ rating, review_title, date, yourReview, pros, cons ,helpfulCount,isApproved}) {
     return (
             <Grid item container spacing={4} style={{borderBottom: '#00000029 solid 1px'}}>
             <Grid item container spacing={1}>
@@ -25,7 +25,11 @@ export function ReviewBox({ rating, review_title, date, yourReview, pros, cons ,
                             
                  </Grid>
                 <Grid item>
-                    <Typography variant = "head2" style = {{fontWeight: "800"}}>{review_title}</Typography>
+                    <Typography variant = "head2" style = {{fontWeight: "800"}}>{review_title}</Typography>{'  '}
+                    
+                    {isApproved === "NotApproved" ? (<button type="button" disabled='true' class="btn btn-danger">Not Verified</button>) 
+                    : 
+                    (<button type="button" class="btn btn-success" disabled='true'>verified</button>) }
                     
                 </Grid>
             </Grid>
