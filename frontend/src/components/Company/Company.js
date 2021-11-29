@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
@@ -19,6 +20,8 @@ import CameraAltIcon from "@material-ui/icons/CameraAltRounded";
 import Modal from "@material-ui/core/Modal";
 import { TextField } from "@material-ui/core";
 import { SearchButton } from "../CompanyReviews/CompanyReviews";
+import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
+import {updateReviewStatus} from "../../Redux/Actions/Company";
 
 import {
   Grid,
@@ -152,6 +155,7 @@ export default function Review(props) {
   const loginReducer = useSelector((state) => state.login);
   const { isAuth, userDetails } = loginReducer;
   const [images, setImage] = useState([]);
+  const [updatePage, setupdatePage] = useState(false);
   const [imageUrl, setImageUrl] = useState([]);
 
   const [newRating, setnewRating] = useState(0);
@@ -166,6 +170,18 @@ export default function Review(props) {
   const [city, setCity] = useState("");
   const [st, setState] = useState("");
   const [photoOpen, setPhotoOpen] = useState(false);
+  const companyDetails = responseFromServer
+  ? responseFromServer
+  : { aboutTheCompany: {} };
+const [values, setValues] = React.useState(["select Review Type","Approved", "NotApproved"]);
+const [filterValue, setFilterValue] = React.useState(["select Review Type"]);
+const [sortValue, setSortValue] = React.useState("createdAt");
+const [reviews, setReviews] = useState([]);
+const [rating, setRating] = useState(4);
+
+const query = new URLSearchParams(props.location.search);
+const id = query.get("id");
+const dispatch = useDispatch();
 
   const handlePhotoOpen = () => {
     isAuth ? setPhotoOpen(true) : props.history.push("/login");
@@ -186,25 +202,38 @@ export default function Review(props) {
     setOpen(false);
   };
 
-  const { companySpecificReviews } = useSelector(
+  let { companySpecificReviews } = useSelector(
     (state) => state.companyReviewList
   );
-  const companyDetails = responseFromServer
-    ? responseFromServer
-    : { aboutTheCompany: {} };
-  console.log(companySpecificReviews);
-  const [values, setValues] = React.useState(["Helpfullness", "Rating"]);
-  const [filterValue, setFilterValue] = React.useState(["Helpfullness"]);
-  const [sortValue, setSortValue] = React.useState("overallRating");
-  const [reviews, setReviews] = useState([]);
-  const [rating, setRating] = useState(4);
-  const query = new URLSearchParams(props.location.search);
-  const id = query.get("id");
-  const dispatch = useDispatch();
+  
+  //Filtering reviews Based on the approved and user reviews.
+  if(companySpecificReviews){
+    if(!isAuth && userDetails.role !== 2){
+    let approvedReviews = companySpecificReviews.filter((review)=> review.isApproved === "Approved");
+    companySpecificReviews = approvedReviews;
+    }
+    else if(userDetails.role !== 2){
+      debugger;
+      let approvedReviewsFromOtherUsers = [];
+      let userReviews = [];
+       approvedReviewsFromOtherUsers = companySpecificReviews.filter((review)=> (review.isApproved === "Approved" && review.userId !== userDetails.userId));
+       userReviews = companySpecificReviews.filter((review)=> (review.userId == userDetails.userId));
+       companySpecificReviews = userReviews.concat(approvedReviewsFromOtherUsers);
+    }
+    
+  }
+//Filter based on approved or not approved
+if(filterValue === "Approved"){
+  companySpecificReviews = companySpecificReviews.filter((review)=> (review.isApproved === "Approved"));
+}
+else if(filterValue === "NotApproved"){
+  companySpecificReviews = companySpecificReviews.filter((review)=> (review.isApproved === "NotApproved"));
+}
 
   const [tooltipopen, setTooltipopen] = React.useState(true);
 
   useEffect(() => {
+    debugger;
     console.log(sortValue);
     if (props.match.params.pathname === "snapshot")
       dispatch(getcompaniesDetails({ employerID: props.match.params.id }));
@@ -216,7 +245,7 @@ export default function Review(props) {
         })
       );
     setRating(companyDetails.noOfRatings);
-  }, [props.match, sortValue]);
+  }, [props.match, sortValue, updatePage, filterValue]);
 
   const changePathName = (pathName) => {
     props.history.push(`/company/${props.match.params.id}/${pathName}`);
@@ -258,8 +287,11 @@ export default function Review(props) {
         });
     }
   };
-
+  const changeToApproved = (id) => {
+    dispatch(updateReviewStatus({reviewid: id}));
+}
   const reviewSubmithandler = async (event) => {
+    setupdatePage(!updatePage);
     event.preventDefault();
     console.log(cons);
     await axios
@@ -296,6 +328,8 @@ export default function Review(props) {
         setinterviewPrep("");
       })
       .catch((error) => {});
+
+     window.location.reload();
   };
 
   //SnapShot page strats here
@@ -549,16 +583,90 @@ export default function Review(props) {
           <Grid container spacing={10}>
             {companySpecificReviews.map((item) => {
               return (
-                <ReviewBox
-                  key={item.id}
-                  rating={item.overallRating}
-                  review_title={item.reviewTitle}
-                  date={item.date}
-                  yourReview={item.yourReview}
-                  pros={item.pros}
-                  cons={item.cons}
-                  helpfulCount={item.isHelpfulCount}
-                />
+                <>
+            <Grid item container spacing={4} style={{borderBottom: '#00000029 solid 1px'}}>
+            <Grid item container spacing={1}>
+                <Grid item style={{width:"57px"}}>
+                    <h4 style={{borderBottom: "3px dotted #000"}}>{item.overallRating}.0</h4>
+                     
+                <Rating
+                  name="size-small"
+                  style={{ color: "#9d2b6b"}}
+                  value={item.overallRating}
+                  size="small"
+                  precision={0.5}
+                  readOnly
+                />  
+              
+                            
+                 </Grid>
+                <Grid item>
+                    <Typography variant = "head2" style = {{fontWeight: "800"}}>{item.reviewTitle}</Typography>{'  '}
+                    
+                    {item.isApproved === "NotApproved" ? (<button type="button" disabled='true' class="btn btn-danger" 
+                    style={{height: '26px', fontWeight: '200',fontSize: "small" , padding: '4px'}}
+                    >
+                        <i class="fa fa-times" aria-hidden="true" style={{color: "white"}}></i>{ ' '}
+                       Not Verified</button>) 
+                    : 
+                    (<button type="button" class="btn btn-success" disabled='true' 
+                    style={{height: '26px', fontWeight: '200',fontSize: "small" , padding: '4px'}}>
+                         <i class="fas fa-check" style={{color: "white"}}></i> { ' '} verified</button>) }
+                </Grid>
+            </Grid>
+            <Grid item container spacing={3}>
+                <Typography variant="subtitle1" style ={{marginLeft:"20px"}}>
+                    {item.yourReview}
+                </Typography>
+            </Grid>
+            <Grid item container spacing={3}>
+            <span><i class="fas fa-check" style={{color: "green"}}></i></span>
+            <div spacing={3}><b> Pros </b></div><br></br>
+            </Grid>
+            <Grid item container spacing={3}>
+            <Typography variant="subtitle1" style ={{marginLeft:"20px"}}>
+                    {item.pros}
+                </Typography>
+            </Grid>
+            <Grid item container spacing={3}>
+            <i class="fa fa-times" aria-hidden="true" style={{color: "red"}}></i><br></br>
+            <div spacing={3}><b>Cons </b> </div>
+            </Grid>
+         
+            <Grid item container spacing={3}>
+            <Typography variant="subtitle1" style ={{marginLeft:"20px"}}>
+                    {item.isApprovedcons}
+                </Typography>
+            </Grid>
+            <span style={{fontSize: "small"}}>Was this review helpfull?</span>
+            <Grid item container spacing={3}>
+            <div><ThumbUpAltIcon></ThumbUpAltIcon></div>{item.isHelpfulCount}
+             </Grid>
+         
+             {isAuth && userDetails.role == 2 && item.isApproved  === "NotApproved"  && (
+                        <span>
+                            <button type="button" class="btn btn-info" onClick={() => { item.isApproved = "Approved" ; changeToApproved(item._id)}}>Verify this review</button>
+                        </span>
+                    )}
+
+        </Grid>
+                </>
+                // <ReviewBox
+                //   key={item.id}
+                //   rating={item.overallRating}
+                //   review_title={item.reviewTitle}
+                //   date={item.date}
+                //   yourReview={item.yourReview}
+                //   pros={item.pros}
+                //   cons={item.cons}
+                //   helpfulCount={item.isHelpfulCount}
+                //   isApproved = {item.isApproved}
+                //   isAuth={isAuth}
+                //   userRole = {userDetails.role}
+                //   id = {item._id}
+                //   sortVal={sortValue}
+                //   filterValue = {filterValue}
+                // />
               );
             })}
           </Grid>
@@ -742,7 +850,7 @@ export default function Review(props) {
             <Grid item style={{ paddingTop: "40px", paddingLeft: "20px" }}>
               <Typography variant="h5">{companyDetails.companyName}</Typography>
               <Typography variant="h5">
-                {companyDetails.noOfRatings}
+                {companyDetails.averageRating}
                 {/* <StarIcon style = {{color: "#9d2b6b", paddingRight: "10px"}}/> */}
                 <Rating
                   name="half-rating-read"

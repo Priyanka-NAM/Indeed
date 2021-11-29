@@ -213,11 +213,11 @@ exports.getCompanyReviews = async (req, res) => {
 };
 
 exports.UpdateReviewStatus = async (req, res) => {
-  console.log(req.review);
+  console.log(req.query);
   try {
     const review = await Reviews.findOneAndUpdate(
-      { _id: req.review._id },
-      { isApproved: req.body.isApproved }
+      { _id: req.body.reviewid },
+      { isApproved: "Approved" }
     );
     if (!review) {
       return res.status(400).json({
