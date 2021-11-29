@@ -91,11 +91,10 @@ const SignInButton = withStyles((theme) => ({
 
 export function Login() {
   const classes = useStyles();
-  let isAuth = useSelector((state) => state.login.isAuth);
-  const [isValid, setValid] = useState(isAuth);
+  let { isAuth, accErr, userDetails } = useSelector((state) => state.login);
+  const { role } = userDetails;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [accErr, setAccErr] = useState(false);
   const [errors, setErrors] = useState({});
 
   const dispatch = useDispatch();
@@ -119,18 +118,14 @@ export function Login() {
       setErrors(error);
     } else {
       setErrors({});
-      await dispatch(jobSeekerLogin(data))
-      setTimeout(() => {
-        if (!isAuth) {
-          setAccErr(true);
-        }
-      }, 3000);
+      await dispatch(jobSeekerLogin(data));
     }
   };
 
   return (
     <Container className={classes.container} maxWidth="xl">
-      {isAuth && <Redirect to="/" />}
+      {isAuth && role === 0 && <Redirect to="/" />}
+      {isAuth && role === 1 && <Redirect to="/employer/home" />}
       <Box className={classes.boxImg}>
         <img
           className={classes.imgLogo}

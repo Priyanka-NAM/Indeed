@@ -1,4 +1,7 @@
-import { EMPLOYER_JOB_POST, EMPLOYER_JOB_ERROR } from "../Constants/UserConstants";
+import {
+  EMPLOYER_JOB_POST,
+  EMPLOYER_JOB_ERROR,
+} from "../Constants/UserConstants";
 
 const initialState = {
   responseFromServer: null,
@@ -30,6 +33,7 @@ export const employerJobPostingReducer = (state = initialState, action) => {
         ...state,
         errorResponse: action.payload,
       };
+
     default:
       return state;
   }

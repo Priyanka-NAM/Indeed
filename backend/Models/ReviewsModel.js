@@ -34,9 +34,9 @@ const reviewSchema = mongoose.Schema(
     appreciationScore: {
       type: Number,
     },
-    postedDate: {
-      type: Date,
-      default: Date.now,
+    postedDay: {
+      type: Number,
+      default: new Date().getDay(),
     },
     reviewerRole: {
       type: String,
