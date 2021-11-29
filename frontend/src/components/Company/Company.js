@@ -303,7 +303,7 @@ export default function Review(props) {
     <div>
       <Grid item style={{ marginTop: "20px", marginBottom: "30px" }}>
         <Typography variant="caption">
-          {companyDetails.employerName} Careers and Employment
+          {companyDetails.companyName} Careers and Employment
         </Typography>
       </Grid>
       <Grid item style={{ marginTop: "20px", marginBottom: "20px" }}>
@@ -386,7 +386,7 @@ export default function Review(props) {
         <Grid item style={{ flex: 1 }}>
           <img
             src="https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80"
-            alt={companyDetails.employerName}
+            alt={companyDetails.companyName}
             style={{ height: "350px", borderRadius: "10px" }}
           />
         </Grid>
@@ -489,7 +489,7 @@ export default function Review(props) {
   const showReviews = () => (
     <div class="container-fluid">
       <Typography variant="h4">
-        <b>{companyDetails.employerName} Employee Reviews</b>
+        <b>{companyDetails.companyName} Employee Reviews</b>
       </Typography>
       <Grid
         item
