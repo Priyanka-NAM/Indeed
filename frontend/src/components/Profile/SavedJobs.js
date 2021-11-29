@@ -34,7 +34,11 @@ function SavedJobs() {
     const classes = useStyles();
     const dispatch = useDispatch();
     let { userDetails } = useSelector((state) => state.login);
-    let { savedJobs } = useSelector((state) => state.jobs.savedJobs);
+    let sJobs  = useSelector((state) => state.jobs.savedJobs);
+    let savedJobs = null
+    if (sJobs) {
+        savedJobs = sJobs.savedJobs
+    } 
     const { userId } = userDetails;
     useEffect(() => {
         const data = {
