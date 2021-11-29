@@ -30,4 +30,15 @@ const updateEmployer = async (req, res) => {
   }
 };
 
-module.exports = { updateEmployer };
+const getEmployerDetails = async (req, res) => {
+  const { employerID } = req.params;
+
+  console.log("employerID ", employerID);
+  const employerExists = await Employer.findOne({ employerID: employerID });
+  if (!employerExists) {
+    res.status("400").send("Employer Not found");
+    return;
+  }
+  res.send(employerExists);
+};
+module.exports = { updateEmployer, getEmployerDetails };

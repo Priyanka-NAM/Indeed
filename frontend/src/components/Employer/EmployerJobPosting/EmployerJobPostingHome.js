@@ -138,7 +138,7 @@ function EmployerJobPostingHome(props) {
     // if (userDetails.userId && userDetails.userId !== "") {
     //   dispatch(employerAllJob(userDetails.userId));
     // }
-    dispatch(employerAllJob("619f0cdd8188bc6c174294cf"));
+    dispatch(employerAllJob("61a07e89e5d016c47d56338a"));
     console.log("test data");
   }, [props]);
   console.log("respone data", responseFromServer);

@@ -1,4 +1,9 @@
-import { EMPLOYER_DETAILS_ADD, EMPLOYER_DETAILS_ERROR } from "../Constants/UserConstants";
+import {
+  EMPLOYER_DETAILS_ADD,
+  EMPLOYER_DETAILS_ERROR,
+  EMPLOYER_DETAILS_GET_ERROR,
+  EMPLOYER_DETAILS_GET,
+} from "../Constants/UserConstants";
 
 const initialState = {
   responseFromServer: null,
@@ -29,6 +34,16 @@ export const employerDetailsReducer = (state = initialState, action) => {
         responseFromServer: action.payload,
       };
     case EMPLOYER_DETAILS_ERROR:
+      return {
+        ...state,
+        errorResponse: action.payload,
+      };
+    case EMPLOYER_DETAILS_GET:
+      return {
+        ...state,
+        responseFromServer: action.payload,
+      };
+    case EMPLOYER_DETAILS_GET_ERROR:
       return {
         ...state,
         errorResponse: action.payload,

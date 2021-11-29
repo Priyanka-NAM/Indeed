@@ -7,11 +7,16 @@ import {
   CompanyListReviewReducer,
 } from "./Reducers/CompanyReducer";
 import { companyReviewReducer } from "./Reducers/CompanyReviewReducer";
-import { TopCompanyListReviewReducer,TopCompanyListRatingReducer,TopAcceptedJobSeekerReducer } from './Reducers/AdminReducers';
+import {
+  TopCompanyListReviewReducer,
+  TopCompanyListRatingReducer,
+  TopAcceptedJobSeekerReducer,
+} from "./Reducers/AdminReducers";
 import { jobReducer } from "./Reducers/JobReducer";
 import { JOBSEEKER_LOGOUT } from "./Constants/UserConstants";
 import { employerJobPostingReducer } from "./Reducers/EmployerJobPostingReducer";
 import { employerJobsReducer } from "./Reducers/EmployerJobsReducer";
+import { employerDetailsReducer } from "./Reducers/EmployerDetailsReducer";
 
 const appReducer = combineReducers({
   signup: signUpReducer,
@@ -20,11 +25,12 @@ const appReducer = combineReducers({
   companyReview: companyReviewReducer,
   companyDetails: CompanyDetailsReducer,
   companyReviewList: CompanyListReviewReducer,
-  TopReviewedCompanies:TopCompanyListReviewReducer,
+  TopReviewedCompanies: TopCompanyListReviewReducer,
   TopRatingCompanies: TopCompanyListRatingReducer,
   TopAcceptedJobseekers: TopAcceptedJobSeekerReducer,
   employerJobPosting: employerJobPostingReducer,
   employerJobs: employerJobsReducer,
+  employerDetails: employerDetailsReducer,
 });
 
 const rootReducer = (state, action) => {
