@@ -62,8 +62,8 @@ export default function UserMenu() {
 
   const handleLogout = () => {
     window.localStorage.clear();
-    dispatch(jobSeekerLogout());
     setLanding(<Redirect to="/login" />);
+    dispatch(jobSeekerLogout());
   };
 
   return (

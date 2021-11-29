@@ -48,28 +48,35 @@ exports.postUserReview = async (req, res) => {
   });
   console.log(employerId);
   let emp = await Employer.findById(employerId);
-
+  let averageWorkHappinessScore = 0;
+  let averageRating = 0;
+  let averageLearningScore = 0;
+  let averageAppreciationScore = 0;
   emp.noOfRatings = emp.noOfRatings + 1;
 
-  emp.averageRating =
+  averageRating =
     (emp.averageRating * (emp.noOfRatings - 1) + parseInt(overallRating)) /
     emp.noOfRatings;
-  emp.averageWorkHappinessScore =
+  averageWorkHappinessScore =
     (((emp.averageWorkHappinessScore / 20) * (emp.noOfRatings - 1) +
       parseInt(workHappinessScore)) /
       emp.noOfRatings) *
     20;
-  emp.averageLearningScore =
+  averageLearningScore =
     (((emp.averageLearningScore / 20) * (emp.noOfRatings - 1) +
       parseInt(learningScore)) /
       emp.noOfRatings) *
     20;
-  emp.averageAppreciationScore =
+  averageAppreciationScore =
     (((emp.averageAppreciationScore / 20) * (emp.noOfRatings - 1) +
       parseInt(appreciationScore)) /
       emp.noOfRatings) *
     20;
 
+  emp.averageRating = averageRating.toFixed(2);
+  emp.averageWorkHappinessScore = averageWorkHappinessScore.toFixed(2);
+  emp.averageLearningScore = averageLearningScore.toFixed(2);
+  emp.averageAppreciationScore = averageAppreciationScore.toFixed(2);
   console.log(emp.averageRating);
 
   emp.save((err) => {
@@ -113,18 +120,21 @@ exports.getUserReviews = async (req, res) => {
 };
 
 exports.getSpecificCompanyReviews = async (req, res) => {
-  const sortVal = req.query.sort ? req.query.sort : 'createdAt';
+  const sortVal = req.query.sort ? req.query.sort : "createdAt";
   try {
     let review;
-    if(sortVal === "overallRating")
-       review = await Reviews.find({ employerId: req.query.employerId }).sort({overallRating:-1});
-      else if(sortVal === "isHelpfulCount")
-       review = await Reviews.find({ employerId: req.query.employerId }).sort({isHelpfulCount: -1});
-       else
-       review = await Reviews.find({ employerId: req.query.employerId }).sort({createdAt: -1});
-
-      
-
+    if (sortVal === "overallRating")
+      review = await Reviews.find({ employerId: req.query.employerId }).sort({
+        overallRating: -1,
+      });
+    else if (sortVal === "isHelpfulCount")
+      review = await Reviews.find({ employerId: req.query.employerId }).sort({
+        isHelpfulCount: -1,
+      });
+    else
+      review = await Reviews.find({ employerId: req.query.employerId }).sort({
+        createdAt: -1,
+      });
 
     req.review = review;
     if (!review) {

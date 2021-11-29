@@ -91,7 +91,8 @@ const SignInButton = withStyles((theme) => ({
 
 export function Login() {
   const classes = useStyles();
-  let { isAuth, accErr } = useSelector((state) => state.login);
+  let { isAuth, accErr, userDetails } = useSelector((state) => state.login);
+  const { role } = userDetails;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -124,7 +125,9 @@ export function Login() {
 
   return (
     <Container className={classes.container} maxWidth="xl">
-      {isAuth && <Redirect to="/" />}
+      {role}
+      {isAuth && role === 0 && <Redirect to="/" />}
+      {isAuth && role === 1 && <Redirect to="/employer/home" />}
       <Box className={classes.boxImg}>
         <img
           className={classes.imgLogo}
