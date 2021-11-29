@@ -126,6 +126,7 @@ export function Login() {
     <Container className={classes.container} maxWidth="xl">
       {isAuth && role === 0 && <Redirect to="/" />}
       {isAuth && role === 1 && <Redirect to="/employer/home" />}
+      {(role === 2 )&& <Redirect to='/indeed/allcompanies' />}
       <Box className={classes.boxImg}>
         <img
           className={classes.imgLogo}

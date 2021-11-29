@@ -84,7 +84,8 @@ export default function Header() {
             disableGutters
             maxWidth={false}
           >
-            <Box className={classes.header_left}>
+            {role !== 2 ? (
+              <Box className={classes.header_left}>
               <Link to='/'><img
                 className={classes.logo}
                 src="/Images/Indeed_logo.png"
@@ -108,7 +109,32 @@ export default function Header() {
                   Find Salary
                 </Typography>
               </Box>
-            </Box>
+            </Box> 
+            )
+            : (
+              (
+                <Box className={classes.header_left}>
+              <Link to='/indeed/allreviews'><img
+                className={classes.logo}
+                src="/Images/Indeed_logo.png"
+                alt=""
+              /></Link>
+                
+                <Box
+                className={classes.link}
+                display={{ xs: "none", sm: "block", md: "block" }}
+              >
+                <Typography component={NavLink} variant="h6" to="/indeed/allcompanies">
+                  Find Company
+                </Typography>
+                <Typography component={NavLink} variant="h6" to="/admindashboard">
+                  Analytics
+                </Typography>
+              </Box>
+              </Box>
+              )
+
+            )}
             {(isAuth || role === 2) ? (
               <Box className={classes.header_right}>
                 <IconButton
