@@ -77,8 +77,6 @@ const createMongoEmployer = async (req, res, id) => {
     console.log("Employer exists");
     res.status("400").send("Error");
   } else {
-    console.log("asas");
-
     const employer = await Employer.create({
       employerID: id,
     });
