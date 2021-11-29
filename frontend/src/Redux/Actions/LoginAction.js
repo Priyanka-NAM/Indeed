@@ -13,6 +13,7 @@ export const loginError = (data) => {
 }
 
 export const loginUser = (data) => {
+//localStorage.setItem('login', JSON.stringify(data));
     return {
         type: ALLUSER_LOGIN,
         payload: data
