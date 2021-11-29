@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
-
+import { GridList, GridListTile } from "@material-ui/core";
+import { API } from "../../config";
 import {
   getcompaniesDetails,
   getCompanySpecificReviews,
@@ -18,7 +19,6 @@ import CameraAltIcon from "@material-ui/icons/CameraAltRounded";
 import Modal from "@material-ui/core/Modal";
 import { TextField } from "@material-ui/core";
 import { SearchButton } from "../CompanyReviews/CompanyReviews";
-import { API } from "../../config";
 
 import {
   Grid,
@@ -80,6 +80,14 @@ const useStyle = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+  photopaper: {
+    position: "relative",
+    height: 300,
+    width: 300,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
 }));
 
 const FollowButton = withStyles((theme) => ({
@@ -106,6 +114,7 @@ function getModalStyle() {
     transform: `translate(-${top}%, -${left}%)`,
   };
 }
+
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
@@ -135,13 +144,15 @@ const UplaodButton = withStyles((theme) => ({
   },
 }))(Button);
 
-
 export default function Review(props) {
   const classes = useStyle();
   const [modalStyle] = React.useState(getModalStyle);
+
   const { responseFromServer } = useSelector((state) => state.companyDetails);
   const loginReducer = useSelector((state) => state.login);
   const { isAuth, userDetails } = loginReducer;
+  const [images, setImage] = useState([]);
+  const [imageUrl, setImageUrl] = useState([]);
 
   const [newRating, setnewRating] = useState(0);
   const [reviewSummary, setReviewSummary] = useState("");
@@ -154,6 +165,14 @@ export default function Review(props) {
   const [reviewTitle, setReviewTitle] = useState("");
   const [city, setCity] = useState("");
   const [st, setState] = useState("");
+  const [photoOpen, setPhotoOpen] = useState(false);
+
+  const handlePhotoOpen = () => {
+    isAuth ? setPhotoOpen(true) : props.history.push("/login");
+  };
+  const handlePhotoClose = () => {
+    setPhotoOpen(false);
+  };
 
   const [interviewPrep, setinterviewPrep] = useState("");
 
@@ -169,11 +188,11 @@ export default function Review(props) {
 
   const { companySpecificReviews } = useSelector(
     (state) => state.companyReviewList
-  ); 
+  );
   const companyDetails = responseFromServer
     ? responseFromServer
     : { aboutTheCompany: {} };
-    console.log(companySpecificReviews);
+  console.log(companySpecificReviews);
   const [values, setValues] = React.useState(["Helpfullness", "Rating"]);
   const [filterValue, setFilterValue] = React.useState(["Helpfullness"]);
   const [sortValue, setSortValue] = React.useState("overallRating");
@@ -191,18 +210,55 @@ export default function Review(props) {
       dispatch(getcompaniesDetails({ employerID: props.match.params.id }));
     else if (props.match.params.pathname === "reviews")
       dispatch(
-        getCompanySpecificReviews({ employerId: props.match.params.id, sort: sortValue})
+        getCompanySpecificReviews({
+          employerId: props.match.params.id,
+          sort: sortValue,
+        })
       );
     setRating(companyDetails.noOfRatings);
-  }, [props.match,sortValue]);
+  }, [props.match, sortValue]);
 
   const changePathName = (pathName) => {
     props.history.push(`/company/${props.match.params.id}/${pathName}`);
   };
   const handleSort = (val) => {
     setSortValue(val);
-  
-  }
+  };
+  const filehandler = async (event) => {
+    event.preventDefault();
+
+    let urls = [];
+    for (let i = 0; i < images.length; i++) {
+      let file = images[i];
+      const formData = new FormData();
+      console.log(file);
+      formData.append("file", file);
+      formData.append("upload_preset", "indeed");
+      axios
+        .post(
+          "https://api.cloudinary.com/v1_1/dgqlka0rq/image/upload",
+          formData
+        )
+        .then((res) => {
+          console.log(res.data.secure_url);
+          urls.push(res.data.secure_url);
+          if (urls.length === images.length) {
+            axios
+              .post(`${API}/company/uploadphoto`, {
+                urls,
+                userId: userDetails.userId,
+                employerId: props.match.params.id,
+              })
+              .then((res) => {
+                setPhotoOpen(false);
+                console.log(res);
+                dispatch(getcompaniesDetails({ employerID: res.data._id }));
+              });
+          }
+        });
+    }
+  };
+
   const reviewSubmithandler = async (event) => {
     event.preventDefault();
     console.log(cons);
@@ -270,43 +326,56 @@ export default function Review(props) {
           }}
         >
           <Typography variant="">
-          <HtmlTooltip open={tooltipopen} title="Do people feel happy at work most of the time?" arrow>
-             <span><b>{companyDetails.averageWorkHappinessScore}</b></span> 
-           </HtmlTooltip> 
-            
-          </Typography>
-           {' '} <b>Work Happiness Score</b>
-          </Grid>
-          <Grid
-            item
-            xl={4}
-            lg={4}
-            style={{
-              padding: "20px",
-            }}
-          >
-        <Typography variant="">
-        <HtmlTooltip open={tooltipopen} title="Do people feel they are achieving most of their goals at work?" arrow>
-          <b>{companyDetails.averageAppreciationScore}</b>   
-        </HtmlTooltip>      
-          </Typography>
-          {' '}  <b>Achievement Score</b>   
-             </Grid>
-             <Grid
-            item
-            xl={4}
-            lg={4}
-            style={{
-              padding: "20px",
-            }}
-          >
-        <Typography variant="">
-        <HtmlTooltip open={tooltipopen} title="Do people feel they often learn something at work?" arrow>
-          <b>{companyDetails.averageLearningScore}</b>  
-        </HtmlTooltip>    
-          </Typography>
-           {' '}   <b>Learning</b>     
-             </Grid>
+            <HtmlTooltip
+              open={tooltipopen}
+              title="Do people feel happy at work most of the time?"
+              arrow
+            >
+              <span>
+                <b>{companyDetails.averageWorkHappinessScore}</b>
+              </span>
+            </HtmlTooltip>
+          </Typography>{" "}
+          <b>Work Happiness Score</b>
+        </Grid>
+        <Grid
+          item
+          xl={4}
+          lg={4}
+          style={{
+            padding: "20px",
+          }}
+        >
+          <Typography variant="">
+            <HtmlTooltip
+              open={tooltipopen}
+              title="Do people feel they are achieving most of their goals at work?"
+              arrow
+            >
+              <b>{companyDetails.averageAppreciationScore}</b>
+            </HtmlTooltip>
+          </Typography>{" "}
+          <b>Achievement Score</b>
+        </Grid>
+        <Grid
+          item
+          xl={4}
+          lg={4}
+          style={{
+            padding: "20px",
+          }}
+        >
+          <Typography variant="">
+            <HtmlTooltip
+              open={tooltipopen}
+              title="Do people feel they often learn something at work?"
+              arrow
+            >
+              <b>{companyDetails.averageLearningScore}</b>
+            </HtmlTooltip>
+          </Typography>{" "}
+          <b>Learning</b>
+        </Grid>
       </Grid>
       <Grid item style={{ marginTop: "100px", marginBottom: "50px" }}>
         <Typography variant="h5">
@@ -436,12 +505,22 @@ export default function Review(props) {
       >
         <FormControl>
           <ButtonGroup
-            variant='outlined'
-            aria-label='outlined button group'
-            style={{ padding: "35px" }}>
-            <Button value='Rating' onClick={(e)=> handleSort("overallRating")}>Rating</Button>
-            <Button value='Helpfullness' onClick={(e)=> handleSort("isHelpfulCount")} >Helpfullness</Button>
-            <Button value='Date' onClick={(e)=> handleSort("createdAt")}>Date</Button>
+            variant="outlined"
+            aria-label="outlined button group"
+            style={{ padding: "35px" }}
+          >
+            <Button value="Rating" onClick={(e) => handleSort("overallRating")}>
+              Rating
+            </Button>
+            <Button
+              value="Helpfullness"
+              onClick={(e) => handleSort("isHelpfulCount")}
+            >
+              Helpfullness
+            </Button>
+            <Button value="Date" onClick={(e) => handleSort("createdAt")}>
+              Date
+            </Button>
           </ButtonGroup>
         </FormControl>
         <FormControl style={{ padding: "37px" }}>
@@ -464,7 +543,7 @@ export default function Review(props) {
           <Grid item style={{ marginTop: "30px", marginBottom: "50px" }}>
             <Typography>
               Found <b>{companySpecificReviews.length}</b> reviews matching the
-              search  
+              search
             </Typography>
           </Grid>
           <Grid container spacing={10}>
@@ -478,10 +557,9 @@ export default function Review(props) {
                   yourReview={item.yourReview}
                   pros={item.pros}
                   cons={item.cons}
-                  helpfulCount = {item.isHelpfulCount}     
-
+                  helpfulCount={item.isHelpfulCount}
                 />
-        );
+              );
             })}
           </Grid>
         </div>
@@ -497,9 +575,48 @@ export default function Review(props) {
             <b>{companyDetails.companyName} Photos</b>
           </span>
         </Grid>
+        {isAuth ? (
+          <GridList
+            cellHeight={200}
+            cols={3}
+            style={{ width: 800, height: 600 }}
+          >
+            {companyDetails.photos.map(
+              (data) =>
+                data.userId === userDetails.userId && (
+                  <GridListTile key={data.id}>
+                    <img src={data.path} alt={data.status} />
+                  </GridListTile>
+                )
+            )}
+            {companyDetails.photos.map(
+              (data) =>
+                data.status === "true" && (
+                  <GridListTile key={data.id}>
+                    <img src={data.path} alt={data.status} />
+                  </GridListTile>
+                )
+            )}
+          </GridList>
+        ) : (
+          <GridList
+            cellHeight={200}
+            cols={3}
+            style={{ width: 800, height: 600 }}
+          >
+            {companyDetails.photos.map(
+              (data) =>
+                data.status === "true" && (
+                  <GridListTile key={data.id}>
+                    <img src={data.path} alt={data.status} />
+                  </GridListTile>
+                )
+            )}
+          </GridList>
+        )}
       </div>
-      <UplaodButton type="submit" variant="contained">
-        Uplaod photo
+      <UplaodButton type="submit" variant="contained" onClick={handlePhotoOpen}>
+        Upload photo
       </UplaodButton>
     </div>
   );
@@ -635,8 +752,10 @@ export default function Review(props) {
                   readOnly
                 />
                 {companySpecificReviews && (
-                <Typography variant='caption'> { companySpecificReviews.length} reviews</Typography>
-
+                  <Typography variant="caption">
+                    {" "}
+                    {companySpecificReviews.length} reviews
+                  </Typography>
                 )}
               </Typography>
             </Grid>
@@ -940,6 +1059,49 @@ export default function Review(props) {
                 Post
               </SearchButton>
             </Grid>
+          </form>
+        </div>
+      </Modal>
+      <Modal
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        open={photoOpen}
+        onClose={handlePhotoClose}
+      >
+        <div style={modalStyle} className={classes.photopaper}>
+          <form className={classes.formStyle}>
+            <label for="file-upload" id="file-drag">
+              <div>
+                <div>Select a file</div>
+                <div>Please select an image</div>
+
+                <input
+                  id="file-upload"
+                  type="file"
+                  name="fileUpload"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => {
+                    let files = [];
+                    for (const file of e.target.files) files.push(file);
+                    console.log(files);
+                    setImage(files);
+                  }}
+                />
+              </div>
+              <button
+                style={{
+                  margin: "20px",
+                  position: "relative",
+                  left: "150px",
+                  top: "100px",
+                }}
+                class="btn btn-primary"
+                onClick={filehandler}
+              >
+                Upload
+              </button>
+            </label>
           </form>
         </div>
       </Modal>

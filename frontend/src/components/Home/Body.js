@@ -61,7 +61,7 @@ function Home(props) {
         setSuggestions(matches);
       }
 
-      const handleLocText = (e) => {
+    const handleLocText = (e) => {
         setLoc(true);
         setLocation(e.target.value);
         let matches = [];
@@ -107,7 +107,7 @@ function Home(props) {
                     <label style={{fontSize:"24px", fontWeight:"600"}}>What</label>
                     <div className={classes.autoComplete}>
                     <input type="text" onChange={handleTitleText} value={job} onBlur={() => {
-                  setTimeout(() => {
+                    setTimeout(() => {
                     setSuggestions([])
                   }, 100)}} className={classes.keywordSearch} placeholder="Job Title, keywords, or company" />
                     {
@@ -122,7 +122,7 @@ function Home(props) {
                     <label style={{fontSize:"24px", fontWeight:"600"}}>Where</label>
                     <div className={classes.autoComplete}>
                     <input type="text" onChange={handleLocText} value={location} onBlur={() => {
-                  setTimeout(() => {
+                    setTimeout(() => {
                     setSuggestions([])
                   }, 100)}} className={classes.keywordSearch} placeholder="location" />
                   {

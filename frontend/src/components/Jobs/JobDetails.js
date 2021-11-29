@@ -1,10 +1,12 @@
-import { Box, makeStyles, Typography } from '@material-ui/core';
+import { Box, makeStyles, Typography, Grid } from '@material-ui/core';
 import React , {useReducer,useState} from 'react';
 import { Button } from '@material-ui/core';
 import  FullJobDescription  from './FullJobDescription';
 import { useSelector,useDispatch } from 'react-redux';
 import StarIcon from '@material-ui/icons/Star';
 import { Link } from 'react-router-dom';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import { postSavedJobs } from '../../Redux/Actions/JobsAction';
 
 const useStyles = makeStyles(theme=>({
     container:{
@@ -37,8 +39,13 @@ const useStyles = makeStyles(theme=>({
     }
 })) 
 function JobDetails({jobData}) {
-    const classes = useStyles()
+    const classes = useStyles();
     const dispatch = useDispatch();
+    const [viewUndo, setViewUndo] = useState(false);
+    const displayUndo = () => {
+        dispatch(postSavedJobs())
+        setViewUndo(!viewUndo)
+    }
     return (
         <Box className={classes.container}>
             <Typography variant={'h5'} style={{marginBottom:'10px'}}>
@@ -60,9 +67,28 @@ function JobDetails({jobData}) {
             <Box style={{marginBottom:'10px'}} style={{fontSize:"15px", fontWeight:"700"}}>
             {'Salary $'}{jobData.salary}{' - '}{jobData.isRemote ? 'Remote' : 'On-line'}
             </Box>
-            <Button className={classes.link} style={{marginTop:'10px', marginBottom:'30px'}}>
-                Apply Now
-            </Button>
+            <Grid container>
+                <Grid item xs={4}>
+                <Button className={classes.link} style={{marginTop:'10px', marginBottom:'30px'}}>
+                    Apply Now
+                </Button>
+                </Grid>
+                <Grid item xs={4}>
+                <Button className={classes.link} onClick={() => displayUndo()} style={{marginTop:'10px', marginBottom:'30px', backgroundColor:'#A4A7AD'}}>
+                    <FavoriteBorderIcon />
+                </Button>
+                </Grid>
+            </Grid>
+                {viewUndo && 
+                <Grid container spacing={4} style={{backgroundColor:'#CFD2D7', borderRadius:'10px'}}>
+                    <Grid item xs={4}>
+                        <Link to='/indeed/saved-jobs'>Moved to saved</Link>
+                    </Grid>
+                    <Grid item xs={4}>
+                        <Link to='/'>Undo</Link>
+                    </Grid>
+                </Grid>
+                }
             <hr />
             <FullJobDescription jobData={jobData} />
         </Box>

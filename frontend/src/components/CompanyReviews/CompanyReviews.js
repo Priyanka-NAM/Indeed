@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
+import { FETCH_COMPANY_DONE } from "../../Redux/Constants/CompanyReviewConstants";
 import { CompanyBox } from "./CompanyBox";
 import { useHistory } from "react-router-dom";
 import { getCompanyReviews } from "../../Redux/Actions/CompanyReviewAction";
@@ -84,15 +84,20 @@ export const SearchButton = withStyles((theme) => ({
 
 export function CompanyReviews() {
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   const [companyName, setcompanyName] = useState("");
   const [location, setlocation] = useState("");
 
   const companyReviewReducer = useSelector((state) => state.companyReview);
 
-  const { companyNames } = companyReviewReducer;
+  let { companyNames } = companyReviewReducer;
+  useEffect(() => {
+    dispatch({
+      type: FETCH_COMPANY_DONE,
+    });
+  }, []);
 
-  const dispatch = useDispatch();
   const history = useHistory();
 
   const onTextChange = (e) => {

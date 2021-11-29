@@ -28,13 +28,13 @@ export default function DonutChart(props) {
           {
             label: "Arm Sales",
             data: numbers,
-            backgroundColor: ["#F54EA2", "#41b6e6", "#FE9000", "#7ebc59", "#8134af"],
+            backgroundColor: ["#0000CD", "#0000FF", "#4169E1", "#4682B4", "#6495ED"],
             hoverBackgroundColor: [
-              "#b9006e",
-              "#005792",
-              "#C1292E",
-              "#2b9464",
-              "#42218E"
+              "#00008B",
+              "#000080",
+              "#191970",
+              "#7B68EE",
+              "#6A5ACD",
             ]
           }
         ]
@@ -54,14 +54,14 @@ export default function DonutChart(props) {
           data={state}
           width={450}
           height={400} 
-          radius={110}
+          radius={80}
           innerRadius={20}
           backgroundColor={'blue'}
           options={{
             title: {
               display: true,
               text: "Top Five Most Reviewed Companies",
-              fontSize: 20
+              fontSize: 15
             },
             // responsive: true,
             legend: {

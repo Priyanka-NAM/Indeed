@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { pool } = require("../config/mysqldb");
+const Employer = require("../Models/EmployerModel");
 
 const loginUser = (req, res) => {
   const { email, password } = req.body;
@@ -40,14 +41,23 @@ const loginUser = (req, res) => {
               const token = jwt.sign(payload, process.env.SECRET, {
                 expiresIn: 1008000,
               });
-              let moongoresults = await User.findOne({
-                userId: result[0].userId,
-              });
               results["JWT"] = token;
               results["email"] = result[0].email;
-              results["userId"] = moongoresults._id;
               results["role"] = result[0].role
-              res.status(200).send(results);
+              if (result[0].role === 0) {
+                const moongoresults = await User.findOne({
+                  userId: result[0].userId,
+                });
+                results["userId"] = moongoresults._id;
+                res.status(200).send(results);
+              }
+              else {
+                const moongoresults = await Employer.findOne({
+                  userId: result[0].userId,
+                });
+                results["userId"] = moongoresults._id;
+                res.status(200).send(results);
+              }
             } else {
               res.status(401).send("Unauthorized");
             }
