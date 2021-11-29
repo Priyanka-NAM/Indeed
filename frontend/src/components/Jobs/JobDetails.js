@@ -1,12 +1,12 @@
 import { Box, makeStyles, Typography, Grid } from '@material-ui/core';
-import React , {useReducer,useState} from 'react';
+import React , {useEffect, useReducer,useState} from 'react';
 import { Button } from '@material-ui/core';
 import  FullJobDescription  from './FullJobDescription';
 import { useSelector,useDispatch } from 'react-redux';
 import StarIcon from '@material-ui/icons/Star';
 import { Link } from 'react-router-dom';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import { postSavedJobs } from '../../Redux/Actions/JobsAction';
+import { postSavedJobs, deleteSavedJobs } from '../../Redux/Actions/JobsAction';
 
 const useStyles = makeStyles(theme=>({
     container:{
@@ -38,14 +38,44 @@ const useStyles = makeStyles(theme=>({
         }
     }
 })) 
-function JobDetails({jobData}) {
+function JobDetails({jobData, index}) {
+    console.log("index : ", index)
     const classes = useStyles();
     const dispatch = useDispatch();
-    const [viewUndo, setViewUndo] = useState(false);
-    const displayUndo = () => {
-        dispatch(postSavedJobs())
-        setViewUndo(!viewUndo)
+    const userId = useSelector(state=>state.login.userDetails.userId)
+    const [viewUndo, setViewUndo] = useState([])
+    const [display, setDisplay] = useState(false)
+
+    useEffect(() => {
+        console.log("view undo", viewUndo)
+    }, [display])
+
+    const displayUndo = (jobId) => {
+        const data = {
+            "jobId": jobId,
+            "userId": userId
+        }
+        let temp = viewUndo
+        temp[index] = !temp[index]
+        setViewUndo(temp)
+        setDisplay(!display)
+        dispatch(postSavedJobs(data))
+        console.log("---", viewUndo)
     }
+
+    const hideUndo = (jobId) => {
+        console.log("delete")
+        const data = {
+            "jobId": jobId,
+            "userId": userId
+        }
+        let temp = viewUndo
+        temp[index] = !temp[index]
+        setViewUndo(temp)
+        setDisplay(!display)
+        dispatch(deleteSavedJobs(data))
+    }
+
     return (
         <Box className={classes.container}>
             <Typography variant={'h5'} style={{marginBottom:'10px'}}>
@@ -74,18 +104,18 @@ function JobDetails({jobData}) {
                 </Button>
                 </Grid>
                 <Grid item xs={4}>
-                <Button className={classes.link} onClick={() => displayUndo()} style={{marginTop:'10px', marginBottom:'30px', backgroundColor:'#A4A7AD'}}>
+                <Button className={classes.link} onClick={() => displayUndo(jobData._id, index)} style={{marginTop:'10px', marginBottom:'30px', backgroundColor:'#A4A7AD'}}>
                     <FavoriteBorderIcon />
                 </Button>
                 </Grid>
             </Grid>
-                {viewUndo && 
+                {viewUndo[index] && 
                 <Grid container spacing={4} style={{backgroundColor:'#CFD2D7', borderRadius:'10px'}}>
                     <Grid item xs={4}>
                         <Link to='/indeed/saved-jobs'>Moved to saved</Link>
                     </Grid>
                     <Grid item xs={4}>
-                        <Link to='/'>Undo</Link>
+                        <div onClick={() => hideUndo(jobData._id)}>Undo</div>
                     </Grid>
                 </Grid>
                 }
