@@ -133,8 +133,8 @@ function EmployerJobPostingHome(props) {
   const isError = false;
   const errorMsg = false;
 
-  function createData(title, city, country) {
-    return { title, city, country };
+  function createData(eachjob, title, city, country) {
+    return { eachjob, title, city, country };
   }
   const dispatch = useDispatch();
   const { responseFromServer } = useSelector((state) => state.employerJobs);
@@ -152,6 +152,7 @@ function EmployerJobPostingHome(props) {
   if (responseFromServer.length > 0) {
     rows = responseFromServer.map((eachjob) => {
       return createData(
+        eachjob,
         eachjob.jobTitle,
         eachjob.jobLocation.city,
         eachjob.jobLocation.country
@@ -202,12 +203,12 @@ function EmployerJobPostingHome(props) {
             flexDirection: "row",
             paddingLeft: "3%",
           }}>
-          <Grid>
+          <Grid style={{ paddingLeft: "10%" }}>
             <Typography className={classes.h4} variant='h4'>
               Jobs
             </Typography>
           </Grid>
-          <Grid style={{ paddingLeft: "75%" }}>
+          <Grid style={{ paddingLeft: "65%" }}>
             <Link
               style={{ textDecoration: "none" }}
               to={{ pathname: "/employer/postJob", state: "" }}>
