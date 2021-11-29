@@ -43,20 +43,20 @@ function Admindashboard() {
     return (
         <div>
             <Header />
-            <div class="container" style={{ backgroundColor: 'ghostwhite', minHeight: '45rem'}}>
-              <h3 style={{textAlign: "center", color : "blue"}}> Analystics</h3>
+            <div class="container" style={{ backgroundColor: 'ghostwhite', minHeight: '45rem', border: '1px solid #d0d0e1'}}>
+              <h3 style={{textAlign: "center", color: 'darkslategrey', fontFamily: "cursive"}}> Analystics</h3>
              
               <div className="row">
-                <div className="col md-12 lg-12">
+                <div className="col md-12 lg-12" style={{backgroundColor: "rgb(181 183 245)" }}>
                 <LineGraph1 />
                 </div>
        
               </div>
             <div className="row">
-               <div className="col md-2 lg-2">
+               <div className="col md-2 lg-2" style={{backgroundColor: '#dce5f5'}}>
                     <DonutChart />
                  </div>
-                 <div className="col md-2 lg-2">
+                 <div className="col md-2 lg-2" style={{backgroundColor: "rgb(99 99 247)"}}>
                  <h6>Top 5 companies based on average rating</h6>
                  <BarChart
         data={data}
@@ -68,12 +68,12 @@ function Admindashboard() {
                  </div>
             </div>
             <div className="row">
-               <div className="col md-2 lg-2" id="chart">
+               <div className="col md-2 lg-2" id="chart" style={{backgroundColor: "rgb(146 146 227)"}}>
                <LineGraph />
               
 
                  </div>
-                 <div className="col md-3 lg-3">
+                 <div className="col md-3 lg-3" style={{backgroundColor: "#b8c2d9"}}>
                  <DonutChart1 />
                  </div>
             </div>
@@ -86,7 +86,7 @@ function Admindashboard() {
                  </div>
             </div>
             <div class="row"> 
-            <div className="col md-11 lg-11">
+            <div className="col md-11 lg-11" style={{backgroundColor: "rgb(131 142 215)"}}>
             <h6 style={{textAlign: "center"}}> Top 10 companies based on number of views</h6>
             <BarChart
         data={data}
