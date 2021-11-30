@@ -8,9 +8,10 @@ const fetchJobs = async (req, res) => {
     console.log("req query : ",req.query)
     const job = req.query.job
     const location = req.query.location
+    const page = parseInt(req.query.page)
+    const limit = parseInt(req.query.limit)
     if (job && location) {
-        try {       
-            const jobList = await Jobs.find({$or: [
+        const query = {$or: [
             {
                 $and: [
                     {"jobTitle": job},
@@ -23,56 +24,70 @@ const fetchJobs = async (req, res) => {
                     {"jobLocation.city": location}
                 ]
             }
-        ]}).populate('employerID')
-        console.log("job list : ",jobList)
-        if (jobList) {
-            return res.status(200).send(jobList)
-        } else {
-            return res.status(404).send("Resource not found")
-        }
-        } catch (error) {
-            return res.status(500).send("Database error")
-        }
+        ]}
+        paginationFunc(res, page, limit, query)
     } else if (job) {
-        try {       
-            const jobList = await Jobs.find({$or: [
+        const query = {$or: [
             {
                 "jobTitle": job
             },
             {
                 "companyName": job
             }
-        ]}).populate('employerID')
-        if (jobList) {
-            return res.status(200).send(jobList)
-        } else {
-            return res.status(404).send("Resource not found")
-        }
-        } catch (error) {
-            return res.status(500).send("Database error")
-        }
+        ]}
+        paginationFunc(res, page, limit, query)
     } else if (location) {
-        try {
-            const jobList = await Jobs.find({"jobLocation.city":location}).populate('employerID')
-            if (jobList) {
-                return res.status(200).send(jobList)
-            } else {
-                return res.status(404).send("Resource not found")
-            }
-        } catch(err) {
-            return res.status(500).send("Database error")
-        }
+        const query = {"jobLocation.city":location}
+        paginationFunc(res, page, limit, query)
     } else {
-        try {
-            const jobList = await Jobs.find().populate('employerID')
-            if (jobList) {
-                res.status(200).send(jobList)
-            } else {
-                res.status(404).send("Resource not found")
-            }
-        } catch(err) {
-            res.status(500).send("Database error")
+        const query = {}
+        paginationFunc(res, page, limit, query)
+    }
+}
+
+const paginationFunc = async (res, page, limit, query) => {
+    console.log("page & limit : ", page, limit)
+    const startIndex = (page - 1) * limit 
+    const endIndex = page * limit
+
+    const results = {}
+    if (page === 0 && limit === 0) { 
+      try {
+        results.results = await Jobs.find(query).populate('employerID')
+        if (results.results) {
+            res.status(200).send(results.results)   
+        } else {
+            res.status(404).send("Resource not found")
+        } 
+      } catch (error) {
+        res.status(500).send("Database error")
+      }
+    } else {
+      if (endIndex < await Jobs.countDocuments().exec()) {
+        results.next = {
+          page: page + 1,
+          limit: limit
         }
+      }
+      
+      if (startIndex > 0) {
+        results.previous = {
+          page: page - 1,
+          limit: limit
+        }
+      }
+
+      try {
+        results.results = await Jobs.find(query).limit(limit).skip(startIndex).exec()
+        if (results.results) {
+            res.status(200).send(results.results)   
+        } else {
+            res.status(404).send("Resource not found")
+        }
+        
+      } catch (e) {
+        res.status(500).send("Database error")
+      }
     }
 }
 
