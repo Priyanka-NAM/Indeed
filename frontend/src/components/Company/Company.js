@@ -290,6 +290,9 @@ else if(filterValue === "NotApproved"){
   const changeToApproved = (id) => {
     dispatch(updateReviewStatus({reviewid: id}));
 }
+const handleHelpfulCount = (val1, val2) => {
+  alert(val1 + " "+ val2);
+}
   const reviewSubmithandler = async (event) => {
     setupdatePage(!updatePage);
     event.preventDefault();
@@ -640,7 +643,24 @@ else if(filterValue === "NotApproved"){
             </Grid>
             <span style={{fontSize: "small"}}>Was this review helpfull?</span>
             <Grid item container spacing={3}>
-            <div><ThumbUpAltIcon></ThumbUpAltIcon></div>{item.isHelpfulCount}
+            <FormControl>
+          <ButtonGroup
+            variant="outlined"
+            aria-label="outlined button group"
+            style={{ padding: "1px" }}
+          >
+            <Button value="yes" onClick={()=> {item.isHelpfulCount = item.isHelpfulCount + 1; handleHelpfulCount(item.isHelpfulCount, item.isNotHelpfulCount)}}>
+              Yes {' '} {item.isHelpfulCount}
+            </Button>
+            <Button
+              value="no"
+              onClick={()=> {item.isNotHelpfulCount = item.isNotHelpfulCount + 1 ; handleHelpfulCount(item.isHelpfulCount, item.isNotHelpfulCount)}}
+            >
+              No{ ' '}{item.isNotHelpfulCount}
+            </Button>
+
+          </ButtonGroup>
+        </FormControl>
              </Grid>
          
              {isAuth && userDetails.role == 2 && item.isApproved  === "NotApproved"  && (

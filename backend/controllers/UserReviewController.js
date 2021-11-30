@@ -213,11 +213,29 @@ exports.getCompanyReviews = async (req, res) => {
 };
 
 exports.UpdateReviewStatus = async (req, res) => {
-  console.log(req.query);
   try {
     const review = await Reviews.findOneAndUpdate(
       { _id: req.body.reviewid },
       { isApproved: "Approved" }
+    );
+    if (!review) {
+      return res.status(400).json({
+        error: error,
+      });
+    }
+    res.send(review);
+  } catch (error) {
+    return res.status(400).json({
+      error: error,
+    });
+  }
+};
+
+exports.UpdateHelpfulCount = async (req, res) => {
+  try {
+    const review = await Reviews.findOneAndUpdate(
+      { _id: req.body.reviewid },
+      { isHelpfulCount: req.body.helpfulcount, isNotHelpfulCount: req.body.nothelpfulcount }
     );
     if (!review) {
       return res.status(400).json({
