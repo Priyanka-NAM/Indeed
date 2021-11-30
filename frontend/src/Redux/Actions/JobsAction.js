@@ -7,6 +7,12 @@ import {
     GET_SAVED_JOBS,
     APPLY_JOB
 } from '../Constants/UserConstants';
+import {
+    GET_JOB_APPLICANTS_REQUEST,
+    GET_JOB_APPLICANTS_SUCCESS,
+    GET_JOB_APPLICANTS_FAIL,
+    GET_JOB_APPLICANTS_RESET
+} from '../Constants/JobConstants';
 import Axios from 'axios'; 
 import { API } from '../../config';
 
@@ -131,3 +137,27 @@ export const applyJobs = (data) => (dispatch) => {
         })
     })
 }
+
+export const getJobApplicants = (id) => async(dispatch) => {
+
+    try{
+        dispatch({
+            type: GET_JOB_APPLICANTS_REQUEST
+        })
+
+        const { data } = await Axios.get(`${API}/employer/job-applicants/${id}`)
+
+        dispatch({
+            type: GET_JOB_APPLICANTS_SUCCESS,
+            payload: data
+        })
+    }
+    catch(error){
+
+        dispatch({
+            type: GET_JOB_APPLICANTS_FAIL,
+            payload: error.response && error.response.data.message ? error.response.data.message : error.message
+        })
+    }
+}
+
