@@ -683,9 +683,6 @@ const handleJobSearch = () => {};
                     {item.isApprovedcons}
                 </Typography>
             </Grid>
-            
-              {userDetails.role !== 2 && (
-                <>
                <span style={{fontSize: "small"}}>Was this review helpfull?</span>
                 <Grid item container spacing={3}>
                 <FormControl>
@@ -694,10 +691,11 @@ const handleJobSearch = () => {};
             aria-label="outlined button group"
             style={{ padding: "1px" }}
           >
-            <Button value="yes" onClick={()=> {item.isHelpfulCount = item.isHelpfulCount + 1; handleHelpfulCount(item._id,item.isHelpfulCount, item.isNotHelpfulCount)}}>
+            <Button disabled = {userDetails.role === 2} value="yes" onClick={()=> {item.isHelpfulCount = item.isHelpfulCount + 1; handleHelpfulCount(item._id,item.isHelpfulCount, item.isNotHelpfulCount)}}>
               Yes {' '} {item.isHelpfulCount}
             </Button>
             <Button
+            disabled = {userDetails.role === 2} 
               value="no"
               onClick={()=> {item.isNotHelpfulCount = item.isNotHelpfulCount + 1 ; handleHelpfulCount(item._id,item.isHelpfulCount, item.isNotHelpfulCount)}}
             >
@@ -707,8 +705,8 @@ const handleJobSearch = () => {};
           </ButtonGroup>
         </FormControl>
               </Grid>
-              </>
-              )}
+            
+            
             
        
          
