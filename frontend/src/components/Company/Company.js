@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
 import { GridList, GridListTile } from "@material-ui/core";
 import { API } from "../../config";
+import JobDescription from "./JobDescription";
 import {
   getcompaniesDetails,
   getCompanySpecificReviews,
@@ -23,6 +24,7 @@ import { TextField } from "@material-ui/core";
 import { SearchButton } from "../CompanyReviews/CompanyReviews";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import { updateReviewStatus } from "../../Redux/Actions/Company";
+import { timeDifference } from "./timeDifference";
 
 import InputGrid from "./InputGrid";
 
@@ -254,7 +256,7 @@ const UplaodButton = withStyles((theme) => ({
 export default function Review(props) {
   const classes = useStyle();
   const [modalStyle] = React.useState(getModalStyle);
-  const [job, setJob] = useState("");
+  const [jobTitle, setJobTitle] = useState("");
   const [location, setLocation] = useState("");
   const { responseFromServer } = useSelector((state) => state.companyDetails);
   const companyDetails = responseFromServer
@@ -262,7 +264,6 @@ export default function Review(props) {
     : { aboutTheCompany: {} };
 
   let { responseFromServer: jobs } = useSelector((state) => state.employerJobs);
-  console.log(jobs);
 
   const loginReducer = useSelector((state) => state.login);
   const { isAuth, userDetails } = loginReducer;
@@ -306,6 +307,7 @@ export default function Review(props) {
   const [interviewPrep, setinterviewPrep] = useState("");
 
   const [open, setOpen] = useState(false);
+  const [jobData, setJobData] = useState(null);
 
   const handleOpen = () => {
     isAuth ? setOpen(true) : props.history.push("/login");
@@ -313,6 +315,9 @@ export default function Review(props) {
 
   const handleClose = () => {
     setOpen(false);
+  };
+  const getJobDescription = (job) => {
+    setJobData(job);
   };
 
   let { companySpecificReviews } = useSelector(
@@ -359,7 +364,6 @@ export default function Review(props) {
   const [tooltipopen, setTooltipopen] = React.useState(true);
 
   useEffect(() => {
-    debugger;
     console.log(sortValue);
     if (
       props.match.params.pathname === "snapshot" ||
@@ -376,7 +380,7 @@ export default function Review(props) {
     else if (props.match.params.pathname === "jobs")
       dispatch(employerAllJob(props.match.params.id));
     setRating(companyDetails.noOfRatings);
-  }, [props.match, sortValue, updatePage, filterValue]);
+  }, [props.match, sortValue, updatePage, filterValue, jobTitle, location]);
 
   const changePathName = (pathName) => {
     props.history.push(`/company/${props.match.params.id}/${pathName}`);
@@ -424,7 +428,33 @@ export default function Review(props) {
   const handleHelpfulCount = (val1, val2) => {
     alert(val1 + " " + val2);
   };
-  const handleJobSearch = () => {};
+  const handleJobSearch = (event) => {
+    event.preventDefault();
+
+    if (jobTitle && location) {
+      jobs = jobs.filter(
+        (row) =>
+          row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1 ||
+          row.jobLocation.city.indexOf(location.toLowerCase()) > -1
+      );
+
+      console.log(jobs);
+    } else if (jobTitle) {
+      jobs = jobs.filter(
+        (row) => row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1
+      );
+
+      console.log(jobs);
+    } else if (location) {
+      jobs = jobs.filter(
+        (row) =>
+          row.jobLocation.city.toLowerCase().indexOf(location.toLowerCase()) >
+          -1
+      );
+
+      console.log(jobs);
+    }
+  };
   const reviewSubmithandler = async (event) => {
     setupdatePage(!updatePage);
     event.preventDefault();
@@ -1069,8 +1099,8 @@ export default function Review(props) {
       <form onSubmit={handleJobSearch} className={classes.searchForm}>
         <Grid container spacing={1}>
           <InputGrid
-            setValue={setJob}
-            value={job}
+            setValue={setJobTitle}
+            value={jobTitle}
             label={"What?"}
             helperText={"Job Title"}
             classes={classes}
@@ -1098,6 +1128,7 @@ export default function Review(props) {
           </Grid>
         </Grid>
       </form>
+
       <Box style={{ display: "flex" }}>
         <Grid className={classes.jobContainer} container>
           {jobs &&
@@ -1111,17 +1142,21 @@ export default function Review(props) {
                 sm={12}
                 xs={12}
               >
-                <Box>
+                <Box onClick={() => getJobDescription(job)}>
                   <Typography className={classes.job_title}>
                     {job.jobTitle}
                   </Typography>
                   <Typography className={classes.job_subTitle}>
                     {job.jobLocation.city}
                   </Typography>
+                  <Typography className={classes.greyText}>
+                    {timeDifference(new Date(job.timeStamp).getTime())}
+                  </Typography>
                 </Box>
               </Grid>
             ))}
         </Grid>
+        {jobData ? <JobDescription jobData={jobData} /> : <></>}
       </Box>
     </>
   );
