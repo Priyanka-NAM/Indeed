@@ -416,82 +416,82 @@ export default function EmployerHomePage(props) {
       </Grid>
     </div>
   );
-  const showReviews = () => (
-    <div class='container-fluid'>
-      <Typography variant='h4'>
-        <b>{companyDetails.employerName} Employee Reviews</b>
-      </Typography>
-      <Grid
-        item
-        style={{
-          alignItems: "center",
-          marginTop: "20px",
-          marginBottom: "50px",
-          backgroundColor: "#d3d3d34f",
-          height: "100px",
-          boxShadow:
-            "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)",
-        }}>
-        <FormControl>
-          <ButtonGroup
-            variant='outlined'
-            aria-label='outlined button group'
-            style={{ padding: "35px" }}>
-            <Button value='Rating' onClick={(e) => handleSort("overallRating")}>
-              Rating
-            </Button>
-            <Button
-              value='Helpfullness'
-              onClick={(e) => handleSort("isHelpfulCount")}>
-              Helpfullness
-            </Button>
-            <Button value='Date' onClick={(e) => handleSort("createdAt")}>
-              Date
-            </Button>
-          </ButtonGroup>
-        </FormControl>
-        <FormControl style={{ padding: "37px" }}>
-          <Select
-            className={classes.outlinedInput}
-            variant='outlined'
-            value={filterValue}
-            name='filterVal'
-            onChange={(e) => setFilterValue(e.target.value)}
-            style={{ height: "30px" }}>
-            {values.map((value, index) => {
-              return <MenuItem value={value}>{value}</MenuItem>;
-            })}
-          </Select>
-        </FormControl>
-      </Grid>
-      {companySpecificReviews && (
-        <div>
-          <Grid item style={{ marginTop: "30px", marginBottom: "50px" }}>
-            <Typography>
-              Found <b>{companySpecificReviews.length}</b> reviews matching the
-              search
-            </Typography>
-          </Grid>
-          <Grid container spacing={10}>
-            {companySpecificReviews.map((item) => {
-              return (
-                <ReviewBox
-                  key={item.id}
-                  rating={item.overallRating}
-                  review_title={item.reviewTitle}
-                  date={item.date}
-                  yourReview={item.yourReview}
-                  pros={item.pros}
-                  cons={item.cons}
-                  helpfulCount={item.isHelpfulCount}
-                />
-              );
-            })}
-          </Grid>
-        </div>
-      )}
-    </div>
-  );
+  // const showReviews = () => (
+  //   <div class='container-fluid'>
+  //     <Typography variant='h4'>
+  //       <b>{companyDetails.employerName} Employee Reviews</b>
+  //     </Typography>
+  //     <Grid
+  //       item
+  //       style={{
+  //         alignItems: "center",
+  //         marginTop: "20px",
+  //         marginBottom: "50px",
+  //         backgroundColor: "#d3d3d34f",
+  //         height: "100px",
+  //         boxShadow:
+  //           "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)",
+  //       }}>
+  //       <FormControl>
+  //         <ButtonGroup
+  //           variant='outlined'
+  //           aria-label='outlined button group'
+  //           style={{ padding: "35px" }}>
+  //           <Button value='Rating' onClick={(e) => handleSort("overallRating")}>
+  //             Rating
+  //           </Button>
+  //           <Button
+  //             value='Helpfullness'
+  //             onClick={(e) => handleSort("isHelpfulCount")}>
+  //             Helpfullness
+  //           </Button>
+  //           <Button value='Date' onClick={(e) => handleSort("createdAt")}>
+  //             Date
+  //           </Button>
+  //         </ButtonGroup>
+  //       </FormControl>
+  //       <FormControl style={{ padding: "37px" }}>
+  //         <Select
+  //           className={classes.outlinedInput}
+  //           variant='outlined'
+  //           value={filterValue}
+  //           name='filterVal'
+  //           onChange={(e) => setFilterValue(e.target.value)}
+  //           style={{ height: "30px" }}>
+  //           {values.map((value, index) => {
+  //             return <MenuItem value={value}>{value}</MenuItem>;
+  //           })}
+  //         </Select>
+  //       </FormControl>
+  //     </Grid>
+  //     {companySpecificReviews && (
+  //       <div>
+  //         <Grid item style={{ marginTop: "30px", marginBottom: "50px" }}>
+  //           <Typography>
+  //             Found <b>{companySpecificReviews.length}</b> reviews matching the
+  //             search
+  //           </Typography>
+  //         </Grid>
+  //         <Grid container spacing={10}>
+  //           {companySpecificReviews.map((item) => {
+  //             return (
+  //               <ReviewBox
+  //                 key={item.id}
+  //                 rating={item.overallRating}
+  //                 review_title={item.reviewTitle}
+  //                 date={item.date}
+  //                 yourReview={item.yourReview}
+  //                 pros={item.pros}
+  //                 cons={item.cons}
+  //                 helpfulCount={item.isHelpfulCount}
+  //               />
+  //             );
+  //           })}
+  //         </Grid>
+  //       </div>
+  //     )}
+  //   </div>
+  // );
   const showPhotos = () => (
     <div className='row'>
       <div className='col-md-9'>
@@ -744,7 +744,7 @@ export default function EmployerHomePage(props) {
         </Grid>
         <hr style={{ marginTop: 0 }}></hr>
         {props.match.params.pathname === "snapshot" && showSnapShot()}
-        {props.match.params.pathname === "reviews" && showReviews()}
+        {/* {props.match.params.pathname === "reviews" && showReviews()} */}
         {props.match.params.pathname === "photos" && showPhotos()}
         {props.match.params.pathname === "whyjoinus" && showWhyJoinUs()}
         {showFooter()}

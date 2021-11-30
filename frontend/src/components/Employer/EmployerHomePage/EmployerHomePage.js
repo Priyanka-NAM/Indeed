@@ -7,7 +7,6 @@ import {
   getCompanySpecificReviews,
 } from "../../../Redux/Actions/Company";
 import axios from "axios";
-// import { ReviewBox } from "../Review/ReviewBox";
 import StarIcon from "@material-ui/icons/Star";
 import { Rating } from "@mui/material";
 import { ReviewBox } from "../../Company/ReviewBox";
@@ -16,23 +15,15 @@ import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import CameraAltIcon from "@material-ui/icons/CameraAltRounded";
 import Modal from "@material-ui/core/Modal";
 import { TextField } from "@material-ui/core";
-// import { SearchButton } from "../CompanyReviews/CompanyReviews";
 import { API } from "../../../config";
 
 import {
   Grid,
   Container,
   makeStyles,
-  FormHelperText,
-  Box,
   Typography,
   Button,
   withStyles,
-  Select,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  ButtonGroup,
 } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import EmployerCompanyDetailsUpdate from "../EmployerDetails/EmployerCompanyDetailsUpdate";
@@ -82,21 +73,6 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-const FollowButton = withStyles((theme) => ({
-  root: {
-    color: "#ffffff",
-    backgroundColor: "#085ff7",
-    cursor: "pointer",
-    width: "200px",
-    borderRadius: "200px",
-    height: "43px",
-    marginLeft: "50px",
-    "&:hover": {
-      backgroundColor: "#0542ac",
-    },
-  },
-}))(Button);
-
 function getModalStyle() {
   const top = 50;
   const left = 50;
@@ -137,21 +113,300 @@ const UplaodButton = withStyles((theme) => ({
 
 export default function EmployerHomePage(props) {
   const classes = useStyle();
-  const showCompany = () => <EmployerCompanyDetailsUpdate />;
-  const showPhotos = () => <EmployerCompanyDetailsUpdate />;
+  const [tooltipopen, setTooltipopen] = React.useState(true);
+
+  const showPhotos = () => (
+    <div className='row'>
+      <div className='col-md-9'>
+        <Grid item style={{ marginTop: "20px", marginBottom: "50px" }}>
+          <span>
+            <CameraAltIcon></CameraAltIcon>{" "}
+            <b>{companyDetails.companyName} Photos</b>
+          </span>
+        </Grid>
+      </div>
+      <UplaodButton type='submit' variant='contained'>
+        Uplaod photo
+      </UplaodButton>
+    </div>
+  );
 
   const changePathName = (pathName) => {
     props.history.push(
-      `/employer/details/${pathName}/${"619f0cdd8188bc6c174294cf"}`
+      `/employer/home/${"619f0cdd8188bc6c174294cf"}/${pathName}`
     );
   };
   const { responseFromServer } = useSelector((state) => state.companyDetails);
-  const { companySpecificReviews } = useSelector(
-    (state) => state.companyReviewList
-  );
+
   const companyDetails = responseFromServer
     ? responseFromServer
     : { aboutTheCompany: {} };
+
+  const showCompany = () => (
+    <div>
+      <Grid item style={{ marginTop: "20px", marginBottom: "30px" }}>
+        <Typography variant='caption'>
+          {companyDetails.employerName} Careers and Employment
+        </Typography>
+      </Grid>
+      <Grid item style={{ marginTop: "20px", marginBottom: "20px" }}>
+        <Typography variant='h5'>
+          <b>Work happiness</b>
+        </Typography>
+      </Grid>
+      <Grid item style={{ marginTop: "20px", marginBottom: "30px" }}>
+        <Typography variant='caption'>
+          Scores based on about 3 responses to Indeed's survey on work happiness
+        </Typography>
+      </Grid>
+      <Grid container item style={{ flex: 3, flexDirection: "row" }}>
+        <Grid
+          item
+          xl={4}
+          lg={4}
+          style={{
+            padding: "20px",
+          }}>
+          <Typography variant=''>
+            <HtmlTooltip
+              open={tooltipopen}
+              title='Do people feel happy at work most of the time?'
+              arrow>
+              <span>
+                <b>{companyDetails.averageWorkHappinessScore}</b>
+              </span>
+            </HtmlTooltip>
+          </Typography>{" "}
+          <b>Work Happiness Score</b>
+        </Grid>
+        <Grid
+          item
+          xl={4}
+          lg={4}
+          style={{
+            padding: "20px",
+          }}>
+          <Typography variant=''>
+            <HtmlTooltip
+              open={tooltipopen}
+              title='Do people feel they are achieving most of their goals at work?'
+              arrow>
+              <b>{companyDetails.averageAppreciationScore}</b>
+            </HtmlTooltip>
+          </Typography>{" "}
+          <b>Achievement Score</b>
+        </Grid>
+        <Grid
+          item
+          xl={4}
+          lg={4}
+          style={{
+            padding: "20px",
+          }}>
+          <Typography variant=''>
+            <HtmlTooltip
+              open={tooltipopen}
+              title='Do people feel they often learn something at work?'
+              arrow>
+              <b>{companyDetails.averageLearningScore}</b>
+            </HtmlTooltip>
+          </Typography>{" "}
+          <b>Learning</b>
+        </Grid>
+      </Grid>
+      <Grid item style={{ marginTop: "100px", marginBottom: "50px" }}>
+        <Typography variant='h5'>
+          <b>About the company</b>
+        </Typography>
+      </Grid>
+      <Grid container spacing={1}>
+        <Grid item style={{ flex: 1 }}>
+          <img
+            src='https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80'
+            alt={companyDetails.employerName}
+            style={{ height: "350px", borderRadius: "10px" }}
+          />
+        </Grid>
+        <Grid container item style={{ flex: 6, flexDirection: "row" }}>
+          <Grid
+            item
+            xl={5}
+            lg={5}
+            style={{
+              border: "2px solid #f2f2f2",
+              borderRadius: "10px",
+              padding: "20px",
+            }}>
+            <div style={{ fontWeight: "600" }}>CEO</div>
+            <br />
+            <br />
+            <div>{companyDetails.aboutTheCompany.ceo}</div>
+          </Grid>
+          <Grid
+            item
+            xl={5}
+            lg={5}
+            style={{
+              border: "2px solid #f2f2f2",
+              borderRadius: "10px",
+              padding: "20px",
+            }}>
+            <div style={{ fontWeight: "600" }}>Revenue</div>
+            <br />
+            <br />
+            <div>{companyDetails.aboutTheCompany.revenue}</div>
+          </Grid>
+          <Grid
+            item
+            xl={5}
+            lg={5}
+            style={{
+              border: "2px solid #f2f2f2",
+              borderRadius: "10px",
+              padding: "20px",
+            }}>
+            <div style={{ fontWeight: "600" }}>Company size</div>
+            <br />
+            <br />
+            <div style={{}}>{companyDetails.aboutTheCompany.companySize}</div>
+          </Grid>
+          <Grid
+            item
+            xl={5}
+            lg={5}
+            style={{
+              border: "2px solid #f2f2f2",
+              borderRadius: "10px",
+              padding: "20px",
+            }}>
+            <div style={{ fontWeight: "600" }}>Industry</div>
+            <br />
+            <br />
+            <div style={{}}>{companyDetails.aboutTheCompany.industry}</div>
+          </Grid>
+        </Grid>
+        <Grid container item style={{ flex: 6, flexDirection: "column" }}>
+          <Grid
+            item
+            xl={5}
+            lg={5}
+            style={{
+              border: "2px solid #f2f2f2",
+              borderRadius: "10px",
+              padding: "20px",
+            }}>
+            <div style={{ fontWeight: "600" }}>Founded</div>
+            <br />
+            <br />
+            <div style={{}}>{companyDetails.aboutTheCompany.founded}</div>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Grid container style={{ padding: "40px" }}>
+        <Typography
+          variant='body2'
+          style={{ color: "#767676", textAlign: "left" }}>
+          {companyDetails.aboutTheCompany.description}
+          <Typography
+            variant='body2'
+            style={{ color: "#767676", textAlign: "left" }}>
+            {companyDetails.aboutTheCompany.misssionandvisson}
+          </Typography>
+        </Typography>
+      </Grid>
+    </div>
+  );
+  const showFooter = () => (
+    <div>
+      <Grid
+        container
+        spacing={1}
+        style={{
+          fontSize: "14px",
+          backgroundColor: "white",
+          padding: "15px 10px",
+          margin: "50px -20px 0",
+        }}>
+        <Grid item style={{ cursor: "pointer" }}>
+          ©️ 2020 Indeed
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Accessibility at Indeed
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Privacy Center
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Cookies
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Privacy
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Terms
+        </Grid>
+      </Grid>
+    </div>
+  );
+  const showWhyJoinUs = () => (
+    <>
+      <Grid
+        item
+        style={{
+          marginTop: "20px",
+          marginBottom: "30px",
+          marginLeft: "100px",
+        }}>
+        <Typography variant='caption'>
+          About {companyDetails.companyName}
+        </Typography>
+      </Grid>
+      <Grid
+        item
+        style={{
+          marginTop: "20px",
+          marginBottom: "50px",
+          marginLeft: "100px",
+        }}>
+        <Typography variant='h5'>
+          <b>About the company</b>
+        </Typography>
+        <Grid container style={{ padding: "40px" }}>
+          <Typography
+            variant='body2'
+            style={{ color: "#767676", textAlign: "left" }}>
+            {companyDetails.aboutTheCompany.description}
+          </Typography>
+        </Grid>
+        <Typography variant='h5'>
+          <b>Work Culture</b>
+        </Typography>
+        <Grid container style={{ padding: "40px" }}>
+          <Typography
+            variant='body2'
+            style={{ color: "#767676", textAlign: "left" }}>
+            {companyDetails.aboutTheCompany.workCulture}
+          </Typography>
+        </Grid>
+        <Typography variant='h5'>
+          <b>Company Values</b>
+        </Typography>
+        <Grid container style={{ padding: "40px" }}>
+          <Typography
+            variant='body2'
+            style={{ color: "#767676", textAlign: "left" }}>
+            {companyDetails.aboutTheCompany.companyValues}
+          </Typography>
+        </Grid>
+      </Grid>
+    </>
+  );
+
   return (
     <Container maxwidth='xl' style={{ marginTop: "5%" }}>
       <div
@@ -180,38 +435,10 @@ export default function EmployerHomePage(props) {
           </Grid>
           <Grid item style={{ paddingTop: "40px", paddingLeft: "20px" }}>
             <Typography variant='h5'>{companyDetails.companyName}</Typography>
-            <Typography variant='h5'>
-              {companyDetails.noOfRatings}
-              {/* <StarIcon style = {{color: "#9d2b6b", paddingRight: "10px"}}/> */}
-              <Rating
-                name='half-rating-read'
-                style={{ color: "#9d2b6b", paddingRight: "10px" }}
-                // value={rating}
-                precision={0.5}
-                readOnly
-              />
-              {companySpecificReviews && (
-                <Typography variant='caption'>
-                  {companySpecificReviews.length} reviews
-                </Typography>
-              )}
-            </Typography>
           </Grid>
         </Grid>
-        <Grid item>
-          {/* <Button
-            color={"primary"}
-            variant='contained'
-            type='submit'
-            onClick={}>
-            {" "}
-            Review this Company{" "}
-          </Button> */}
-          <br />
-          {/* <Typography variant="caption" >Get weekly updates, new jobs, and reviews</Typography> */}
-        </Grid>
+        <Grid item></Grid>
       </Grid>
-
       <Grid container style={{ height: "40px" }}>
         <Grid
           item
@@ -233,16 +460,6 @@ export default function EmployerHomePage(props) {
           onClick={() => changePathName("whyjoinus")}>
           Why Join Us
         </Grid>
-        <Grid
-          item
-          className={
-            props.match.params.pathname === "reviews"
-              ? classes.activeTab
-              : classes.optionTab
-          }
-          onClick={() => changePathName("reviews")}>
-          Reviews
-        </Grid>
 
         <Grid
           item
@@ -258,11 +475,8 @@ export default function EmployerHomePage(props) {
       <hr style={{ marginTop: 0 }}></hr>
       {props.match.params.pathname === "company" && showCompany()}
       {props.match.params.pathname === "photos" && showPhotos()}
-
-      {/* {props.match.params.pathname === "reviews" && showReviews()}
-      {props.match.params.pathname === "photos" && showPhotos()}
-      {props.match.params.pathname === "whyjoinus" && showWhyJoinUs()} */}
-      {/* {showFooter()} */}
+      {props.match.params.pathname === "whyjoinus" && showWhyJoinUs()}
+      {showFooter()}
     </Container>
   );
 }

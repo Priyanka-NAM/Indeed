@@ -105,7 +105,7 @@ function EmployerHeader() {
         }}>
         <div style={{ flex: 6 }}>
           <Typography
-            to='/employer/home/'
+            to='/employer/home/619f0cdd8188bc6c174294cf/company'
             component={NavLink}
             className={classes.link}>
             <img

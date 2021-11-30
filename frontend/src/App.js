@@ -52,9 +52,13 @@ function App() {
             path='/employer/jobs-posted'
             component={EmployerJobPostingHome}
           />
-          <Route path='/reports' component={EmployerHomePage} />
-          <Route path='/employer/home' component={EmployerHomePage} />
-
+          {/* <Route path='/reports' component={EmployerHomePage} /> */}
+          {/* <Route path='/employer/home' component={EmployerHomePage} /> */}
+          <Route
+            exact
+            path='/employer/home/:id/:pathname'
+            component={EmployerHomePage}
+          />
           <Route path='/admindashboard' component={Admindashboard} />
           <Route exact path='/employer/' component={EmployerLandingPage} />
           <Route path='/employer/profile' component={EmployerProfile} />
