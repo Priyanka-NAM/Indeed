@@ -6,6 +6,8 @@ import {
     COMPANY_LIST_REVIEWS_FAIL,
     UPDATE_REVIEW_STATUS_SUCCESS,
     UPDATE_REVIEW_STATUS_FAIL,
+    UPDATE_HELPFUL_COUNT_SUCCESS,
+    UPDATE_HELPFUL_COUNT_FAIL,
   } from '../Constants/Company';
   
   const initialState = {
@@ -71,3 +73,24 @@ export const UpdateReviewStatusReducer = (state = initialState2, action) => {
       return { ...state };
   }
 };
+
+const initialState3 = {
+  updateHelpfulCount: null,
+  updateHelpfulCountError : null
+}
+// export const UpdateHelpfulCountReducer = (state = initialState3, action) => {
+//   switch (action.type) {
+//     case UPDATE_REVIEW_STATUS_SUCCESS:
+//         return { 
+//             ...state,
+//             updateReviewStatus: action.payload, 
+//             };
+//     case UPDATE_REVIEW_STATUS_FAIL:
+//         return {
+//             ...state,
+//             updateReviewStatusError: action.payload
+//           };
+//     default:
+//       return { ...state };
+//   }
+// };

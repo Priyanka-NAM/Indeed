@@ -21,9 +21,10 @@ import { employerAllJob } from "../../Redux/Actions/EmployerJobPostingAction";
 import Modal from "@material-ui/core/Modal";
 import { TextField } from "@material-ui/core";
 import { SearchButton } from "../CompanyReviews/CompanyReviews";
-import InputGrid from "./InputGrid";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import { updateReviewStatus } from "../../Redux/Actions/Company";
+
+import InputGrid from "./InputGrid";
 
 import {
   Grid,
@@ -43,6 +44,37 @@ import {
 import { Redirect } from "react-router-dom";
 
 const useStyle = makeStyles((theme) => ({
+  jobContainer: {
+    width: "450px",
+  },
+  card: {
+    border: "1px solid black",
+    padding: "15px",
+    cursor: "pointer",
+    position: "relative",
+    top: "100px",
+    left: "50px",
+    height: "150x",
+    marginBottom: "20px",
+    "&:hover": {
+      "& $job_title": {
+        textDecoration: "underline",
+      },
+    },
+    borderRadius: "10px",
+  },
+  job_title: {
+    fontWeight: "bold",
+    fontSize: "20px",
+  },
+  job_subTitle: {
+    fontSize: "16px",
+  },
+  job_snippet: {
+    margin: "20px 0px 10px 0px",
+    fontSize: "15px",
+    lineHeight: "1.4rem",
+  },
   formhelperText: {
     color: "#085ff7",
     paddingLeft: "20px",
@@ -222,7 +254,15 @@ const UplaodButton = withStyles((theme) => ({
 export default function Review(props) {
   const classes = useStyle();
   const [modalStyle] = React.useState(getModalStyle);
-  const { responseFromServer } = useSelector((state) => state.employerJobs);
+  const [job, setJob] = useState("");
+  const [location, setLocation] = useState("");
+  const { responseFromServer } = useSelector((state) => state.companyDetails);
+  const companyDetails = responseFromServer
+    ? responseFromServer
+    : { aboutTheCompany: {} };
+
+  let { responseFromServer: jobs } = useSelector((state) => state.employerJobs);
+  console.log(jobs);
 
   const loginReducer = useSelector((state) => state.login);
   const { isAuth, userDetails } = loginReducer;
@@ -242,9 +282,6 @@ export default function Review(props) {
   const [city, setCity] = useState("");
   const [st, setState] = useState("");
   const [photoOpen, setPhotoOpen] = useState(false);
-  const companyDetails = responseFromServer
-    ? responseFromServer
-    : { aboutTheCompany: {} };
   const [values, setValues] = React.useState([
     "select Review Type",
     "Approved",
@@ -283,9 +320,6 @@ export default function Review(props) {
   );
 
   console.log(companySpecificReviews);
-
-  const [job, setJob] = useState("");
-  const [location, setLocation] = useState("");
 
   //Filtering reviews Based on the approved and user reviews.
   if (companySpecificReviews) {
@@ -327,8 +361,10 @@ export default function Review(props) {
   useEffect(() => {
     debugger;
     console.log(sortValue);
-    console.log(props.match.params.pathname);
-    if (props.match.params.pathname === "snapshot")
+    if (
+      props.match.params.pathname === "snapshot" ||
+      props.match.params.pathname === "photos"
+    )
       dispatch(getcompaniesDetails({ employerID: props.match.params.id }));
     else if (props.match.params.pathname === "reviews")
       dispatch(
@@ -339,7 +375,6 @@ export default function Review(props) {
       );
     else if (props.match.params.pathname === "jobs")
       dispatch(employerAllJob(props.match.params.id));
-
     setRating(companyDetails.noOfRatings);
   }, [props.match, sortValue, updatePage, filterValue]);
 
@@ -386,6 +421,10 @@ export default function Review(props) {
   const changeToApproved = (id) => {
     dispatch(updateReviewStatus({ reviewid: id }));
   };
+  const handleHelpfulCount = (val1, val2) => {
+    alert(val1 + " " + val2);
+  };
+  const handleJobSearch = () => {};
   const reviewSubmithandler = async (event) => {
     setupdatePage(!updatePage);
     event.preventDefault();
@@ -427,8 +466,6 @@ export default function Review(props) {
 
     window.location.reload();
   };
-
-  const handleJobSearch = () => {};
 
   //SnapShot page strats here
   const showSnapShot = () => (
@@ -679,170 +716,203 @@ export default function Review(props) {
             </Typography>
           </Grid>
           <Grid container spacing={10}>
-            {companySpecificReviews.map((item) => {
-              return (
-                <>
-                  <Grid
-                    item
-                    container
-                    spacing={4}
-                    style={{ borderBottom: "#00000029 solid 1px" }}
-                  >
-                    <Grid item container spacing={1}>
-                      <Grid item style={{ width: "57px" }}>
-                        <h4 style={{ borderBottom: "3px dotted #000" }}>
-                          {item.overallRating}.0
-                        </h4>
+            {companySpecificReviews &&
+              companySpecificReviews.map((item) => {
+                return (
+                  <>
+                    <Grid
+                      item
+                      container
+                      spacing={4}
+                      style={{ borderBottom: "#00000029 solid 1px" }}
+                    >
+                      <Grid item container spacing={1}>
+                        <Grid item style={{ width: "57px" }}>
+                          <h4 style={{ borderBottom: "3px dotted #000" }}>
+                            {item.overallRating}.0
+                          </h4>
 
-                        <Rating
-                          name="size-small"
-                          style={{ color: "#9d2b6b" }}
-                          value={item.overallRating}
-                          size="small"
-                          precision={0.5}
-                          readOnly
-                        />
+                          <Rating
+                            name="size-small"
+                            style={{ color: "#9d2b6b" }}
+                            value={item.overallRating}
+                            size="small"
+                            precision={0.5}
+                            readOnly
+                          />
+                        </Grid>
+                        <Grid item>
+                          <Typography
+                            variant="head2"
+                            style={{ fontWeight: "800" }}
+                          >
+                            {item.reviewTitle}
+                          </Typography>
+                          {"  "}
+
+                          {item.isApproved === "NotApproved" ? (
+                            <button
+                              type="button"
+                              disabled="true"
+                              class="btn btn-danger"
+                              style={{
+                                height: "26px",
+                                fontWeight: "200",
+                                fontSize: "small",
+                                padding: "4px",
+                              }}
+                            >
+                              <i
+                                class="fa fa-times"
+                                aria-hidden="true"
+                                style={{ color: "white" }}
+                              ></i>{" "}
+                              Not Verified
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              class="btn btn-success"
+                              disabled="true"
+                              style={{
+                                height: "26px",
+                                fontWeight: "200",
+                                fontSize: "small",
+                                padding: "4px",
+                              }}
+                            >
+                              <i
+                                class="fas fa-check"
+                                style={{ color: "white" }}
+                              ></i>{" "}
+                              verified
+                            </button>
+                          )}
+                        </Grid>
                       </Grid>
-                      <Grid item>
+                      <Grid item container spacing={3}>
                         <Typography
-                          variant="head2"
-                          style={{ fontWeight: "800" }}
+                          variant="subtitle1"
+                          style={{ marginLeft: "20px" }}
                         >
-                          {item.reviewTitle}
+                          {item.yourReview}
                         </Typography>
-                        {"  "}
-
-                        {item.isApproved === "NotApproved" ? (
-                          <button
-                            type="button"
-                            disabled="true"
-                            class="btn btn-danger"
-                            style={{
-                              height: "26px",
-                              fontWeight: "200",
-                              fontSize: "small",
-                              padding: "4px",
-                            }}
-                          >
-                            <i
-                              class="fa fa-times"
-                              aria-hidden="true"
-                              style={{ color: "white" }}
-                            ></i>{" "}
-                            Not Verified
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            class="btn btn-success"
-                            disabled="true"
-                            style={{
-                              height: "26px",
-                              fontWeight: "200",
-                              fontSize: "small",
-                              padding: "4px",
-                            }}
-                          >
-                            <i
-                              class="fas fa-check"
-                              style={{ color: "white" }}
-                            ></i>{" "}
-                            verified
-                          </button>
-                        )}
                       </Grid>
-                    </Grid>
-                    <Grid item container spacing={3}>
-                      <Typography
-                        variant="subtitle1"
-                        style={{ marginLeft: "20px" }}
-                      >
-                        {item.yourReview}
-                      </Typography>
-                    </Grid>
-                    <Grid item container spacing={3}>
-                      <span>
-                        <i class="fas fa-check" style={{ color: "green" }}></i>
-                      </span>
-                      <div spacing={3}>
-                        <b> Pros </b>
-                      </div>
-                      <br></br>
-                    </Grid>
-                    <Grid item container spacing={3}>
-                      <Typography
-                        variant="subtitle1"
-                        style={{ marginLeft: "20px" }}
-                      >
-                        {item.pros}
-                      </Typography>
-                    </Grid>
-                    <Grid item container spacing={3}>
-                      <i
-                        class="fa fa-times"
-                        aria-hidden="true"
-                        style={{ color: "red" }}
-                      ></i>
-                      <br></br>
-                      <div spacing={3}>
-                        <b>Cons </b>{" "}
-                      </div>
-                    </Grid>
-
-                    <Grid item container spacing={3}>
-                      <Typography
-                        variant="subtitle1"
-                        style={{ marginLeft: "20px" }}
-                      >
-                        {item.isApprovedcons}
-                      </Typography>
-                    </Grid>
-                    <span style={{ fontSize: "small" }}>
-                      Was this review helpfull?
-                    </span>
-                    <Grid item container spacing={3}>
-                      <div>
-                        <ThumbUpAltIcon></ThumbUpAltIcon>
-                      </div>
-                      {item.isHelpfulCount}
-                    </Grid>
-
-                    {isAuth &&
-                      userDetails.role == 2 &&
-                      item.isApproved === "NotApproved" && (
+                      <Grid item container spacing={3}>
                         <span>
-                          <button
-                            type="button"
-                            class="btn btn-info"
-                            onClick={() => {
-                              item.isApproved = "Approved";
-                              changeToApproved(item._id);
-                            }}
-                          >
-                            Verify this review
-                          </button>
+                          <i
+                            class="fas fa-check"
+                            style={{ color: "green" }}
+                          ></i>
                         </span>
-                      )}
-                  </Grid>
-                </>
-                // <ReviewBox
-                //   key={item.id}
-                //   rating={item.overallRating}
-                //   review_title={item.reviewTitle}
-                //   date={item.date}
-                //   yourReview={item.yourReview}
-                //   pros={item.pros}
-                //   cons={item.cons}
-                //   helpfulCount={item.isHelpfulCount}
-                //   isApproved = {item.isApproved}
-                //   isAuth={isAuth}
-                //   userRole = {userDetails.role}
-                //   id = {item._id}
-                //   sortVal={sortValue}
-                //   filterValue = {filterValue}
-                // />
-              );
-            })}
+                        <div spacing={3}>
+                          <b> Pros </b>
+                        </div>
+                        <br></br>
+                      </Grid>
+                      <Grid item container spacing={3}>
+                        <Typography
+                          variant="subtitle1"
+                          style={{ marginLeft: "20px" }}
+                        >
+                          {item.pros}
+                        </Typography>
+                      </Grid>
+                      <Grid item container spacing={3}>
+                        <i
+                          class="fa fa-times"
+                          aria-hidden="true"
+                          style={{ color: "red" }}
+                        ></i>
+                        <br></br>
+                        <div spacing={3}>
+                          <b>Cons </b>{" "}
+                        </div>
+                      </Grid>
+
+                      <Grid item container spacing={3}>
+                        <Typography
+                          variant="subtitle1"
+                          style={{ marginLeft: "20px" }}
+                        >
+                          {item.isApprovedcons}
+                        </Typography>
+                      </Grid>
+                      <span style={{ fontSize: "small" }}>
+                        Was this review helpfull?
+                      </span>
+                      <Grid item container spacing={3}>
+                        <FormControl>
+                          <ButtonGroup
+                            variant="outlined"
+                            aria-label="outlined button group"
+                            style={{ padding: "1px" }}
+                          >
+                            <Button
+                              value="yes"
+                              onClick={() => {
+                                item.isHelpfulCount = item.isHelpfulCount + 1;
+                                handleHelpfulCount(
+                                  item.isHelpfulCount,
+                                  item.isNotHelpfulCount
+                                );
+                              }}
+                            >
+                              Yes {item.isHelpfulCount}
+                            </Button>
+                            <Button
+                              value="no"
+                              onClick={() => {
+                                item.isNotHelpfulCount =
+                                  item.isNotHelpfulCount + 1;
+                                handleHelpfulCount(
+                                  item.isHelpfulCount,
+                                  item.isNotHelpfulCount
+                                );
+                              }}
+                            >
+                              No {item.isNotHelpfulCount}
+                            </Button>
+                          </ButtonGroup>
+                        </FormControl>
+                      </Grid>
+
+                      {isAuth &&
+                        userDetails.role == 2 &&
+                        item.isApproved === "NotApproved" && (
+                          <span>
+                            <button
+                              type="button"
+                              class="btn btn-info"
+                              onClick={() => {
+                                item.isApproved = "Approved";
+                                changeToApproved(item._id);
+                              }}
+                            >
+                              Verify this review
+                            </button>
+                          </span>
+                        )}
+                    </Grid>
+                  </>
+                  // <ReviewBox
+                  //   key={item.id}
+                  //   rating={item.overallRating}
+                  //   review_title={item.reviewTitle}
+                  //   date={item.date}
+                  //   yourReview={item.yourReview}
+                  //   pros={item.pros}
+                  //   cons={item.cons}
+                  //   helpfulCount={item.isHelpfulCount}
+                  //   isApproved = {item.isApproved}
+                  //   isAuth={isAuth}
+                  //   userRole = {userDetails.role}
+                  //   id = {item._id}
+                  //   sortVal={sortValue}
+                  //   filterValue = {filterValue}
+                  // />
+                );
+              })}
           </Grid>
         </div>
       )}
@@ -854,7 +924,7 @@ export default function Review(props) {
         <Grid item style={{ marginTop: "20px", marginBottom: "50px" }}>
           <span>
             <CameraAltIcon></CameraAltIcon>{" "}
-            <b>{companyDetails.companyName} Photos</b>
+            <b>{companyDetails && companyDetails.companyName} Photos</b>
           </span>
         </Grid>
         {isAuth ? (
@@ -863,22 +933,24 @@ export default function Review(props) {
             cols={3}
             style={{ width: 800, height: 600 }}
           >
-            {companyDetails.photos.map(
-              (data) =>
-                data.userId === userDetails.userId && (
-                  <GridListTile key={data.id}>
-                    <img src={data.path} alt={data.status} />
-                  </GridListTile>
-                )
-            )}
-            {companyDetails.photos.map(
-              (data) =>
-                data.status && (
-                  <GridListTile key={data._id}>
-                    <img src={data.path} alt={data.status} />
-                  </GridListTile>
-                )
-            )}
+            {companyDetails &&
+              companyDetails.photos.map(
+                (data) =>
+                  data.userId === userDetails.userId && (
+                    <GridListTile key={data.id}>
+                      <img src={data.path} alt={data.status} />
+                    </GridListTile>
+                  )
+              )}
+            {companyDetails &&
+              companyDetails.photos.map(
+                (data) =>
+                  data.status && (
+                    <GridListTile key={data.id}>
+                      <img src={data.path} alt={data.status} />
+                    </GridListTile>
+                  )
+              )}
           </GridList>
         ) : (
           <GridList
@@ -886,14 +958,16 @@ export default function Review(props) {
             cols={3}
             style={{ width: 800, height: 600 }}
           >
-            {companyDetails.photos.map(
-              (data) =>
-                data.status && (
-                  <GridListTile key={data._id}>
-                    <img src={data.path} alt={data.status} />
-                  </GridListTile>
-                )
-            )}
+            {companyDetails &&
+              companyDetails.photos &&
+              companyDetails.photos.map(
+                (data) =>
+                  data.status && (
+                    <GridListTile key={data.id}>
+                      <img src={data.path} alt={data.status} />
+                    </GridListTile>
+                  )
+              )}
           </GridList>
         )}
       </div>
@@ -990,7 +1064,6 @@ export default function Review(props) {
       </Grid>
     </>
   );
-
   const showJobs = () => (
     <>
       <form onSubmit={handleJobSearch} className={classes.searchForm}>
@@ -1027,12 +1100,12 @@ export default function Review(props) {
       </form>
       <Box style={{ display: "flex" }}>
         <Grid className={classes.jobContainer} container>
-          {responseFromServer &&
-            responseFromServer.map((job, index) => (
+          {jobs &&
+            jobs.map((job) => (
               <Grid
                 className={classes.card}
                 item
-                key={job.jobkey}
+                key={job._id}
                 lg={12}
                 md={12}
                 sm={12}
@@ -1043,10 +1116,8 @@ export default function Review(props) {
                     {job.jobTitle}
                   </Typography>
                   <Typography className={classes.job_subTitle}>
-                    {job.jobLocation}
+                    {job.jobLocation.city}
                   </Typography>
-
-                  <div className={classes.job_snippet}></div>
                 </Box>
               </Grid>
             ))}
@@ -1054,7 +1125,6 @@ export default function Review(props) {
       </Box>
     </>
   );
-
   return (
     <div>
       <Header />
