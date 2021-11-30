@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
       }
   }))
 
-function Home(props) {
+function Body(props) {
     const classes = useStyles();
     const history = useHistory()
     const dispatch = useDispatch()
@@ -44,21 +44,30 @@ function Home(props) {
     const [job,setJob] = useState('');
     const [location,setLocation] = useState('');
     const [isTitle,setTitle] = useState(false);
+    const [isCompany,setCompany] = useState(false);
     const [isLoc,setLoc] = useState(false);
     const [suggestions, setSuggestions] = useState([]);
     const allJobs = useSelector(state => state.jobs.allJobs);
 
     const handleTitleText = (e) => {
-        setTitle(true);
+        //setTitle(true);
         setJob(e.target.value);
         let matches = [];
         if ((e.target.value).length > 0) {
           matches = allJobs.filter(job => {
-            const regex = new RegExp(`${e.target.value}`, "gi");
-            return job.jobTitle.match(regex);
+            const regex = new RegExp(`^${e.target.value}`, "gi");
+            if(job.jobTitle.match(regex)) {
+              setTitle(true);
+              return job.jobTitle.match(regex);
+            } else if (job.companyName.match(regex)) {
+              setCompany(true)
+              return job.companyName.match(regex);
+            }
+            return null
           })
         }
         setSuggestions(matches);
+        console.log(suggestions)
       }
 
     const handleLocText = (e) => {
@@ -80,6 +89,12 @@ function Home(props) {
         setSuggestions([]);
     }
 
+    const handleCompanySelect = (item) => {
+      setCompany(false);
+      setJob(item);
+      setSuggestions([]);
+    }
+
     const handleLocSelect = (item) => {
         setLoc(false);
         setLocation(item);
@@ -91,8 +106,6 @@ function Home(props) {
             "job": job,
             "location": location
         }
-        console.log("data : ", data)
-        //history.push(`/indeed/jobs?q=${job}&location=${location}`)
         setRedirectJobs(<Redirect to={{
             pathname: '/indeed/jobs',
             state: { query: data }
@@ -110,12 +123,30 @@ function Home(props) {
                     setTimeout(() => {
                     setSuggestions([])
                   }, 100)}} className={classes.keywordSearch} placeholder="Job Title, keywords, or company" />
-                    {
-                    suggestions.length !== 0 && suggestions.map((suggestion, index) =>
+                    {/* {
+                    suggestions.length !== 0 && isTitle && suggestions.map((suggestion, index) =>
                     <div key={index} className={classes.suggestions} onClick={() => handleTitleSelect(suggestion.jobTitle)}>
-                        {isTitle && suggestion.jobTitle}
+                        {suggestion.jobTitle}
                     </div>
-                    )}
+                    )} */}
+                    {
+                    suggestions.length !== 0 && isTitle && 
+                    <div className={classes.suggestions} onClick={() => handleTitleSelect(suggestions[0].jobTitle)}>
+                        {suggestions[0].jobTitle}
+                    </div>
+                    }
+                    {/* {
+                    suggestions.length !== 0 && isCompany && suggestions.map((suggestion, index) =>
+                    <div key={index} className={classes.suggestions} onClick={() => handleCompanySelect(suggestion.companyName)}>
+                        {suggestion.companyName}
+                    </div>
+                    )} */}
+                    {
+                    suggestions.length !== 0 && isCompany && 
+                    <div className={classes.suggestions} onClick={() => handleCompanySelect(suggestions[0].companyName)}>
+                        {suggestions[0].companyName}
+                    </div>
+                    }
                     </div>
                     </Grid>
                     <Grid item xs={4}>
@@ -125,12 +156,18 @@ function Home(props) {
                     setTimeout(() => {
                     setSuggestions([])
                   }, 100)}} className={classes.keywordSearch} placeholder="location" />
-                  {
+                    {/* {
                     suggestions.length !== 0 && suggestions.map((suggestion, index) =>
                     <div key={index} className={classes.suggestions} onClick={() => handleLocSelect(suggestion.jobLocation.city)}>
                         {isLoc && suggestion.jobLocation.city}
                     </div>
-                    )}
+                    )} */}
+                    {
+                    suggestions.length !== 0 && 
+                    <div className={classes.suggestions} onClick={() => handleLocSelect(suggestions[0].jobLocation.city)}>
+                        {isLoc && suggestions[0].jobLocation.city}
+                    </div>
+                    }
                     </div>
                     </Grid>
                     <Grid item xs={4}>
@@ -144,4 +181,4 @@ function Home(props) {
     );
 }
 
-export default Home;
+export default Body;
