@@ -21,7 +21,7 @@ router.post("/user-salary", userSalary);
 router.get("/reviews", getAllReviews);
 router.get("/home", getHomePage);
 router.get("/whyjoinus", getHomePage);
-router.put("/review/:reviewId", UpdateReviewStatus);
+router.put("/review/update-review-status", UpdateReviewStatus);
 router.get("/companyreviews", getCompanyReviews);
 router.post("/uploadphoto", uploadPhoto);
 module.exports = router;

@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { Container, Grid, Typography } from "@material-ui/core";
-import { Box, makeStyles, AppBar, Toolbar } from "@material-ui/core";
+import { Box, makeStyles } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import JobDetails1 from "./JobDetails1";
 import JobDetails2 from "./JobDetails2";
 import JobDetails3 from "./JobDetails3";
 import { useSelector } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
-import EmployerHeader from "../EmployerHomePage/EmployerHeader";
 
 const useStyles = makeStyles((theme) => ({
   container: {

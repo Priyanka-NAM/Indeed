@@ -1,16 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Container, Grid, Typography } from "@material-ui/core";
-import {
-  Box,
-  makeStyles,
-  AppBar,
-  Toolbar,
-  Button,
-  Checkbox,
-} from "@material-ui/core";
+import { makeStyles, Button } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-
-import { Link } from "react-router-dom";
+import { BrowserRouter as Router, Link } from "react-router-dom";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -23,8 +15,6 @@ import CardContent from "@material-ui/core/CardContent";
 import TablePagination from "@material-ui/core/TablePagination";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-
-import PropTypes from "prop-types";
 import { employerAllJob } from "../../../Redux/Actions/EmployerJobPostingAction";
 
 const useStyles = makeStyles((theme) => ({
@@ -84,41 +74,36 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     width: "200px",
-    borderRadius: "20px",
+    borderRadius: "9px",
     height: "50px",
     color: "white",
     backgroundColor: "#065FF7",
   },
-  divider: {
-    backgroundColor: "#f2f2f2",
-    heigth: "10px",
-    width: "150px",
-    margin: "0 30px",
-  },
-  pageBreak: {
-    backgroundColor: "#f2f2f2",
-    heigth: "10px",
-    width: "440px",
-    margin: "30px 30px 20px",
-  },
+
   formStyle: {
     width: "100%",
   },
   cardlook: {
-    width: "80%",
-    marginLeft: "2%",
+    width: "100%",
   },
   tableHeader: {
     fontSize: "20px",
     fontWeight: "bold",
+    color: "#065FF7",
   },
   root: {
     marginLeft: "2%",
     marginRight: "2%",
   },
   tableBody: {
+    width: "100%",
     marginLeft: "2%",
     marginRight: "2%",
+    display: "flex",
+    flexDirection: "row",
+  },
+  eachrow: {
+    flex: "1",
   },
 }));
 
@@ -132,17 +117,12 @@ function EmployerJobPostingHome(props) {
       },
     },
   });
-  let [step, setStep] = useState(1);
-  const success = false;
-  const isError = false;
-  const errorMsg = false;
 
-  function createData(title, city, country) {
-    return { title, city, country };
+  function createData(eachjob, title, city, country) {
+    return { eachjob, title, city, country };
   }
   const dispatch = useDispatch();
   const { responseFromServer } = useSelector((state) => state.employerJobs);
-  const { userDetails } = useSelector((state) => state.login);
 
   useEffect(() => {
     // if (userDetails.userId && userDetails.userId !== "") {
@@ -156,24 +136,13 @@ function EmployerJobPostingHome(props) {
   if (responseFromServer.length > 0) {
     rows = responseFromServer.map((eachjob) => {
       return createData(
+        eachjob,
         eachjob.jobTitle,
         eachjob.jobLocation.city,
         eachjob.jobLocation.country
       );
     });
   }
-  // const rows = [
-  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
-  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
-  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
-  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
-  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
-  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
-  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
-  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
-  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
-  //   createData("Gingerbread", 356, 16.0, 49, 3.9),
-  // ];
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(2);
@@ -190,11 +159,14 @@ function EmployerJobPostingHome(props) {
   const columns = [
     { id: "Job Title", label: "Job Title" },
     {
+      id: "Applicants",
+      label: "Applicants",
+      minWidth: 100,
+    },
+    {
       id: "Action",
       label: "Action",
-      minWidth: 170,
-      align: "right",
-      format: (value) => value.toLocaleString("en-US"),
+      minWidth: 100,
     },
   ];
 
@@ -207,8 +179,6 @@ function EmployerJobPostingHome(props) {
       }}>
       <MuiThemeProvider theme={theme} />
       <CssBaseline />
-      {success ? alert("User registered successfully") : <></>}
-      {isError ? <Box>{errorMsg}</Box> : <></>}
       <Container className={classes.container} maxWidth='xl'>
         <Grid
           item
@@ -217,12 +187,12 @@ function EmployerJobPostingHome(props) {
             flexDirection: "row",
             paddingLeft: "3%",
           }}>
-          <Grid>
+          <Grid style={{ paddingLeft: "10%" }}>
             <Typography className={classes.h4} variant='h4'>
               Jobs
             </Typography>
           </Grid>
-          <Grid style={{ paddingLeft: "75%" }}>
+          <Grid style={{ paddingLeft: "65%" }}>
             <Link
               style={{ textDecoration: "none" }}
               to={{ pathname: "/employer/postJob", state: "" }}>
@@ -232,10 +202,11 @@ function EmployerJobPostingHome(props) {
             </Link>
           </Grid>
         </Grid>
-
+        <br />
+        <br />
         <Grid item xs={2} style={{ paddingLeft: "80%" }}></Grid>
         <br />
-        <div style={{ height: 400, width: "100%" }}>
+        <div style={{ height: 400, width: "80%", marginLeft: "10%" }}>
           <Paper className={classes.root}>
             <TableContainer className={classes.tablecontainer}>
               <Table stickyHeader>
@@ -253,38 +224,60 @@ function EmployerJobPostingHome(props) {
                   </TableRow>
                 </TableHead>
                 <br />
-                <TableBody className={classes.tableBody}>
-                  {rows
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => {
-                      return (
-                        <TableRow
-                          role='checkbox'
-                          tabIndex={-1}
-                          key={row.code}
-                          className={classes.eachrow}>
-                          <Card className={classes.cardlook}>
-                            <CardContent>
-                              <Typography variant='h5' component='h2'>
-                                {row.title}
-                              </Typography>
-                              <Typography
-                                className={classes.pos}
-                                color='textSecondary'>
-                                {row.city}
-                              </Typography>
-                              <Typography
-                                className={classes.pos}
-                                color='textSecondary'>
-                                {row.country}
-                              </Typography>
-                            </CardContent>
-                          </Card>
-                          <br />
+                {rows
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => {
+                    return (
+                      <TableBody>
+                        <TableRow role='checkbox' tabIndex={-1} key={row.code}>
+                          <TableCell style={{ flex: 3 }}>
+                            <Card className={classes.cardlook}>
+                              <CardContent>
+                                <Typography variant='h5' component='h2'>
+                                  {row.title}
+                                </Typography>
+                                <Typography
+                                  className={classes.pos}
+                                  color='textSecondary'>
+                                  {row.city}
+                                </Typography>
+                                <Typography
+                                  className={classes.pos}
+                                  color='textSecondary'>
+                                  {row.country}
+                                </Typography>
+                              </CardContent>
+                            </Card>
+                          </TableCell>
+                          <TableCell style={{ flex: 1 }}>
+                            <Typography
+                              style={{ color: "#065FF7", fontWeight: "bold" }}
+                              to={{
+                                pathname: "/employer/showJobDetails",
+                                state: { row },
+                              }}>
+                              3 <span>Applicants</span>
+                            </Typography>
+                          </TableCell>
+                          <TableCell style={{ flex: 1 }}>
+                            <Button
+                              variant='outlined'
+                              color='#065FF7'
+                              style={{ color: "#065FF7" }}>
+                              <Link
+                                style={{ textDecoration: "none" }}
+                                to={{
+                                  pathname: "/employer/showJobDetails",
+                                  state: { row },
+                                }}>
+                                Job Details
+                              </Link>
+                            </Button>
+                          </TableCell>
                         </TableRow>
-                      );
-                    })}
-                </TableBody>
+                      </TableBody>
+                    );
+                  })}
               </Table>
             </TableContainer>
             <TablePagination

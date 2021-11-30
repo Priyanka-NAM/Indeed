@@ -3,12 +3,12 @@ import { Typography, Button } from "@material-ui/core";
 import { makeStyles, AppBar, Toolbar } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { useDispatch } from "react-redux";
 import { Redirect } from "react-router";
 import { NavLink } from "react-router-dom";
 import { employerLogout } from "../../../Redux/Actions/EmployerSignOutAction";
-
+import EmployerMenu from "./EmployerMenu";
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 
   inddedLogo: {
     height: "45px",
-    paddingRight: "30px",
+    paddingRight: "1%",
   },
   button: {
     width: "100px",
@@ -104,35 +104,56 @@ function EmployerHeader() {
           minHeight: "64px",
         }}>
         <div style={{ flex: 6 }}>
-          <img
-            className={classes.inddedLogo}
-            src='/Images/Indeed_Employer_logo.png'
-            alt=''
-          />
+          <Typography
+            to='/employer/home/'
+            component={NavLink}
+            className={classes.link}>
+            <img
+              className={classes.inddedLogo}
+              src='/Images/Indeed_Employer_logo.png'
+              alt=''
+            />
+          </Typography>
           <Typography
             to='/employer/jobs-posted/'
             component={NavLink}
             className={classes.link}>
-            Jobs
+            Post a Job
           </Typography>
           <Typography
+            to='/employer/company/update'
+            component={NavLink}
+            className={classes.link}>
+            Company
+          </Typography>
+          {/* <Typography
             to='/employer/applicants-page'
             component={NavLink}
             className={classes.link}>
             Applicants
-          </Typography>
-          <Typography
-            to='/employer/analytics'
-            component={NavLink}
-            className={classes.link}>
-            Analytics
-          </Typography>
-          <Typography
-            to='/employer/reports'
-            component={NavLink}
-            className={classes.link}>
-            Reports
-          </Typography>
+          </Typography> */}
+          {isAuth && (
+            <>
+              <Typography
+                to='/employer/reports'
+                component={NavLink}
+                className={classes.link}>
+                Reports
+              </Typography>
+              <Typography
+                to='/employer/reviews'
+                component={NavLink}
+                className={classes.link}>
+                Reviews
+              </Typography>
+              <Typography
+                to='/employer/'
+                component={NavLink}
+                className={classes.link}>
+                Photos
+              </Typography>
+            </>
+          )}
         </div>
         <div style={{ flex: 1 }}>
           {!isAuth ? (
@@ -156,14 +177,26 @@ function EmployerHeader() {
             </div>
           ) : (
             // <Typography component={NavLink} className={classes.button2}>
-            <Button
-              className={classes.button}
-              variant='contained'
-              onClick={() => {
-                handleLogout();
-              }}>
-              Sign out
-            </Button>
+
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <EmployerMenu />
+              {/* <Typography
+                to='/'
+                component={NavLink}
+                className={classes.link}
+                style={{ paddingRight: "10%" }}>
+                <AccountCircleIcon style={{ fontSize: "200%" }} />
+              </Typography> */}
+              {/* <Button
+                className={classes.button}
+                variant='contained'
+                onClick={() => {
+                  handleLogout();
+                }}>
+                Sign out
+              </Button> */}
+            </div>
+
             // </Typography>
           )}
         </div>

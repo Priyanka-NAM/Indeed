@@ -11,7 +11,7 @@ function Landing() {
         console.log("decoded : ", decoded)
         let token = "JWT " + userDetails.JWT
         localStorage.setItem("email", decoded.email)
-        localStorage.setItem("userid", decoded._id)
+        localStorage.setItem("userid", userDetails.userId)
         localStorage.setItem("token", token)
         localStorage.setItem("role", userDetails.role)
     }

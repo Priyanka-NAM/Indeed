@@ -10,6 +10,8 @@ import {
     ADMIN_GET_ALL_REVIEWS_FAIL,
     ADMIN_TOP_MOST_CEOS_SUCCESS,
     ADMIN_TOP_MOST_CEOS_FAIL,
+    ADMIN_LIST_ALL_COMPANIES_SUCCESS,
+    ADMIN_LIST_ALL_COMPANIES_FAIL,
 
   } from '../Constants/AdminConstants';
 
@@ -118,6 +120,29 @@ const initialState1 = {
           return {
               ...state,
               TopRatedCeosError: action.payload
+            };
+      default:
+        return { ...state };
+    }
+  };
+
+
+  const initialState5 = {
+    ListAllCompanies: null,
+    ListAllCompaniesError: null
+  }
+
+  export const getAllCompaniesReducer = (state = initialState5 , action) => {
+    switch (action.type) {
+      case ADMIN_LIST_ALL_COMPANIES_SUCCESS:
+          return { 
+              ...state,
+              ListAllCompanies: action.payload, 
+              };
+      case ADMIN_LIST_ALL_COMPANIES_FAIL:
+          return {
+              ...state,
+              ListAllCompaniesError: action.payload
             };
       default:
         return { ...state };

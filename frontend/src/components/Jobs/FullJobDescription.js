@@ -58,7 +58,6 @@ export default class FullJobDescription extends React.Component {
   }
   render() {
     const {jobData} = this.props
-    console.log("j d : ", jobData.jobDescription.responsibilites)
     return (
       <div>
           <Element name="test7" className="element" id="containerElement" style={{
