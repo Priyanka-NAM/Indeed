@@ -14,6 +14,7 @@ import CardContent from "@material-ui/core/CardContent";
 import TablePagination from "@material-ui/core/TablePagination";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { getJobApplicants } from "../../../Redux/Actions/JobsAction";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -123,15 +124,136 @@ const EmployerJobApplicants = ({match}) => {
         }
     })
 
+    const createData = (applicantEmail, applicantResume, applicantStatus) => {
+        return { applicantEmail, applicantResume, applicantStatus }
+    }
+
     const dispatch = useDispatch();
 
-    useEffect(() => {
+    const jobApplicants = useSelector(state => state.jobApplicants)
+    const { error, applicants } = jobApplicants
 
+    let rows = []
+
+    if(applicants.length > 0){
+        rows = applicants.map((eachApplicant) => {
+            return createData(
+                eachApplicant.email,
+                eachApplicant.resume,
+                "APPLIED"
+            )
+        })
+    }
+
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(2);
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+    };
+
+    useEffect(() => {
+        dispatch(getJobApplicants(match.params.id))
     }, [match])
+
+    const columns = [
+        {id: "Applicant Email", label: "Applicant Email" },
+        {id: "View Resume", label: "View Resume" },
+        {id: "Application Status", label: "Application Status"},
+        {id: "Message", label: "Send Message" }
+    ]
 
     return(
         <>
-            EmployerJobApplicants
+            <div style={{ height: 400, width: "80%", marginLeft: "10%"}}>
+                <Paper className={classes.root}>
+                    <TableContainer>
+                        <Table stickyHeader>
+                            <TableHead>
+                                <TableRow>
+                                    { columns.map( column => (
+                                        <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                            className={classes.tableHeader}
+                                        >
+                                            {column.label}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            </TableHead>
+                            <br/>
+                            {
+                                rows
+                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    .map(row => {
+                                        return (
+                                            <TableBody>
+                                                <TableRow role='checkbox' tabIndex={-1} key={row.code}>
+                                                    <TableCell style={{flex: 3}}>
+                                                        <Typography variant='h5' component='h2'>
+                                                            {row.applicantEmail}
+                                                        </Typography>
+                                                    </TableCell>
+                                                    <TableCell style={{ flex: 1 }}>
+                                                        <Button
+                                                            variant='outlined'
+                                                            color='#065FF7'
+                                                            style={{ color: "#065FF7" }}>
+                                                            <Link
+                                                                style={{ textDecoration: "none" }}
+                                                                to={{
+                                                                    pathname: "/employer/showJobDetails",
+                                                                    state: { row },
+                                                                }}>
+                                                                View Resume
+                                                            </Link>
+                                                        </Button>
+                                                    </TableCell>
+                                                    <TableCell style={{flex: 3}}>
+                                                        <Typography variant='h5' component='h2'>
+                                                            {row.applicantStatus}
+                                                        </Typography>
+                                                    </TableCell>
+                                                    <TableCell style={{ flex: 1 }}>
+                                                        <Button
+                                                            variant='outlined'
+                                                            color='#065FF7'
+                                                            style={{ color: "#065FF7" }}>
+                                                            <Link
+                                                                style={{ textDecoration: "none" }}
+                                                                to={{
+                                                                    pathname: "/employer/send-message",
+                                                                    state: { row },
+                                                                }}>
+                                                                Send Message
+                                                            </Link>
+                                                        </Button>
+                                                    </TableCell>
+                                                </TableRow>
+                                            </TableBody>
+                                        )
+                                    })
+                            }
+                        </Table>
+                    </TableContainer>
+                    <TablePagination
+                        rowsPerPageOptions={[2, 5, 10]}
+                        component='div'
+                        count={rows.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                </Paper>
+
+            </div>
         </>
     )
 }
