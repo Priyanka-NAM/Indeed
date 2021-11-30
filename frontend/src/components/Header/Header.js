@@ -71,7 +71,9 @@ export default function Header() {
   useEffect(() => {
     const data = {
         "job": '',
-        "location": ''
+        "location": '',
+        "page": 0,
+        "limit": 0
     }
     dispatch(fetchAllJobs(data))
   },[])

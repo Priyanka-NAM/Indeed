@@ -5,17 +5,6 @@ const postJob = async (req, res) => {
     console.log(userId, jobId)
     try {
         if (userId) {
-        //     const appResult = await Application.create({
-        //         userId,
-        //         jobId,
-        //         employerId,
-        //         status : "applied"
-        //     });
-        //     if (appResult) {
-        //         return res.status(200).send("job applied successfully")
-        //     } else {
-        //         return res.status(404).send("Resource not found")
-        //     }
             const applicationExists = await Application.findOne({$and: [
                 {
                     "userId": userId
@@ -29,12 +18,13 @@ const postJob = async (req, res) => {
             ]})
             console.log("app exists", applicationExists)
             if (applicationExists) {
-                const appResult = await Application.findOneAndUpdate({userId}, {jobId, status:"applied"}, {new:true})
-                if (appResult) {
-                    return res.status(200).send("job applied successfully")
-                } else {
-                    return res.status(404).send("Resource not found")
-                }
+                return res.status(409).send("job already applied")
+                // const appResult = await Application.findOneAndUpdate({userId}, {jobId, status:"applied"}, {new:true})
+                // if (appResult) {
+                //     return res.status(200).send("job updated successfully")
+                // } else {
+                //     return res.status(404).send("Resource not found")
+                // }
             } else {
                 console.log("create else")
                 const appResult = await Application.create({
