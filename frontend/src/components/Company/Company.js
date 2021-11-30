@@ -1047,7 +1047,6 @@ export default function Review(props) {
                   </Typography>
 
                   <div className={classes.job_snippet}></div>
-                  <Typography className={classes.greyText}></Typography>
                 </Box>
               </Grid>
             ))}
