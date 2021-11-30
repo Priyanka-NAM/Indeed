@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import Modal from '@material-ui/core/Modal';
 import { postSavedJobs, deleteSavedJobs, applyJobs } from '../../Redux/Actions/JobsAction';
+import { Redirect } from 'react-router';
 
 const useStyles = makeStyles(theme=>({
     container:{
@@ -51,10 +52,12 @@ function JobDetails({jobData, index}) {
     console.log("index : ", index)
     const classes = useStyles();
     const dispatch = useDispatch();
+    const isAuth = useSelector(state=>state.login.isAuth)
     const {userId, email} = useSelector(state=>state.login.userDetails)
     const [viewUndo, setViewUndo] = useState([])
+    const [redirectLogin, setLogin] = useState(false)
     const [display, setDisplay] = useState(false)
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -94,17 +97,22 @@ function JobDetails({jobData, index}) {
     }
 
     const handleApplyJob = (jobId, employerId) => {
-        const data = {
-            "userId": userId,
-            "jobId": jobId,
-            "employerId": employerId
+        if (isAuth) {
+            const data = {
+                "userId": userId,
+                "jobId": jobId,
+                "employerId": employerId
+            }
+            dispatch(applyJobs(data))
+            setOpen(false)
+        } else {
+            setLogin(true)
         }
-        dispatch(applyJobs(data))
-        setOpen(false)
     }
 
     return (
         <Box className={classes.container}>
+            {redirectLogin && <Redirect to='/login' />}
             <Typography variant={'h5'} style={{marginBottom:'10px'}}>
                 {jobData.jobTitle}
             </Typography>
