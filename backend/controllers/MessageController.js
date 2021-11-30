@@ -1,12 +1,12 @@
 const Messages = require('../Models/MessageModel')
-
+const Employer = require('../Models/EmployerModel')
 
 /*
     @ Post
     /indeed/messages/send-message
     Employer Send Message to Job Seeker
  */
-const sendMessage = async(req, res) => {
+const sendMessage = async (req, res) => {
 
     try{
 
@@ -36,10 +36,11 @@ const sendMessage = async(req, res) => {
     }
 }
 
-const replyMessage = async(req, res) => {
+const replyMessage = async (req, res) => {
+    console.log(req.body)
     try{
         const getMessage = await Messages.findById({_id: req.body._id})
-
+        console.log(getMessage)
         getMessage.messages.push({
             from: req.body.message.from,
             to: req.body.message.to,
@@ -66,13 +67,18 @@ const replyMessage = async(req, res) => {
    /indeed/messages/employer-messages/:id
    Employer Inbox
  */
-const getEmployerMessages = async(req, res) => {
+const getEmployerMessages = async (req, res) => {
     const { employerId } = req.params;
     try{
         const messages = await Messages.find({'employerId' : employerId});
+         if (messages) {
+            res.status(200).send(messages)
+         } else {
+            res.status(404).send("Resource not found")
+         }
         res.status(200).send(messages);
     }
-    catch(error){
+    catch(error){ 
         res.status(500);
         throw new Error('500: Internal Server Error')
     }
@@ -83,15 +89,48 @@ const getEmployerMessages = async(req, res) => {
     /indeed/messages/jobSeeker-messages/:id
     JobSeeker Inbox
  */
-const getJobSeekerMessages = async(req, res) => {
-    const { userId } = req.params;
+const getJobSeekerMessages = async (req, res) => {
+    const { userId, employerId } = req.query;
+    console.log(userId, employerId)
     try{
-        const messages = await Messages.find({'userId' : userId});
-        res.status(200).send(messages);
+        const messages = await Messages.find({$and: [
+            {
+                "userId": userId
+            },
+            {
+                "employerId": employerId
+            }
+        ]});
+        if (messages) {
+            res.status(200).send(messages);
+        } else {
+            res.status(404).send("Resource not found")
+        }
+        
     }
     catch(error){
         res.status(500).send('500: Internal Server Error')
     }
 }
 
-module.exports = { sendMessage, getEmployerMessages, getJobSeekerMessages, replyMessage };
+const getDistinctEmployer = async (req, res) => {
+    const { userId } = req.query;
+    try{
+        const ids = await Messages.find({'userId' : userId}).distinct('employerId')
+        if (ids) {
+            const employerDetails = await Employer.find({'_id':{$in : ids}})
+            if (employerDetails) {
+                return res.status(200).send(employerDetails)
+            } else {
+                return res.status(404).send("Resource not found")
+            }
+        } else {
+            return res.status(404).send("Resource not found")
+        }
+    }
+    catch(error){
+        res.status(500).send('500: Internal Server Error')
+    } 
+}
+
+module.exports = { sendMessage, getEmployerMessages, getJobSeekerMessages, replyMessage, getDistinctEmployer };
