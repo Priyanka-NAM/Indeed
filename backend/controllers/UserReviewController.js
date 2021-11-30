@@ -232,6 +232,7 @@ exports.UpdateReviewStatus = async (req, res) => {
 };
 
 exports.UpdateHelpfulCount = async (req, res) => {
+  console.log()
   try {
     const review = await Reviews.findOneAndUpdate(
       { _id: req.body.reviewid },

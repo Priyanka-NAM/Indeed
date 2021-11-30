@@ -22,6 +22,8 @@ import { TextField } from "@material-ui/core";
 import { SearchButton } from "../CompanyReviews/CompanyReviews";
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import {updateReviewStatus} from "../../Redux/Actions/Company";
+import { employerAllJob } from "../../Redux/Actions/EmployerJobPostingAction";
+import InputGrid from "./InputGrid";
 
 import {
   Grid,
@@ -41,6 +43,37 @@ import {
 import { Redirect } from "react-router-dom";
 
 const useStyle = makeStyles((theme) => ({
+  jobContainer: {
+    width: "450px",
+  },
+  card: {
+    border: "1px solid black",
+    padding: "15px",
+    cursor: "pointer",
+    position: "relative",
+    top: "100px",
+    left: "50px",
+    height: "150x",
+    marginBottom: "20px",
+    "&:hover": {
+      "& $job_title": {
+        textDecoration: "underline",
+      },
+    },
+    borderRadius: "10px",
+  },
+  job_title: {
+    fontWeight: "bold",
+    fontSize: "20px",
+  },
+  job_subTitle: {
+    fontSize: "16px",
+  },
+  job_snippet: {
+    margin: "20px 0px 10px 0px",
+    fontSize: "15px",
+    lineHeight: "1.4rem",
+  },
   formhelperText: {
     color: "#085ff7",
     paddingLeft: "20px",
@@ -150,8 +183,16 @@ const UplaodButton = withStyles((theme) => ({
 export default function Review(props) {
   const classes = useStyle();
   const [modalStyle] = React.useState(getModalStyle);
-
+  const [job, setJob] = useState("");
+  const [location, setLocation] = useState("");
   const { responseFromServer } = useSelector((state) => state.companyDetails);
+  const companyDetails = responseFromServer
+  ? responseFromServer
+  : { aboutTheCompany: {} };
+  
+  let  { responseFromServer: jobs} = useSelector((state) => state.employerJobs);
+  console.log(jobs);
+
   const loginReducer = useSelector((state) => state.login);
   const { isAuth, userDetails } = loginReducer;
   const [images, setImage] = useState([]);
@@ -170,9 +211,6 @@ export default function Review(props) {
   const [city, setCity] = useState("");
   const [st, setState] = useState("");
   const [photoOpen, setPhotoOpen] = useState(false);
-  const companyDetails = responseFromServer
-  ? responseFromServer
-  : { aboutTheCompany: {} };
 const [values, setValues] = React.useState(["select Review Type","Approved", "NotApproved"]);
 const [filterValue, setFilterValue] = React.useState(["select Review Type"]);
 const [sortValue, setSortValue] = React.useState("createdAt");
@@ -235,7 +273,7 @@ else if(filterValue === "NotApproved"){
   useEffect(() => {
     debugger;
     console.log(sortValue);
-    if (props.match.params.pathname === "snapshot")
+    if (props.match.params.pathname === "snapshot" || props.match.params.pathname === "photos" )
       dispatch(getcompaniesDetails({ employerID: props.match.params.id }));
     else if (props.match.params.pathname === "reviews")
       dispatch(
@@ -244,6 +282,8 @@ else if(filterValue === "NotApproved"){
           sort: sortValue,
         })
       );
+    else if (props.match.params.pathname === "jobs")
+      dispatch(employerAllJob(props.match.params.id));
     setRating(companyDetails.noOfRatings);
   }, [props.match, sortValue, updatePage, filterValue]);
 
@@ -293,6 +333,7 @@ else if(filterValue === "NotApproved"){
 const handleHelpfulCount = (val1, val2) => {
   alert(val1 + " "+ val2);
 }
+const handleJobSearch = () => {};
   const reviewSubmithandler = async (event) => {
     setupdatePage(!updatePage);
     event.preventDefault();
@@ -584,7 +625,7 @@ const handleHelpfulCount = (val1, val2) => {
             </Typography>
           </Grid>
           <Grid container spacing={10}>
-            {companySpecificReviews.map((item) => {
+            {companySpecificReviews && companySpecificReviews.map((item) => {
               return (
                 <>
             <Grid item container spacing={4} style={{borderBottom: '#00000029 solid 1px'}}>
@@ -700,7 +741,7 @@ const handleHelpfulCount = (val1, val2) => {
         <Grid item style={{ marginTop: "20px", marginBottom: "50px" }}>
           <span>
             <CameraAltIcon></CameraAltIcon>{" "}
-            <b>{companyDetails.companyName} Photos</b>
+            <b>{companyDetails && companyDetails.companyName} Photos</b>
           </span>
         </Grid>
         {isAuth ? (
@@ -709,7 +750,7 @@ const handleHelpfulCount = (val1, val2) => {
             cols={3}
             style={{ width: 800, height: 600 }}
           >
-            {companyDetails.photos.map(
+            {companyDetails && companyDetails.photos.map(
               (data) =>
                 data.userId === userDetails.userId && (
                   <GridListTile key={data.id}>
@@ -717,9 +758,9 @@ const handleHelpfulCount = (val1, val2) => {
                   </GridListTile>
                 )
             )}
-            {companyDetails.photos.map(
+            {companyDetails && companyDetails.photos.map(
               (data) =>
-                data.status === "true" && (
+                data.status && (
                   <GridListTile key={data.id}>
                     <img src={data.path} alt={data.status} />
                   </GridListTile>
@@ -732,9 +773,9 @@ const handleHelpfulCount = (val1, val2) => {
             cols={3}
             style={{ width: 800, height: 600 }}
           >
-            {companyDetails.photos.map(
+            {companyDetails && companyDetails.photos && companyDetails.photos.map(
               (data) =>
-                data.status === "true" && (
+                data.status && (
                   <GridListTile key={data.id}>
                     <img src={data.path} alt={data.status} />
                   </GridListTile>
@@ -836,7 +877,67 @@ const handleHelpfulCount = (val1, val2) => {
       </Grid>
     </>
   );
+  const showJobs = () => (
+    <>
+      <form onSubmit={handleJobSearch} className={classes.searchForm}>
+        <Grid container spacing={1}>
+          <InputGrid
+            setValue={setJob}
+            value={job}
+            label={"What?"}
+            helperText={"Job Title"}
+            classes={classes}
+          />
 
+          <InputGrid
+            setValue={setLocation}
+            value={location}
+            label={"Where"}
+            helperText="Location"
+            classes={classes}
+          />
+
+          <Grid
+            item
+            lg={2}
+            md={2}
+            sm={2}
+            xs={12}
+            className={classes.btn_Container}
+          >
+            <Button color={"primary"} variant="contained" type="submit">
+              Find Jobs
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
+      <Box style={{ display: "flex" }}>
+        <Grid className={classes.jobContainer} container>
+          {jobs &&
+            jobs.map((job) => (
+              <Grid
+                className={classes.card}
+                item
+                key={job._id}
+                lg={12}
+                md={12}
+                sm={12} 
+                xs={12}
+              >
+                <Box>
+                  <Typography className={classes.job_title}>
+                    {job.jobTitle}
+                  </Typography>
+                  <Typography className={classes.job_subTitle}>
+                    {job.jobLocation.city}
+                  </Typography>
+                </Box>
+              </Grid>
+            ))}
+        </Grid>
+      </Box>
+    </>
+  );
   return (
     <div>
       <Header />
@@ -998,6 +1099,7 @@ const handleHelpfulCount = (val1, val2) => {
         {props.match.params.pathname === "reviews" && showReviews()}
         {props.match.params.pathname === "photos" && showPhotos()}
         {props.match.params.pathname === "whyjoinus" && showWhyJoinUs()}
+        {props.match.params.pathname === "jobs" && showJobs()}
         {showFooter()}
       </Container>
 
