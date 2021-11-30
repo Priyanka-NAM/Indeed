@@ -16,9 +16,11 @@ import { ReviewBox } from "./ReviewBox";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 
 import CameraAltIcon from "@material-ui/icons/CameraAltRounded";
+import { employerAllJob } from "../../Redux/Actions/EmployerJobPostingAction";
 import Modal from "@material-ui/core/Modal";
 import { TextField } from "@material-ui/core";
 import { SearchButton } from "../CompanyReviews/CompanyReviews";
+import InputGrid from "./InputGrid";
 
 import {
   Grid,
@@ -43,6 +45,76 @@ const useStyle = makeStyles((theme) => ({
     paddingLeft: "20px",
     cursor: "pointer",
     fontSize: "17px",
+  },
+  jobContainer: {
+    width: "450px",
+  },
+  card: {
+    border: "1px solid black",
+    padding: "15px",
+    cursor: "pointer",
+    position: "relative",
+    top: "100px",
+    left: "50px",
+    height: "150x",
+    marginBottom: "20px",
+    "&:hover": {
+      "& $job_title": {
+        textDecoration: "underline",
+      },
+    },
+    borderRadius: "10px",
+  },
+  job_title: {
+    fontWeight: "bold",
+    fontSize: "20px",
+  },
+  job_subTitle: {
+    fontSize: "16px",
+  },
+  job_snippet: {
+    margin: "20px 0px 10px 0px",
+    fontSize: "15px",
+    lineHeight: "1.4rem",
+  },
+  input: {
+    width: "100%",
+    height: "45px",
+  },
+  removeMargin: {
+    margin: "0",
+  },
+  searchForm: {
+    display: "flex",
+    justifyContent: "center",
+  },
+  btn_Container: {
+    display: "flex",
+    alignItems: "flex-end",
+
+    "& button": {
+      width: "100%",
+      height: "45px",
+      fontSize: "13px",
+      fontWeight: "bold",
+      borderRadius: "10px",
+    },
+  },
+  suggestionInput: {
+    position: "relative",
+  },
+  autocontainer: {
+    border: `1px solid ${theme.palette.primary.main}`,
+    width: "99%",
+    backgroundColor: "white",
+    borderBottomLeftRadius: "5px",
+    borderBottomRightRadius: "5px",
+    zIndex: "10",
+    paddingBottom: "30px",
+    position: "absolute",
+    "& div": {
+      marginTop: "30px",
+    },
   },
   outlinedInput: {
     width: "700px",
@@ -147,8 +219,8 @@ const UplaodButton = withStyles((theme) => ({
 export default function Review(props) {
   const classes = useStyle();
   const [modalStyle] = React.useState(getModalStyle);
+  const { responseFromServer } = useSelector((state) => state.employerJobs);
 
-  const { responseFromServer } = useSelector((state) => state.companyDetails);
   const loginReducer = useSelector((state) => state.login);
   const { isAuth, userDetails } = loginReducer;
   const [images, setImage] = useState([]);
@@ -201,11 +273,14 @@ export default function Review(props) {
   const query = new URLSearchParams(props.location.search);
   const id = query.get("id");
   const dispatch = useDispatch();
+  const [job, setJob] = useState("");
+  const [location, setLocation] = useState("");
 
   const [tooltipopen, setTooltipopen] = React.useState(true);
 
   useEffect(() => {
     console.log(sortValue);
+    console.log(props.match.params.pathname);
     if (props.match.params.pathname === "snapshot")
       dispatch(getcompaniesDetails({ employerID: props.match.params.id }));
     else if (props.match.params.pathname === "reviews")
@@ -215,6 +290,9 @@ export default function Review(props) {
           sort: sortValue,
         })
       );
+    else if (props.match.params.pathname === "jobs")
+      dispatch(employerAllJob(props.match.params.id));
+
     setRating(companyDetails.noOfRatings);
   }, [props.match, sortValue]);
 
@@ -297,6 +375,8 @@ export default function Review(props) {
       })
       .catch((error) => {});
   };
+
+  const handleJobSearch = () => {};
 
   //SnapShot page strats here
   const showSnapShot = () => (
@@ -591,8 +671,8 @@ export default function Review(props) {
             )}
             {companyDetails.photos.map(
               (data) =>
-                data.status === "true" && (
-                  <GridListTile key={data.id}>
+                data.status && (
+                  <GridListTile key={data._id}>
                     <img src={data.path} alt={data.status} />
                   </GridListTile>
                 )
@@ -606,8 +686,8 @@ export default function Review(props) {
           >
             {companyDetails.photos.map(
               (data) =>
-                data.status === "true" && (
-                  <GridListTile key={data.id}>
+                data.status && (
+                  <GridListTile key={data._id}>
                     <img src={data.path} alt={data.status} />
                   </GridListTile>
                 )
@@ -706,6 +786,71 @@ export default function Review(props) {
           </Typography>
         </Grid>
       </Grid>
+    </>
+  );
+
+  const showJobs = () => (
+    <>
+      <form onSubmit={handleJobSearch} className={classes.searchForm}>
+        <Grid container spacing={1}>
+          <InputGrid
+            setValue={setJob}
+            value={job}
+            label={"What?"}
+            helperText={"Job Title"}
+            classes={classes}
+          />
+
+          <InputGrid
+            setValue={setLocation}
+            value={location}
+            label={"Where"}
+            helperText="Location"
+            classes={classes}
+          />
+
+          <Grid
+            item
+            lg={2}
+            md={2}
+            sm={2}
+            xs={12}
+            className={classes.btn_Container}
+          >
+            <Button color={"primary"} variant="contained" type="submit">
+              Find Jobs
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
+      <Box style={{ display: "flex" }}>
+        <Grid className={classes.jobContainer} container>
+          {responseFromServer &&
+            responseFromServer.map((job, index) => (
+              <Grid
+                className={classes.card}
+                item
+                key={job.jobkey}
+                lg={12}
+                md={12}
+                sm={12}
+                xs={12}
+              >
+                <Box>
+                  <Typography className={classes.job_title}>
+                    {job.jobTitle}
+                  </Typography>
+                  <Typography className={classes.job_subTitle}>
+                    {job.jobLocation}
+                  </Typography>
+
+                  <div className={classes.job_snippet}></div>
+                  <Typography className={classes.greyText}></Typography>
+                </Box>
+              </Grid>
+            ))}
+        </Grid>
+      </Box>
     </>
   );
 
@@ -870,6 +1015,7 @@ export default function Review(props) {
         {props.match.params.pathname === "reviews" && showReviews()}
         {props.match.params.pathname === "photos" && showPhotos()}
         {props.match.params.pathname === "whyjoinus" && showWhyJoinUs()}
+        {props.match.params.pathname === "jobs" && showJobs()}
         {showFooter()}
       </Container>
 
