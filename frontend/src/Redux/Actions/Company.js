@@ -5,6 +5,8 @@ import {
     COMPANY_LIST_REVIEWS_FAIL,
     UPDATE_REVIEW_STATUS_SUCCESS,
     UPDATE_REVIEW_STATUS_FAIL,
+    UPDATE_HELPFUL_COUNT_SUCCESS,
+    UPDATE_HELPFUL_COUNT_FAIL,
   } from '../Constants/Company';
   
   import Axios from 'axios'; 
@@ -71,7 +73,29 @@ export const updateReviewStatus = (data) => (dispatch) => {
         Accept: 'application/json'
       },
     }
-  Axios.put(`${API}/company/review/update-review-status?reviewid=${data.reviewid}`,  data)
+  Axios.put(`${API}/company/review/update-review-status?reviewid=${data.reviewid}`,data)
+  .then((response) => {
+      dispatch({
+          type : UPDATE_REVIEW_STATUS_SUCCESS,
+          payload : response.data 
+      })
+  })
+  .catch(error => {
+      dispatch({
+          type: UPDATE_REVIEW_STATUS_FAIL,
+          payload: error
+      })
+  });
+}
+
+export const updateHelpfulCount = (data) => (dispatch) => {
+  const config = {
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json'
+      },
+    }
+  Axios.put(`${API}/company/review/update-helpful-count?reviewid=${data.reviewid}&helpfulcount=${data.helpfulcount}&nothelpfulcount=${data.nothelpfulcount}`, data)
   .then((response) => {
       dispatch({
           type : UPDATE_REVIEW_STATUS_SUCCESS,
