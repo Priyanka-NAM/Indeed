@@ -11,6 +11,7 @@ import StarIcon from "@material-ui/icons/Star";
 import { Rating } from "@mui/material";
 import { ReviewBox } from "../../Company/ReviewBox";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import { Form, Col, Card, Row, Alert } from "react-bootstrap";
 
 import CameraAltIcon from "@material-ui/icons/CameraAltRounded";
 import Modal from "@material-ui/core/Modal";
@@ -114,18 +115,101 @@ const UplaodButton = withStyles((theme) => ({
 export default function EmployerHomePage(props) {
   const classes = useStyle();
   const [tooltipopen, setTooltipopen] = React.useState(true);
+  const loginReducer = useSelector((state) => state.login);
+  const { isAuth, userDetails } = loginReducer;
+  const [images, setImage] = useState({});
+  const [url, setUrl] = useState("");
+  const dispatch = useDispatch();
+  const [modalStyle] = React.useState(getModalStyle);
+
+  const [photoOpen, setPhotoOpen] = useState(false);
+  const [photoType, setPhotoType] = useState("");
+
+  const handleBannerPhotoOpen = () => {
+    isAuth ? setPhotoOpen(true) : props.history.push("/login");
+    setPhotoType("companyBanner");
+  };
+  const handleLogoPhotoOpen = () => {
+    isAuth ? setPhotoOpen(true) : props.history.push("/login");
+    setPhotoType("companyLogo");
+  };
+  const handleCeoPhotoOpen = () => {
+    isAuth ? setPhotoOpen(true) : props.history.push("/login");
+    setPhotoType("companyCeoPicture");
+  };
+  const handlePhotoClose = () => {
+    setPhotoOpen(false);
+    setPhotoType("");
+  };
+
+  const filehandler = async (event) => {
+    event.preventDefault();
+    let urls = [];
+    let file = images;
+    const formData = new FormData();
+    console.log(file);
+    formData.append("file", file);
+    formData.append("upload_preset", "indeed");
+    axios
+      .post("https://api.cloudinary.com/v1_1/dgqlka0rq/image/upload", formData)
+      .then((res) => {
+        console.log(res.data.secure_url);
+        urls.push(res.data.secure_url);
+        if (urls.length === images.length) {
+          axios
+            .post(`${API}/employer/employer_pic_upload`, {
+              urls,
+              employerID: userDetails.userId,
+              fieldName: photoType,
+            })
+            .then((res) => {
+              setPhotoOpen(false);
+              console.log(res);
+              // dispatch(getcompaniesDetails({ employerID: res.data._id }));
+            });
+        }
+      });
+  };
 
   const showPhotos = () => (
     <div className='row'>
       <div className='col-md-9'>
         <Grid item style={{ marginTop: "20px", marginBottom: "50px" }}>
-          <span>
-            <CameraAltIcon></CameraAltIcon>{" "}
-            <b>{companyDetails.companyName} Photos</b>
-          </span>
+          <CameraAltIcon></CameraAltIcon>
+          <b>Company Logo</b>
         </Grid>
       </div>
-      <UplaodButton type='submit' variant='contained'>
+      <UplaodButton
+        type='submit'
+        name='companyLogo'
+        variant='contained'
+        onClick={handleBannerPhotoOpen}>
+        Uplaod Logo
+      </UplaodButton>
+      <div className='col-md-9'>
+        <Grid item style={{ marginTop: "20px", marginBottom: "50px" }}>
+          <CameraAltIcon></CameraAltIcon>
+          <b>Company Banner</b>
+        </Grid>
+      </div>
+      <UplaodButton
+        type='submit'
+        name='companyBanner'
+        variant='contained'
+        onClick={handleLogoPhotoOpen}>
+        Uplaod Banner
+      </UplaodButton>
+      <div className='col-md-9'>
+        <Grid item style={{ marginTop: "20px", marginBottom: "50px" }}>
+          <CameraAltIcon></CameraAltIcon>
+          <b>CEO</b>
+        </Grid>
+      </div>
+      <UplaodButton
+        type='submit'
+        name='companyCeoPicture'
+        variant='contained'
+        onClick={handleCeoPhotoOpen}>
         Uplaod photo
       </UplaodButton>
     </div>
@@ -408,75 +492,118 @@ export default function EmployerHomePage(props) {
   );
 
   return (
-    <Container maxwidth='xl' style={{ marginTop: "5%" }}>
-      <div
-        class='jumbotron text-white jumbotron-image shadow'
-        style={{
-          backgroundImage: `url(https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80)`,
-          backgroundSize: "cover",
-          height: "250px",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center center",
-        }}></div>
-      <Grid
-        container
-        style={{
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "20px",
-        }}>
-        <Grid container item lg={6} md={7} sm={8}>
-          <Grid item className={classes.imgCont}>
-            <img
-              src='https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80'
-              alt=''
-              width='100px'
-            />
-          </Grid>
-          <Grid item style={{ paddingTop: "40px", paddingLeft: "20px" }}>
-            <Typography variant='h5'>{companyDetails.companyName}</Typography>
-          </Grid>
-        </Grid>
-        <Grid item></Grid>
-      </Grid>
-      <Grid container style={{ height: "40px" }}>
+    <>
+      <Container maxwidth='xl' style={{ marginTop: "5%" }}>
+        <div
+          class='jumbotron text-white jumbotron-image shadow'
+          style={{
+            backgroundImage: `url(https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80)`,
+            backgroundSize: "cover",
+            height: "250px",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center center",
+          }}></div>
         <Grid
-          item
-          className={
-            props.match.params.pathname === "company"
-              ? classes.activeTab
-              : classes.optionTab
-          }
-          onClick={() => changePathName("company")}>
-          Company
+          container
+          style={{
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "20px",
+          }}>
+          <Grid container item lg={6} md={7} sm={8}>
+            <Grid item className={classes.imgCont}>
+              <img
+                src='https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80'
+                alt=''
+                width='100px'
+              />
+            </Grid>
+            <Grid item style={{ paddingTop: "40px", paddingLeft: "20px" }}>
+              <Typography variant='h5'>{companyDetails.companyName}</Typography>
+            </Grid>
+          </Grid>
+          <Grid item></Grid>
         </Grid>
-        <Grid
-          item
-          className={
-            props.match.params.pathname === "whyjoinus"
-              ? classes.activeTab
-              : classes.optionTab
-          }
-          onClick={() => changePathName("whyjoinus")}>
-          Why Join Us
-        </Grid>
+        <Grid container style={{ height: "40px" }}>
+          <Grid
+            item
+            className={
+              props.match.params.pathname === "company"
+                ? classes.activeTab
+                : classes.optionTab
+            }
+            onClick={() => changePathName("company")}>
+            Company
+          </Grid>
+          <Grid
+            item
+            className={
+              props.match.params.pathname === "whyjoinus"
+                ? classes.activeTab
+                : classes.optionTab
+            }
+            onClick={() => changePathName("whyjoinus")}>
+            Why Join Us
+          </Grid>
 
-        <Grid
-          item
-          className={
-            props.match.params.pathname === "photos"
-              ? classes.activeTab
-              : classes.optionTab
-          }
-          onClick={() => changePathName("photos")}>
-          Photos
+          <Grid
+            item
+            className={
+              props.match.params.pathname === "photos"
+                ? classes.activeTab
+                : classes.optionTab
+            }
+            onClick={() => changePathName("photos")}>
+            Photos
+          </Grid>
         </Grid>
-      </Grid>
-      <hr style={{ marginTop: 0 }}></hr>
-      {props.match.params.pathname === "company" && showCompany()}
-      {props.match.params.pathname === "photos" && showPhotos()}
-      {props.match.params.pathname === "whyjoinus" && showWhyJoinUs()}
-      {showFooter()}
-    </Container>
+        <hr style={{ marginTop: 0 }}></hr>
+        {props.match.params.pathname === "company" && showCompany()}
+        {props.match.params.pathname === "photos" && showPhotos()}
+        {props.match.params.pathname === "whyjoinus" && showWhyJoinUs()}
+        {showFooter()}
+      </Container>
+
+      <Modal
+        aria-labelledby='simple-modal-title'
+        aria-describedby='simple-modal-description'
+        open={photoOpen}
+        onClose={handlePhotoClose}>
+        <div style={modalStyle} className={classes.photopaper}>
+          <form className={classes.formStyle}>
+            <label for='file-upload' id='file-drag'>
+              <div>
+                <div>Select a file</div>
+                <div>Please select an image</div>
+                <input
+                  id='file-upload'
+                  type='file'
+                  name='fileUpload'
+                  accept='image/*'
+                  multiple
+                  onChange={(e) => {
+                    let files = [];
+                    for (const file of e.target.files) files.push(file);
+                    console.log(files);
+                    setImage(files);
+                  }}
+                />
+              </div>
+              <button
+                style={{
+                  margin: "20px",
+                  position: "relative",
+                  left: "150px",
+                  top: "100px",
+                }}
+                class='btn btn-primary'
+                onClick={filehandler}>
+                Upload
+              </button>
+            </label>
+          </form>
+        </div>
+      </Modal>
+    </>
   );
 }
