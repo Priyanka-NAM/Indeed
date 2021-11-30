@@ -6,6 +6,7 @@ import {
   CompanyDetailsReducer,
   CompanyListReviewReducer,
   UpdateReviewStatusReducer,
+  UpdateHelpfulCountReducer,
 } from "./Reducers/CompanyReducer";
 import { companyReviewReducer } from "./Reducers/CompanyReviewReducer";
 import { TopCompanyListReviewReducer,TopCompanyListRatingReducer,TopAcceptedJobSeekerReducer,
@@ -33,6 +34,7 @@ const appReducer = combineReducers({
   TopRatedCeos: getTopRatedCeosReducer,
   AdminListAllCompanies: getAllCompaniesReducer,
   UpdateReviewStatus: UpdateReviewStatusReducer,
+  UpdateHelpfulCount: UpdateHelpfulCountReducer,
   jobApplicants: jobApplicantsReducer
 });
 

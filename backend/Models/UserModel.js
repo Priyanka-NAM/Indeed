@@ -18,6 +18,7 @@ const userSchema = mongoose.Schema({
         },
         noOfAcceptedReviews: {
             type: Number,
+            default: 0,
         },
         savedJobs: [
             {
