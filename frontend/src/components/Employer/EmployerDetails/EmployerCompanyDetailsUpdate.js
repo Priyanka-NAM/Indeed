@@ -20,7 +20,11 @@ import {
   employerDetailsAdd,
 } from "../../../Redux/Actions/EmployerDetailsAction";
 import { isInfo } from "../EmployerDetails/CompanyDetails1Validation";
+import MuiAlert from "@mui/material/Alert";
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
+});
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: "#f2f2f2",
@@ -124,19 +128,22 @@ function EmployerCompanyDetailsUpdate(props) {
   const dispatch = useDispatch();
   let [employerDetails, setemployerDetails] = useState({ aboutTheCompany: {} });
   let { responseFromServer } = useSelector((state) => state.employerDetails);
+  let { signup } = useSelector((state) => state);
 
   useEffect(() => {
-    // if (userDetails.userId && userDetails.userId !== "") {
-    //   dispatch(employerDetailsGet(userDetails.userId));
-    // }
-    dispatch(employerDetailsGet(12));
+    if (signup && signup.responseFromServer) {
+      dispatch(employerDetailsGet(signup.responseFromServer.employerID));
+    }
+    // dispatch(employerDetailsGet(12));
     //   }, [props]);
     // const loadProfile = async () => {
     //   await dispatch(employerDetailsGet(12));
     //   console.log("Response From Server ", employerDetails);
     // };
     // loadProfile();
+  }, [props]);
 
+  useEffect(() => {
     if (responseFromServer) {
       console.log("Response From Server", responseFromServer);
       setemployerDetails({
@@ -144,7 +151,7 @@ function EmployerCompanyDetailsUpdate(props) {
       });
       console.log("Employer Details ", employerDetails);
     }
-  }, [props]);
+  }, [responseFromServer]);
 
   const onEmployerDetailsChange = (e) => {
     // employerDetails = {

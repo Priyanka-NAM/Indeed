@@ -27,6 +27,7 @@ import EmployerReviews from "./components/Employer/EmployerReviews/EmployerRevie
 import EmployerJobApplicants from "./components/Employer/EmployerApplicants/EmployerJobApplicants";
 import JobSeekerMessage from "./components/Messages/JobSeekerMessage";
 
+import EmployerPieChart from "./components/Employer/EmployerReports/EmployerPieChart";
 function App() {
   return (
     <ThemeProvider theme={Theme}>
@@ -67,6 +68,7 @@ function App() {
           />
           <Route path='/employer/showJobDetails' component={EachJobDetails} />
           <Route path='/employer/reviews' component={EmployerReviews} />
+          <Route path='/employer/reports' component={EmployerPieChart} />
 
           <Route path='/indeed/allcompanies' component={AdminListCompanies} />
           <Route

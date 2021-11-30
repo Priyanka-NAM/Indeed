@@ -1,6 +1,6 @@
 const Reviews = require("../Models/ReviewsModel");
 const Employer = require("../Models/EmployerModel");
-
+const User = require("../Models/UserModel");
 exports.postUserReview = async (req, res) => {
   console.log("Post User Review");
   const {
@@ -112,6 +112,7 @@ exports.getUserReviews = async (req, res) => {
       });
     }
     res.send(review);
+   
   } catch (error) {
     return res.status(400).json({
       error: error,
@@ -223,6 +224,9 @@ exports.UpdateReviewStatus = async (req, res) => {
         error: error,
       });
     }
+    const user = await User.findById(review.userId);
+    user.noOfAcceptedReviews = user.noOfAcceptedReviews + 1;
+    user.save();
     res.send(review);
   } catch (error) {
     return res.status(400).json({

@@ -7,7 +7,8 @@ import {
 
 const initialState = {
   responseFromServer: null,
-  errorResponse: null,
+  addErrorResponse: null,
+  getErrorResponse: null,
   employerID: "",
   employerName: "",
   website: "",
@@ -36,7 +37,7 @@ export const employerDetailsReducer = (state = initialState, action) => {
     case EMPLOYER_DETAILS_ERROR:
       return {
         ...state,
-        errorResponse: action.payload,
+        addErrorResponse: action.payload,
       };
     case EMPLOYER_DETAILS_GET:
       return {
@@ -46,7 +47,7 @@ export const employerDetailsReducer = (state = initialState, action) => {
     case EMPLOYER_DETAILS_GET_ERROR:
       return {
         ...state,
-        errorResponse: action.payload,
+        getErrorResponse: action.payload,
       };
     default:
       return state;

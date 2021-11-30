@@ -23,6 +23,7 @@ import { SearchButton } from "../CompanyReviews/CompanyReviews";
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import {updateReviewStatus} from "../../Redux/Actions/Company";
 import { employerAllJob } from "../../Redux/Actions/EmployerJobPostingAction";
+import { updateHelpfulCount } from "../../Redux/Actions/Company";
 import InputGrid from "./InputGrid";
 
 import {
@@ -330,8 +331,8 @@ else if(filterValue === "NotApproved"){
   const changeToApproved = (id) => {
     dispatch(updateReviewStatus({reviewid: id}));
 }
-const handleHelpfulCount = (val1, val2) => {
-  alert(val1 + " "+ val2);
+const handleHelpfulCount = (reviewid, helpfulcount, nothelpfulcount) => {
+  dispatch(updateHelpfulCount({reviewid,helpfulcount,nothelpfulcount}));
 }
 const handleJobSearch = () => {};
   const reviewSubmithandler = async (event) => {
@@ -682,27 +683,34 @@ const handleJobSearch = () => {};
                     {item.isApprovedcons}
                 </Typography>
             </Grid>
-            <span style={{fontSize: "small"}}>Was this review helpfull?</span>
-            <Grid item container spacing={3}>
-            <FormControl>
+            
+              {userDetails.role !== 2 && (
+                <>
+               <span style={{fontSize: "small"}}>Was this review helpfull?</span>
+                <Grid item container spacing={3}>
+                <FormControl>
           <ButtonGroup
             variant="outlined"
             aria-label="outlined button group"
             style={{ padding: "1px" }}
           >
-            <Button value="yes" onClick={()=> {item.isHelpfulCount = item.isHelpfulCount + 1; handleHelpfulCount(item.isHelpfulCount, item.isNotHelpfulCount)}}>
+            <Button value="yes" onClick={()=> {item.isHelpfulCount = item.isHelpfulCount + 1; handleHelpfulCount(item._id,item.isHelpfulCount, item.isNotHelpfulCount)}}>
               Yes {' '} {item.isHelpfulCount}
             </Button>
             <Button
               value="no"
-              onClick={()=> {item.isNotHelpfulCount = item.isNotHelpfulCount + 1 ; handleHelpfulCount(item.isHelpfulCount, item.isNotHelpfulCount)}}
+              onClick={()=> {item.isNotHelpfulCount = item.isNotHelpfulCount + 1 ; handleHelpfulCount(item._id,item.isHelpfulCount, item.isNotHelpfulCount)}}
             >
               No{ ' '}{item.isNotHelpfulCount}
             </Button>
 
           </ButtonGroup>
         </FormControl>
-             </Grid>
+              </Grid>
+              </>
+              )}
+            
+       
          
              {isAuth && userDetails.role == 2 && item.isApproved  === "NotApproved"  && (
                         <span>

@@ -6,10 +6,17 @@ import {
   CompanyDetailsReducer,
   CompanyListReviewReducer,
   UpdateReviewStatusReducer,
+  UpdateHelpfulCountReducer,
 } from "./Reducers/CompanyReducer";
 import { companyReviewReducer } from "./Reducers/CompanyReviewReducer";
-import { TopCompanyListReviewReducer,TopCompanyListRatingReducer,TopAcceptedJobSeekerReducer,
-  getAllReviewsReducer,getTopRatedCeosReducer, getAllCompaniesReducer } from './Reducers/AdminReducers';
+import {
+  TopCompanyListReviewReducer,
+  TopCompanyListRatingReducer,
+  TopAcceptedJobSeekerReducer,
+  getAllReviewsReducer,
+  getTopRatedCeosReducer,
+  getAllCompaniesReducer,
+} from "./Reducers/AdminReducers";
 import { jobReducer, jobApplicantsReducer } from "./Reducers/JobReducer";
 import { JOBSEEKER_LOGOUT } from "./Constants/UserConstants";
 import { employerJobPostingReducer } from "./Reducers/EmployerJobPostingReducer";
@@ -34,8 +41,9 @@ const appReducer = combineReducers({
   TopRatedCeos: getTopRatedCeosReducer,
   AdminListAllCompanies: getAllCompaniesReducer,
   UpdateReviewStatus: UpdateReviewStatusReducer,
+  messages: messageReducer,
+  UpdateHelpfulCount: UpdateHelpfulCountReducer,
   jobApplicants: jobApplicantsReducer,
-  messages: messageReducer
 });
 
 // const rootReducer = (state, action) => {
@@ -45,23 +53,21 @@ const appReducer = combineReducers({
 //   return appReducer(state, action);
 // };
 
-
-const customerSignInfoFromStorage = localStorage.getItem('login')
-  ? JSON.parse(localStorage.getItem('login'))
+const customerSignInfoFromStorage = localStorage.getItem("login")
+  ? JSON.parse(localStorage.getItem("login"))
   : {
-    isAuth: false,
-    userDetails: {},
-    errorResponse: null,
-    accErr: false,
-  };
-
+      isAuth: false,
+      userDetails: {},
+      errorResponse: null,
+      accErr: false,
+    };
 
 const initialState = {
-  login:  customerSignInfoFromStorage ,
+  login: customerSignInfoFromStorage,
 };
 const createComposer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 export const store = createStore(
   appReducer,
   initialState,
-   createComposer(applyMiddleware(thunk))
+  createComposer(applyMiddleware(thunk))
 );
