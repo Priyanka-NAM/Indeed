@@ -17,6 +17,7 @@ import {
 } from "../../../Redux/Actions/EmployerDetailsAction";
 import { isInfo } from "../EmployerDetails/CompanyDetails1Validation";
 import MuiAlert from "@mui/material/Alert";
+import { Redirect } from "react-router";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -113,6 +114,7 @@ function EmployerProfile(props) {
   let [employerDetails, setemployerDetails] = useState({});
   const { responseFromServer } = useSelector((state) => state.employerDetails);
   let { signup } = useSelector((state) => state);
+  let { isAuth, role, userDetails } = useSelector((state) => state.login);
 
   useEffect(() => {
     // if (userDetails.userId && userDetails.userId !== "") {
@@ -167,6 +169,7 @@ function EmployerProfile(props) {
 
   return (
     <>
+      {/* {(!isAuth || role !== 1) && <Redirect to='/employer/home' />} */}
       {isError && <Alert severity='error'>Profile update failed!</Alert>}
       <Container className={classes.container} maxWidth='xl'>
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>

@@ -9,6 +9,7 @@ import { Box, makeStyles, Typography } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 import { Rating } from "@mui/material";
 import {
   getcompaniesDetails,
@@ -83,6 +84,8 @@ const useStyles = makeStyles((theme) => ({
 
 function EmployerReviews(props) {
   const dispatch = useDispatch();
+  const [clicked, setClicked] = useState(false);
+
   const { companySpecificReviews } = useSelector(
     (state) => state.companyReviewList
   );
@@ -97,6 +100,14 @@ function EmployerReviews(props) {
     console.log("payload Details ", companySpecificReviews);
   }, [props]);
 
+  useEffect(() => {
+    dispatch(
+      getCompanySpecificReviews({
+        employerId: "619f0cdd8188bc6c174294cf",
+      })
+    );
+  }, [clicked]);
+
   let rows = [];
   function createData(reviewTitle, overallRating, pros, cons) {
     return { reviewTitle, overallRating, pros, cons };
@@ -107,11 +118,17 @@ function EmployerReviews(props) {
         eachreview.reviewTitle,
         eachreview.overallRating,
         eachreview.pros,
-        eachreview.cons
+        eachreview.cons,
+        eachreview.isFeatured
       );
     });
   }
   const classes = useStyles();
+
+  const featureHandler = (row) => {
+    setClicked(true);
+    dispatch();
+  };
 
   return (
     <>
@@ -217,8 +234,12 @@ function EmployerReviews(props) {
                       component='h6'>
                       Featured?
                     </Typography>
-                    <Typography variant='h5' component='h2'>
-                      <BookmarkBorderIcon onClick={{}} />
+                    <Typography
+                      variant='h5'
+                      component='h2'
+                      onClick={() => featureHandler(row)}>
+                      {row.isFeatured && <BookmarkIcon />}
+                      {!row.isFeatured && <BookmarkBorderIcon />}
                     </Typography>
                   </Typography>
                 </CardContent>

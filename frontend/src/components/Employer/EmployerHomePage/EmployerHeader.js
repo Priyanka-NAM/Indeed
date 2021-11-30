@@ -105,7 +105,7 @@ function EmployerHeader() {
         }}>
         <div style={{ flex: 6 }}>
           <Typography
-            to='/employer/home/'
+            to='/employer/home/619f0cdd8188bc6c174294cf/company'
             component={NavLink}
             className={classes.link}>
             <img
@@ -114,26 +114,21 @@ function EmployerHeader() {
               alt=''
             />
           </Typography>
-          <Typography
-            to='/employer/jobs-posted/'
-            component={NavLink}
-            className={classes.link}>
-            Post a Job
-          </Typography>
-          <Typography
-            to='/employer/company/update'
-            component={NavLink}
-            className={classes.link}>
-            Company
-          </Typography>
-          {/* <Typography
-            to='/employer/applicants-page'
-            component={NavLink}
-            className={classes.link}>
-            Applicants
-          </Typography> */}
+
           {isAuth && (
             <>
+              <Typography
+                to='/employer/jobs-posted/'
+                component={NavLink}
+                className={classes.link}>
+                Post a Job
+              </Typography>
+              <Typography
+                to='/employer/company/update'
+                component={NavLink}
+                className={classes.link}>
+                Company
+              </Typography>
               <Typography
                 to='/employer/reports'
                 component={NavLink}
@@ -145,12 +140,6 @@ function EmployerHeader() {
                 component={NavLink}
                 className={classes.link}>
                 Reviews
-              </Typography>
-              <Typography
-                to='/employer/'
-                component={NavLink}
-                className={classes.link}>
-                Photos
               </Typography>
             </>
           )}
@@ -176,28 +165,9 @@ function EmployerHeader() {
               </Typography>
             </div>
           ) : (
-            // <Typography component={NavLink} className={classes.button2}>
-
             <div style={{ display: "flex", alignItems: "center" }}>
               <EmployerMenu />
-              {/* <Typography
-                to='/'
-                component={NavLink}
-                className={classes.link}
-                style={{ paddingRight: "10%" }}>
-                <AccountCircleIcon style={{ fontSize: "200%" }} />
-              </Typography> */}
-              {/* <Button
-                className={classes.button}
-                variant='contained'
-                onClick={() => {
-                  handleLogout();
-                }}>
-                Sign out
-              </Button> */}
             </div>
-
-            // </Typography>
           )}
         </div>
       </Toolbar>
