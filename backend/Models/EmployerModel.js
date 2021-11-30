@@ -139,6 +139,15 @@ const employerSchema = mongoose.Schema({
     required: true,
     unique: true,
   },
+  companyBanner: {
+    type: String,
+  },
+  companyLogo: {
+    type: String,
+  },
+  companyCeoPicture: {
+    type: String,
+  },
 });
 
 const Employer = mongoose.model("Employer", employerSchema);

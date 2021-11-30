@@ -48,10 +48,9 @@ const StyledMenuItem = withStyles((theme) => ({
 export default function EmployerMenu() {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [redirectLanding, setLanding] = useState(null);
   const userDetails = useSelector((state) => state.login.userDetails);
   const role = useSelector((state) => state.login.userDetails.role);
-
+  const history = useHistory();
   const handleClick = (event) => {
     console.log(event.currentTarget);
     setAnchorEl(event.currentTarget);
@@ -64,12 +63,12 @@ export default function EmployerMenu() {
   const handleLogout = () => {
     window.localStorage.clear();
     dispatch(employerLogout());
-    setLanding(<Redirect exact to='/employer/' />);
+    console.log("calling logoout");
+    history.push("/employer");
   };
 
   return (
     <div>
-      {redirectLanding}
       <IconButton
         edge='start'
         color='inherit'
