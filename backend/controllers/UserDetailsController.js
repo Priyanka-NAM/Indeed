@@ -5,8 +5,11 @@ const updateUserSavedJobs = async (req, res) => {
     console.log(userId, jobId)
     try {
         if (userId) {
-            const jobExists = await User.find({savedJobs : jobId})
+            const jobExists = await User.findOne({savedJobs : jobId})
             console.log("jobexists : ", jobExists)
+            if (jobExists) {
+                return res.status(409).send("Job already added to saved jobs")
+            }
             const user = await User.findOneAndUpdate({_id: userId}, {$push: {"savedJobs": jobId}}, {new:true})
             if (user) {
                 res.status(200).send("added job to saved jobs")

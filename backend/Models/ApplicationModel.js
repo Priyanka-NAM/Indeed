@@ -2,19 +2,22 @@ const mongoose = require('mongoose')
  
 const applicationSchema = mongoose.Schema({
         userId: {
-            type: String,
-            // ref: 'User',
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
             required:true
         },
         employerId: {
-            type: String,
-            // ref: 'Employer',
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Employer',
             required:true
         },
         jobId: {
-            type: String,
-            // ref: 'Jobs',
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Jobs',
             required:true
+        },
+        resume: {
+            type: String
         },
         status: {
             type: String,
