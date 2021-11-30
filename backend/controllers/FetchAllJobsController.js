@@ -78,7 +78,7 @@ const paginationFunc = async (res, page, limit, query) => {
       }
 
       try {
-        results.results = await Jobs.find(query).limit(limit).skip(startIndex).exec()
+        results.results = await Jobs.find(query).limit(limit).skip(startIndex).populate('employerID').exec()
         if (results.results) {
             res.status(200).send(results.results)   
         } else {

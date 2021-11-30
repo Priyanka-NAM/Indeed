@@ -25,6 +25,8 @@ import AdminListCompanies from "./components/AdminCompany/AdminCompany";
 import EachJobDetails from "./components/Employer/EmployerJobPosting/EachJobDetailsPage";
 import EmployerReviews from "./components/Employer/EmployerReviews/EmployerReviews";
 import EmployerJobApplicants from "./components/Employer/EmployerApplicants/EmployerJobApplicants";
+import JobSeekerMessage from "./components/Messages/JobSeekerMessage";
+
 import EmployerPieChart from "./components/Employer/EmployerReports/EmployerPieChart";
 function App() {
   return (
@@ -37,6 +39,7 @@ function App() {
           <Route path='/login' component={Login} />
           <Route exact path='/company/:id/:pathname' component={Company} />
           <Route path='/indeed/profile' component={UserProfile} />
+          <Route path='/indeed/messages' component={JobSeekerMessage} />
           <Route path='/indeed/saved-jobs' component={SavedJobs} />
           <Route path='/indeed/jobs' component={JobsDisplay} />
           <Route path='/addemployer' component={EmployerSignup} />

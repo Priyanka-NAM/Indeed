@@ -139,6 +139,7 @@ export default function Header() {
             )}
             {(isAuth || role === 2) ? (
               <Box className={classes.header_right}>
+                <Link to='/indeed/messages'>
                 <IconButton
                   edge="start"
                   color="inherit"
@@ -146,7 +147,7 @@ export default function Header() {
                 >
                   <ForumIcon />
                 </IconButton>
-
+                </Link>
                         <IconButton
                         edge="start"
                         color="inherit"
