@@ -15,6 +15,7 @@ import { JOBSEEKER_LOGOUT } from "./Constants/UserConstants";
 import { employerJobPostingReducer } from "./Reducers/EmployerJobPostingReducer";
 import { employerJobsReducer } from "./Reducers/EmployerJobsReducer";
 import { employerDetailsReducer } from "./Reducers/EmployerDetailsReducer";
+import { messageReducer } from "./Reducers/MessageReducer";
 
 const appReducer = combineReducers({
   signup: signUpReducer,
@@ -33,7 +34,8 @@ const appReducer = combineReducers({
   TopRatedCeos: getTopRatedCeosReducer,
   AdminListAllCompanies: getAllCompaniesReducer,
   UpdateReviewStatus: UpdateReviewStatusReducer,
-  jobApplicants: jobApplicantsReducer
+  jobApplicants: jobApplicantsReducer,
+  messages: messageReducer
 });
 
 // const rootReducer = (state, action) => {

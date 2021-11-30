@@ -8,9 +8,39 @@ import {
     GET_EMPLOYER_MESSAGES_REQUEST,
     GET_EMPLOYER_MESSAGES_SUCCESS,
     GET_EMPLOYER_MESSAGES_FAIL,
-    SEND_MESSAGE_RESET
+    SEND_MESSAGE_RESET,
+    GET_DISTINCT_EMPLOYERS,
+    GET_MSGS_JOBSEEKERS,
+    MESSAGE_ERROR
 } from '../Constants/MessageConstants';
 
+const initialState = {
+    employerDetails: null,
+    errorResponse: null,
+    conversation: null
+} 
+  
+export const messageReducer = (state = initialState, action) => {
+      switch (action.type) {
+        case GET_DISTINCT_EMPLOYERS:
+          return { 
+                ...state,
+                employerDetails: action.payload  
+            };
+        case GET_MSGS_JOBSEEKERS:
+            return {
+                ...state,
+                conversation: action.payload
+            }
+        case MESSAGE_ERROR:
+            return {
+                ...state,
+                errorResponse: action.payload
+            };
+        default:
+            return state;
+            }
+    }
 export const sendMessageReducer = (state= {}, action) => {
 
     switch(action.type){
