@@ -25,7 +25,9 @@ import AdminListCompanies from "./components/AdminCompany/AdminCompany";
 import EachJobDetails from "./components/Employer/EmployerJobPosting/EachJobDetailsPage";
 import EmployerReviews from "./components/Employer/EmployerReviews/EmployerReviews";
 import EmployerJobApplicants from "./components/Employer/EmployerApplicants/EmployerJobApplicants";
+import JobSeekerMessage from "./components/Messages/JobSeekerMessage";
 
+import EmployerPieChart from "./components/Employer/EmployerReports/EmployerPieChart";
 function App() {
   return (
     <ThemeProvider theme={Theme}>
@@ -37,6 +39,7 @@ function App() {
           <Route path='/login' component={Login} />
           <Route exact path='/company/:id/:pathname' component={Company} />
           <Route path='/indeed/profile' component={UserProfile} />
+          <Route path='/indeed/messages' component={JobSeekerMessage} />
           <Route path='/indeed/saved-jobs' component={SavedJobs} />
           <Route path='/indeed/jobs' component={JobsDisplay} />
           <Route path='/addemployer' component={EmployerSignup} />
@@ -52,9 +55,13 @@ function App() {
             path='/employer/jobs-posted'
             component={EmployerJobPostingHome}
           />
-          <Route path='/reports' component={EmployerHomePage} />
-          <Route path='/employer/home' component={EmployerHomePage} />
-
+          {/* <Route path='/reports' component={EmployerHomePage} /> */}
+          {/* <Route path='/employer/home' component={EmployerHomePage} /> */}
+          <Route
+            exact
+            path='/employer/home/:id/:pathname'
+            component={EmployerHomePage}
+          />
           <Route path='/admindashboard' component={Admindashboard} />
           <Route exact path='/employer/' component={EmployerLandingPage} />
           <Route path='/employer/profile' component={EmployerProfile} />
@@ -65,6 +72,7 @@ function App() {
           />
           <Route path='/employer/showJobDetails' component={EachJobDetails} />
           <Route path='/employer/reviews' component={EmployerReviews} />
+          <Route path='/employer/reports' component={EmployerPieChart} />
 
           <Route path='/indeed/allcompanies' component={AdminListCompanies} />
           <Route

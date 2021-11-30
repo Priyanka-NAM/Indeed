@@ -78,19 +78,19 @@ const initialState3 = {
   updateHelpfulCount: null,
   updateHelpfulCountError : null
 }
-// export const UpdateHelpfulCountReducer = (state = initialState3, action) => {
-//   switch (action.type) {
-//     case UPDATE_REVIEW_STATUS_SUCCESS:
-//         return { 
-//             ...state,
-//             updateReviewStatus: action.payload, 
-//             };
-//     case UPDATE_REVIEW_STATUS_FAIL:
-//         return {
-//             ...state,
-//             updateReviewStatusError: action.payload
-//           };
-//     default:
-//       return { ...state };
-//   }
-// };
+export const UpdateHelpfulCountReducer = (state = initialState3, action) => {
+  switch (action.type) {
+    case UPDATE_HELPFUL_COUNT_SUCCESS:
+        return { 
+            ...state,
+            updateHelpfulCount: action.payload, 
+            };
+    case UPDATE_HELPFUL_COUNT_FAIL:
+        return {
+            ...state,
+            updateHelpfulCountError: action.payload
+          };
+    default:
+      return { ...state };
+  }
+};

@@ -1,10 +1,8 @@
-/* eslint-disable eqeqeq */
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
 import { GridList, GridListTile } from "@material-ui/core";
 import { API } from "../../config";
-import JobDescription from "./JobDescription";
 import {
   getcompaniesDetails,
   getCompanySpecificReviews,
@@ -18,15 +16,16 @@ import { ReviewBox } from "./ReviewBox";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 
 import CameraAltIcon from "@material-ui/icons/CameraAltRounded";
-import { employerAllJob } from "../../Redux/Actions/EmployerJobPostingAction";
 import Modal from "@material-ui/core/Modal";
 import { TextField } from "@material-ui/core";
 import { SearchButton } from "../CompanyReviews/CompanyReviews";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import { updateReviewStatus } from "../../Redux/Actions/Company";
-import { timeDifference } from "./timeDifference";
-
+import { employerAllJob } from "../../Redux/Actions/EmployerJobPostingAction";
+import { updateHelpfulCount } from "../../Redux/Actions/Company";
 import InputGrid from "./InputGrid";
+import JobDescription from "./JobDescription";
+import { timeDifference } from "./timeDifference";
 
 import {
   Grid,
@@ -49,71 +48,7 @@ const useStyle = makeStyles((theme) => ({
   jobContainer: {
     width: "450px",
   },
-  card: {
-    border: "1px solid black",
-    padding: "15px",
-    cursor: "pointer",
-    position: "relative",
-    top: "100px",
-    left: "50px",
-    height: "150x",
-    marginBottom: "20px",
-    "&:hover": {
-      "& $job_title": {
-        textDecoration: "underline",
-      },
-    },
-    borderRadius: "10px",
-  },
-  job_title: {
-    fontWeight: "bold",
-    fontSize: "20px",
-  },
-  job_subTitle: {
-    fontSize: "16px",
-  },
-  job_snippet: {
-    margin: "20px 0px 10px 0px",
-    fontSize: "15px",
-    lineHeight: "1.4rem",
-  },
-  formhelperText: {
-    color: "#085ff7",
-    paddingLeft: "20px",
-    cursor: "pointer",
-    fontSize: "17px",
-  },
-  jobContainer: {
-    width: "450px",
-  },
-  card: {
-    border: "1px solid black",
-    padding: "15px",
-    cursor: "pointer",
-    position: "relative",
-    top: "100px",
-    left: "50px",
-    height: "150x",
-    marginBottom: "20px",
-    "&:hover": {
-      "& $job_title": {
-        textDecoration: "underline",
-      },
-    },
-    borderRadius: "10px",
-  },
-  job_title: {
-    fontWeight: "bold",
-    fontSize: "20px",
-  },
-  job_subTitle: {
-    fontSize: "16px",
-  },
-  job_snippet: {
-    margin: "20px 0px 10px 0px",
-    fontSize: "15px",
-    lineHeight: "1.4rem",
-  },
+
   input: {
     width: "100%",
     height: "45px",
@@ -152,6 +87,40 @@ const useStyle = makeStyles((theme) => ({
     "& div": {
       marginTop: "30px",
     },
+  },
+  card: {
+    border: "1px solid black",
+    padding: "15px",
+    cursor: "pointer",
+    position: "relative",
+    top: "100px",
+    left: "50px",
+    height: "150x",
+    marginBottom: "20px",
+    "&:hover": {
+      "& $job_title": {
+        textDecoration: "underline",
+      },
+    },
+    borderRadius: "10px",
+  },
+  job_title: {
+    fontWeight: "bold",
+    fontSize: "20px",
+  },
+  job_subTitle: {
+    fontSize: "16px",
+  },
+  job_snippet: {
+    margin: "20px 0px 10px 0px",
+    fontSize: "15px",
+    lineHeight: "1.4rem",
+  },
+  formhelperText: {
+    color: "#085ff7",
+    paddingLeft: "20px",
+    cursor: "pointer",
+    fontSize: "17px",
   },
   outlinedInput: {
     width: "700px",
@@ -264,6 +233,7 @@ export default function Review(props) {
     : { aboutTheCompany: {} };
 
   let { responseFromServer: jobs } = useSelector((state) => state.employerJobs);
+  console.log(jobs);
 
   const loginReducer = useSelector((state) => state.login);
   const { isAuth, userDetails } = loginReducer;
@@ -296,7 +266,11 @@ export default function Review(props) {
   const query = new URLSearchParams(props.location.search);
   const id = query.get("id");
   const dispatch = useDispatch();
+  const getJobDescription = (job) => {
+    setJobData(job);
+  };
 
+  const [jobData, setJobData] = useState(null);
   const handlePhotoOpen = () => {
     isAuth ? setPhotoOpen(true) : props.history.push("/login");
   };
@@ -307,7 +281,6 @@ export default function Review(props) {
   const [interviewPrep, setinterviewPrep] = useState("");
 
   const [open, setOpen] = useState(false);
-  const [jobData, setJobData] = useState(null);
 
   const handleOpen = () => {
     isAuth ? setOpen(true) : props.history.push("/login");
@@ -316,15 +289,10 @@ export default function Review(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  const getJobDescription = (job) => {
-    setJobData(job);
-  };
 
   let { companySpecificReviews } = useSelector(
     (state) => state.companyReviewList
   );
-
-  console.log(companySpecificReviews);
 
   //Filtering reviews Based on the approved and user reviews.
   if (companySpecificReviews) {
@@ -364,6 +332,7 @@ export default function Review(props) {
   const [tooltipopen, setTooltipopen] = React.useState(true);
 
   useEffect(() => {
+    debugger;
     console.log(sortValue);
     if (
       props.match.params.pathname === "snapshot" ||
@@ -380,7 +349,7 @@ export default function Review(props) {
     else if (props.match.params.pathname === "jobs")
       dispatch(employerAllJob(props.match.params.id));
     setRating(companyDetails.noOfRatings);
-  }, [props.match, sortValue, updatePage, filterValue, jobTitle, location]);
+  }, [props.match, sortValue, updatePage, filterValue]);
 
   const changePathName = (pathName) => {
     props.history.push(`/company/${props.match.params.id}/${pathName}`);
@@ -425,8 +394,8 @@ export default function Review(props) {
   const changeToApproved = (id) => {
     dispatch(updateReviewStatus({ reviewid: id }));
   };
-  const handleHelpfulCount = (val1, val2) => {
-    alert(val1 + " " + val2);
+  const handleHelpfulCount = (reviewid, helpfulcount, nothelpfulcount) => {
+    dispatch(updateHelpfulCount({ reviewid, helpfulcount, nothelpfulcount }));
   };
   const handleJobSearch = (event) => {
     event.preventDefault();
@@ -868,44 +837,52 @@ export default function Review(props) {
                           {item.isApprovedcons}
                         </Typography>
                       </Grid>
-                      <span style={{ fontSize: "small" }}>
-                        Was this review helpfull?
-                      </span>
-                      <Grid item container spacing={3}>
-                        <FormControl>
-                          <ButtonGroup
-                            variant="outlined"
-                            aria-label="outlined button group"
-                            style={{ padding: "1px" }}
-                          >
-                            <Button
-                              value="yes"
-                              onClick={() => {
-                                item.isHelpfulCount = item.isHelpfulCount + 1;
-                                handleHelpfulCount(
-                                  item.isHelpfulCount,
-                                  item.isNotHelpfulCount
-                                );
-                              }}
-                            >
-                              Yes {item.isHelpfulCount}
-                            </Button>
-                            <Button
-                              value="no"
-                              onClick={() => {
-                                item.isNotHelpfulCount =
-                                  item.isNotHelpfulCount + 1;
-                                handleHelpfulCount(
-                                  item.isHelpfulCount,
-                                  item.isNotHelpfulCount
-                                );
-                              }}
-                            >
-                              No {item.isNotHelpfulCount}
-                            </Button>
-                          </ButtonGroup>
-                        </FormControl>
-                      </Grid>
+
+                      {userDetails.role !== 2 && (
+                        <>
+                          <span style={{ fontSize: "small" }}>
+                            Was this review helpfull?
+                          </span>
+                          <Grid item container spacing={3}>
+                            <FormControl>
+                              <ButtonGroup
+                                variant="outlined"
+                                aria-label="outlined button group"
+                                style={{ padding: "1px" }}
+                              >
+                                <Button
+                                  value="yes"
+                                  onClick={() => {
+                                    item.isHelpfulCount =
+                                      item.isHelpfulCount + 1;
+                                    handleHelpfulCount(
+                                      item._id,
+                                      item.isHelpfulCount,
+                                      item.isNotHelpfulCount
+                                    );
+                                  }}
+                                >
+                                  Yes {item.isHelpfulCount}
+                                </Button>
+                                <Button
+                                  value="no"
+                                  onClick={() => {
+                                    item.isNotHelpfulCount =
+                                      item.isNotHelpfulCount + 1;
+                                    handleHelpfulCount(
+                                      item._id,
+                                      item.isHelpfulCount,
+                                      item.isNotHelpfulCount
+                                    );
+                                  }}
+                                >
+                                  No {item.isNotHelpfulCount}
+                                </Button>
+                              </ButtonGroup>
+                            </FormControl>
+                          </Grid>
+                        </>
+                      )}
 
                       {isAuth &&
                         userDetails.role == 2 &&

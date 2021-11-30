@@ -16,7 +16,12 @@ import {
   employerDetailsAdd,
 } from "../../../Redux/Actions/EmployerDetailsAction";
 import { isInfo } from "../EmployerDetails/CompanyDetails1Validation";
+import MuiAlert from "@mui/material/Alert";
+import { Redirect } from "react-router";
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
+});
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: "#f2f2f2",
@@ -108,18 +113,29 @@ function EmployerProfile(props) {
   const dispatch = useDispatch();
   let [employerDetails, setemployerDetails] = useState({});
   const { responseFromServer } = useSelector((state) => state.employerDetails);
+  let { signup } = useSelector((state) => state);
+  let { isAuth, role, userDetails } = useSelector((state) => state.login);
 
   useEffect(() => {
     // if (userDetails.userId && userDetails.userId !== "") {
     //   dispatch(employerDetailsGet(userDetails.userId));
     // }
-    dispatch(employerDetailsGet(12));
+
+    if (signup && signup.responseFromServer) {
+      dispatch(employerDetailsGet(signup.responseFromServer.employerID));
+    }
+    // dispatch(employerDetailsGet(12));
+  }, [props]);
+
+  useEffect(() => {
     if (responseFromServer) {
+      console.log("Response From Server", responseFromServer);
       setemployerDetails({
         ...responseFromServer,
       });
+      console.log("Employer Details ", employerDetails);
     }
-  }, [props]);
+  }, [responseFromServer]);
 
   const onEmployerDetailsChange = (e) => {
     setemployerDetails({
@@ -139,6 +155,7 @@ function EmployerProfile(props) {
   const success = false;
   let isError = false;
   const errorMsg = false;
+  let message = "";
   const handleSubmit = (e) => {
     e.preventDefault();
     const errors = isInfo(employerDetails);
@@ -152,6 +169,8 @@ function EmployerProfile(props) {
 
   return (
     <>
+      {/* {(!isAuth || role !== 1) && <Redirect to='/employer/home' />} */}
+      {isError && <Alert severity='error'>Profile update failed!</Alert>}
       <Container className={classes.container} maxWidth='xl'>
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
           <Grid container justifyContent='center' alignItems='center'>

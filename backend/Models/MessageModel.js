@@ -3,7 +3,7 @@ console.log("message");
 const messageSchema = mongoose.Schema({
     employerId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Employer",
+        ref: "Employer", 
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
