@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import axios from "axios";
 import { useDispatch, useSelector } from 'react-redux';
 import { API } from '../../config';
-import { getDistinctEmployer, getMessagesJobSeeker } from '../../Redux/Actions/MessagesAction';
+import { getDistinctEmployer, getMessages } from '../../Redux/Actions/MessagesAction';
 import TextField from '@mui/material/TextField';
 
 const useStyles = makeStyles(theme=>({
@@ -61,7 +61,7 @@ function JobSeekerMessage() {
             "userId": userId,
             "employerId": empId
         }
-        await dispatch(getMessagesJobSeeker(data))
+        await dispatch(getMessages(data))
         setOpen(true)
     }
 
