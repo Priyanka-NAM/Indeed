@@ -53,8 +53,8 @@ export const getDistinctEmployer = (data) => (dispatch) => {
     });
 }
 
-export const getMessagesJobSeeker = (data) => (dispatch) => {
-    Axios.get(`${API}/messages/user-messages/`,{
+export const getMessages = (data) => (dispatch) => {
+    Axios.get(`${API}/messages/conversation`,{
         params: data
     }).then(response => {
         dispatch({

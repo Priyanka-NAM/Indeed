@@ -223,7 +223,7 @@ const EmployerJobApplicants = ({match}) => {
                                                     <TableCell style={{ flex: 1 }}>
                                                         <Button
                                                             variant='outlined'
-                                                            color='#065FF7'
+                                                            color='#065FF7' 
                                                             style={{ color: "#065FF7" }}>
                                                             <Link
                                                                 style={{ textDecoration: "none" }}
