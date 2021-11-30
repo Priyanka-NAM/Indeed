@@ -4,6 +4,10 @@ import {
     COMPANY_LIST_FAIL,
     COMPANY_LIST_REVIEWS_SUCCESS,
     COMPANY_LIST_REVIEWS_FAIL,
+    UPDATE_REVIEW_STATUS_SUCCESS,
+    UPDATE_REVIEW_STATUS_FAIL,
+    UPDATE_HELPFUL_COUNT_SUCCESS,
+    UPDATE_HELPFUL_COUNT_FAIL,
   } from '../Constants/Company';
   
   const initialState = {
@@ -43,6 +47,48 @@ export const CompanyListReviewReducer = (state = initialState1, action) => {
         return {
             ...state,
             companySpecificReviewsError: action.payload
+          };
+    default:
+      return { ...state };
+  }
+};
+
+const initialState2 = {
+  updateReviewStatus: null,
+  updateReviewStatusError: null
+}
+export const UpdateReviewStatusReducer = (state = initialState2, action) => {
+  switch (action.type) {
+    case UPDATE_REVIEW_STATUS_SUCCESS:
+        return { 
+            ...state,
+            updateReviewStatus: action.payload, 
+            };
+    case UPDATE_REVIEW_STATUS_FAIL:
+        return {
+            ...state,
+            updateReviewStatusError: action.payload
+          };
+    default:
+      return { ...state };
+  }
+};
+
+const initialState3 = {
+  updateHelpfulCount: null,
+  updateHelpfulCountError : null
+}
+export const UpdateHelpfulCountReducer = (state = initialState3, action) => {
+  switch (action.type) {
+    case UPDATE_HELPFUL_COUNT_SUCCESS:
+        return { 
+            ...state,
+            updateHelpfulCount: action.payload, 
+            };
+    case UPDATE_HELPFUL_COUNT_FAIL:
+        return {
+            ...state,
+            updateHelpfulCountError: action.payload
           };
     default:
       return { ...state };

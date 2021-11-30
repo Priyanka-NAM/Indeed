@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Box, Typography, Grid } from "@material-ui/core";
-import Body from "../Home/Body";
 import { makeStyles } from '@material-ui/core/styles';
 import {useDispatch, useSelector} from "react-redux";
 import { fetchAllJobs } from '../../Redux/Actions/JobsAction';
 import { Link } from 'react-router-dom';
 import StarIcon from '@material-ui/icons/Star';
 import JobDetails from './JobDetails';
+import Pagination from '@mui/material/Pagination';
 
 const useStyles = makeStyles(theme=>({
     job_section:{
@@ -38,39 +38,51 @@ const useStyles = makeStyles(theme=>({
         fontSize:'16px'
     },
     job_snippet:{
-        margin:'20px 0px 10px 0px',
+        margin:'10px 0px 10px 0px',
         fontSize:'15px',
         lineHeight:'1.4rem'
     },
 }))
 
 function JobsDisplay(props) {
-    // const query = new URLSearchParams(props.location.search)
-    // console.log("-----", query.get('q'), query.get('location'))
     const classes = useStyles()
     const dispatch = useDispatch()
     const jobDetails = useSelector(state=>state.jobs.queriedJobs)
+    const allJobDetails = useSelector(state=>state.jobs.allJobs)
     const [jobData,setJobData] = useState(null)
     const [index,setIndex] = useState(null)
+    const [page,setPage] = useState(1)
+    const [limit,setLimit] = useState(10)
     useEffect(() => {
         const data = {
             "job": props.location.state.query.job,
-            "location": props.location.state.query.location
+            "location": props.location.state.query.location,
+            "page": page,
+            "limit": limit
         }
+        console.log("data : ", data)
         console.log("jobs dis : ", data)
         dispatch(fetchAllJobs(data))
-    },[])
-
+    },[page, limit])
+    let boundary = 0;
+    if (allJobDetails) {
+        boundary = Math.round((allJobDetails.length)/limit)
+    }
     const getJobDetails = (job, index) => {
         setIndex(index)
         setJobData(job)
     }
 
+    const handlePage = (e, value) => {
+        setPage(value) 
+    }
+    
+    const handleLimit = (e) => {
+        setLimit(e.target.value)
+    }
+
     return ( 
         <Container className={classes.job_section}>
-            {/* <Box style={{transform:"scale(0.8) translateX(-12%)"}}>
-                <Body />
-            </Box> */}
             <Box style={{display:'flex'}}>
                 {
                     jobDetails && <Grid className={classes.jobContainer}  container>  {
@@ -95,9 +107,8 @@ function JobsDisplay(props) {
                                 </Typography>
                                 <div className={classes.job_snippet} >
                                     <ul style={{marginLeft:"10px"}}>
-                                    {job.jobDescription.moreInfo.split(".").map((info,index) => 
-                                    <li key={index} style={{listStyleType:"circle"}}>{info}{'.'}</li>
-                                    )}
+                                    <li style={{listStyleType:"circle"}}>{job.jobDescription.moreInfo.split(".")[0]}{'.'}</li>
+                                    <li style={{listStyleType:"circle"}}>{job.jobDescription.moreInfo.split(".")[1]}{'.'}</li>
                                     </ul>
                                 </div>
                             </Box>
@@ -108,6 +119,24 @@ function JobsDisplay(props) {
                 {
                     jobData ? <JobDetails jobData={jobData} index={index}/> : <></>
                 }
+                </Box>
+                <Grid container>
+                    <Grid item xs={3}>
+                        <label>Rows per page</label>&nbsp;&nbsp;
+                    <select onChange={handleLimit}>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                    </select>
+                    </Grid>
+                    <Grid item xs={9}>
+                        <Pagination count={boundary} page={page} onChange={handlePage} />
+                    </Grid>
+                </Grid>
+                <Box style={{marginTop:"30px"}}>
                 </Box>
         </Container>
     );

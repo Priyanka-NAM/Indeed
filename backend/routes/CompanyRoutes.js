@@ -7,6 +7,7 @@ const {
   UpdateReviewStatus,
   getCompanyReviews,
   getSpecificCompanyReviews,
+  UpdateHelpfulCount,
 } = require("../controllers/UserReviewController");
 const userSalary = require("../controllers/UserSalaryController");
 const getHomePage = require("../controllers/CompanyHomePage");
@@ -21,7 +22,8 @@ router.post("/user-salary", userSalary);
 router.get("/reviews", getAllReviews);
 router.get("/home", getHomePage);
 router.get("/whyjoinus", getHomePage);
-router.put("/review/:reviewId", UpdateReviewStatus);
+router.put("/review/update-review-status", UpdateReviewStatus);
+router.put("/review/update-helpful-count", UpdateHelpfulCount);
 router.get("/companyreviews", getCompanyReviews);
 router.post("/uploadphoto", uploadPhoto);
 module.exports = router;

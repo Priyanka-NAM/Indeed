@@ -1,12 +1,26 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import StarIcon from '@material-ui/icons/Star';
 import { Grid, Typography } from '@material-ui/core';
 import { Rating } from "@mui/material";
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
+import {updateReviewStatus} from "../../Redux/Actions/Company";
 
 
-export function ReviewBox({ rating, review_title, date, yourReview, pros, cons ,helpfulCount}) {
+export function ReviewBox({id, rating, review_title, date, yourReview, pros, cons ,helpfulCount,isApproved,isAuth, userRole, sortVal,filterValue}) {
+    const dispatch = useDispatch();
+    const [isApprovedByAdmin, setisApprovedByAdmin] = useState(isApproved);
+    const [filterVal, setFilterVal] = useState(filterValue);
+    
+    const changeToApproved = () => {
+        debugger;
+        setisApprovedByAdmin("Approved");
+        dispatch(updateReviewStatus({reviewid: id}));
+    }
+    useEffect(() => {
+        
+    }, [isApprovedByAdmin, sortVal, filterVal])
     return (
             <Grid item container spacing={4} style={{borderBottom: '#00000029 solid 1px'}}>
             <Grid item container spacing={1}>
@@ -25,8 +39,17 @@ export function ReviewBox({ rating, review_title, date, yourReview, pros, cons ,
                             
                  </Grid>
                 <Grid item>
-                    <Typography variant = "head2" style = {{fontWeight: "800"}}>{review_title}</Typography>
+                    <Typography variant = "head2" style = {{fontWeight: "800"}}>{review_title}</Typography>{'  '}
                     
+                    {isApprovedByAdmin === "NotApproved" ? (<button type="button" disabled='true' class="btn btn-danger" 
+                    style={{height: '26px', fontWeight: '200',fontSize: "small" , padding: '4px'}}
+                    >
+                        <i class="fa fa-times" aria-hidden="true" style={{color: "white"}}></i>{ ' '}
+                       Not Verified</button>) 
+                    : 
+                    (<button type="button" class="btn btn-success" disabled='true' 
+                    style={{height: '26px', fontWeight: '200',fontSize: "small" , padding: '4px'}}>
+                         <i class="fas fa-check" style={{color: "white"}}></i> { ' '} verified</button>) }
                 </Grid>
             </Grid>
             <Grid item container spacing={3}>
@@ -58,7 +81,11 @@ export function ReviewBox({ rating, review_title, date, yourReview, pros, cons ,
             <div><ThumbUpAltIcon></ThumbUpAltIcon></div>{helpfulCount}
              </Grid>
          
-
+             {isAuth && userRole == 2 && isApprovedByAdmin === "NotApproved"  && (
+                        <span>
+                            <button type="button" class="btn btn-info" onClick={changeToApproved}>Verify this review</button>
+                        </span>
+                    )}
 
         </Grid>
     )
