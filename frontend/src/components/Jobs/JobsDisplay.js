@@ -85,7 +85,8 @@ function JobsDisplay(props) {
         <Container className={classes.job_section}>
             <Box style={{display:'flex'}}>
                 {
-                    jobDetails && <Grid className={classes.jobContainer}  container>  {
+                    jobDetails && 
+                    <Grid className={classes.jobContainer} container>  {
                         jobDetails.map((job,index)=>
                         <Grid className={classes.card}  item key={index} lg={12} md={12} sm={12} xs={12} >
                             <Box onClick={() => getJobDetails(job, index)}>
