@@ -14,9 +14,8 @@ export const employerDetailsAdd = (data) => (dispatch) => {
       "Content-Type": "application/json",
     },
   };
-  const newdata = { ...data, employerID: 12 };
-  console.log("data", newdata);
-  Axios.post(`${API}/employer/updateemployer`, newdata, config)
+  console.log("data", data);
+  Axios.post(`${API}/employer/updateemployer`, data, config)
     .then((response) => {
       dispatch({
         type: EMPLOYER_DETAILS_ADD,

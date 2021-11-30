@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 import { Container, Grid, OutlinedInput, Button } from "@material-ui/core";
@@ -15,10 +15,14 @@ import { useDispatch, useSelector } from "react-redux";
 // import { UserReducer, DefaultUser } from "./EmployerDetailsReducer";
 
 import { Link, Redirect } from "react-router-dom";
-import { isInfo } from "./CompanyDetails1Validation";
+import { isInfo } from "./CompanyDetails3Validation";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import { employerDetailsAdd } from "../../../Redux/Actions/EmployerDetailsAction";
+import MuiAlert from "@mui/material/Alert";
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
+});
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: "#f2f2f2",
@@ -122,20 +126,14 @@ function CompanyDetails3({
   setemployerDetails,
 }) {
   const classes = useStyles();
-  // const [[target.name: target.value ] = useState("");
   const dispatch = useDispatch();
-  const [errors, setErrors] = useState({});
-
-  const success = false;
-  const isError = false;
-  const errorMsg = false;
-
-  const onEmployerDetailsChange = (e) => {
-    setemployerDetails({
-      ...employerDetails,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const [isError, setIsError] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const signup = useSelector((state) => state.signup);
+  const { employerDetails: stateEmployerDetails } = useSelector(
+    (state) => state
+  );
+  const { responseFromServer } = signup;
 
   const onAboutCompanyChange = (e) => {
     const { aboutTheCompany } = employerDetails;
@@ -147,21 +145,49 @@ function CompanyDetails3({
       },
     });
   };
+  useEffect(() => {
+    if (employerDetails.employerID)
+      dispatch(employerDetailsAdd(employerDetails));
+  }, [employerDetails.employerID]);
+
+  useEffect(() => {
+    if (stateEmployerDetails.responseFromServer) {
+      setSuccess(true);
+      setIsError(false);
+    }
+  }, [stateEmployerDetails.responseFromServer]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const errors = isInfo(employerDetails);
-    setErrors(errors);
-    if (Object.keys(errors).length > 0) return;
+    const error = isInfo(employerDetails);
+    if (Object.keys(error).length !== 0) {
+      console.log("Setting isError to True");
+      setIsError(true);
+      setSuccess(false);
+      return;
+    }
     // setStep(step + 1);
-    dispatch(employerDetailsAdd(employerDetails));
+    if (responseFromServer) {
+      // console.log("signup.responseFromServer,", responseFromServer.employerID);
+      setemployerDetails({
+        ...employerDetails,
+        employerID: responseFromServer.employerID,
+      });
+      console.log("employerDetails", employerDetails);
+    }
+
     // setHome(true);
   };
 
   return (
     <>
-      {success ? alert("User registered successfully") : <></>}
-      {isError ? <Box>{errorMsg}</Box> : <></>}
+      {/* {success ? alert("User registered successfully") : <></>} */}
+
+      {/* {isError ? <Box>{errorMsg}</Box> : <></>} */}
+
+      {stateEmployerDetails && stateEmployerDetails.addErrorResponse && (
+        <Alert severity='error'>Employer Registration Error!</Alert>
+      )}
       <Container className={classes.container} maxWidth='xl'>
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
           <Grid item style={{ margin: "25px 0" }}>
@@ -260,6 +286,11 @@ function CompanyDetails3({
           </Grid>
         </Box>
       </Container>
+      {isError && <Alert severity='error'>Check the fields again!</Alert>}
+      {success && (
+        <Alert severity='success'>Employer registered successfully!</Alert>
+      )}
+      {success && <Redirect to='/login' />}
       {/* // : <Redirect to='/' /> */}
     </>
   );
