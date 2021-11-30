@@ -2,32 +2,32 @@
 @ POST
 /api/users/signup
 User Signup Route
- */ 
-const User = require("../Models/UserModel")
-const Employer = require("../Models/EmployerModel")
-const bcrypt = require("bcryptjs")
-const {pool} = require('../config/mysqldb')
+ */
+const User = require("../Models/UserModel");
+const Employer = require("../Models/EmployerModel");
+const bcrypt = require("bcryptjs");
+const { pool } = require("../config/mysqldb");
 
 const createUser = async (req, res) => {
   const { email, password, role } = req.body;
   if (!email) {
-    return res.status(404).send("email is required")
+    return res.status(404).send("email is required");
   }
   if (!password) {
-    return res.status(404).send("password is required")
+    return res.status(404).send("password is required");
   }
   if (role === -1) {
-    return res.status(404).send("role is required")
+    return res.status(404).send("role is required");
   }
-  console.log("req data", email, password, role)
+  console.log("req data", email, password, role);
   pool.getConnection(async (err, conn) => {
     if (err) {
-      res.status(500).send('Error occurred!');
+      res.status(500).send("Error occurred!");
     } else {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
       conn.query(
-        'INSERT INTO users (email, password, role) VALUES (?,?,?)',
+        "INSERT INTO users (email, password, role) VALUES (?,?,?)",
         [email, hashedPassword, role],
         (error, insertResult) => {
           if (error) {
@@ -36,31 +36,31 @@ const createUser = async (req, res) => {
             });
           }
           if (role === 0) {
-            createMongoUser(req, res, insertResult.insertId)
+            createMongoUser(req, res, insertResult.insertId);
           } else {
-            createMongoEmployer(req, res, insertResult.insertId)
+            createMongoEmployer(req, res, insertResult.insertId);
           }
           conn.release();
         }
       );
     }
-  })
-} 
-  
-  // get the data from request body which is in json and put it in variables called user and password
-  const createMongoUser = async (req, res, insertId) => {
-    const {email, role} = req.body
-    const userExists = await User.findOne({ email });
-    if (userExists) {
-      return res.status(409).send("User already exists");
-    } else {
-      const user = await User.create({
-        userId : insertId,
-        email
-      });
+  });
+};
+
+// get the data from request body which is in json and put it in variables called user and password
+const createMongoUser = async (req, res, insertId) => {
+  const { email, role } = req.body;
+  const userExists = await User.findOne({ email });
+  if (userExists) {
+    return res.status(409).send("User already exists");
+  } else {
+    const user = await User.create({
+      userId: insertId,
+      email,
+    });
     if (user) {
       console.log("Created!");
-      res.status(200).json({"role":role})
+      res.status(200).json({ role: role });
     } else {
       res.status(500).send("database error");
       throw new Error("Database error: Please try again later. ");
@@ -69,9 +69,9 @@ const createUser = async (req, res) => {
 };
 
 const createMongoEmployer = async (req, res, id) => {
-  const {role} = req.body
+  const { email, role } = req.body;
   const employerExists = await Employer.findOne({
-    employerID: id, 
+    employerEmail: email,
   });
   if (employerExists) {
     console.log("Employer exists");
@@ -79,13 +79,15 @@ const createMongoEmployer = async (req, res, id) => {
   } else {
     const employer = await Employer.create({
       employerID: id,
+      employerEmail: email,
     });
 
     if (employer) {
       console.log("Created!");
       res.status(201).json({
         employerID: id,
-        "role": role
+        role: role,
+        employerEmail: email,
       });
     } else {
       res.status("400");

@@ -134,6 +134,11 @@ const employerSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
+  employerEmail: {
+    type: String,
+    required: true,
+    unique: true,
+  },
 });
 
 const Employer = mongoose.model("Employer", employerSchema);
