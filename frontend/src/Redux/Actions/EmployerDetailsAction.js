@@ -37,8 +37,8 @@ export const employerDetailsGet = (employerID) => (dispatch) => {
       "Content-Type": "application/json",
     },
   };
-  // Axios.get(`${API}/employer/employerdetails/:${employerID}`, config)
-  Axios.get(`${API}/employer/employerdetails/12`, config)
+  Axios.get(`${API}/employer/employerdetails/${employerID}`, config)
+    // Axios.get(`${API}/employer/employerdetails/12`, config)
     .then((response) => {
       dispatch({
         type: EMPLOYER_DETAILS_GET,
@@ -53,3 +53,29 @@ export const employerDetailsGet = (employerID) => (dispatch) => {
       });
     });
 };
+
+// export const getEmployerCompanyDetails = (data) => (dispatch) => {
+//   const config = {
+//       headers: {
+//         'content-type': 'application/x-www-form-urlencoded',
+//         Accept: 'application/json'
+//       },
+//     }
+//   Axios.get(`${API}/employer/home`,
+//   {
+//   params: data
+// },
+// config)
+//   .then((response) => {
+//       dispatch({
+//           type : COMPANY_LIST_SUCCESS,
+//           payload : response.data
+//       })
+//   })
+//   .catch(error => {
+//       dispatch({
+//           type: COMPANY_LIST_FAIL,
+//           payload: error
+//       })
+//   });
+// }

@@ -35,7 +35,7 @@ const getEmployerDetails = async (req, res) => {
   const { employerID } = req.params;
 
   console.log("employerID ", employerID);
-  const employerExists = await Employer.findOne({ employerID: employerID });
+  const employerExists = await Employer.findOne({ _id: employerID });
   if (!employerExists) {
     res.status("400").send("Employer Not found");
     return;

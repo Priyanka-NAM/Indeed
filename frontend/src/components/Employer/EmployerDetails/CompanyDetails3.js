@@ -181,10 +181,6 @@ function CompanyDetails3({
 
   return (
     <>
-      {/* {success ? alert("User registered successfully") : <></>} */}
-
-      {/* {isError ? <Box>{errorMsg}</Box> : <></>} */}
-
       {stateEmployerDetails && stateEmployerDetails.addErrorResponse && (
         <Alert severity='error'>Employer Registration Error!</Alert>
       )}
