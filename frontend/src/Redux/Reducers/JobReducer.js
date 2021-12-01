@@ -1,10 +1,13 @@
 import {
     FETCH_ALL_JOBS,
     FETCH_QUERIED_JOBS,
+    FETCH_Q_JOBS,
     JOB_ERROR,
     POST_SAVED_JOBS,
     DELETE_SAVED_JOBS,
     GET_SAVED_JOBS,
+    GET_USER_REVIEWS,
+    REVIEW_ERROR,
     APPLY_JOB
 } from '../Constants/UserConstants';
 
@@ -15,23 +18,39 @@ const initialState = {
     successResponse: null, 
     errorResponse: null,
     queriedJobs: null,
-    savedJobs: null
+    savedJobs: null,
+    reviews: null,
+    queriedJobsLength: 0
 } 
   
 export const jobReducer = (state = initialState, action) => {
       switch (action.type) {
         case FETCH_ALL_JOBS:
-          console.log("jobs reducer : ", action.payload)
           return { 
             ...state,
             allJobs: action.payload  
           };
         case FETCH_QUERIED_JOBS:
-          console.log("jobs reducer : ", action.payload)
           return { 
             ...state,
-            queriedJobs: action.payload  
+            queriedJobs: action.payload,
           };
+        case FETCH_Q_JOBS:
+          return {
+            ...state, 
+            queriedJobsLength: action.payload.length
+          }
+        case GET_USER_REVIEWS: {
+          return {
+            ...state,
+            reviews: action.payload
+          }
+        }
+        case REVIEW_ERROR:
+          return {
+            ...state,
+            errorResponse: action.payload
+          }
         case POST_SAVED_JOBS:
           return {
             ...state,

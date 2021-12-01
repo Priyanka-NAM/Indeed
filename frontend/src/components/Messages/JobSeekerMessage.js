@@ -126,7 +126,7 @@ function JobSeekerMessage() {
                     </Grid>
                     <Grid item xs={4} style={{marginTop:"90px", textAlign:"left"}}>
                     <Button onClick={handleSend} color={'primary'} style={{marginTop:"10px"}}
-                     variant='contained' type='submit'>send</Button>
+                     variant='contained' type='submit' disabled={conversation ? false : true}>send</Button>
                     </Grid>
                     </Grid>
                 </Grid>

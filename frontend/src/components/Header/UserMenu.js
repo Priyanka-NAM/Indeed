@@ -121,12 +121,15 @@ export default function UserMenu() {
           <ListItemText primary="My Jobs" />
         </StyledMenuItem>
         </Link>
+        <Link
+          to="/indeed/reviews">
         <StyledMenuItem>
           <ListItemIcon>
             <RateReviewIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText primary="My Reviews" />
         </StyledMenuItem>
+        </Link>
         <StyledMenuItem
           onClick={() => {
             handleLogout();

@@ -1,3 +1,4 @@
+const Reviews = require("../Models/ReviewsModel");
 const User = require("../Models/UserModel");
 
 const updateUserSavedJobs = async (req, res) => {
@@ -62,4 +63,23 @@ const getUserSavedJobs = async (req, res) => {
     }
 }
 
-module.exports = { updateUserSavedJobs, deleteUserSavedJobs, getUserSavedJobs }
+const getUserReviews = async (req, res) => {
+    const {userId} = req.query
+    console.log(userId)
+    try {
+        if (userId) {
+            const reviews = await Reviews.find({userId})
+            if (reviews) {
+                res.status(200).send(reviews)
+            } else {
+                res.status(404).send("Resource not found")
+            }
+        } else {
+            res.status(401).send("Unauthorized")
+        }   
+    } catch (error) {
+        res.status(500).send("Database error")
+    }
+}
+
+module.exports = { updateUserSavedJobs, deleteUserSavedJobs, getUserSavedJobs, getUserReviews }

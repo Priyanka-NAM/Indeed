@@ -3,7 +3,7 @@ import React , {useEffect, useReducer,useState} from 'react';
 import  FullJobDescription  from './FullJobDescription';
 import { useSelector,useDispatch } from 'react-redux';
 import StarIcon from '@material-ui/icons/Star';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import Modal from '@material-ui/core/Modal';
 import { postSavedJobs, deleteSavedJobs, applyJobs } from '../../Redux/Actions/JobsAction';
@@ -51,7 +51,8 @@ const useStyles = makeStyles(theme=>({
 function JobDetails({jobData, index}) {
     console.log("index : ", index)
     const classes = useStyles();
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
+    const history = useHistory()
     const isAuth = useSelector(state=>state.login.isAuth)
     const {userId, email} = useSelector(state=>state.login.userDetails)
     const [viewUndo, setViewUndo] = useState([])
@@ -110,6 +111,14 @@ function JobDetails({jobData, index}) {
         }
     }
 
+    const handleCompany = (empId) => {
+        history.push(`/company/${empId}/snapshot`);
+    }
+
+    const handleReviews = (empId) => {
+        history.push(`/company/${empId}/reviews`);
+    }
+
     return (
         <Box className={classes.container}>
             {redirectLogin && <Redirect to='/login' />}
@@ -118,10 +127,11 @@ function JobDetails({jobData, index}) {
             </Typography>
             <Box style={{marginBottom:'10px'}}>
             <div style={{fontSize:"14px", fontWeight:"700"}}>
-                <Link to='/' style={{color:"#3A74F2"}}>{jobData.companyName}</Link>{'  '}
+            <label style={{cursor:"pointer"}} onClick={() => handleCompany(jobData.employerID._id)}>{jobData.companyName}</label>{'  '}
                 {jobData.employerID.averageRating}
                 <StarIcon fontSize="small" style={{height:"12px"}} />
-                {'  '}<Link to='/' style={{color:"#3A74F2"}}>{jobData.employerID.noOfRatings + ' reviews'}</Link>
+                {'  '}<label onClick={() => handleReviews(jobData.employerID._id)}
+                 style={{color:"#3A74F2", cursor:"pointer"}}>{jobData.employerID.noOfRatings + ' reviews'}</label>
             </div>
             <div style={{fontWeight:"700"}}>
             {jobData.jobLocation.address}{' '}
