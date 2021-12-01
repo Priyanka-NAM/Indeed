@@ -2,15 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 import { Container, Grid, OutlinedInput, Button } from "@material-ui/core";
-import {
-  Box,
-  Card,
-  makeStyles,
-  withStyles,
-  FormHelperText,
-  Select,
-  MenuItem,
-} from "@material-ui/core";
+import { Box, makeStyles, withStyles, FormHelperText } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 // import { UserReducer, DefaultUser } from "./EmployerDetailsReducer";
 
@@ -188,12 +180,12 @@ function CompanyDetails3({
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
           <Grid item style={{ margin: "25px 0" }}>
             <form className={classes.formStyle}>
-              <FormHelperText className={classes.formhelperText}>
+              {/* <FormHelperText className={classes.formhelperText}>
                 Company images*
               </FormHelperText>
 
               <br />
-              <br />
+              <br /> */}
               <FormHelperText className={classes.formhelperText}>
                 Mission and Vision*
               </FormHelperText>
