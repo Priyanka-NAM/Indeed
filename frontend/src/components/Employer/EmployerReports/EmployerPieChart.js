@@ -56,12 +56,23 @@ const useStyles = makeStyles((theme) => ({
   body: {
     backgroundColor: "black",
   },
-  container: {
+  container1: {
     backgroundColor: "#f2f2f2",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "left",
-    marginLeft: "20%",
+    padding: "20px",
+  },
+
+  container: {
+    top: "20%",
+    marginLeft: "25%",
+    alignSelf: "flex-start",
+    border: "1px solid white",
+    padding: "20px",
+    flex: "1",
+    borderRadius: "10px ",
+    width: "45%",
+    marginTop: "2%",
+    fontFamily: "Noto Sans,Helvetica Neue, Helvetica, Arial, sans-serif",
+    backgroundColor: "white",
   },
 
   boxImg: {
@@ -72,13 +83,13 @@ const useStyles = makeStyles((theme) => ({
     margin: "60px 0 30px",
   },
   imgLogo: {
-    height: "180px",
+    height: "150px",
+    width: "300px",
   },
   boxForm: {
     backgroundColor: "#ffffff",
-    width: "60%",
-    marginLeft: "30%",
-    marginTop: "2%",
+    width: "50%",
+    marginLeft: "20%",
   },
   "@global": {
     body: {
@@ -93,15 +104,19 @@ function EmployerPieChart() {
   // Sample data
   const classes = useStyles();
 
+  // Data from backend
+  //   const data = [
+  //       {_id: "applied", count: 5}
+  //   ]
   const data = [
-    { status: "Applicants Applied", value: 80 },
-    { status: "Applicants Rejected", value: 20 },
-    { status: "Applicants Selected", value: 40 },
+    { _id: "Applicants Applied", count: 80 },
+    { _id: "Applicants Rejected", count: 20 },
+    { _id: "Applicants Selected", count: 40 },
   ];
   return (
     <>
-      <ThemeProvider theme={theme}>
-        <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
+      <Container className={classes.container1} maxWidth='xl'>
+        <Box className={classes.container} sx={{ borderRadius: 16 }}>
           <Grid container justifyContent='center' alignItems='center'>
             <Grid item xs={6}>
               <Typography className={classes.h4} variant='h4'>
@@ -118,28 +133,29 @@ function EmployerPieChart() {
             </Grid>
           </Grid>
         </Box>
-
-        <Container
-          style={{ display: "flex", flexDirection: "row", marginTop: "4%" }}>
-          <Paper style={{ width: "50%" }}>
-            <Chart data={data}>
-              <PieSeries
-                valueField='value'
-                argumentField='status'
-                name='Applicants Selected'
-              />
-              <Title text='Total Applicants' />
-              <Animation />
-              <Legend />
-            </Chart>
-          </Paper>{" "}
-          <Typography
-            variant='h5'
-            component='h2'
-            style={{ marginLeft: "4%", flex: "4" }}></Typography>
-          <EmployerBarChart />
-        </Container>
-      </ThemeProvider>
+        <ThemeProvider theme={theme}>
+          <Container
+            style={{ display: "flex", flexDirection: "row", marginTop: "4%" }}>
+            <Paper style={{ width: "50%" }}>
+              <Chart data={data}>
+                <PieSeries
+                  valueField='count'
+                  argumentField='_id'
+                  name='Applicants Selected'
+                />
+                <Title text='Total Applicants' />
+                <Animation />
+                <Legend />
+              </Chart>
+            </Paper>{" "}
+            <Typography
+              variant='h5'
+              component='h2'
+              style={{ marginLeft: "4%", flex: "4" }}></Typography>
+            <EmployerBarChart />
+          </Container>
+        </ThemeProvider>
+      </Container>
     </>
   );
 }
