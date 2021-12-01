@@ -135,20 +135,20 @@ function EmployerBarChart() {
 
         <BarSeries
           name='Applicants Applied'
-          valueField='gold'
-          argumentField='country'
+          valueField='applied'
+          argumentField='jobTitle'
           color='#42A5F5'
         />
         <BarSeries
           name='Applicants Selected'
-          valueField='silver'
-          argumentField='country'
+          valueField='rejected'
+          argumentField='jobTitle'
           color='#9CCC65'
         />
         <BarSeries
           name='Applicants Rejected'
-          valueField='bronze'
-          argumentField='country'
+          valueField='selected'
+          argumentField='jobTitle'
           color='#FF7043'
         />
         <Animation />

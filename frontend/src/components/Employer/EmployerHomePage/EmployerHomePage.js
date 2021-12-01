@@ -235,7 +235,7 @@ export default function EmployerHomePage(props) {
     if (userDetails && userDetails.userId) {
       dispatch(employerDetailsGet(userDetails.userId));
     }
-  });
+  }, [props]);
   const companyDetails = responseFromServer
     ? responseFromServer
     : { aboutTheCompany: {} };

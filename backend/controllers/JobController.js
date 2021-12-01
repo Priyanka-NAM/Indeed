@@ -3,10 +3,11 @@
 /indeed/employer/post-job
 Employer Post Job Route
  */
+const mongoose = require("mongoose");
 const Jobs = require("../Models/JobsModel");
 const Users = require("../Models/UserModel");
 const Reviews = require("../Models/ReviewsModel");
-
+const Applications = require("../Models/ApplicationModel");
 const createJob = async (req, res) => {
   // get the data from request body which is in json and put it in variables called user and password
   // const jobExists = await Jobs.findOne({ jobId });
@@ -107,25 +108,117 @@ const getAllJobs = async (req, res) => {
 };
 
 const getJobApplicants = async (req, res) => {
-  try{
-    const jobApplicants = await Jobs.findById({_id: req.params.id});
+  try {
+    const jobApplicants = await Jobs.findById({ _id: req.params.id });
 
-    if(jobApplicants){
-      const applicants = []
+    if (jobApplicants) {
+      const applicants = [];
 
-      for(let i=0; i<jobApplicants.applicants.length; i++){
-        applicants.push(await Users.findById({_id: jobApplicants.applicants[i]}));
+      for (let i = 0; i < jobApplicants.applicants.length; i++) {
+        applicants.push(
+          await Users.findById({ _id: jobApplicants.applicants[i] })
+        );
       }
 
-      res.status(200).send(applicants)
+      res.status(200).send(applicants);
+    } else {
+      res.status(400).send("Error: Unable to get Job Applicants");
     }
-    else{
-      res.status(400).send("Error: Unable to get Job Applicants")
-    }
+  } catch (error) {
+    res.status(500).send("Internal Server Error");
   }
-  catch(error){
-    res.status(500).send("Internal Server Error")
-  }
-}
+};
 
-module.exports = { createJob, updateJob, getAllJobs, getJobApplicants };
+const jobApplications = async (req, res) => {
+  // const employerID = req.params.id;
+  const employerID = mongoose.Types.ObjectId(req.params.id);
+  console.log("Req.params", employerID); // get the data from request body which is in json and put it in variables called user and password
+  const TotalApplications = await Applications.aggregate([
+    {
+      $match: { employerId: employerID },
+    },
+    { $group: { _id: "$status", count: { $sum: 1 } } },
+  ]);
+  // .match({ employerId: employerID })
+  // .group({ _id: "$status", count: { $sum: 1 } });
+
+  if (!TotalApplications) {
+    res.status("400").send("Employer Applications Not found");
+    return;
+  } else {
+    // const getJobs = await Jobs.find({ employerID });
+    // if (!getJobs) {
+    //   res.status("200").send("Jobs Not found");
+    // }
+    res.send(TotalApplications);
+  }
+};
+
+const eachJobApplications = async (req, res) => {
+  // const employerID = req.params.id;
+  const employerID = mongoose.Types.ObjectId(req.params.id);
+  console.log("Req.params", employerID); // get the data from request body which is in json and put it in variables called user and password
+  const TotalApplications = await Applications.aggregate([
+    {
+      $match: { employerId: employerID },
+    },
+    {
+      $group: {
+        _id: { jobId: "$jobId", status: "$status" },
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+  // .match({ employerId: employerID })
+  // .group({ _id: "$status", count: { $sum: 1 } });
+
+  if (!TotalApplications) {
+    res.status("400").send("Employer Applications Not found");
+    return;
+  } else {
+    // Process the aggregate output
+    const jobObj = { jobTitle: "", applied: 0, rejected: 0, selected: 0 };
+    let processedResult = [];
+    let jobIds = [];
+    for (let i = 0; i < TotalApplications.length; i++) {
+      if (!jobIds.find((ele) => ele === TotalApplications[i]._id.jobId)) {
+        const jobinfo = await Jobs.findById(TotalApplications[i]._id.jobId);
+        let jobObj = {
+          jobId: TotalApplications[i]._id.jobId,
+          jobTitle: jobinfo.jobTitle,
+          applied: 0,
+          rejected: 0,
+          selected: 0,
+        };
+        jobIds.push(TotalApplications[i]._id.jobId);
+        processedResult.push(jobObj);
+      }
+    }
+    for (let i = 0; i < TotalApplications.length; i++) {
+      for (let j = 0; j < processedResult.length; j++) {
+        if (processedResult[j].jobId === TotalApplications[i]._id.jobId) {
+          if (TotalApplications[i]._id.status === "applied") {
+            processedResult[j].applied += TotalApplications[i].count;
+          }
+          if (TotalApplications[i]._id.status === "rejected") {
+            processedResult[j].rejected += TotalApplications[i].count;
+          }
+          if (TotalApplications[i]._id.status === "selected") {
+            processedResult[j].selected += TotalApplications[i].count;
+          }
+        }
+      }
+    }
+
+    res.send(processedResult);
+  }
+};
+
+module.exports = {
+  createJob,
+  updateJob,
+  getAllJobs,
+  getJobApplicants,
+  jobApplications,
+  eachJobApplications,
+};
