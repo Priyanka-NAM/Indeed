@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
 
 import { Grid, Container } from "@material-ui/core";
 
@@ -7,14 +6,12 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import { Box, makeStyles, Typography } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import { Rating } from "@mui/material";
-import {
-  getcompaniesDetails,
-  getCompanySpecificReviews,
-} from "../../../Redux/Actions/Company";
+import { getCompanySpecificReviews } from "../../../Redux/Actions/Company";
 import { employerReviewUpdate } from "./../../../Redux/Actions/EmployerReviewAction";
 
 const useStyles = makeStyles((theme) => ({
@@ -164,9 +161,11 @@ function EmployerReviews(props) {
     setClicked(true);
     dispatch(employerReviewUpdate({ _id: row._id }));
   };
+  const isAuth = useSelector((state) => state.login.isAuth);
 
   return (
     <>
+      {!isAuth && <Redirect to='/employer' />}
       <Container className={classes.container1} maxWidth='xl'>
         <Box className={classes.container}>
           <Grid container justifyContent='center' alignItems='center'>
@@ -274,7 +273,7 @@ function EmployerReviews(props) {
                         variant='h5'
                         component='h2'
                         onClick={() => featureHandler(row)}>
-                        {row.isFeatured && <BookmarkIcon />}
+                        {row.isFeatured && <BookmarkIcon color='Green' />}
                         {!row.isFeatured && <BookmarkBorderIcon />}
                       </Typography>
                     </Typography>

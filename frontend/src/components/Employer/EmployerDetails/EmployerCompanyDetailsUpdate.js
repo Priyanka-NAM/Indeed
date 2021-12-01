@@ -21,6 +21,7 @@ import {
 } from "../../../Redux/Actions/EmployerDetailsAction";
 import { isInfo } from "../EmployerDetails/CompanyDetails1Validation";
 import MuiAlert from "@mui/material/Alert";
+import { useHistory, Redirect } from "react-router-dom";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -131,6 +132,7 @@ function EmployerCompanyDetailsUpdate(props) {
 
   let { responseFromServer } = useSelector((state) => state.employerDetails);
   let { signup } = useSelector((state) => state);
+  const history = useHistory();
 
   useEffect(() => {
     // if (signup && signup.responseFromServer) {
@@ -204,6 +206,7 @@ function EmployerCompanyDetailsUpdate(props) {
 
   return (
     <>
+      {!isAuth && <Redirect to='/employer/' />}
       <Container className={classes.container} maxWidth='xl'>
         <Box className={classes.boxForm1} sx={{ borderRadius: 16 }}>
           <Grid container justifyContent='center' alignItems='center'>

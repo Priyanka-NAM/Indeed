@@ -17,6 +17,8 @@ import {
   Grid,
 } from "@material-ui/core";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { Redirect } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Stack, Animation } from "@devexpress/dx-react-chart";
 import { withStyles } from "@material-ui/core/styles";
@@ -103,6 +105,7 @@ const useStyles = makeStyles((theme) => ({
 function EmployerPieChart() {
   // Sample data
   const classes = useStyles();
+  const isAuth = useSelector((state) => state.login.isAuth);
 
   // Data from backend
   //   const data = [
@@ -115,6 +118,8 @@ function EmployerPieChart() {
   ];
   return (
     <>
+      {!isAuth && <Redirect to='/employer' />}
+
       <Container className={classes.container1} maxWidth='xl'>
         <Box className={classes.container} sx={{ borderRadius: 16 }}>
           <Grid container justifyContent='center' alignItems='center'>
