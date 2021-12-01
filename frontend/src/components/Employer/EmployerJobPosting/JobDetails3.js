@@ -228,7 +228,38 @@ function JobDetails3({ step, setStep, jobDetails, setjobDetails }) {
           </Grid>
         </Box>
       </Container>
-      {/* // : <Redirect to='/' /> */}
+      <Grid
+        container
+        spacing={1}
+        style={{
+          fontSize: "14px",
+          padding: "15px 10px",
+          margin: "0 -20px ",
+        }}>
+        <Grid item style={{ cursor: "pointer" }}>
+          © 2020 Indeed
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Accessibility at Indeed
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Privacy Center
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Cookies
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Privacy
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Terms
+        </Grid>
+      </Grid>
     </>
   );
 }
