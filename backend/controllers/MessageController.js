@@ -7,14 +7,11 @@ const Employer = require('../Models/EmployerModel')
     Employer Send Message to Job Seeker
  */
 const sendMessage = async (req, res) => {
-
     try{
-
         const newMessage = await Messages.create({
             employerId: req.body.employerId,
             userId: req.body.userId
         })
-
         newMessage.messages.push(
             {from : req.body.message.from,
                 to: req.body.message.to,
@@ -22,7 +19,6 @@ const sendMessage = async (req, res) => {
             })
 
         await newMessage.save()
-
         if(newMessage){
             res.status(200).send(newMessage)
         }
@@ -46,9 +42,7 @@ const replyMessage = async (req, res) => {
             to: req.body.message.to,
             messageText: req.body.message.messageText
         })
-
         await getMessage.save()
-
         if(getMessage){
             res.status(200).send(getMessage)
         }
@@ -67,7 +61,7 @@ const getMessages = async (req, res) => {
     const { userId, employerId } = req.query;
     console.log(userId, employerId)
     try{
-        const messages = await Messages.find({$and: [
+        const messages = await Messages.findOne({$and: [
             {
                 "userId": userId
             },
@@ -76,6 +70,7 @@ const getMessages = async (req, res) => {
             }
         ]});
         if (messages) {
+            console.log(messages)
             res.status(200).send(messages);
         } else {
             res.status(404).send("Resource not found")

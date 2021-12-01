@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Box, Typography, Grid, Button } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import axios from "axios";
 import { useDispatch, useSelector } from 'react-redux';
-import { API } from '../../config';
-import { getDistinctEmployer, getMessages } from '../../Redux/Actions/MessagesAction';
+import { getDistinctEmployer, getMessages, replyMessageAction } from '../../Redux/Actions/MessagesAction';
 import TextField from '@mui/material/TextField';
 
 const useStyles = makeStyles(theme=>({
@@ -33,10 +31,12 @@ function JobSeekerMessage() {
     let userId = useSelector(state=>state.login.userDetails.userId);
     let employerDetails = useSelector(state=>state.messages.employerDetails)
     let conversation = useSelector(state=>state.messages.conversation)
+    let successResponse = useSelector(state=>state.messages.successResponse)
 
     const [open, setOpen] = useState(false)
+    //const [flag, setFlag] = useState(false)
     const [text, setText] = useState("")
-    const [reply, setReply] = useState(null)
+    // const [reply, setReply] = useState(null)
     const [msg, setMsg] = useState(false)
 
     useEffect(() => {
@@ -44,16 +44,34 @@ function JobSeekerMessage() {
             "userId": userId
         }
         dispatch(getDistinctEmployer(data))
-    },[open, text])
+        if (successResponse) {
+            const data = {
+                "userId": conversation.userId,
+                "employerId": conversation.employerId
+            }
+            dispatch(getMessages(data))
+        }
+    },[open, successResponse])
 
     const handleMessage = (e) => {
         setText(e.target.value)
     }
 
-    const handleSend = () => {
-        setReply(text)
-        setText("")
-        setMsg(true)
+    const handleSend = async () => {
+        if (conversation) {
+            const data = {
+                "_id": conversation._id,
+                "message": {
+                    "from": conversation.userId,
+                    "to": conversation.employerId,
+                    "messageText": text
+                }
+            }
+            await dispatch(replyMessageAction(data))
+            //setReply(text)
+            setText("")
+        }
+        //setMsg(true)
     }
 
     const displayMessage = async (empId) => {
@@ -92,14 +110,14 @@ function JobSeekerMessage() {
                 </Typography>
                     <Grid item xs={12} style={{marginTop:"90px"}}>
                     </Grid>
-                    {open && conversation  && conversation[0].messages.map((msg, key) => 
+                    {conversation  && conversation.messages.map((msg, key) => 
                         <Grid key={key} item xs={12} style={{fontSize:"20px", textAlign:"right"}}>
                         {msg.messageText}
                         <hr />
                         </Grid>
                     )}
                     <Grid item xs={12} style={{ fontSize:"20px", textAlign:"right"}}>
-                        {msg && reply}
+                        {/* {msg && reply} */}
                     </Grid>
                     <hr  />
                     <Grid container spacing={2}>
