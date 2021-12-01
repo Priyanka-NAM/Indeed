@@ -13,8 +13,17 @@ import {
   InputAdornment,
   TextField,
   FormHelperText,
+  ListItem,
 } from "@material-ui/core";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 import { useState } from "react";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
 
 import SearchIcon from "@material-ui/icons/Search";
 
@@ -101,13 +110,14 @@ export function FindSalaries() {
       );
 
       arr = arr.filter(
-        (row) =>
-          row.jobLocation.toLowerCase().indexOf(location.toLowerCase()) > -1
+        (row) => row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1
       );
       setFilterSalaries(arr);
+      console.log(arr);
       const average =
         arr.reduce((total, next) => total + parseInt(next.currentPay), 0) /
         arr.length;
+      console.log(average);
       setaverageSalary(average);
       setDisplayTitle(arr.length > 0 ? arr[0].jobTitle : "");
       setFilterValue(true);
@@ -195,13 +205,37 @@ export function FindSalaries() {
         </Grid>
       </Container>
       {filterValue && (
-          <h1>
-            {" "}
+        <div>
+          {" "}
+          <h2>
             Average Salary of {displayTitle} in {location} is {averageSalary}
-          </h1>
-        ) && (
-          <h1> Top Companies {filteredSalaries.map((c) => c.companyName)}</h1>
-        )}
+          </h2>
+          <h1>Top Companies</h1>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Company Name</TableCell>
+                  <TableCell>Salary</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredSalaries.map((row) => (
+                  <TableRow
+                    key={row._id}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row">
+                      {row.companyName}
+                    </TableCell>
+                    <TableCell>{row.currentPay}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
+      )}
     </div>
   );
 }
