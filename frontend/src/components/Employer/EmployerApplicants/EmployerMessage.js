@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Box, Typography, Grid, Button } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { getDistinctEmployer, getMessages, replyMessageAction } from '../../Redux/Actions/MessagesAction';
+import {  sendMessageAction, getMessages, replyMessageAction } from '../../../Redux/Actions/MessagesAction';
 import TextField from '@mui/material/TextField';
 
 const useStyles = makeStyles(theme=>({
@@ -25,33 +25,23 @@ const useStyles = makeStyles(theme=>({
 }))
 
 
-function JobSeekerMessage() {
+function EmployerMessage() {
     const classes = useStyles()
     const dispatch = useDispatch();
-    let userId = useSelector(state=>state.login.userDetails.userId);
-    let employerDetails = useSelector(state=>state.messages.employerDetails)
+    // let userId = useSelector(state=>state.login.userDetails.userId);
+    // let employerDetails = useSelector(state=>state.messages.employerDetails)
     let conversation = useSelector(state=>state.messages.conversation)
     let successResponse = useSelector(state=>state.messages.successResponse)
 
-    const [open, setOpen] = useState(false)
-    //const [flag, setFlag] = useState(false)
     const [text, setText] = useState("")
-    // const [reply, setReply] = useState(null)
-    const [msg, setMsg] = useState(false)
 
     useEffect(() => {
         const data = {
-            "userId": userId
+            "userId": "61a40bfc844e19451386004d",
+            "employerId": "619f0c548188bc6c174294c7"
         }
-        dispatch(getDistinctEmployer(data))
-        if (successResponse) {
-            const data = {
-                "userId": conversation.userId,
-                "employerId": conversation.employerId
-            }
-            dispatch(getMessages(data))
-        }
-    },[open, successResponse])
+        dispatch(getMessages(data))
+    },[successResponse])
 
     const handleMessage = (e) => {
         setText(e.target.value)
@@ -68,23 +58,24 @@ function JobSeekerMessage() {
                 }
             }
             await dispatch(replyMessageAction(data))
-            //setReply(text)
-            setText("")
+        } else {
+            const data = {
+                "userId": "61a40bfc844e19451386004d",
+                "employerId": "619f0c548188bc6c174294c7",
+                "message": {
+                    "from": "619f0c548188bc6c174294c7",
+                    "to": "61a40bfc844e19451386004d",
+                    "messageText": text
+                }
+            }
+           await dispatch(sendMessageAction(data))
         }
-        //setMsg(true)
+        setText("")
     }
 
-    const displayMessage = async (empId) => {
-        const data = {
-            "userId": userId,
-            "employerId": empId
-        }
-        await dispatch(getMessages(data))
-        setOpen(true)
-    }
 
     return (
-        <Container>
+        <Container style={{marginTop:"10px"}}>
             <Grid container spacing={2}>
                 <Grid item xs={3} className={classes.msg_section}>
                 <Typography variant="h5">
@@ -93,14 +84,6 @@ function JobSeekerMessage() {
                 <br />
                 <hr />
                 <br />
-                {employerDetails && employerDetails.map((emp,key) => 
-                    <Grid key={key} item className={classes.employer_section} >
-                        <div onClick={() => displayMessage(emp._id)} style={{fontSize:"20px", fontWeight:"700", cursor:'pointer'}}>
-                        {emp.employerName}
-                        </div>
-                    </Grid>
-                    )
-                }
                 </Grid>
                 <Grid item xs={1}>
                 </Grid>
@@ -117,7 +100,7 @@ function JobSeekerMessage() {
                         </Grid>
                     )}
                     <Grid item xs={12} style={{ fontSize:"20px", textAlign:"right"}}>
-                        {/* {msg && reply} */}
+                        
                     </Grid>
                     <hr  />
                     <Grid container spacing={2}>
@@ -135,4 +118,4 @@ function JobSeekerMessage() {
     );
 }
 
-export default JobSeekerMessage;
+export default EmployerMessage;

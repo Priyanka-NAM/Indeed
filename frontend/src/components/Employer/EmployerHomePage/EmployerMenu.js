@@ -59,7 +59,7 @@ export default function EmployerMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+ 
   const handleLogout = () => {
     window.localStorage.clear();
     dispatch(employerLogout());

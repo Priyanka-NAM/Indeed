@@ -47,8 +47,8 @@ const StyledMenuItem = withStyles((theme) => ({
 
 export default function UserMenu() {
   const dispatch = useDispatch();
+  const history = useHistory();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [redirectLanding, setLanding] = useState(null);
   const userDetails = useSelector((state) => state.login.userDetails);
   const role = useSelector((state) => state.login.userDetails.role);
 
@@ -63,16 +63,15 @@ export default function UserMenu() {
 
   const handleLogout = () => {
     window.localStorage.clear();
-    setLanding(<Redirect to="/login" />);
+    history.push("/login");
     dispatch(jobSeekerLogout());
   };
   const handleDashboard = () => {
-    setLanding(<Redirect to="/admindashboard" />);
+    history.push("/admindashboard");
   }
 
   return (
     <div>
-      {redirectLanding}
       <IconButton
         edge="start"
         color="inherit"

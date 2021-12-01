@@ -11,13 +11,15 @@ import {
     SEND_MESSAGE_RESET,
     GET_DISTINCT_EMPLOYERS,
     GET_MSGS_JOBSEEKERS,
+    REPLY_MESSAGE_SUCCESS,
     MESSAGE_ERROR
 } from '../Constants/MessageConstants';
 
 const initialState = {
     employerDetails: null,
     errorResponse: null,
-    conversation: null
+    conversation: null,
+    successResponse: null
 } 
   
 export const messageReducer = (state = initialState, action) => {
@@ -32,6 +34,21 @@ export const messageReducer = (state = initialState, action) => {
                 ...state,
                 conversation: action.payload
             }
+        case SEND_MESSAGE_SUCCESS:
+            return {
+                ...state,
+                successResponse: action.payload
+            }
+        case REPLY_MESSAGE_SUCCESS:
+            return {
+                ...state,
+                successResponse: action.payload
+            }
+        case SEND_MESSAGE_FAIL:
+            return {
+                ...state,
+                errorResponse: action.payload
+            };
         case MESSAGE_ERROR:
             return {
                 ...state,
