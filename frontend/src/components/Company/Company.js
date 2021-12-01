@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Image } from 'react-bootstrap';
 import { styled } from "@mui/material/styles";
 import { GridList, GridListTile } from "@material-ui/core";
 import { API } from "../../config";
@@ -23,6 +24,7 @@ import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import { updateReviewStatus } from "../../Redux/Actions/Company";
 import { employerAllJob } from "../../Redux/Actions/EmployerJobPostingAction";
 import { updateHelpfulCount } from "../../Redux/Actions/Company";
+import {updatePhotoStatus} from '../../Redux/Actions/AdminAction';
 import InputGrid from "./InputGrid";
 import JobDescription from "./JobDescription";
 import { timeDifference } from "./timeDifference";
@@ -227,6 +229,7 @@ export default function Review(props) {
   const [modalStyle] = React.useState(getModalStyle);
   const [jobTitle, setJobTitle] = useState("");
   const [location, setLocation] = useState("");
+  const [shouldDoJobSerach, setshouldDoJobSerach] = useState(false);
   const { responseFromServer } = useSelector((state) => state.companyDetails);
   const companyDetails = responseFromServer
     ? responseFromServer
@@ -277,7 +280,9 @@ export default function Review(props) {
   const handlePhotoClose = () => {
     setPhotoOpen(false);
   };
-
+  const handlePhotoSatus = (employerId, photoId) => {
+    dispatch(updatePhotoStatus({employerId, photoId }))
+  }
   const [interviewPrep, setinterviewPrep] = useState("");
 
   const [open, setOpen] = useState(false);
@@ -289,7 +294,7 @@ export default function Review(props) {
   const handleClose = () => {
     setOpen(false);
   };
-
+ 
   let { companySpecificReviews } = useSelector(
     (state) => state.companyReviewList
   );
@@ -328,7 +333,30 @@ export default function Review(props) {
       (review) => review.isApproved === "NotApproved"
     );
   }
+//Filter on jobs
+if (jobTitle && location && shouldDoJobSerach) {
+  jobs = jobs.filter(
+    (row) =>
+      row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1 ||
+      row.jobLocation.city.indexOf(location.toLowerCase()) > -1
+  );
 
+  console.log(jobs);
+} else if (jobTitle && shouldDoJobSerach) {
+  jobs = jobs.filter(
+    (row) => row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1
+  );
+
+  console.log(jobs);
+} else if (location && shouldDoJobSerach) {
+  jobs = jobs.filter(
+    (row) =>
+      row.jobLocation.city.toLowerCase().indexOf(location.toLowerCase()) >
+      -1
+  );
+
+  console.log(jobs);
+}
   const [tooltipopen, setTooltipopen] = React.useState(true);
 
   useEffect(() => {
@@ -399,31 +427,11 @@ export default function Review(props) {
   };
   const handleJobSearch = (event) => {
     event.preventDefault();
-
-    if (jobTitle && location) {
-      jobs = jobs.filter(
-        (row) =>
-          row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1 ||
-          row.jobLocation.city.indexOf(location.toLowerCase()) > -1
-      );
-
-      console.log(jobs);
-    } else if (jobTitle) {
-      jobs = jobs.filter(
-        (row) => row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1
-      );
-
-      console.log(jobs);
-    } else if (location) {
-      jobs = jobs.filter(
-        (row) =>
-          row.jobLocation.city.toLowerCase().indexOf(location.toLowerCase()) >
-          -1
-      );
-
-      console.log(jobs);
-    }
+    setshouldDoJobSerach(true);
   };
+  const switchJobSearch = () => {
+    setshouldDoJobSerach(false);
+  }
   const reviewSubmithandler = async (event) => {
     setupdatePage(!updatePage);
     event.preventDefault();
@@ -552,9 +560,9 @@ export default function Review(props) {
       </Grid>
       <Grid container spacing={1}>
         <Grid item style={{ flex: 1 }}>
-          <img
-            src="https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80"
-            alt={companyDetails.companyName}
+          <Image
+            src={companyDetails.companyCeoPicture}
+            onError = {(e) => { e.target.onerror = null; e.target.src = 'https://dummyimage.com/100.png/09f/fff'; }}
             style={{ height: "350px", borderRadius: "10px" }}
           />
         </Grid>
@@ -935,7 +943,71 @@ export default function Review(props) {
           </span>
         </Grid>
         {isAuth ? (
-          <GridList
+          <>
+            {userDetails.role === 2 ? (
+              <>
+                             <GridList
+            cellHeight={200}
+            cols={3}
+            style={{ width: 800, height: 600 }}
+          >
+            {companyDetails &&
+              companyDetails.photos.map(
+                (data) =>
+                  (
+                    <GridListTile key={data.id}>
+                      <img src={data.path} alt={data.status} />
+                      {data.status ? (
+                        <>
+                        <button
+                              type="button"
+                              class="btn btn-success"
+                              disabled="true"
+                              style={{
+                                height: "26px",
+                                fontWeight: "200",
+                                fontSize: "small",
+                                padding: "4px",
+                                position: "absolute",
+                                top: "2px",
+                                right: "0px",
+                              }}
+                            >
+                              <i
+                                class="fas fa-check"
+                                style={{ color: "white"}}
+                              ></i>{" "}
+                              verified
+                            </button>
+                        </>
+                      ): (
+                        <>
+                        <button
+                              type="button"
+                              class="btn btn-info"
+                              style={{
+                                height: "26px",
+                                fontWeight: "200",
+                                fontSize: "small",
+                                padding: "4px",
+                                position: "absolute",
+                                top: "2px",
+                                right: "0px",
+                              }}
+                              onClick={()=> {data.status = true; handlePhotoSatus(companyDetails._id, data._id);}}
+                            >
+                              Verify here
+                            </button>
+                        </>
+                      )}
+                    </GridListTile>
+                  )
+              )}
+          </GridList>
+              </>
+            ): (
+              <>
+               <GridList
             cellHeight={200}
             cols={3}
             style={{ width: 800, height: 600 }}
@@ -945,20 +1017,94 @@ export default function Review(props) {
                 (data) =>
                   data.userId === userDetails.userId && (
                     <GridListTile key={data.id}>
-                      <img src={data.path} alt={data.status} />
+                      <img src={data.path} alt={data.status} style={{position: "relative"}}/>
+                      {data.status ? (
+                        <>
+                        <button
+                              type="button"
+                              class="btn btn-success"
+                              disabled="true"
+                              style={{
+                                height: "26px",
+                                fontWeight: "200",
+                                fontSize: "small",
+                                padding: "4px",
+                                position: "absolute",
+                                top: "2px",
+                                right: "0px",
+                              }}
+                            >
+                              <i
+                                class="fas fa-check"
+                                style={{ color: "white"}}
+                              ></i>{" "}
+                              verified
+                            </button>
+                        </>
+                      ): (
+                        <>
+                        <button
+                              type="button"
+                              class="btn btn-danger"
+                              disabled="true"
+                              style={{
+                                height: "26px",
+                                fontWeight: "200",
+                                fontSize: "small",
+                                padding: "4px",
+                                position: "absolute",
+                                top: "2px",
+                                right: "0px",
+                              }}
+                            >
+                              <i
+                                class="fa fa-times"
+                                aria-hidden="true"
+                                style={{ color: "white" }}
+                              ></i>{" "}
+                              Not Verified
+                            </button>
+                        </>
+                      )}
                     </GridListTile>
                   )
               )}
             {companyDetails &&
               companyDetails.photos.map(
                 (data) =>
-                  data.status && (
+                  data.status && data.userId !== userDetails.userId  &&(
+                    <>
                     <GridListTile key={data.id}>
-                      <img src={data.path} alt={data.status} />
+                      <img src={data.path} alt={data.status} style={{position: "relative"}}/>
+                      <button
+                              type="button"
+                              class="btn btn-success"
+                              disabled="true"
+                              style={{
+                                height: "26px",
+                                fontWeight: "200",
+                                fontSize: "small",
+                                padding: "4px",
+                                position: "absolute",
+                                top: "2px",
+                                right: "0px",
+                              }}
+                            >
+                              <i
+                                class="fas fa-check"
+                                style={{ color: "white"}}
+                              ></i>{" "}
+                              verified
+                            </button>
                     </GridListTile>
+                    </>
                   )
               )}
           </GridList>
+              </>
+            )}
+          </>
+         
         ) : (
           <GridList
             cellHeight={200}
@@ -970,9 +1116,33 @@ export default function Review(props) {
               companyDetails.photos.map(
                 (data) =>
                   data.status && (
+                    
+                    
                     <GridListTile key={data.id}>
-                      <img src={data.path} alt={data.status} />
+                      <img src={data.path} alt={data.status} style={{position: "relative"}}/>
+                      <button
+                              type="button"
+                              class="btn btn-success"
+                              disabled="true"
+                              style={{
+                                height: "26px",
+                                fontWeight: "200",
+                                fontSize: "small",
+                                padding: "4px",
+                                position: "absolute",
+                                top: "2px",
+                                right: "0px",
+                              }}
+                            >
+                              <i
+                                class="fas fa-check"
+                                style={{ color: "white"}}
+                              ></i>{" "}
+                              verified
+                            </button>
                     </GridListTile>
+                    
+                    
                   )
               )}
           </GridList>
@@ -1081,6 +1251,9 @@ export default function Review(props) {
             label={"What?"}
             helperText={"Job Title"}
             classes={classes}
+            switchJobSearch={switchJobSearch}
+
+            
           />
 
           <InputGrid
@@ -1089,6 +1262,7 @@ export default function Review(props) {
             label={"Where"}
             helperText="Location"
             classes={classes}
+            switchJobSearch={switchJobSearch}
           />
 
           <Grid
@@ -1144,7 +1318,7 @@ export default function Review(props) {
         <div
           class="jumbotron text-white jumbotron-image shadow"
           style={{
-            backgroundImage: `url(https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80)`,
+            backgroundImage: `url(${companyDetails.companyBanner})`,
             backgroundSize: "cover",
             height: "250px",
             backgroundRepeat: "no-repeat",
@@ -1161,10 +1335,11 @@ export default function Review(props) {
         >
           <Grid container item lg={6} md={7} sm={8}>
             <Grid item className={classes.imgCont}>
-              <img
-                src="https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80"
+              <Image
+                src={companyDetails.companyLogo}
                 alt=""
                 width="100px"
+                onError={(e) => {  this.src = 'https://dummyimage.com/100.png/09f/fff'; }}
               />
             </Grid>
             <Grid item style={{ paddingTop: "40px", paddingLeft: "20px" }}>

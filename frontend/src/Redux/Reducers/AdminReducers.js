@@ -12,6 +12,8 @@ import {
     ADMIN_TOP_MOST_CEOS_FAIL,
     ADMIN_LIST_ALL_COMPANIES_SUCCESS,
     ADMIN_LIST_ALL_COMPANIES_FAIL,
+    ADMIN_UPDATE_PHOTO_STATUS_SUCCESS,
+    ADMIN_UPDATE_PHOTO_STATUS_FAIL,
 
   } from '../Constants/AdminConstants';
 
@@ -143,6 +145,28 @@ const initialState1 = {
           return {
               ...state,
               ListAllCompaniesError: action.payload
+            };
+      default:
+        return { ...state };
+    }
+  };
+
+  const initialState6 = {
+    updatePhotoStatus: null,
+    updatePhotoStatusError: null
+  }
+
+  export const updatePhotoStatusReducer = (state = initialState6 , action) => {
+    switch (action.type) {
+      case ADMIN_UPDATE_PHOTO_STATUS_SUCCESS:
+          return { 
+              ...state,
+              updatePhotoStatus: action.payload, 
+              };
+      case ADMIN_UPDATE_PHOTO_STATUS_FAIL:
+          return {
+              ...state,
+              updatePhotoStatusError: action.payload
             };
       default:
         return { ...state };
