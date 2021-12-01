@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import SearchGrid from './SearchGrid';
 import { useHistory } from 'react-router-dom';
 import { Redirect } from 'react-router';
-import { fetchAllJobs } from '../../Redux/Actions/JobsAction';
+import { fetchQJobs } from '../../Redux/Actions/JobsAction';
 
 const useStyles = makeStyles((theme) => ({
     autoComplete: {
@@ -20,11 +20,7 @@ const useStyles = makeStyles((theme) => ({
         height: '45px'
     },
     suggestions: {
-        cursor: 'pointer',
-        border: 'none',
-        '&:hover': {
-          backgroundColor: '#C9CACC'
-        }
+        border: 'none'
       }
   }))
 
@@ -102,6 +98,13 @@ function Body(props) {
     }
 
     const handleJobs = () => {
+      const qData = {
+        "job": job,
+        "location": location,
+        "page": 0,
+        "limit": 0
+      }
+      dispatch(fetchQJobs(qData))
         const data = {
             "job": job,
             "location": location
@@ -131,8 +134,11 @@ function Body(props) {
                     )} */}
                     {
                     suggestions.length !== 0 && isTitle && 
-                    <div className={classes.suggestions} onClick={() => handleTitleSelect(suggestions[0].jobTitle)}>
-                        {suggestions[0].jobTitle}
+                    <div className={classes.suggestions}>
+                        <label onClick={() => handleTitleSelect(suggestions[0].jobTitle)} style={{cursor: 'pointer'}}>{suggestions[0] && suggestions[0].jobTitle}</label><br />
+                        <label onClick={() => handleTitleSelect(suggestions[1].jobTitle)} style={{cursor: 'pointer'}}>{suggestions[1] && suggestions[1].jobTitle}</label><br />
+                        <label onClick={() => handleTitleSelect(suggestions[2].jobTitle)} style={{cursor: 'pointer'}}>{suggestions[2] && suggestions[2].jobTitle}</label><br />
+
                     </div>
                     }
                     {/* {
@@ -143,8 +149,10 @@ function Body(props) {
                     )} */}
                     {
                     suggestions.length !== 0 && isCompany && 
-                    <div className={classes.suggestions} onClick={() => handleCompanySelect(suggestions[0].companyName)}>
-                        {suggestions[0].companyName}
+                    <div className={classes.suggestions}>
+                        <label onClick={() => handleCompanySelect(suggestions[0].companyName)} style={{cursor: 'pointer'}}>{suggestions[0] && suggestions[0].companyName}</label><br />
+                        <label onClick={() => handleCompanySelect(suggestions[1].companyName)} style={{cursor: 'pointer'}}>{suggestions[1] && suggestions[1].companyName}</label><br />
+                        <label onClick={() => handleCompanySelect(suggestions[2].companyName)} style={{cursor: 'pointer'}}>{suggestions[2] && suggestions[2].companyName}</label><br />
                     </div>
                     }
                     </div>
@@ -164,8 +172,10 @@ function Body(props) {
                     )} */}
                     {
                     suggestions.length !== 0 && 
-                    <div className={classes.suggestions} onClick={() => handleLocSelect(suggestions[0].jobLocation.city)}>
-                        {isLoc && suggestions[0].jobLocation.city}
+                    <div className={classes.suggestions}>
+                        <label onClick={() => handleLocSelect(suggestions[0].jobLocation.city)} style={{cursor: 'pointer'}}>{isLoc && suggestions[0] && suggestions[0].jobLocation.city}</label><br />
+                        <label onClick={() => handleLocSelect(suggestions[1].jobLocation.city)} style={{cursor: 'pointer'}}>{isLoc && suggestions[1] && suggestions[1].jobLocation.city}</label><br />
+                        <label onClick={() => handleLocSelect(suggestions[2].jobLocation.city)} style={{cursor: 'pointer'}}>{isLoc && suggestions[2] && suggestions[2].jobLocation.city}</label><br />
                     </div>
                     }
                     </div>

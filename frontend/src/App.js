@@ -29,6 +29,7 @@ import JobSeekerMessage from "./components/Messages/JobSeekerMessage";
 
 import EmployerPieChart from "./components/Employer/EmployerReports/EmployerPieChart";
 import EmployerMessage from "./components/Employer/EmployerApplicants/EmployerMessage";
+import Reviews from "./components/Profile/Reviews";
 function App() {
   return (
     <ThemeProvider theme={Theme}>
@@ -42,6 +43,7 @@ function App() {
           <Route path='/indeed/profile' component={UserProfile} />
           <Route path='/indeed/messages' component={JobSeekerMessage} />
           <Route path='/indeed/saved-jobs' component={SavedJobs} />
+          <Route path='/indeed/reviews' component={Reviews} />
           <Route path='/indeed/jobs' component={JobsDisplay} />
           <Route path='/addemployer' component={EmployerSignup} />
           <Route
