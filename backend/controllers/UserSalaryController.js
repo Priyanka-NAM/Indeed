@@ -21,7 +21,7 @@ const userSalary = async (req, res) => {
 const getUserSalary = async (req, res) => {
   console.log("get all reviews");
   try {
-    const salary = await Salaries.find({});
+    const salary = await Salaries.find({}).sort({ currentPay: -1 });
     if (!salary) {
       console.log("error");
       return res.status(400).json({

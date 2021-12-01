@@ -112,7 +112,7 @@ export default function Header() {
                   <Typography
                     component={NavLink}
                     variant="h6"
-                    to="/find-salaries"
+                    to="/indeed/find-salaries"
                   >
                     Find Salary
                   </Typography>
