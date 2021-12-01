@@ -9,7 +9,10 @@ const {
   getSpecificCompanyReviews,
   UpdateHelpfulCount,
 } = require("../controllers/UserReviewController");
-const userSalary = require("../controllers/UserSalaryController");
+const {
+  userSalary,
+  getUserSalary,
+} = require("../controllers/UserSalaryController");
 const getHomePage = require("../controllers/CompanyHomePage");
 const { uploadPhoto } = require("../controllers/UserPhotoController");
 const router = express.Router();
@@ -19,6 +22,7 @@ router.post("/user-review", postUserReview);
 router.get("/user-review", getUserReviews);
 router.get("/company-specific-reviews", getSpecificCompanyReviews);
 router.post("/user-salary", userSalary);
+router.get("/user-salary", getUserSalary);
 router.get("/reviews", getAllReviews);
 router.get("/home", getHomePage);
 router.get("/whyjoinus", getHomePage);

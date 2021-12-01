@@ -23,6 +23,7 @@ import { employerJobPostingReducer } from "./Reducers/EmployerJobPostingReducer"
 import { employerJobsReducer } from "./Reducers/EmployerJobsReducer";
 import { employerDetailsReducer } from "./Reducers/EmployerDetailsReducer";
 import { messageReducer } from "./Reducers/MessageReducer";
+import { companySalaryReducer } from "./Reducers/CompanySalaryReducer";
 
 const appReducer = combineReducers({
   signup: signUpReducer,
@@ -44,6 +45,7 @@ const appReducer = combineReducers({
   messages: messageReducer,
   UpdateHelpfulCount: UpdateHelpfulCountReducer,
   jobApplicants: jobApplicantsReducer,
+  salary: companySalaryReducer,
 });
 
 // const rootReducer = (state, action) => {

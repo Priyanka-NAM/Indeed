@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
-import { GridList, GridListTile } from "@material-ui/core";
+import {
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  GridList,
+  GridListTile,
+  Radio,
+  RadioGroup,
+} from "@material-ui/core";
 import { API } from "../../config";
 import {
   getcompaniesDetails,
@@ -26,6 +34,7 @@ import { updateHelpfulCount } from "../../Redux/Actions/Company";
 import InputGrid from "./InputGrid";
 import JobDescription from "./JobDescription";
 import { timeDifference } from "./timeDifference";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 
 import {
   Grid,
@@ -117,7 +126,7 @@ const useStyle = makeStyles((theme) => ({
     lineHeight: "1.4rem",
   },
   formhelperText: {
-    color: "#085ff7",
+    color: "#000000",
     paddingLeft: "20px",
     cursor: "pointer",
     fontSize: "17px",
@@ -182,6 +191,19 @@ const FollowButton = withStyles((theme) => ({
     },
   },
 }))(Button);
+const GreenCheckbox = withStyles({
+  root: {
+    color: "black",
+    "&$checked": {
+      color: "black",
+    },
+    "&$disabled": {
+      color: "white",
+    },
+  },
+  checked: {},
+  disabled: {},
+})(Checkbox);
 
 function getModalStyle() {
   const top = 50;
@@ -233,12 +255,23 @@ export default function Review(props) {
     : { aboutTheCompany: {} };
 
   let { responseFromServer: jobs } = useSelector((state) => state.employerJobs);
-  console.log(jobs);
 
   const loginReducer = useSelector((state) => state.login);
   const { isAuth, userDetails } = loginReducer;
   const [images, setImage] = useState([]);
   const [updatePage, setupdatePage] = useState(false);
+  const [companyname, setCompanyName] = useState("");
+  const [salaryJobTitle, setSalaryJobTitle] = useState("");
+  const [newsalary, setNewSalary] = useState("");
+  const [salaryLocation, setSalaryLocation] = useState("");
+
+  const [isWorking, setisWorking] = useState("No");
+
+  const handleisWorkingChange = (event) => {
+    setisWorking(event.target.value);
+    console.log(isWorking);
+  };
+
   const [imageUrl, setImageUrl] = useState([]);
 
   const [newRating, setnewRating] = useState(0);
@@ -253,6 +286,7 @@ export default function Review(props) {
   const [city, setCity] = useState("");
   const [st, setState] = useState("");
   const [photoOpen, setPhotoOpen] = useState(false);
+  const [salaryOpen, setSalaryOpen] = useState(false);
   const [values, setValues] = React.useState([
     "select Review Type",
     "Approved",
@@ -262,6 +296,13 @@ export default function Review(props) {
   const [sortValue, setSortValue] = React.useState("createdAt");
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(4);
+  const [endvalue, setEndValue] = React.useState(
+    new Date("2014-08-18T21:11:54")
+  );
+
+  const handleChange = (newValue) => {
+    setEndValue(newValue);
+  };
 
   const query = new URLSearchParams(props.location.search);
   const id = query.get("id");
@@ -278,6 +319,13 @@ export default function Review(props) {
     setPhotoOpen(false);
   };
 
+  const handleSalaryClose = () => {
+    setSalaryOpen(false);
+  };
+
+  const handleSalaryOpen = () => {
+    setSalaryOpen(true);
+  };
   const [interviewPrep, setinterviewPrep] = useState("");
 
   const [open, setOpen] = useState(false);
@@ -332,7 +380,6 @@ export default function Review(props) {
   const [tooltipopen, setTooltipopen] = React.useState(true);
 
   useEffect(() => {
-    debugger;
     console.log(sortValue);
     if (
       props.match.params.pathname === "snapshot" ||
@@ -420,9 +467,27 @@ export default function Review(props) {
           row.jobLocation.city.toLowerCase().indexOf(location.toLowerCase()) >
           -1
       );
-
-      console.log(jobs);
     }
+  };
+
+  const salarySubmithandler = async (event) => {
+    event.preventDefault();
+    const obj = {
+      jobTitle: salaryJobTitle,
+      currentPay: newsalary,
+      companyName: companyname,
+      jobLocation: salaryLocation,
+    };
+    console.log(obj);
+    await axios
+      .post(`${API}/company/user-salary`, { ...obj })
+      .then((response) => {
+        setSalaryOpen(false);
+        setCompanyName("");
+        setSalaryJobTitle("");
+        setNewSalary("");
+        setSalaryLocation("");
+      });
   };
   const reviewSubmithandler = async (event) => {
     setupdatePage(!updatePage);
@@ -1021,6 +1086,18 @@ export default function Review(props) {
       </Grid>
     </div>
   );
+  const showSalary = () => (
+    <>
+      <SearchButton
+        type="submit"
+        variant="contained"
+        style={{ position: "relative", left: "800px" }}
+        onClick={handleSalaryOpen}
+      >
+        Add a Salary
+      </SearchButton>
+    </>
+  );
   const showWhyJoinUs = () => (
     <>
       <Grid
@@ -1299,6 +1376,7 @@ export default function Review(props) {
         {props.match.params.pathname === "photos" && showPhotos()}
         {props.match.params.pathname === "whyjoinus" && showWhyJoinUs()}
         {props.match.params.pathname === "jobs" && showJobs()}
+        {props.match.params.pathname === "salaries" && showSalary()}
         {showFooter()}
       </Container>
 
@@ -1531,6 +1609,173 @@ export default function Review(props) {
                 Upload
               </button>
             </label>
+          </form>
+        </div>
+      </Modal>
+      <Modal
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        open={salaryOpen}
+        onClose={handleSalaryClose}
+      >
+        <div style={modalStyle} className={classes.paper}>
+          <form className={classes.formStyle} onSubmit={salarySubmithandler}>
+            <Grid style={{ height: "80px" }}>
+              <FormHelperText className={classes.formhelperText}>
+                What's Your Company ?
+              </FormHelperText>
+              <TextField
+                className={classes.outlinedInput}
+                required
+                type="text"
+                value={companyname}
+                required
+                onChange={(event) => {
+                  setCompanyName(event.target.value);
+                }}
+                variant="outlined"
+                placeholder=""
+              />
+            </Grid>
+            <Grid style={{ height: "80px" }}>
+              <FormHelperText className={classes.formhelperText}>
+                Are you Currently working ?
+              </FormHelperText>
+
+              <RadioGroup
+                aria-label="Working"
+                row
+                name="controlled-radio-buttons-group"
+                value={isWorking}
+                onChange={handleisWorkingChange}
+              >
+                <FormControlLabel value="No" control={<Radio />} label="Yes" />
+                <FormControlLabel value="Yes" control={<Radio />} label="No" />
+              </RadioGroup>
+              {isWorking === "Yes" && (
+                <div
+                  style={{
+                    position: "relative",
+                    left: "350px",
+                    bottom: "80px",
+                    marginBottom: "0px",
+                  }}
+                >
+                  <FormHelperText className={classes.formhelperText}>
+                    End Date
+                  </FormHelperText>
+                  <input type="date" className={classes.formhelperText} />
+                </div>
+              )}
+            </Grid>
+
+            <Grid style={{ height: "80px" }}>
+              <FormHelperText className={classes.formhelperText}>
+                Whats Your Job Title?
+              </FormHelperText>
+              <TextField
+                className={classes.outlinedInput}
+                type="text"
+                required
+                variant="outlined"
+                placeholder="Job Title"
+                value={salaryJobTitle}
+                onChange={(event) => {
+                  setSalaryJobTitle(event.target.value);
+                }}
+              />
+            </Grid>
+
+            <Grid style={{ height: "80px" }}>
+              <FormHelperText className={classes.formhelperText}>
+                Pay
+              </FormHelperText>
+              <TextField
+                className={classes.outlinedInput}
+                type="text"
+                required
+                variant="outlined"
+                placeholder="Current Pay"
+                value={newsalary}
+                onChange={(event) => {
+                  setNewSalary(event.target.value);
+                }}
+              />
+            </Grid>
+            <Grid style={{ height: "80px" }}>
+              <FormHelperText className={classes.formhelperText}>
+                Beneifts
+              </FormHelperText>
+              <FormGroup>
+                <FormControlLabel
+                  style={{ height: "25px" }}
+                  control={<GreenCheckbox />}
+                  label="Paid time off"
+                />
+                <FormControlLabel
+                  style={{ height: "25px" }}
+                  control={<GreenCheckbox />}
+                  label="Health insurance"
+                />
+                <FormControlLabel
+                  style={{ height: "25px" }}
+                  control={<GreenCheckbox />}
+                  label="Life insurance"
+                />
+                <FormControlLabel
+                  style={{ height: "25px" }}
+                  control={<GreenCheckbox />}
+                  label="Dental/ vision insurance"
+                />
+                <FormControlLabel
+                  style={{ height: "25px" }}
+                  control={<GreenCheckbox />}
+                  label="Retirement/ 401(k)"
+                />
+                <FormControlLabel
+                  style={{ height: "25px" }}
+                  control={<GreenCheckbox />}
+                  label="Other benefits"
+                />
+              </FormGroup>
+            </Grid>
+            <Grid
+              style={{
+                height: "80px",
+                position: "relative",
+                top: "150px",
+                width: "50px",
+              }}
+            >
+              <FormHelperText className={classes.formhelperText}>
+                Location
+              </FormHelperText>
+              <TextField
+                className={classes.outlinedInput}
+                style={{ width: "150px" }}
+                required
+                type="text"
+                variant="outlined"
+                placeholder="Location"
+                value={salaryLocation}
+                onChange={(event) => {
+                  setSalaryLocation(event.target.value);
+                }}
+              />
+            </Grid>
+            <br />
+            <Grid
+              style={{
+                height: "80px",
+                position: "relative",
+                left: "400px",
+                top: "80px",
+              }}
+            >
+              <SearchButton type="submit" variant="contained">
+                Post
+              </SearchButton>
+            </Grid>
           </form>
         </div>
       </Modal>
