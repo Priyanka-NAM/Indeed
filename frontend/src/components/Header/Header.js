@@ -116,7 +116,7 @@ export default function Header() {
             : (
               (
                 <Box className={classes.header_left}>
-              <Link to='/indeed/allreviews'><img
+              <Link to='/indeed/allcompanies'><img
                 className={classes.logo}
                 src="/Images/Indeed_logo.png"
                 alt=""

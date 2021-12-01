@@ -5,7 +5,8 @@ import { CompanyBox } from "./CompanyBox";
 import { useHistory } from "react-router-dom";
 import { getAllCompanies } from "../../Redux/Actions/AdminAction";
 import SearchIcon from "@material-ui/icons/Search";
-
+import {Login} from '../Login/Login';
+ 
 //import Rating from "@material-ui/lab/Rating";
 import {
   Container,
@@ -84,6 +85,8 @@ export const SearchButton = withStyles((theme) => ({
 
 export default function AdminListCompanies() {
   const classes = useStyles();
+  const loginReducer = useSelector((state) => state.login);
+  const { isAuth, userDetails } = loginReducer;
 
   const [companyName, setcompanyName] = useState("");
   const [location, setlocation] = useState("");
@@ -118,7 +121,9 @@ export default function AdminListCompanies() {
   };
 
   return (
-    <Container className={classes.container} maxWidth="xl">
+    <>
+    {userDetails && userDetails.role === 2 ? (
+      <Container className={classes.container} maxWidth="xl">
       <Grid container className={classes.boxSearch}>
         <Grid
           item
@@ -248,5 +253,8 @@ export default function AdminListCompanies() {
         </Grid>
       </Grid>
     </Container>
+    ) : <Login/>}
+    
+    </>
   );
 }
