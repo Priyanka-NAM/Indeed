@@ -5,6 +5,7 @@ const {
   updateEmployer,
   getEmployerDetails,
   companyPicsUpload,
+  employerReviewUpdate,
 } = require("../controllers/EmployerController");
 const employerHomePage = require("../controllers/EmployerHomePage");
 
@@ -12,5 +13,6 @@ router.post("/updateemployer", updateEmployer);
 router.get("/employerdetails/:employerID", getEmployerDetails);
 router.get("/home", employerHomePage);
 router.post("/employer_pic_upload", companyPicsUpload);
+router.post("/reviewupdate", employerReviewUpdate);
 
 module.exports = router;

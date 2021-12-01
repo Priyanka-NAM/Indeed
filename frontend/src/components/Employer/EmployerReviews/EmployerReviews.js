@@ -15,6 +15,8 @@ import {
   getcompaniesDetails,
   getCompanySpecificReviews,
 } from "../../../Redux/Actions/Company";
+import { employerReviewUpdate } from "./../../../Redux/Actions/EmployerReviewAction";
+
 const useStyles = makeStyles((theme) => ({
   container: {
     top: "20%",
@@ -85,6 +87,8 @@ const useStyles = makeStyles((theme) => ({
 function EmployerReviews(props) {
   const dispatch = useDispatch();
   const [clicked, setClicked] = useState(false);
+  let { userDetails } = useSelector((state) => state.login);
+  let { responseFromServer } = useSelector((state) => state.employerReview);
 
   const { companySpecificReviews } = useSelector(
     (state) => state.companyReviewList
@@ -94,7 +98,7 @@ function EmployerReviews(props) {
     console.log("companySpecificReviews");
     dispatch(
       getCompanySpecificReviews({
-        employerId: "619f0cdd8188bc6c174294cf",
+        employerId: "619f0cdd8188bc6c174294cf", // userDetails.userId,
       })
     );
     console.log("payload Details ", companySpecificReviews);
@@ -103,18 +107,28 @@ function EmployerReviews(props) {
   useEffect(() => {
     dispatch(
       getCompanySpecificReviews({
-        employerId: "619f0cdd8188bc6c174294cf",
+        employerId: "619f0cdd8188bc6c174294cf", //userDetails.userId,
       })
     );
+    setClicked(false);
   }, [clicked]);
 
+  useEffect(() => {
+    dispatch(
+      getCompanySpecificReviews({
+        employerId: "619f0cdd8188bc6c174294cf", //userDetails.userId,
+      })
+    );
+  }, [responseFromServer]);
+
   let rows = [];
-  function createData(reviewTitle, overallRating, pros, cons) {
-    return { reviewTitle, overallRating, pros, cons };
+  function createData(_id, reviewTitle, overallRating, pros, cons, isFeatured) {
+    return { _id, reviewTitle, overallRating, pros, cons, isFeatured };
   }
   if (companySpecificReviews && companySpecificReviews.length > 0) {
     rows = companySpecificReviews.map((eachreview) => {
       return createData(
+        eachreview._id,
         eachreview.reviewTitle,
         eachreview.overallRating,
         eachreview.pros,
@@ -127,7 +141,7 @@ function EmployerReviews(props) {
 
   const featureHandler = (row) => {
     setClicked(true);
-    dispatch();
+    dispatch(employerReviewUpdate({ _id: row._id }));
   };
 
   return (
