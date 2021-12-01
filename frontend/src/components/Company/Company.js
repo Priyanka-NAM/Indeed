@@ -36,7 +36,7 @@ import { updatePhotoStatus } from "../../Redux/Actions/AdminAction";
 import InputGrid from "./InputGrid";
 import JobDescription from "./JobDescription";
 import { timeDifference } from "./timeDifference";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+//import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 
 import {
   Grid,
@@ -295,7 +295,16 @@ export default function Review(props) {
     "Approved",
     "NotApproved",
   ]);
-  const [filterValue, setFilterValue] = React.useState(["select Review Type"]);
+  const [Ratingvalues, setRatingValues] = React.useState([
+    "select Rating value",
+    1,
+    2,
+    3,
+    4,
+    5,
+  ]);
+  const [filterValue, setFilterValue] = React.useState("select Review Type");
+  const [ratingfilterValue, setratingFilterValue] = React.useState("select Rating value");
   const [sortValue, setSortValue] = React.useState("createdAt");
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(4);
@@ -348,14 +357,15 @@ export default function Review(props) {
     (state) => state.companyReviewList
   );
 
-  //Filtering reviews Based on the approved and user reviews.
+  
   if (companySpecificReviews) {
-    if (!isAuth && userDetails.role !== 2) {
+    //Filtering reviews Based on the approved and user reviews.
+    if (!isAuth) {
       let approvedReviews = companySpecificReviews.filter(
         (review) => review.isApproved === "Approved"
       );
       companySpecificReviews = approvedReviews;
-    } else if (userDetails.role !== 2) {
+    } else if (userDetails.role !== 2 ) {
       debugger;
       let approvedReviewsFromOtherUsers = [];
       let userReviews = [];
@@ -371,9 +381,21 @@ export default function Review(props) {
         approvedReviewsFromOtherUsers
       );
     }
+    // //sort based on sort value
+    // if(sortValue !== "createdAt")
+    // companySpecificReviews.sort(function(a, b) {
+    //   return a. - b;
+    // });
   }
-  //Filter based on approved or not approved
-  if (filterValue === "Approved") {
+    // //Filter based on review ratings
+    if(companySpecificReviews && ratingfilterValue !== "select Rating value"){
+      companySpecificReviews = companySpecificReviews.filter(
+        (review) => review.overallRating === ratingfilterValue
+      );
+     }
+     
+   //Filter based on approved or not approved
+   if (filterValue === "Approved") {
     companySpecificReviews = companySpecificReviews.filter(
       (review) => review.isApproved === "Approved"
     );
@@ -382,6 +404,7 @@ export default function Review(props) {
       (review) => review.isApproved === "NotApproved"
     );
   }
+
   //Filter on jobs
   if (jobTitle && location && shouldDoJobSerach) {
     jobs = jobs.filter(
@@ -408,7 +431,6 @@ export default function Review(props) {
   const [tooltipopen, setTooltipopen] = React.useState(true);
 
   useEffect(() => {
-    console.log(sortValue);
     if (
       props.match.params.pathname === "snapshot" ||
       props.match.params.pathname === "photos"
@@ -424,7 +446,7 @@ export default function Review(props) {
     else if (props.match.params.pathname === "jobs")
       dispatch(employerAllJob(props.match.params.id));
     setRating(companyDetails.noOfRatings);
-  }, [props.match, sortValue, updatePage, filterValue]);
+  }, [props.match,updatePage, filterValue]);
 
   const changePathName = (pathName) => {
     props.history.push(`/company/${props.match.params.id}/${pathName}`);
@@ -799,9 +821,23 @@ export default function Review(props) {
             value={filterValue}
             name="filterVal"
             onChange={(e) => setFilterValue(e.target.value)}
-            style={{ height: "30px" }}
+            style={{ height: "30px", width: "189px" }}
           >
             {values.map((value, index) => {
+              return <MenuItem value={value}>{value}</MenuItem>;
+            })}
+          </Select>
+        </FormControl>
+       <FormControl style={{ padding: "37px", paddingLeft: "50px" }}>
+          <Select
+            className={classes.outlinedInput}
+            variant="outlined"
+            value={ratingfilterValue}
+            name="ratingfilterVal"
+            onChange={(e) => setratingFilterValue(e.target.value)}
+            style={{ height: "30px" , width: "189px" }}
+          >
+            {Ratingvalues.map((value, index) => {
               return <MenuItem value={value}>{value}</MenuItem>;
             })}
           </Select>
