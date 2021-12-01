@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Image } from 'react-bootstrap';
+import { Image } from "react-bootstrap";
 import { styled } from "@mui/material/styles";
-import { GridList, GridListTile } from "@material-ui/core";
+import {
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  GridList,
+  GridListTile,
+  Radio,
+  RadioGroup,
+} from "@material-ui/core";
 import { API } from "../../config";
 import {
   getcompaniesDetails,
@@ -24,10 +32,11 @@ import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import { updateReviewStatus } from "../../Redux/Actions/Company";
 import { employerAllJob } from "../../Redux/Actions/EmployerJobPostingAction";
 import { updateHelpfulCount } from "../../Redux/Actions/Company";
-import {updatePhotoStatus} from '../../Redux/Actions/AdminAction';
+import { updatePhotoStatus } from "../../Redux/Actions/AdminAction";
 import InputGrid from "./InputGrid";
 import JobDescription from "./JobDescription";
 import { timeDifference } from "./timeDifference";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 
 import {
   Grid,
@@ -119,7 +128,7 @@ const useStyle = makeStyles((theme) => ({
     lineHeight: "1.4rem",
   },
   formhelperText: {
-    color: "#085ff7",
+    color: "#000000",
     paddingLeft: "20px",
     cursor: "pointer",
     fontSize: "17px",
@@ -184,6 +193,19 @@ const FollowButton = withStyles((theme) => ({
     },
   },
 }))(Button);
+const GreenCheckbox = withStyles({
+  root: {
+    color: "black",
+    "&$checked": {
+      color: "black",
+    },
+    "&$disabled": {
+      color: "white",
+    },
+  },
+  checked: {},
+  disabled: {},
+})(Checkbox);
 
 function getModalStyle() {
   const top = 50;
@@ -236,12 +258,23 @@ export default function Review(props) {
     : { aboutTheCompany: {} };
 
   let { responseFromServer: jobs } = useSelector((state) => state.employerJobs);
-  console.log(jobs);
 
   const loginReducer = useSelector((state) => state.login);
   const { isAuth, userDetails } = loginReducer;
   const [images, setImage] = useState([]);
   const [updatePage, setupdatePage] = useState(false);
+  const [companyname, setCompanyName] = useState("");
+  const [salaryJobTitle, setSalaryJobTitle] = useState("");
+  const [newsalary, setNewSalary] = useState("");
+  const [salaryLocation, setSalaryLocation] = useState("");
+
+  const [isWorking, setisWorking] = useState("No");
+
+  const handleisWorkingChange = (event) => {
+    setisWorking(event.target.value);
+    console.log(isWorking);
+  };
+
   const [imageUrl, setImageUrl] = useState([]);
 
   const [newRating, setnewRating] = useState(0);
@@ -256,6 +289,7 @@ export default function Review(props) {
   const [city, setCity] = useState("");
   const [st, setState] = useState("");
   const [photoOpen, setPhotoOpen] = useState(false);
+  const [salaryOpen, setSalaryOpen] = useState(false);
   const [values, setValues] = React.useState([
     "select Review Type",
     "Approved",
@@ -265,6 +299,13 @@ export default function Review(props) {
   const [sortValue, setSortValue] = React.useState("createdAt");
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(4);
+  const [endvalue, setEndValue] = React.useState(
+    new Date("2014-08-18T21:11:54")
+  );
+
+  const handleChange = (newValue) => {
+    setEndValue(newValue);
+  };
 
   const query = new URLSearchParams(props.location.search);
   const id = query.get("id");
@@ -280,9 +321,17 @@ export default function Review(props) {
   const handlePhotoClose = () => {
     setPhotoOpen(false);
   };
+
+  const handleSalaryClose = () => {
+    setSalaryOpen(false);
+  };
+
+  const handleSalaryOpen = () => {
+    setSalaryOpen(true);
+  };
   const handlePhotoSatus = (employerId, photoId) => {
-    dispatch(updatePhotoStatus({employerId, photoId }))
-  }
+    dispatch(updatePhotoStatus({ employerId, photoId }));
+  };
   const [interviewPrep, setinterviewPrep] = useState("");
 
   const [open, setOpen] = useState(false);
@@ -294,7 +343,7 @@ export default function Review(props) {
   const handleClose = () => {
     setOpen(false);
   };
- 
+
   let { companySpecificReviews } = useSelector(
     (state) => state.companyReviewList
   );
@@ -333,34 +382,32 @@ export default function Review(props) {
       (review) => review.isApproved === "NotApproved"
     );
   }
-//Filter on jobs
-if (jobTitle && location && shouldDoJobSerach) {
-  jobs = jobs.filter(
-    (row) =>
-      row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1 ||
-      row.jobLocation.city.indexOf(location.toLowerCase()) > -1
-  );
+  //Filter on jobs
+  if (jobTitle && location && shouldDoJobSerach) {
+    jobs = jobs.filter(
+      (row) =>
+        row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1 ||
+        row.jobLocation.city.indexOf(location.toLowerCase()) > -1
+    );
 
-  console.log(jobs);
-} else if (jobTitle && shouldDoJobSerach) {
-  jobs = jobs.filter(
-    (row) => row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1
-  );
+    console.log(jobs);
+  } else if (jobTitle && shouldDoJobSerach) {
+    jobs = jobs.filter(
+      (row) => row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1
+    );
 
-  console.log(jobs);
-} else if (location && shouldDoJobSerach) {
-  jobs = jobs.filter(
-    (row) =>
-      row.jobLocation.city.toLowerCase().indexOf(location.toLowerCase()) >
-      -1
-  );
+    console.log(jobs);
+  } else if (location && shouldDoJobSerach) {
+    jobs = jobs.filter(
+      (row) =>
+        row.jobLocation.city.toLowerCase().indexOf(location.toLowerCase()) > -1
+    );
 
-  console.log(jobs);
-}
+    console.log(jobs);
+  }
   const [tooltipopen, setTooltipopen] = React.useState(true);
 
   useEffect(() => {
-    debugger;
     console.log(sortValue);
     if (
       props.match.params.pathname === "snapshot" ||
@@ -427,11 +474,54 @@ if (jobTitle && location && shouldDoJobSerach) {
   };
   const handleJobSearch = (event) => {
     event.preventDefault();
+
+    if (jobTitle && location) {
+      jobs = jobs.filter(
+        (row) =>
+          row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1 ||
+          row.jobLocation.city.indexOf(location.toLowerCase()) > -1
+      );
+
+      console.log(jobs);
+    } else if (jobTitle) {
+      jobs = jobs.filter(
+        (row) => row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1
+      );
+
+      console.log(jobs);
+    } else if (location) {
+      jobs = jobs.filter(
+        (row) =>
+          row.jobLocation.city.toLowerCase().indexOf(location.toLowerCase()) >
+          -1
+      );
+    }
     setshouldDoJobSerach(true);
   };
+
+  const salarySubmithandler = async (event) => {
+    event.preventDefault();
+    const obj = {
+      jobTitle: salaryJobTitle,
+      currentPay: newsalary,
+      companyName: companyname,
+      jobLocation: salaryLocation,
+    };
+    console.log(obj);
+    await axios
+      .post(`${API}/company/user-salary`, { ...obj })
+      .then((response) => {
+        setSalaryOpen(false);
+        setCompanyName("");
+        setSalaryJobTitle("");
+        setNewSalary("");
+        setSalaryLocation("");
+      });
+  };
+
   const switchJobSearch = () => {
     setshouldDoJobSerach(false);
-  }
+  };
   const reviewSubmithandler = async (event) => {
     setupdatePage(!updatePage);
     event.preventDefault();
@@ -562,7 +652,10 @@ if (jobTitle && location && shouldDoJobSerach) {
         <Grid item style={{ flex: 1 }}>
           <Image
             src={companyDetails.companyCeoPicture}
-            onError = {(e) => { e.target.onerror = null; e.target.src = 'https://dummyimage.com/100.png/09f/fff'; }}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "https://dummyimage.com/100.png/09f/fff";
+            }}
             style={{ height: "350px", borderRadius: "10px" }}
           />
         </Grid>
@@ -946,20 +1039,18 @@ if (jobTitle && location && shouldDoJobSerach) {
           <>
             {userDetails.role === 2 ? (
               <>
-                             <GridList
-            cellHeight={200}
-            cols={3}
-            style={{ width: 800, height: 600 }}
-          >
-            {companyDetails &&
-              companyDetails.photos.map(
-                (data) =>
-                  (
-                    <GridListTile key={data.id}>
-                      <img src={data.path} alt={data.status} />
-                      {data.status ? (
-                        <>
-                        <button
+                <GridList
+                  cellHeight={200}
+                  cols={3}
+                  style={{ width: 800, height: 600 }}
+                >
+                  {companyDetails &&
+                    companyDetails.photos.map((data) => (
+                      <GridListTile key={data.id}>
+                        <img src={data.path} alt={data.status} />
+                        {data.status ? (
+                          <>
+                            <button
                               type="button"
                               class="btn btn-success"
                               disabled="true"
@@ -975,14 +1066,14 @@ if (jobTitle && location && shouldDoJobSerach) {
                             >
                               <i
                                 class="fas fa-check"
-                                style={{ color: "white"}}
+                                style={{ color: "white" }}
                               ></i>{" "}
                               verified
                             </button>
-                        </>
-                      ): (
-                        <>
-                        <button
+                          </>
+                        ) : (
+                          <>
+                            <button
                               type="button"
                               class="btn btn-info"
                               style={{
@@ -994,117 +1085,127 @@ if (jobTitle && location && shouldDoJobSerach) {
                                 top: "2px",
                                 right: "0px",
                               }}
-                              onClick={()=> {data.status = true; handlePhotoSatus(companyDetails._id, data._id);}}
+                              onClick={() => {
+                                data.status = true;
+                                handlePhotoSatus(companyDetails._id, data._id);
+                              }}
                             >
                               Verify here
                             </button>
-                        </>
-                      )}
-                    </GridListTile>
-                  )
-              )}
-          </GridList>
+                          </>
+                        )}
+                      </GridListTile>
+                    ))}
+                </GridList>
               </>
-            ): (
+            ) : (
               <>
-               <GridList
-            cellHeight={200}
-            cols={3}
-            style={{ width: 800, height: 600 }}
-          >
-            {companyDetails &&
-              companyDetails.photos.map(
-                (data) =>
-                  data.userId === userDetails.userId && (
-                    <GridListTile key={data.id}>
-                      <img src={data.path} alt={data.status} style={{position: "relative"}}/>
-                      {data.status ? (
-                        <>
-                        <button
-                              type="button"
-                              class="btn btn-success"
-                              disabled="true"
-                              style={{
-                                height: "26px",
-                                fontWeight: "200",
-                                fontSize: "small",
-                                padding: "4px",
-                                position: "absolute",
-                                top: "2px",
-                                right: "0px",
-                              }}
-                            >
-                              <i
-                                class="fas fa-check"
-                                style={{ color: "white"}}
-                              ></i>{" "}
-                              verified
-                            </button>
-                        </>
-                      ): (
-                        <>
-                        <button
-                              type="button"
-                              class="btn btn-danger"
-                              disabled="true"
-                              style={{
-                                height: "26px",
-                                fontWeight: "200",
-                                fontSize: "small",
-                                padding: "4px",
-                                position: "absolute",
-                                top: "2px",
-                                right: "0px",
-                              }}
-                            >
-                              <i
-                                class="fa fa-times"
-                                aria-hidden="true"
-                                style={{ color: "white" }}
-                              ></i>{" "}
-                              Not Verified
-                            </button>
-                        </>
-                      )}
-                    </GridListTile>
-                  )
-              )}
-            {companyDetails &&
-              companyDetails.photos.map(
-                (data) =>
-                  data.status && data.userId !== userDetails.userId  &&(
-                    <>
-                    <GridListTile key={data.id}>
-                      <img src={data.path} alt={data.status} style={{position: "relative"}}/>
-                      <button
-                              type="button"
-                              class="btn btn-success"
-                              disabled="true"
-                              style={{
-                                height: "26px",
-                                fontWeight: "200",
-                                fontSize: "small",
-                                padding: "4px",
-                                position: "absolute",
-                                top: "2px",
-                                right: "0px",
-                              }}
-                            >
-                              <i
-                                class="fas fa-check"
-                                style={{ color: "white"}}
-                              ></i>{" "}
-                              verified
-                            </button>
-                    </GridListTile>
-                    </>
-                  )
-              )}
-          </GridList>
+                <GridList
+                  cellHeight={200}
+                  cols={3}
+                  style={{ width: 800, height: 600 }}
+                >
+                  {companyDetails &&
+                    companyDetails.photos.map(
+                      (data) =>
+                        data.userId === userDetails.userId && (
+                          <GridListTile key={data.id}>
+                            <img
+                              src={data.path}
+                              alt={data.status}
+                              style={{ position: "relative" }}
+                            />
+                            {data.status ? (
+                              <>
+                                <button
+                                  type="button"
+                                  class="btn btn-success"
+                                  disabled="true"
+                                  style={{
+                                    height: "26px",
+                                    fontWeight: "200",
+                                    fontSize: "small",
+                                    padding: "4px",
+                                    position: "absolute",
+                                    top: "2px",
+                                    right: "0px",
+                                  }}
+                                >
+                                  <i
+                                    class="fas fa-check"
+                                    style={{ color: "white" }}
+                                  ></i>{" "}
+                                  verified
+                                </button>
+                              </>
+                            ) : (
+                              <>
+                                <button
+                                  type="button"
+                                  class="btn btn-danger"
+                                  disabled="true"
+                                  style={{
+                                    height: "26px",
+                                    fontWeight: "200",
+                                    fontSize: "small",
+                                    padding: "4px",
+                                    position: "absolute",
+                                    top: "2px",
+                                    right: "0px",
+                                  }}
+                                >
+                                  <i
+                                    class="fa fa-times"
+                                    aria-hidden="true"
+                                    style={{ color: "white" }}
+                                  ></i>{" "}
+                                  Not Verified
+                                </button>
+                              </>
+                            )}
+                          </GridListTile>
+                        )
+                    )}
+                  {companyDetails &&
+                    companyDetails.photos.map(
+                      (data) =>
+                        data.status &&
+                        data.userId !== userDetails.userId && (
+                          <>
+                            <GridListTile key={data.id}>
+                              <img
+                                src={data.path}
+                                alt={data.status}
+                                style={{ position: "relative" }}
+                              />
+                              <button
+                                type="button"
+                                class="btn btn-success"
+                                disabled="true"
+                                style={{
+                                  height: "26px",
+                                  fontWeight: "200",
+                                  fontSize: "small",
+                                  padding: "4px",
+                                  position: "absolute",
+                                  top: "2px",
+                                  right: "0px",
+                                }}
+                              >
+                                <i
+                                  class="fas fa-check"
+                                  style={{ color: "white" }}
+                                ></i>{" "}
+                                verified
+                              </button>
+                            </GridListTile>
+                          </>
+                        )
+                    )}
+                </GridList>
               </>
             )}
           </>
-         
         ) : (
           <GridList
             cellHeight={200}
@@ -1116,33 +1217,30 @@ if (jobTitle && location && shouldDoJobSerach) {
               companyDetails.photos.map(
                 (data) =>
                   data.status && (
-                    
-                    
                     <GridListTile key={data.id}>
-                      <img src={data.path} alt={data.status} style={{position: "relative"}}/>
+                      <img
+                        src={data.path}
+                        alt={data.status}
+                        style={{ position: "relative" }}
+                      />
                       <button
-                              type="button"
-                              class="btn btn-success"
-                              disabled="true"
-                              style={{
-                                height: "26px",
-                                fontWeight: "200",
-                                fontSize: "small",
-                                padding: "4px",
-                                position: "absolute",
-                                top: "2px",
-                                right: "0px",
-                              }}
-                            >
-                              <i
-                                class="fas fa-check"
-                                style={{ color: "white"}}
-                              ></i>{" "}
-                              verified
-                            </button>
+                        type="button"
+                        class="btn btn-success"
+                        disabled="true"
+                        style={{
+                          height: "26px",
+                          fontWeight: "200",
+                          fontSize: "small",
+                          padding: "4px",
+                          position: "absolute",
+                          top: "2px",
+                          right: "0px",
+                        }}
+                      >
+                        <i class="fas fa-check" style={{ color: "white" }}></i>{" "}
+                        verified
+                      </button>
                     </GridListTile>
-                    
-                    
                   )
               )}
           </GridList>
@@ -1190,6 +1288,18 @@ if (jobTitle && location && shouldDoJobSerach) {
         </Grid>
       </Grid>
     </div>
+  );
+  const showSalary = () => (
+    <>
+      <SearchButton
+        type="submit"
+        variant="contained"
+        style={{ position: "relative", left: "800px" }}
+        onClick={handleSalaryOpen}
+      >
+        Add a Salary
+      </SearchButton>
+    </>
   );
   const showWhyJoinUs = () => (
     <>
@@ -1252,8 +1362,6 @@ if (jobTitle && location && shouldDoJobSerach) {
             helperText={"Job Title"}
             classes={classes}
             switchJobSearch={switchJobSearch}
-
-            
           />
 
           <InputGrid
@@ -1339,7 +1447,9 @@ if (jobTitle && location && shouldDoJobSerach) {
                 src={companyDetails.companyLogo}
                 alt=""
                 width="100px"
-                onError={(e) => {  this.src = 'https://dummyimage.com/100.png/09f/fff'; }}
+                onError={(e) => {
+                  this.src = "https://dummyimage.com/100.png/09f/fff";
+                }}
               />
             </Grid>
             <Grid item style={{ paddingTop: "40px", paddingLeft: "20px" }}>
@@ -1474,6 +1584,7 @@ if (jobTitle && location && shouldDoJobSerach) {
         {props.match.params.pathname === "photos" && showPhotos()}
         {props.match.params.pathname === "whyjoinus" && showWhyJoinUs()}
         {props.match.params.pathname === "jobs" && showJobs()}
+        {props.match.params.pathname === "salaries" && showSalary()}
         {showFooter()}
       </Container>
 
@@ -1706,6 +1817,173 @@ if (jobTitle && location && shouldDoJobSerach) {
                 Upload
               </button>
             </label>
+          </form>
+        </div>
+      </Modal>
+      <Modal
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        open={salaryOpen}
+        onClose={handleSalaryClose}
+      >
+        <div style={modalStyle} className={classes.paper}>
+          <form className={classes.formStyle} onSubmit={salarySubmithandler}>
+            <Grid style={{ height: "80px" }}>
+              <FormHelperText className={classes.formhelperText}>
+                What's Your Company ?
+              </FormHelperText>
+              <TextField
+                className={classes.outlinedInput}
+                required
+                type="text"
+                value={companyname}
+                required
+                onChange={(event) => {
+                  setCompanyName(event.target.value);
+                }}
+                variant="outlined"
+                placeholder=""
+              />
+            </Grid>
+            <Grid style={{ height: "80px" }}>
+              <FormHelperText className={classes.formhelperText}>
+                Are you Currently working ?
+              </FormHelperText>
+
+              <RadioGroup
+                aria-label="Working"
+                row
+                name="controlled-radio-buttons-group"
+                value={isWorking}
+                onChange={handleisWorkingChange}
+              >
+                <FormControlLabel value="No" control={<Radio />} label="Yes" />
+                <FormControlLabel value="Yes" control={<Radio />} label="No" />
+              </RadioGroup>
+              {isWorking === "Yes" && (
+                <div
+                  style={{
+                    position: "relative",
+                    left: "350px",
+                    bottom: "80px",
+                    marginBottom: "0px",
+                  }}
+                >
+                  <FormHelperText className={classes.formhelperText}>
+                    End Date
+                  </FormHelperText>
+                  <input type="date" className={classes.formhelperText} />
+                </div>
+              )}
+            </Grid>
+
+            <Grid style={{ height: "80px" }}>
+              <FormHelperText className={classes.formhelperText}>
+                Whats Your Job Title?
+              </FormHelperText>
+              <TextField
+                className={classes.outlinedInput}
+                type="text"
+                required
+                variant="outlined"
+                placeholder="Job Title"
+                value={salaryJobTitle}
+                onChange={(event) => {
+                  setSalaryJobTitle(event.target.value);
+                }}
+              />
+            </Grid>
+
+            <Grid style={{ height: "80px" }}>
+              <FormHelperText className={classes.formhelperText}>
+                Pay
+              </FormHelperText>
+              <TextField
+                className={classes.outlinedInput}
+                type="text"
+                required
+                variant="outlined"
+                placeholder="Current Pay"
+                value={newsalary}
+                onChange={(event) => {
+                  setNewSalary(event.target.value);
+                }}
+              />
+            </Grid>
+            <Grid style={{ height: "80px" }}>
+              <FormHelperText className={classes.formhelperText}>
+                Beneifts
+              </FormHelperText>
+              <FormGroup>
+                <FormControlLabel
+                  style={{ height: "25px" }}
+                  control={<GreenCheckbox />}
+                  label="Paid time off"
+                />
+                <FormControlLabel
+                  style={{ height: "25px" }}
+                  control={<GreenCheckbox />}
+                  label="Health insurance"
+                />
+                <FormControlLabel
+                  style={{ height: "25px" }}
+                  control={<GreenCheckbox />}
+                  label="Life insurance"
+                />
+                <FormControlLabel
+                  style={{ height: "25px" }}
+                  control={<GreenCheckbox />}
+                  label="Dental/ vision insurance"
+                />
+                <FormControlLabel
+                  style={{ height: "25px" }}
+                  control={<GreenCheckbox />}
+                  label="Retirement/ 401(k)"
+                />
+                <FormControlLabel
+                  style={{ height: "25px" }}
+                  control={<GreenCheckbox />}
+                  label="Other benefits"
+                />
+              </FormGroup>
+            </Grid>
+            <Grid
+              style={{
+                height: "80px",
+                position: "relative",
+                top: "150px",
+                width: "50px",
+              }}
+            >
+              <FormHelperText className={classes.formhelperText}>
+                Location
+              </FormHelperText>
+              <TextField
+                className={classes.outlinedInput}
+                style={{ width: "150px" }}
+                required
+                type="text"
+                variant="outlined"
+                placeholder="Location"
+                value={salaryLocation}
+                onChange={(event) => {
+                  setSalaryLocation(event.target.value);
+                }}
+              />
+            </Grid>
+            <br />
+            <Grid
+              style={{
+                height: "80px",
+                position: "relative",
+                left: "400px",
+                top: "80px",
+              }}
+            >
+              <SearchButton type="submit" variant="contained">
+                Post
+              </SearchButton>
+            </Grid>
           </form>
         </div>
       </Modal>
