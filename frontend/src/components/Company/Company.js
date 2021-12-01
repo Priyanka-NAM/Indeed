@@ -381,11 +381,22 @@ export default function Review(props) {
         approvedReviewsFromOtherUsers
       );
     }
-    // //sort based on sort value
-    // if(sortValue !== "createdAt")
-    // companySpecificReviews.sort(function(a, b) {
-    //   return a. - b;
-    // });
+     //sort based on sort value
+    if(sortValue !== "createdAt"){
+      debugger;
+      if(sortValue === "overallRating"){
+        companySpecificReviews.sort(function(a, b) {
+          return b.overallRating - a.overallRating;
+        });
+      }
+      else{
+        companySpecificReviews.sort(function(a, b) {
+          return b.isHelpfulCount - a.isHelpfulCount;
+        });
+      }
+      
+    }
+    
   }
     // //Filter based on review ratings
     if(companySpecificReviews && ratingfilterValue !== "select Rating value"){
@@ -446,7 +457,7 @@ export default function Review(props) {
     else if (props.match.params.pathname === "jobs")
       dispatch(employerAllJob(props.match.params.id));
     setRating(companyDetails.noOfRatings);
-  }, [props.match,updatePage, filterValue]);
+  }, [props.match,updatePage,sortValue, filterValue]);
 
   const changePathName = (pathName) => {
     props.history.push(`/company/${props.match.params.id}/${pathName}`);
@@ -1149,7 +1160,7 @@ export default function Review(props) {
                             <img
                               src={data.path}
                               alt={data.status}
-                              style={{ position: "relative" }}
+                              style={{ position: "relative" , height: '200px' }}
                             />
                             {data.status ? (
                               <>
@@ -1212,7 +1223,7 @@ export default function Review(props) {
                               <img
                                 src={data.path}
                                 alt={data.status}
-                                style={{ position: "relative" }}
+                                style={{ position: "relative", height: '200px'  }}
                               />
                               <button
                                 type="button"
@@ -1257,7 +1268,7 @@ export default function Review(props) {
                       <img
                         src={data.path}
                         alt={data.status}
-                        style={{ position: "relative" }}
+                        style={{ position: "relative"}}
                       />
                       <button
                         type="button"
