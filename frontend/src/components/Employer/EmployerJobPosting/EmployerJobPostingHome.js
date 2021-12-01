@@ -16,6 +16,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { employerAllJob } from "../../../Redux/Actions/EmployerJobPostingAction";
+import { Redirect } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   body: {
@@ -155,6 +156,7 @@ function EmployerJobPostingHome(props) {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+  const isAuth = useSelector((state) => state.login.isAuth);
 
   const columns = [
     { id: "Job Title", label: "Job Title" },
@@ -171,165 +173,170 @@ function EmployerJobPostingHome(props) {
   ];
 
   return (
-    <div
-      style={{
-        paddingTop: "3%",
-        backgroundColor: "#f2f2f2",
-        height: "100%",
-      }}>
-      <MuiThemeProvider theme={theme} />
-      <CssBaseline />
-      <Container className={classes.container} maxWidth='xl'>
-        <Grid
-          item
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            paddingLeft: "3%",
-          }}>
-          <Grid style={{ paddingLeft: "10%" }}>
-            <Typography className={classes.h4} variant='h4'>
-              Jobs
-            </Typography>
+    <>
+      {!isAuth && <Redirect to='/employer' />}
+      <div
+        style={{
+          paddingTop: "3%",
+          backgroundColor: "#f2f2f2",
+          height: "100%",
+        }}>
+        <MuiThemeProvider theme={theme} />
+        <CssBaseline />
+        <Container className={classes.container} maxWidth='xl'>
+          <Grid
+            item
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              paddingLeft: "3%",
+            }}>
+            <Grid style={{ paddingLeft: "10%" }}>
+              <Typography className={classes.h4} variant='h4'>
+                Jobs
+              </Typography>
+            </Grid>
+            <Grid style={{ paddingLeft: "65%" }}>
+              <Link
+                style={{ textDecoration: "none" }}
+                to={{ pathname: "/employer/postJob", state: "" }}>
+                <Button className={classes.button} variant='contained'>
+                  Post a Job
+                </Button>
+              </Link>
+            </Grid>
           </Grid>
-          <Grid style={{ paddingLeft: "65%" }}>
-            <Link
-              style={{ textDecoration: "none" }}
-              to={{ pathname: "/employer/postJob", state: "" }}>
-              <Button className={classes.button} variant='contained'>
-                Post a Job
-              </Button>
-            </Link>
-          </Grid>
-        </Grid>
-        <br />
-        <br />
-        <Grid item xs={2} style={{ paddingLeft: "80%" }}></Grid>
-        <br />
-        <div style={{ height: 400, width: "80%", marginLeft: "10%" }}>
-          <Paper className={classes.root}>
-            <TableContainer className={classes.tablecontainer}>
-              <Table stickyHeader>
-                <TableHead>
-                  <TableRow>
-                    {columns.map((column) => (
-                      <TableCell
-                        key={column.id}
-                        align={column.align}
-                        className={classes.tableHeader}
-                        style={{ minWidth: column.minWidth }}>
-                        {column.label}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <br />
-                {rows
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => {
-                    return (
-                      <TableBody>
-                        <TableRow role='checkbox' tabIndex={-1} key={row.code}>
-                          <TableCell style={{ flex: 3 }}>
-                            <Card className={classes.cardlook}>
-                              <CardContent>
-                                <Typography variant='h5' component='h2'>
-                                  {row.title}
-                                </Typography>
-                                <Typography
-                                  className={classes.pos}
-                                  color='textSecondary'>
-                                  {row.city}
-                                </Typography>
-                                <Typography
-                                  className={classes.pos}
-                                  color='textSecondary'>
-                                  {row.country}
-                                </Typography>
-                              </CardContent>
-                            </Card>
-                          </TableCell>
-                          <TableCell style={{ flex: 1 }}>
-                            <Typography
-                              style={{ color: "#065FF7", fontWeight: "bold" }}
-                              to={{
-                                pathname: "/employer/showJobDetails",
-                                state: { row },
-                              }}>
-                              3 <span>Applicants</span>
-                            </Typography>
-                          </TableCell>
-                          <TableCell style={{ flex: 1 }}>
-                            <Button
-                              variant='outlined'
-                              color='#065FF7'
-                              style={{ color: "#065FF7" }}>
-                              <Link
-                                style={{ textDecoration: "none" }}
+          <br />
+          <br />
+          <Grid item xs={2} style={{ paddingLeft: "80%" }}></Grid>
+          <br />
+          <div style={{ height: 400, width: "80%", marginLeft: "10%" }}>
+            <Paper className={classes.root}>
+              <TableContainer className={classes.tablecontainer}>
+                <Table stickyHeader>
+                  <TableHead>
+                    <TableRow>
+                      {columns.map((column) => (
+                        <TableCell
+                          key={column.id}
+                          align={column.align}
+                          className={classes.tableHeader}
+                          style={{ minWidth: column.minWidth }}>
+                          {column.label}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <br />
+                  {rows
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row) => {
+                      return (
+                        <TableBody>
+                          <TableRow
+                            role='checkbox'
+                            tabIndex={-1}
+                            key={row.code}>
+                            <TableCell style={{ flex: 3 }}>
+                              <Card className={classes.cardlook}>
+                                <CardContent>
+                                  <Typography variant='h5' component='h2'>
+                                    {row.title}
+                                  </Typography>
+                                  <Typography
+                                    className={classes.pos}
+                                    color='textSecondary'>
+                                    {row.city}
+                                  </Typography>
+                                  <Typography
+                                    className={classes.pos}
+                                    color='textSecondary'>
+                                    {row.country}
+                                  </Typography>
+                                </CardContent>
+                              </Card>
+                            </TableCell>
+                            <TableCell style={{ flex: 1 }}>
+                              <Typography
+                                style={{ color: "#065FF7", fontWeight: "bold" }}
                                 to={{
                                   pathname: "/employer/showJobDetails",
                                   state: { row },
                                 }}>
-                                Job Details
-                              </Link>
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    );
-                  })}
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[2, 5, 10]}
-              component='div'
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Paper>
-        </div>
-        <br />
-        <br />
+                                3 <span>Applicants</span>
+                              </Typography>
+                            </TableCell>
+                            <TableCell style={{ flex: 1 }}>
+                              <Button
+                                variant='outlined'
+                                color='#065FF7'
+                                style={{ color: "#065FF7" }}>
+                                <Link
+                                  style={{ textDecoration: "none" }}
+                                  to={{
+                                    pathname: "/employer/showJobDetails",
+                                    state: { row },
+                                  }}>
+                                  Job Details
+                                </Link>
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      );
+                    })}
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[2, 5, 10]}
+                component='div'
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </Paper>
+          </div>
+          <br />
+          <br />
 
-        {/* <Grid
-          container
-          spacing={1}
-          style={{
-            fontSize: "14px",
-            backgroundColor: "white",
-            padding: "15px 10px",
-            margin: "0 -20px ",
-          }}>
-          <Grid item style={{ cursor: "pointer" }}>
-            © 2020 Indeed
+          <Grid
+            container
+            spacing={1}
+            style={{
+              fontSize: "14px",
+              padding: "15px 10px",
+              margin: "0 -20px ",
+            }}>
+            <Grid item style={{ cursor: "pointer" }}>
+              © 2020 Indeed
+            </Grid>
+            <Grid item>-</Grid>
+            <Grid item style={{ cursor: "pointer" }}>
+              Accessibility at Indeed
+            </Grid>
+            <Grid item>-</Grid>
+            <Grid item style={{ cursor: "pointer" }}>
+              Privacy Center
+            </Grid>
+            <Grid item>-</Grid>
+            <Grid item style={{ cursor: "pointer" }}>
+              Cookies
+            </Grid>
+            <Grid item>-</Grid>
+            <Grid item style={{ cursor: "pointer" }}>
+              Privacy
+            </Grid>
+            <Grid item>-</Grid>
+            <Grid item style={{ cursor: "pointer" }}>
+              Terms
+            </Grid>
           </Grid>
-          <Grid item>-</Grid>
-          <Grid item style={{ cursor: "pointer" }}>
-            Accessibility at Indeed
-          </Grid>
-          <Grid item>-</Grid>
-          <Grid item style={{ cursor: "pointer" }}>
-            Privacy Center
-          </Grid>
-          <Grid item>-</Grid>
-          <Grid item style={{ cursor: "pointer" }}>
-            Cookies
-          </Grid>
-          <Grid item>-</Grid>
-          <Grid item style={{ cursor: "pointer" }}>
-            Privacy
-          </Grid>
-          <Grid item>-</Grid>
-          <Grid item style={{ cursor: "pointer" }}>
-            Terms
-          </Grid>
-        </Grid> */}
-      </Container>
-      {/* // : <Redirect to='/' /> */}
-    </div>
+        </Container>
+        {/* // : <Redirect to='/' /> */}
+      </div>
+    </>
   );
 }
 
