@@ -1,4 +1,5 @@
 /* 
+import Review from './../../frontend/src/components/Company/Company';
 @ POST
 /indeed/employer/addemployer
 User Signup Route
@@ -6,6 +7,7 @@ User Signup Route
 
 const { pool } = require("../config/mysqldb");
 const Employer = require("../Models/EmployerModel");
+const Review = require("../Models/ReviewsModel");
 const bcrypt = require("bcryptjs");
 
 const updateEmployer = async (req, res) => {
@@ -35,7 +37,7 @@ const getEmployerDetails = async (req, res) => {
   const { employerID } = req.params;
 
   console.log("employerID ", employerID);
-  const employerExists = await Employer.findOne({ employerID: employerID });
+  const employerExists = await Employer.findOne({ _id: employerID });
   if (!employerExists) {
     res.status("400").send("Employer Not found");
     return;
@@ -46,7 +48,7 @@ const getEmployerDetails = async (req, res) => {
 const companyPicsUpload = async (req, res) => {
   const { employerID, urls, fieldName } = req.body;
 
-  let emp = await Employer.findOne({ employerID: employerID });
+  let emp = await Employer.findOne({ _id: employerID });
 
   if (!emp) {
     res.status("400").send("Error. Employer doesn't Exist.");
@@ -65,4 +67,28 @@ const companyPicsUpload = async (req, res) => {
   }
 };
 
-module.exports = { updateEmployer, getEmployerDetails, companyPicsUpload };
+const employerReviewUpdate = async (req, res) => {
+  const { _id } = req.body;
+
+  let review = await Review.findOne({ _id: _id });
+
+  if (!review) {
+    res.status("400").send("Error. Review doesn't Exist.");
+  } else {
+    review.isFeatured = !review.isFeatured;
+    await review.save((err, result) => {
+      if (err) {
+        throw err;
+      } else {
+        res.status(200).send(review);
+      }
+    });
+  }
+};
+
+module.exports = {
+  updateEmployer,
+  getEmployerDetails,
+  companyPicsUpload,
+  employerReviewUpdate,
+};

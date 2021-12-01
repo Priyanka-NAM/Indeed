@@ -9,10 +9,10 @@ const Employer = require("../Models/EmployerModel");
 const loginUser = (req, res) => {
   const { email, password } = req.body;
   if (!email) {
-    return res.status(404).send("email is required")
+    return res.status(404).send("email is required");
   }
   if (!password) {
-    return res.status(404).send("password is required")
+    return res.status(404).send("password is required");
   }
   console.log(email);
   pool.getConnection(async (err, conn) => {
@@ -43,17 +43,16 @@ const loginUser = (req, res) => {
               });
               results["JWT"] = token;
               results["email"] = result[0].email;
-              results["role"] = result[0].role
+              results["role"] = result[0].role;
               if (result[0].role === 0) {
                 const moongoresults = await User.findOne({
                   userId: result[0].userId,
                 });
                 results["userId"] = moongoresults._id;
                 res.status(200).send(results);
-              }
-              else {
+              } else {
                 const moongoresults = await Employer.findOne({
-                  userId: result[0].userId,
+                  employerID: result[0].userId,
                 });
                 results["userId"] = moongoresults._id;
                 res.status(200).send(results);

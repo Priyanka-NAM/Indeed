@@ -1,10 +1,13 @@
 import {
     FETCH_ALL_JOBS,
     FETCH_QUERIED_JOBS,
+    FETCH_Q_JOBS,
     JOB_ERROR,
     POST_SAVED_JOBS,
     DELETE_SAVED_JOBS,
     GET_SAVED_JOBS,
+    GET_USER_REVIEWS,
+    REVIEW_ERROR,
     APPLY_JOB
 } from '../Constants/UserConstants';
 import {
@@ -50,6 +53,25 @@ export const fetchAllJobs = (data) => (dispatch) => {
             })
         }); 
     }
+}
+
+
+export const fetchQJobs = (data) => (dispatch) => {
+    Axios.get(`${API}/users/public/jobs`,{
+        params:data
+    })
+    .then((response) => {
+        dispatch({
+            type : FETCH_Q_JOBS,
+            payload : response.data 
+        })
+    })
+    .catch(error => {
+        dispatch({
+            type: JOB_ERROR,
+            payload: error
+        })
+    });
 }
 
 export const postSavedJobs = (data) => (dispatch) => {
@@ -117,6 +139,29 @@ export const getSavedJobs = (data) => (dispatch) => {
     })
 }
 
+export const getUserReviews = (data) => (dispatch) => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }
+    Axios.get(`${API}/users/reviews`, {
+        params:data
+    }, config)
+    .then((response) => {
+        dispatch({
+            type: GET_USER_REVIEWS,
+            payload: response.data
+        })
+    })
+    .catch((error) => {
+        dispatch({
+            type: REVIEW_ERROR,
+            payload: error
+        })
+    })
+}
+
 export const applyJobs = (data) => (dispatch) => {
     const config = {
         headers: {
@@ -139,21 +184,17 @@ export const applyJobs = (data) => (dispatch) => {
 }
 
 export const getJobApplicants = (id) => async(dispatch) => {
-
     try{
         dispatch({
             type: GET_JOB_APPLICANTS_REQUEST
         })
-
         const { data } = await Axios.get(`${API}/employer/job-applicants/${id}`)
-
         dispatch({
             type: GET_JOB_APPLICANTS_SUCCESS,
             payload: data
         })
     }
     catch(error){
-
         dispatch({
             type: GET_JOB_APPLICANTS_FAIL,
             payload: error.response && error.response.data.message ? error.response.data.message : error.message

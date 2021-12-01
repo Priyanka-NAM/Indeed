@@ -29,6 +29,8 @@ import JobSeekerMessage from "./components/Messages/JobSeekerMessage";
 
 import EmployerPieChart from "./components/Employer/EmployerReports/EmployerPieChart";
 import { FindSalaries } from "./components/FindSalaries/FindSalaries";
+import EmployerMessage from "./components/Employer/EmployerApplicants/EmployerMessage";
+import Reviews from "./components/Profile/Reviews";
 function App() {
   return (
     <ThemeProvider theme={Theme}>
@@ -51,6 +53,7 @@ function App() {
             component={CompanyReviews}
           />
           <Route path="/employer" component={EmployerHeader} />
+          <Route path="/employer/send-message" component={EmployerMessage} />
           <Route path="/employer/postJob" component={EmployerJobPost} />
 
           <Route

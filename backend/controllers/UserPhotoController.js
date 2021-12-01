@@ -19,3 +19,20 @@ exports.uploadPhoto = async (req, res) => {
     }
   });
 };
+
+exports.updatePhotoStatus = async (req, res) => {
+try{
+  let emp = await Employer.findOneAndUpdate({_id : req.query.employerId , 
+    "photos._id": req.query.photoId } , {$set: {'photos.$.status': true}});
+   if(emp){
+    res.status(200).send(emp);
+   }
+   
+}
+catch (error) {
+  return res.status(400).json({
+    error: error,
+  });
+}
+ 
+}

@@ -15,15 +15,25 @@ const initialState = {
 export const loginReducer = (state = initialState, action) => {
   switch (action.type) {
     case ALLUSER_LOGIN:
-      localStorage.setItem("login", JSON.stringify({...state, isAuth: true, userDetails: action.payload}));
+      localStorage.setItem(
+        "login",
+        JSON.stringify({ ...state, isAuth: true, userDetails: action.payload })
+      );
       return {
         ...state,
         isAuth: true,
         userDetails: action.payload,
       };
     case LOGIN_ERROR:
-      localStorage.setItem("login", JSON.stringify({...state, accErr: true, errorResponse: action.payload}));
-       return {
+      localStorage.setItem(
+        "login",
+        JSON.stringify({
+          ...state,
+          accErr: true,
+          errorResponse: action.payload,
+        })
+      );
+      return {
         ...state,
         accErr: true,
         errorResponse: action.payload,
@@ -41,10 +51,10 @@ export const loginReducer = (state = initialState, action) => {
       return {
         ...state,
         userDetails: {},
+        responseFromServer: {},
         isAuth: false,
       };
     default:
       return state;
   }
- 
 };

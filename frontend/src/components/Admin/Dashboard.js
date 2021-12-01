@@ -12,10 +12,13 @@ import {
 import LineGraph from './LineGraph';
 import LineGraph1 from './LineGraph1';
 import PieChart from './PieChart';
+import {Login} from '../Login/Login';
 
 
 function Admindashboard() {
     const dispatch = useDispatch();
+    const loginReducer = useSelector((state) => state.login);
+    const { isAuth, userDetails } = loginReducer;
     const { topCompanyRatings } = useSelector(
         (state) => state.TopRatingCompanies
       );
@@ -41,6 +44,8 @@ function Admindashboard() {
        dispatch(getTopRatedCompanies());
     }, [])
     return (
+      <>
+      {userDetails && userDetails.role === 2 ? (
         <div>
             <Header />
             <div class="container" style={{ backgroundColor: 'rgb(181 183 245)', minHeight: '45rem', border: '1px solid #d0d0e1'}}>
@@ -99,13 +104,11 @@ function Admindashboard() {
            
             </div>
 
-
-                 
-             
-            
-
             
         </div>
+      ): (<Login/>)}
+        
+        </>
     );
 }
 
