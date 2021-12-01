@@ -61,7 +61,7 @@ function Admindashboard() {
                <div className="col md-2 lg-2" style={{backgroundColor: '#dce5f5'}}>
                     <DonutChart />
                  </div>
-                 <div className="col md-2 lg-2" style={{backgroundColor: "rgb(188 197 239)"}}>
+                 <div className="col md-2 lg-2" style={{backgroundColor: "rgb(99 99 247)"}}>
                  <h6>Top 5 companies based on average rating</h6>
                  <BarChart
         data={data}
@@ -103,6 +103,7 @@ function Admindashboard() {
             </div>
            
             </div>
+
             
         </div>
       ): (<Login/>)}
