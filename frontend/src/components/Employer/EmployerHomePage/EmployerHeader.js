@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { useDispatch } from "react-redux";
-import { Redirect } from "react-router";
+import { Redirect } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { employerLogout } from "../../../Redux/Actions/EmployerSignOutAction";
 import EmployerMenu from "./EmployerMenu";

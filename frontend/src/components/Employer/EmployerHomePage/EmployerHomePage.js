@@ -507,6 +507,8 @@ export default function EmployerHomePage(props) {
 
   return (
     <>
+      {!isAuth && <Redirect to='/employer/' />}
+
       <div>
         <Container maxwidth='xl' style={{ marginTop: "5%" }}>
           <div

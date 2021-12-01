@@ -6,6 +6,7 @@ import JobDetails1 from "./JobDetails1";
 import JobDetails2 from "./JobDetails2";
 import JobDetails3 from "./JobDetails3";
 import { useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -149,7 +150,7 @@ function EmployerJobPost() {
 
   return (
     <>
-      {/* {isAuth && <Redirect to='/login' />} */}
+      {!isAuth && <Redirect to='/login' />}
       <Container className={classes.container} maxWidth='xl'>
         <br />
         <br />
