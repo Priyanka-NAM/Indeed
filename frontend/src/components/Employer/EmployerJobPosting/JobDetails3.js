@@ -1,16 +1,8 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Container, Grid, OutlinedInput, Button } from "@material-ui/core";
-import {
-  Box,
-  makeStyles,
-  withStyles,
-  FormHelperText,
-  Select,
-  MenuItem,
-} from "@material-ui/core";
+import { Box, makeStyles, withStyles, FormHelperText } from "@material-ui/core";
 import { useDispatch } from "react-redux";
-// import { isInfo } from "./CompanyDetails2Validation";
 import { employerJobPost } from "../../../Redux/Actions/EmployerJobPostingAction";
 
 const useStyles = makeStyles((theme) => ({
@@ -139,7 +131,6 @@ function JobDetails3({ step, setStep, jobDetails, setjobDetails }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // const errors = isInfo(jobDetails);
     setErrors(errors);
     if (Object.keys(errors).length > 0) return;
     dispatch(employerJobPost(jobDetails));

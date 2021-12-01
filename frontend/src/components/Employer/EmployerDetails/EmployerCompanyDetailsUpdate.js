@@ -145,8 +145,6 @@ function EmployerCompanyDetailsUpdate(props) {
 
   useEffect(() => {
     if (responseFromServer) {
-      // setSuccess(true);
-      // setIsError(false);
       console.log("Response From Server", responseFromServer);
       setemployerDetails({
         ...responseFromServer,
