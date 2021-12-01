@@ -1,4 +1,3 @@
-/* eslint-disable eqeqeq */
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
@@ -20,11 +19,13 @@ import CameraAltIcon from "@material-ui/icons/CameraAltRounded";
 import Modal from "@material-ui/core/Modal";
 import { TextField } from "@material-ui/core";
 import { SearchButton } from "../CompanyReviews/CompanyReviews";
-import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
-import {updateReviewStatus} from "../../Redux/Actions/Company";
+import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
+import { updateReviewStatus } from "../../Redux/Actions/Company";
 import { employerAllJob } from "../../Redux/Actions/EmployerJobPostingAction";
 import { updateHelpfulCount } from "../../Redux/Actions/Company";
 import InputGrid from "./InputGrid";
+import JobDescription from "./JobDescription";
+import { timeDifference } from "./timeDifference";
 
 import {
   Grid,
@@ -46,6 +47,46 @@ import { Redirect } from "react-router-dom";
 const useStyle = makeStyles((theme) => ({
   jobContainer: {
     width: "450px",
+  },
+
+  input: {
+    width: "100%",
+    height: "45px",
+  },
+  removeMargin: {
+    margin: "0",
+  },
+  searchForm: {
+    display: "flex",
+    justifyContent: "center",
+  },
+  btn_Container: {
+    display: "flex",
+    alignItems: "flex-end",
+
+    "& button": {
+      width: "100%",
+      height: "45px",
+      fontSize: "13px",
+      fontWeight: "bold",
+      borderRadius: "10px",
+    },
+  },
+  suggestionInput: {
+    position: "relative",
+  },
+  autocontainer: {
+    border: `1px solid ${theme.palette.primary.main}`,
+    width: "99%",
+    backgroundColor: "white",
+    borderBottomLeftRadius: "5px",
+    borderBottomRightRadius: "5px",
+    zIndex: "10",
+    paddingBottom: "30px",
+    position: "absolute",
+    "& div": {
+      marginTop: "30px",
+    },
   },
   card: {
     border: "1px solid black",
@@ -184,14 +225,14 @@ const UplaodButton = withStyles((theme) => ({
 export default function Review(props) {
   const classes = useStyle();
   const [modalStyle] = React.useState(getModalStyle);
-  const [job, setJob] = useState("");
+  const [jobTitle, setJobTitle] = useState("");
   const [location, setLocation] = useState("");
   const { responseFromServer } = useSelector((state) => state.companyDetails);
   const companyDetails = responseFromServer
-  ? responseFromServer
-  : { aboutTheCompany: {} };
-  
-  let  { responseFromServer: jobs} = useSelector((state) => state.employerJobs);
+    ? responseFromServer
+    : { aboutTheCompany: {} };
+
+  let { responseFromServer: jobs } = useSelector((state) => state.employerJobs);
   console.log(jobs);
 
   const loginReducer = useSelector((state) => state.login);
@@ -212,16 +253,24 @@ export default function Review(props) {
   const [city, setCity] = useState("");
   const [st, setState] = useState("");
   const [photoOpen, setPhotoOpen] = useState(false);
-const [values, setValues] = React.useState(["select Review Type","Approved", "NotApproved"]);
-const [filterValue, setFilterValue] = React.useState(["select Review Type"]);
-const [sortValue, setSortValue] = React.useState("createdAt");
-const [reviews, setReviews] = useState([]);
-const [rating, setRating] = useState(4);
+  const [values, setValues] = React.useState([
+    "select Review Type",
+    "Approved",
+    "NotApproved",
+  ]);
+  const [filterValue, setFilterValue] = React.useState(["select Review Type"]);
+  const [sortValue, setSortValue] = React.useState("createdAt");
+  const [reviews, setReviews] = useState([]);
+  const [rating, setRating] = useState(4);
 
-const query = new URLSearchParams(props.location.search);
-const id = query.get("id");
-const dispatch = useDispatch();
+  const query = new URLSearchParams(props.location.search);
+  const id = query.get("id");
+  const dispatch = useDispatch();
+  const getJobDescription = (job) => {
+    setJobData(job);
+  };
 
+  const [jobData, setJobData] = useState(null);
   const handlePhotoOpen = () => {
     isAuth ? setPhotoOpen(true) : props.history.push("/login");
   };
@@ -244,37 +293,51 @@ const dispatch = useDispatch();
   let { companySpecificReviews } = useSelector(
     (state) => state.companyReviewList
   );
-  
+
   //Filtering reviews Based on the approved and user reviews.
-  if(companySpecificReviews){
-    if(!isAuth && userDetails.role !== 2){
-    let approvedReviews = companySpecificReviews.filter((review)=> review.isApproved === "Approved");
-    companySpecificReviews = approvedReviews;
-    }
-    else if(userDetails.role !== 2){
+  if (companySpecificReviews) {
+    if (!isAuth && userDetails.role !== 2) {
+      let approvedReviews = companySpecificReviews.filter(
+        (review) => review.isApproved === "Approved"
+      );
+      companySpecificReviews = approvedReviews;
+    } else if (userDetails.role !== 2) {
       debugger;
       let approvedReviewsFromOtherUsers = [];
       let userReviews = [];
-       approvedReviewsFromOtherUsers = companySpecificReviews.filter((review)=> (review.isApproved === "Approved" && review.userId !== userDetails.userId));
-       userReviews = companySpecificReviews.filter((review)=> (review.userId == userDetails.userId));
-       companySpecificReviews = userReviews.concat(approvedReviewsFromOtherUsers);
+      approvedReviewsFromOtherUsers = companySpecificReviews.filter(
+        (review) =>
+          review.isApproved === "Approved" &&
+          review.userId !== userDetails.userId
+      );
+      userReviews = companySpecificReviews.filter(
+        (review) => review.userId == userDetails.userId
+      );
+      companySpecificReviews = userReviews.concat(
+        approvedReviewsFromOtherUsers
+      );
     }
-    
   }
-//Filter based on approved or not approved
-if(filterValue === "Approved"){
-  companySpecificReviews = companySpecificReviews.filter((review)=> (review.isApproved === "Approved"));
-}
-else if(filterValue === "NotApproved"){
-  companySpecificReviews = companySpecificReviews.filter((review)=> (review.isApproved === "NotApproved"));
-}
+  //Filter based on approved or not approved
+  if (filterValue === "Approved") {
+    companySpecificReviews = companySpecificReviews.filter(
+      (review) => review.isApproved === "Approved"
+    );
+  } else if (filterValue === "NotApproved") {
+    companySpecificReviews = companySpecificReviews.filter(
+      (review) => review.isApproved === "NotApproved"
+    );
+  }
 
   const [tooltipopen, setTooltipopen] = React.useState(true);
 
   useEffect(() => {
     debugger;
     console.log(sortValue);
-    if (props.match.params.pathname === "snapshot" || props.match.params.pathname === "photos" )
+    if (
+      props.match.params.pathname === "snapshot" ||
+      props.match.params.pathname === "photos"
+    )
       dispatch(getcompaniesDetails({ employerID: props.match.params.id }));
     else if (props.match.params.pathname === "reviews")
       dispatch(
@@ -329,12 +392,38 @@ else if(filterValue === "NotApproved"){
     }
   };
   const changeToApproved = (id) => {
-    dispatch(updateReviewStatus({reviewid: id}));
-}
-const handleHelpfulCount = (reviewid, helpfulcount, nothelpfulcount) => {
-  dispatch(updateHelpfulCount({reviewid,helpfulcount,nothelpfulcount}));
-}
-const handleJobSearch = () => {};
+    dispatch(updateReviewStatus({ reviewid: id }));
+  };
+  const handleHelpfulCount = (reviewid, helpfulcount, nothelpfulcount) => {
+    dispatch(updateHelpfulCount({ reviewid, helpfulcount, nothelpfulcount }));
+  };
+  const handleJobSearch = (event) => {
+    event.preventDefault();
+
+    if (jobTitle && location) {
+      jobs = jobs.filter(
+        (row) =>
+          row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1 ||
+          row.jobLocation.city.indexOf(location.toLowerCase()) > -1
+      );
+
+      console.log(jobs);
+    } else if (jobTitle) {
+      jobs = jobs.filter(
+        (row) => row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1
+      );
+
+      console.log(jobs);
+    } else if (location) {
+      jobs = jobs.filter(
+        (row) =>
+          row.jobLocation.city.toLowerCase().indexOf(location.toLowerCase()) >
+          -1
+      );
+
+      console.log(jobs);
+    }
+  };
   const reviewSubmithandler = async (event) => {
     setupdatePage(!updatePage);
     event.preventDefault();
@@ -374,7 +463,7 @@ const handleJobSearch = () => {};
       })
       .catch((error) => {});
 
-     window.location.reload();
+    window.location.reload();
   };
 
   //SnapShot page strats here
@@ -626,116 +715,211 @@ const handleJobSearch = () => {};
             </Typography>
           </Grid>
           <Grid container spacing={10}>
-            {companySpecificReviews && companySpecificReviews.map((item) => {
-              return (
-                <>
-            <Grid item container spacing={4} style={{borderBottom: '#00000029 solid 1px'}}>
-            <Grid item container spacing={1}>
-                <Grid item style={{width:"57px"}}>
-                    <h4 style={{borderBottom: "3px dotted #000"}}>{item.overallRating}.0</h4>
-                     
-                <Rating
-                  name="size-small"
-                  style={{ color: "#9d2b6b"}}
-                  value={item.overallRating}
-                  size="small"
-                  precision={0.5}
-                  readOnly
-                />  
-              
-                            
-                 </Grid>
-                <Grid item>
-                    <Typography variant = "head2" style = {{fontWeight: "800"}}>{item.reviewTitle}</Typography>{'  '}
-                    
-                    {item.isApproved === "NotApproved" ? (<button type="button" disabled='true' class="btn btn-danger" 
-                    style={{height: '26px', fontWeight: '200',fontSize: "small" , padding: '4px'}}
+            {companySpecificReviews &&
+              companySpecificReviews.map((item) => {
+                return (
+                  <>
+                    <Grid
+                      item
+                      container
+                      spacing={4}
+                      style={{ borderBottom: "#00000029 solid 1px" }}
                     >
-                        <i class="fa fa-times" aria-hidden="true" style={{color: "white"}}></i>{ ' '}
-                       Not Verified</button>) 
-                    : 
-                    (<button type="button" class="btn btn-success" disabled='true' 
-                    style={{height: '26px', fontWeight: '200',fontSize: "small" , padding: '4px'}}>
-                         <i class="fas fa-check" style={{color: "white"}}></i> { ' '} verified</button>) }
-                </Grid>
-            </Grid>
-            <Grid item container spacing={3}>
-                <Typography variant="subtitle1" style ={{marginLeft:"20px"}}>
-                    {item.yourReview}
-                </Typography>
-            </Grid>
-            <Grid item container spacing={3}>
-            <span><i class="fas fa-check" style={{color: "green"}}></i></span>
-            <div spacing={3}><b> Pros </b></div><br></br>
-            </Grid>
-            <Grid item container spacing={3}>
-            <Typography variant="subtitle1" style ={{marginLeft:"20px"}}>
-                    {item.pros}
-                </Typography>
-            </Grid>
-            <Grid item container spacing={3}>
-            <i class="fa fa-times" aria-hidden="true" style={{color: "red"}}></i><br></br>
-            <div spacing={3}><b>Cons </b> </div>
-            </Grid>
-         
-            <Grid item container spacing={3}>
-            <Typography variant="subtitle1" style ={{marginLeft:"20px"}}>
-                    {item.isApprovedcons}
-                </Typography>
-            </Grid>
-               <span style={{fontSize: "small"}}>Was this review helpfull?</span>
-                <Grid item container spacing={3}>
-                <FormControl>
-          <ButtonGroup
-            variant="outlined"
-            aria-label="outlined button group"
-            style={{ padding: "1px" }}
-          >
-            <Button disabled = {userDetails.role === 2} value="yes" onClick={()=> {item.isHelpfulCount = item.isHelpfulCount + 1; handleHelpfulCount(item._id,item.isHelpfulCount, item.isNotHelpfulCount)}}>
-              Yes {' '} {item.isHelpfulCount}
-            </Button>
-            <Button
-            disabled = {userDetails.role === 2} 
-              value="no"
-              onClick={()=> {item.isNotHelpfulCount = item.isNotHelpfulCount + 1 ; handleHelpfulCount(item._id,item.isHelpfulCount, item.isNotHelpfulCount)}}
-            >
-              No{ ' '}{item.isNotHelpfulCount}
-            </Button>
+                      <Grid item container spacing={1}>
+                        <Grid item style={{ width: "57px" }}>
+                          <h4 style={{ borderBottom: "3px dotted #000" }}>
+                            {item.overallRating}.0
+                          </h4>
 
-          </ButtonGroup>
-        </FormControl>
-              </Grid>
-            
-            
-            
-       
-         
-             {isAuth && userDetails.role == 2 && item.isApproved  === "NotApproved"  && (
+                          <Rating
+                            name="size-small"
+                            style={{ color: "#9d2b6b" }}
+                            value={item.overallRating}
+                            size="small"
+                            precision={0.5}
+                            readOnly
+                          />
+                        </Grid>
+                        <Grid item>
+                          <Typography
+                            variant="head2"
+                            style={{ fontWeight: "800" }}
+                          >
+                            {item.reviewTitle}
+                          </Typography>
+                          {"  "}
+
+                          {item.isApproved === "NotApproved" ? (
+                            <button
+                              type="button"
+                              disabled="true"
+                              class="btn btn-danger"
+                              style={{
+                                height: "26px",
+                                fontWeight: "200",
+                                fontSize: "small",
+                                padding: "4px",
+                              }}
+                            >
+                              <i
+                                class="fa fa-times"
+                                aria-hidden="true"
+                                style={{ color: "white" }}
+                              ></i>{" "}
+                              Not Verified
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              class="btn btn-success"
+                              disabled="true"
+                              style={{
+                                height: "26px",
+                                fontWeight: "200",
+                                fontSize: "small",
+                                padding: "4px",
+                              }}
+                            >
+                              <i
+                                class="fas fa-check"
+                                style={{ color: "white" }}
+                              ></i>{" "}
+                              verified
+                            </button>
+                          )}
+                        </Grid>
+                      </Grid>
+                      <Grid item container spacing={3}>
+                        <Typography
+                          variant="subtitle1"
+                          style={{ marginLeft: "20px" }}
+                        >
+                          {item.yourReview}
+                        </Typography>
+                      </Grid>
+                      <Grid item container spacing={3}>
                         <span>
-                            <button type="button" class="btn btn-info" onClick={() => { item.isApproved = "Approved" ; changeToApproved(item._id)}}>Verify this review</button>
+                          <i
+                            class="fas fa-check"
+                            style={{ color: "green" }}
+                          ></i>
                         </span>
-                    )}
+                        <div spacing={3}>
+                          <b> Pros </b>
+                        </div>
+                        <br></br>
+                      </Grid>
+                      <Grid item container spacing={3}>
+                        <Typography
+                          variant="subtitle1"
+                          style={{ marginLeft: "20px" }}
+                        >
+                          {item.pros}
+                        </Typography>
+                      </Grid>
+                      <Grid item container spacing={3}>
+                        <i
+                          class="fa fa-times"
+                          aria-hidden="true"
+                          style={{ color: "red" }}
+                        ></i>
+                        <br></br>
+                        <div spacing={3}>
+                          <b>Cons </b>{" "}
+                        </div>
+                      </Grid>
 
-        </Grid>
-                </>
-                // <ReviewBox
-                //   key={item.id}
-                //   rating={item.overallRating}
-                //   review_title={item.reviewTitle}
-                //   date={item.date}
-                //   yourReview={item.yourReview}
-                //   pros={item.pros}
-                //   cons={item.cons}
-                //   helpfulCount={item.isHelpfulCount}
-                //   isApproved = {item.isApproved}
-                //   isAuth={isAuth}
-                //   userRole = {userDetails.role}
-                //   id = {item._id}
-                //   sortVal={sortValue}
-                //   filterValue = {filterValue}
-                // />
-              );
-            })}
+                      <Grid item container spacing={3}>
+                        <Typography
+                          variant="subtitle1"
+                          style={{ marginLeft: "20px" }}
+                        >
+                          {item.isApprovedcons}
+                        </Typography>
+                      </Grid>
+
+                      {userDetails.role !== 2 && (
+                        <>
+                          <span style={{ fontSize: "small" }}>
+                            Was this review helpfull?
+                          </span>
+                          <Grid item container spacing={3}>
+                            <FormControl>
+                              <ButtonGroup
+                                variant="outlined"
+                                aria-label="outlined button group"
+                                style={{ padding: "1px" }}
+                              >
+                                <Button
+                                  value="yes"
+                                  onClick={() => {
+                                    item.isHelpfulCount =
+                                      item.isHelpfulCount + 1;
+                                    handleHelpfulCount(
+                                      item._id,
+                                      item.isHelpfulCount,
+                                      item.isNotHelpfulCount
+                                    );
+                                  }}
+                                >
+                                  Yes {item.isHelpfulCount}
+                                </Button>
+                                <Button
+                                  value="no"
+                                  onClick={() => {
+                                    item.isNotHelpfulCount =
+                                      item.isNotHelpfulCount + 1;
+                                    handleHelpfulCount(
+                                      item._id,
+                                      item.isHelpfulCount,
+                                      item.isNotHelpfulCount
+                                    );
+                                  }}
+                                >
+                                  No {item.isNotHelpfulCount}
+                                </Button>
+                              </ButtonGroup>
+                            </FormControl>
+                          </Grid>
+                        </>
+                      )}
+
+                      {isAuth &&
+                        userDetails.role == 2 &&
+                        item.isApproved === "NotApproved" && (
+                          <span>
+                            <button
+                              type="button"
+                              class="btn btn-info"
+                              onClick={() => {
+                                item.isApproved = "Approved";
+                                changeToApproved(item._id);
+                              }}
+                            >
+                              Verify this review
+                            </button>
+                          </span>
+                        )}
+                    </Grid>
+                  </>
+                  // <ReviewBox
+                  //   key={item.id}
+                  //   rating={item.overallRating}
+                  //   review_title={item.reviewTitle}
+                  //   date={item.date}
+                  //   yourReview={item.yourReview}
+                  //   pros={item.pros}
+                  //   cons={item.cons}
+                  //   helpfulCount={item.isHelpfulCount}
+                  //   isApproved = {item.isApproved}
+                  //   isAuth={isAuth}
+                  //   userRole = {userDetails.role}
+                  //   id = {item._id}
+                  //   sortVal={sortValue}
+                  //   filterValue = {filterValue}
+                  // />
+                );
+              })}
           </Grid>
         </div>
       )}
@@ -756,22 +940,24 @@ const handleJobSearch = () => {};
             cols={3}
             style={{ width: 800, height: 600 }}
           >
-            {companyDetails && companyDetails.photos.map(
-              (data) =>
-                data.userId === userDetails.userId && (
-                  <GridListTile key={data.id}>
-                    <img src={data.path} alt={data.status} />
-                  </GridListTile>
-                )
-            )}
-            {companyDetails && companyDetails.photos.map(
-              (data) =>
-                data.status && (
-                  <GridListTile key={data.id}>
-                    <img src={data.path} alt={data.status} />
-                  </GridListTile>
-                )
-            )}
+            {companyDetails &&
+              companyDetails.photos.map(
+                (data) =>
+                  data.userId === userDetails.userId && (
+                    <GridListTile key={data.id}>
+                      <img src={data.path} alt={data.status} />
+                    </GridListTile>
+                  )
+              )}
+            {companyDetails &&
+              companyDetails.photos.map(
+                (data) =>
+                  data.status && (
+                    <GridListTile key={data.id}>
+                      <img src={data.path} alt={data.status} />
+                    </GridListTile>
+                  )
+              )}
           </GridList>
         ) : (
           <GridList
@@ -779,14 +965,16 @@ const handleJobSearch = () => {};
             cols={3}
             style={{ width: 800, height: 600 }}
           >
-            {companyDetails && companyDetails.photos && companyDetails.photos.map(
-              (data) =>
-                data.status && (
-                  <GridListTile key={data.id}>
-                    <img src={data.path} alt={data.status} />
-                  </GridListTile>
-                )
-            )}
+            {companyDetails &&
+              companyDetails.photos &&
+              companyDetails.photos.map(
+                (data) =>
+                  data.status && (
+                    <GridListTile key={data.id}>
+                      <img src={data.path} alt={data.status} />
+                    </GridListTile>
+                  )
+              )}
           </GridList>
         )}
       </div>
@@ -888,8 +1076,8 @@ const handleJobSearch = () => {};
       <form onSubmit={handleJobSearch} className={classes.searchForm}>
         <Grid container spacing={1}>
           <InputGrid
-            setValue={setJob}
-            value={job}
+            setValue={setJobTitle}
+            value={jobTitle}
             label={"What?"}
             helperText={"Job Title"}
             classes={classes}
@@ -917,6 +1105,7 @@ const handleJobSearch = () => {};
           </Grid>
         </Grid>
       </form>
+
       <Box style={{ display: "flex" }}>
         <Grid className={classes.jobContainer} container>
           {jobs &&
@@ -927,20 +1116,24 @@ const handleJobSearch = () => {};
                 key={job._id}
                 lg={12}
                 md={12}
-                sm={12} 
+                sm={12}
                 xs={12}
               >
-                <Box>
+                <Box onClick={() => getJobDescription(job)}>
                   <Typography className={classes.job_title}>
                     {job.jobTitle}
                   </Typography>
                   <Typography className={classes.job_subTitle}>
                     {job.jobLocation.city}
                   </Typography>
+                  <Typography className={classes.greyText}>
+                    {timeDifference(new Date(job.timeStamp).getTime())}
+                  </Typography>
                 </Box>
               </Grid>
             ))}
         </Grid>
+        {jobData ? <JobDescription jobData={jobData} /> : <></>}
       </Box>
     </>
   );

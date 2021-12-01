@@ -127,12 +127,17 @@ function EmployerCompanyDetailsUpdate(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
   let [employerDetails, setemployerDetails] = useState({ aboutTheCompany: {} });
+  let { isAuth, accErr, userDetails } = useSelector((state) => state.login);
+
   let { responseFromServer } = useSelector((state) => state.employerDetails);
   let { signup } = useSelector((state) => state);
 
   useEffect(() => {
-    if (signup && signup.responseFromServer) {
-      dispatch(employerDetailsGet(signup.responseFromServer.employerID));
+    // if (signup && signup.responseFromServer) {
+    //   dispatch(employerDetailsGet(signup.responseFromServer.employerID));
+    // }
+    if (userDetails && userDetails.userId) {
+      dispatch(employerDetailsGet(userDetails.userId));
     }
     // dispatch(employerDetailsGet(12));
     //   }, [props]);

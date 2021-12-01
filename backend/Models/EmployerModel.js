@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 console.log("employee");
 const employerSchema = mongoose.Schema({
+ 
   employerID: {
     type: Number,
     required: true,
@@ -138,6 +139,15 @@ const employerSchema = mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+  },
+  companyBanner: {
+    type: String,
+  },
+  companyLogo: {
+    type: String,
+  },
+  companyCeoPicture: {
+    type: String,
   },
 });
 
