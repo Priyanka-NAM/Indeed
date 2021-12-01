@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Image } from 'react-bootstrap';
 import { styled } from "@mui/material/styles";
 import { GridList, GridListTile } from "@material-ui/core";
 import { API } from "../../config";
@@ -227,6 +228,7 @@ export default function Review(props) {
   const [modalStyle] = React.useState(getModalStyle);
   const [jobTitle, setJobTitle] = useState("");
   const [location, setLocation] = useState("");
+  const [shouldDoJobSerach, setshouldDoJobSerach] = useState(false);
   const { responseFromServer } = useSelector((state) => state.companyDetails);
   const companyDetails = responseFromServer
     ? responseFromServer
@@ -289,7 +291,7 @@ export default function Review(props) {
   const handleClose = () => {
     setOpen(false);
   };
-
+ 
   let { companySpecificReviews } = useSelector(
     (state) => state.companyReviewList
   );
@@ -328,7 +330,30 @@ export default function Review(props) {
       (review) => review.isApproved === "NotApproved"
     );
   }
+//Filter on jobs
+if (jobTitle && location && shouldDoJobSerach) {
+  jobs = jobs.filter(
+    (row) =>
+      row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1 ||
+      row.jobLocation.city.indexOf(location.toLowerCase()) > -1
+  );
 
+  console.log(jobs);
+} else if (jobTitle && shouldDoJobSerach) {
+  jobs = jobs.filter(
+    (row) => row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1
+  );
+
+  console.log(jobs);
+} else if (location && shouldDoJobSerach) {
+  jobs = jobs.filter(
+    (row) =>
+      row.jobLocation.city.toLowerCase().indexOf(location.toLowerCase()) >
+      -1
+  );
+
+  console.log(jobs);
+}
   const [tooltipopen, setTooltipopen] = React.useState(true);
 
   useEffect(() => {
@@ -399,31 +424,11 @@ export default function Review(props) {
   };
   const handleJobSearch = (event) => {
     event.preventDefault();
-
-    if (jobTitle && location) {
-      jobs = jobs.filter(
-        (row) =>
-          row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1 ||
-          row.jobLocation.city.indexOf(location.toLowerCase()) > -1
-      );
-
-      console.log(jobs);
-    } else if (jobTitle) {
-      jobs = jobs.filter(
-        (row) => row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1
-      );
-
-      console.log(jobs);
-    } else if (location) {
-      jobs = jobs.filter(
-        (row) =>
-          row.jobLocation.city.toLowerCase().indexOf(location.toLowerCase()) >
-          -1
-      );
-
-      console.log(jobs);
-    }
+    setshouldDoJobSerach(true);
   };
+  const switchJobSearch = () => {
+    setshouldDoJobSerach(false);
+  }
   const reviewSubmithandler = async (event) => {
     setupdatePage(!updatePage);
     event.preventDefault();
@@ -552,9 +557,9 @@ export default function Review(props) {
       </Grid>
       <Grid container spacing={1}>
         <Grid item style={{ flex: 1 }}>
-          <img
-            src="https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80"
-            alt={companyDetails.companyName}
+          <Image
+            src={companyDetails.companyCeoPicture}
+            onError = {(e) => { e.target.onerror = null; e.target.src = 'https://dummyimage.com/100.png/09f/fff'; }}
             style={{ height: "350px", borderRadius: "10px" }}
           />
         </Grid>
@@ -1081,6 +1086,9 @@ export default function Review(props) {
             label={"What?"}
             helperText={"Job Title"}
             classes={classes}
+            switchJobSearch={switchJobSearch}
+
+            
           />
 
           <InputGrid
@@ -1089,6 +1097,7 @@ export default function Review(props) {
             label={"Where"}
             helperText="Location"
             classes={classes}
+            switchJobSearch={switchJobSearch}
           />
 
           <Grid
@@ -1144,7 +1153,7 @@ export default function Review(props) {
         <div
           class="jumbotron text-white jumbotron-image shadow"
           style={{
-            backgroundImage: `url(https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80)`,
+            backgroundImage: `url(${companyDetails.companyBanner})`,
             backgroundSize: "cover",
             height: "250px",
             backgroundRepeat: "no-repeat",
@@ -1161,10 +1170,11 @@ export default function Review(props) {
         >
           <Grid container item lg={6} md={7} sm={8}>
             <Grid item className={classes.imgCont}>
-              <img
-                src="https://images.unsplash.com/photo-1552152974-19b9caf99137?fit=crop&w=1350&q=80"
+              <Image
+                src={companyDetails.companyLogo}
                 alt=""
                 width="100px"
+                onError={(e) => {  this.src = 'https://dummyimage.com/100.png/09f/fff'; }}
               />
             </Grid>
             <Grid item style={{ paddingTop: "40px", paddingLeft: "20px" }}>
