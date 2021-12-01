@@ -36,7 +36,6 @@ const replyMessage = async (req, res) => {
     console.log(req.body)
     try{
         const getMessage = await Messages.findById({_id: req.body._id})
-        console.log(getMessage)
         getMessage.messages.push({
             from: req.body.message.from,
             to: req.body.message.to,
@@ -70,7 +69,6 @@ const getMessages = async (req, res) => {
             }
         ]});
         if (messages) {
-            console.log(messages)
             res.status(200).send(messages);
         } else {
             res.status(404).send("Resource not found")
