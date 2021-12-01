@@ -24,6 +24,7 @@ import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import { updateReviewStatus } from "../../Redux/Actions/Company";
 import { employerAllJob } from "../../Redux/Actions/EmployerJobPostingAction";
 import { updateHelpfulCount } from "../../Redux/Actions/Company";
+import {updatePhotoStatus} from '../../Redux/Actions/AdminAction';
 import InputGrid from "./InputGrid";
 import JobDescription from "./JobDescription";
 import { timeDifference } from "./timeDifference";
@@ -279,7 +280,9 @@ export default function Review(props) {
   const handlePhotoClose = () => {
     setPhotoOpen(false);
   };
-
+  const handlePhotoSatus = (employerId, photoId) => {
+    dispatch(updatePhotoStatus({employerId, photoId }))
+  }
   const [interviewPrep, setinterviewPrep] = useState("");
 
   const [open, setOpen] = useState(false);
@@ -940,7 +943,71 @@ if (jobTitle && location && shouldDoJobSerach) {
           </span>
         </Grid>
         {isAuth ? (
-          <GridList
+          <>
+            {userDetails.role === 2 ? (
+              <>
+                             <GridList
+            cellHeight={200}
+            cols={3}
+            style={{ width: 800, height: 600 }}
+          >
+            {companyDetails &&
+              companyDetails.photos.map(
+                (data) =>
+                  (
+                    <GridListTile key={data.id}>
+                      <img src={data.path} alt={data.status} />
+                      {data.status ? (
+                        <>
+                        <button
+                              type="button"
+                              class="btn btn-success"
+                              disabled="true"
+                              style={{
+                                height: "26px",
+                                fontWeight: "200",
+                                fontSize: "small",
+                                padding: "4px",
+                                position: "absolute",
+                                top: "2px",
+                                right: "0px",
+                              }}
+                            >
+                              <i
+                                class="fas fa-check"
+                                style={{ color: "white"}}
+                              ></i>{" "}
+                              verified
+                            </button>
+                        </>
+                      ): (
+                        <>
+                        <button
+                              type="button"
+                              class="btn btn-info"
+                              style={{
+                                height: "26px",
+                                fontWeight: "200",
+                                fontSize: "small",
+                                padding: "4px",
+                                position: "absolute",
+                                top: "2px",
+                                right: "0px",
+                              }}
+                              onClick={()=> {data.status = true; handlePhotoSatus(companyDetails._id, data._id);}}
+                            >
+                              Verify here
+                            </button>
+                        </>
+                      )}
+                    </GridListTile>
+                  )
+              )}
+          </GridList>
+              </>
+            ): (
+              <>
+               <GridList
             cellHeight={200}
             cols={3}
             style={{ width: 800, height: 600 }}
@@ -950,20 +1017,94 @@ if (jobTitle && location && shouldDoJobSerach) {
                 (data) =>
                   data.userId === userDetails.userId && (
                     <GridListTile key={data.id}>
-                      <img src={data.path} alt={data.status} />
+                      <img src={data.path} alt={data.status} style={{position: "relative"}}/>
+                      {data.status ? (
+                        <>
+                        <button
+                              type="button"
+                              class="btn btn-success"
+                              disabled="true"
+                              style={{
+                                height: "26px",
+                                fontWeight: "200",
+                                fontSize: "small",
+                                padding: "4px",
+                                position: "absolute",
+                                top: "2px",
+                                right: "0px",
+                              }}
+                            >
+                              <i
+                                class="fas fa-check"
+                                style={{ color: "white"}}
+                              ></i>{" "}
+                              verified
+                            </button>
+                        </>
+                      ): (
+                        <>
+                        <button
+                              type="button"
+                              class="btn btn-danger"
+                              disabled="true"
+                              style={{
+                                height: "26px",
+                                fontWeight: "200",
+                                fontSize: "small",
+                                padding: "4px",
+                                position: "absolute",
+                                top: "2px",
+                                right: "0px",
+                              }}
+                            >
+                              <i
+                                class="fa fa-times"
+                                aria-hidden="true"
+                                style={{ color: "white" }}
+                              ></i>{" "}
+                              Not Verified
+                            </button>
+                        </>
+                      )}
                     </GridListTile>
                   )
               )}
             {companyDetails &&
               companyDetails.photos.map(
                 (data) =>
-                  data.status && (
+                  data.status && data.userId !== userDetails.userId  &&(
+                    <>
                     <GridListTile key={data.id}>
-                      <img src={data.path} alt={data.status} />
+                      <img src={data.path} alt={data.status} style={{position: "relative"}}/>
+                      <button
+                              type="button"
+                              class="btn btn-success"
+                              disabled="true"
+                              style={{
+                                height: "26px",
+                                fontWeight: "200",
+                                fontSize: "small",
+                                padding: "4px",
+                                position: "absolute",
+                                top: "2px",
+                                right: "0px",
+                              }}
+                            >
+                              <i
+                                class="fas fa-check"
+                                style={{ color: "white"}}
+                              ></i>{" "}
+                              verified
+                            </button>
                     </GridListTile>
+                    </>
                   )
               )}
           </GridList>
+              </>
+            )}
+          </>
+         
         ) : (
           <GridList
             cellHeight={200}
@@ -975,9 +1116,33 @@ if (jobTitle && location && shouldDoJobSerach) {
               companyDetails.photos.map(
                 (data) =>
                   data.status && (
+                    
+                    
                     <GridListTile key={data.id}>
-                      <img src={data.path} alt={data.status} />
+                      <img src={data.path} alt={data.status} style={{position: "relative"}}/>
+                      <button
+                              type="button"
+                              class="btn btn-success"
+                              disabled="true"
+                              style={{
+                                height: "26px",
+                                fontWeight: "200",
+                                fontSize: "small",
+                                padding: "4px",
+                                position: "absolute",
+                                top: "2px",
+                                right: "0px",
+                              }}
+                            >
+                              <i
+                                class="fas fa-check"
+                                style={{ color: "white"}}
+                              ></i>{" "}
+                              verified
+                            </button>
                     </GridListTile>
+                    
+                    
                   )
               )}
           </GridList>

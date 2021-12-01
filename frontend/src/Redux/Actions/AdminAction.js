@@ -11,6 +11,8 @@ import {
     ADMIN_TOP_MOST_CEOS_FAIL,
     ADMIN_LIST_ALL_COMPANIES_SUCCESS,
     ADMIN_LIST_ALL_COMPANIES_FAIL,
+    ADMIN_UPDATE_PHOTO_STATUS_SUCCESS,
+    ADMIN_UPDATE_PHOTO_STATUS_FAIL,
 
   } from '../Constants/AdminConstants';
 
@@ -123,3 +125,21 @@ import {
                     });
                     
                     }
+
+                    export const updatePhotoStatus = (data) => (dispatch) => {
+   
+                        Axios.put(`${API}/company/update-photo-status?employerId=${data.employerId}&photoId=${data.photoId}`)
+                        .then((response) => {
+                            dispatch({
+                                type : ADMIN_UPDATE_PHOTO_STATUS_SUCCESS,
+                                payload : response.data 
+                            })
+                        })
+                        .catch(error => {
+                            dispatch({
+                                type: ADMIN_UPDATE_PHOTO_STATUS_FAIL,
+                                payload: error
+                            })
+                        });
+                        
+                        }

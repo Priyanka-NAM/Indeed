@@ -16,6 +16,7 @@ import {
   getAllReviewsReducer,
   getTopRatedCeosReducer,
   getAllCompaniesReducer,
+  updatePhotoStatusReducer,
 } from "./Reducers/AdminReducers";
 import { jobReducer, jobApplicantsReducer } from "./Reducers/JobReducer";
 import { JOBSEEKER_LOGOUT } from "./Constants/UserConstants";
@@ -45,6 +46,7 @@ const appReducer = combineReducers({
   UpdateReviewStatus: UpdateReviewStatusReducer,
   messages: messageReducer,
   UpdateHelpfulCount: UpdateHelpfulCountReducer,
+  updatePhotoStatus: updatePhotoStatusReducer,
   jobApplicants: jobApplicantsReducer,
 });
 
