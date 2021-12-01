@@ -7,16 +7,13 @@ import {
   makeStyles,
   withStyles,
   FormHelperText,
-  Select,
-  FormControl,
   FormLabel,
-  FormControlLabel,
-  RadioGroup,
-  Radio,
-  MenuItem,
 } from "@material-ui/core";
-import { useDispatch } from "react-redux";
-// import { isInfo } from "./CompanyDetails2Validation";
+import { isInfo } from "./JobDetails2Validation";
+import MuiAlert from "@mui/material/Alert";
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
+});
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -125,8 +122,6 @@ function JobDetails2({ step, setStep, jobDetails, setjobDetails }) {
   const classes = useStyles();
   const [errors, setErrors] = useState({});
 
-  const success = false;
-  const isError = false;
   const errorMsg = false;
 
   const onjobDetailsChange = (e) => {
@@ -155,10 +150,18 @@ function JobDetails2({ step, setStep, jobDetails, setjobDetails }) {
       },
     });
   };
+  const [isError, setIsError] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // const errors = isInfo(jobDetails);
+    const error = isInfo(jobDetails);
+    if (Object.keys(error).length !== 0) {
+      console.log("Setting isError to True");
+      setIsError(true);
+      setSuccess(false);
+      return;
+    }
     setErrors(errors);
     if (Object.keys(errors).length > 0) return;
     setStep(step + 1);
@@ -276,7 +279,7 @@ function JobDetails2({ step, setStep, jobDetails, setjobDetails }) {
                 className={classes.outlinedInput}
                 onChange={onjobDetailsChange}
                 value={jobDetails.industry}
-                // error={errors.industry}
+                error={errors.industry}
                 type='text'
                 variant='outlined'
                 name='industry'
@@ -290,7 +293,7 @@ function JobDetails2({ step, setStep, jobDetails, setjobDetails }) {
                 className={classes.outlinedInput}
                 onChange={onjobDetailsChange}
                 value={jobDetails.salary}
-                // error={errors.salary}
+                error={errors.salary}
                 required
                 type='number'
                 variant='outlined'
@@ -305,7 +308,7 @@ function JobDetails2({ step, setStep, jobDetails, setjobDetails }) {
                 className={classes.outlinedInput}
                 onChange={onJobDescription}
                 value={jobDetails.jobDescription.compensation}
-                // error={errors.headQuarters}
+                error={errors.compensation}
                 required
                 type='text'
                 variant='outlined'
@@ -337,8 +340,15 @@ function JobDetails2({ step, setStep, jobDetails, setjobDetails }) {
             </Grid>
           </Grid>
         </Box>
+        {isError && (
+          <Alert severity='error'>
+            One or More fields are missing or wrong data!
+          </Alert>
+        )}
+        {success && (
+          <Alert severity='success'>Employer registered successfully!</Alert>
+        )}
       </Container>
-      {/* // : <Redirect to='/' /> */}
     </>
   );
 }

@@ -10,7 +10,6 @@ import {
   Select,
   MenuItem,
 } from "@material-ui/core";
-import { useDispatch } from "react-redux";
 import { isInfo } from "./CompanyDetails2Validation";
 
 const useStyles = makeStyles((theme) => ({
@@ -151,8 +150,6 @@ function CompanyDetails2({
 
   return (
     <>
-      {success ? alert("User registered successfully") : <></>}
-      {isError ? <Box>{errorMsg}</Box> : <></>}
       <Container className={classes.container} maxWidth='xl'>
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
           <Grid item style={{ margin: "25px 0" }}>

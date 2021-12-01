@@ -13,15 +13,15 @@ import {
   MenuItem,
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
+import { isInfo } from "./EmployerCompanyDetailsUpdateValidation";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import {
   employerDetailsGet,
   employerDetailsAdd,
 } from "../../../Redux/Actions/EmployerDetailsAction";
-import { isInfo } from "../EmployerDetails/CompanyDetails1Validation";
 import MuiAlert from "@mui/material/Alert";
 import { useHistory, Redirect } from "react-router-dom";
+// import isInfo from "./EmployerDetails/CompanyDetails1Validation";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -141,13 +141,6 @@ function EmployerCompanyDetailsUpdate(props) {
     if (userDetails && userDetails.userId) {
       dispatch(employerDetailsGet(userDetails.userId));
     }
-    // dispatch(employerDetailsGet(12));
-    //   }, [props]);
-    // const loadProfile = async () => {
-    //   await dispatch(employerDetailsGet(12));
-    //   console.log("Response From Server ", employerDetails);
-    // };
-    // loadProfile();
   }, [props]);
 
   useEffect(() => {
@@ -161,10 +154,6 @@ function EmployerCompanyDetailsUpdate(props) {
   }, [responseFromServer]);
 
   const onEmployerDetailsChange = (e) => {
-    // employerDetails = {
-    //   ...employerDetails,
-    //   [e.target.name]: e.target.value,
-    // };
     setemployerDetails({
       ...employerDetails,
       [e.target.name]: e.target.value,
@@ -173,13 +162,7 @@ function EmployerCompanyDetailsUpdate(props) {
 
   const onAboutCompanyChange = (e) => {
     const { aboutTheCompany } = employerDetails;
-    // employerDetails = {
-    //   ...employerDetails,
-    //   aboutTheCompany: {
-    //     ...aboutTheCompany,
-    //     [e.target.name]: e.target.value,
-    //   },
-    // };
+
     setemployerDetails({
       ...employerDetails,
       aboutTheCompany: {
@@ -190,17 +173,21 @@ function EmployerCompanyDetailsUpdate(props) {
   };
   console.log("Employer Details New: ", employerDetails);
   const [errors, setErrors] = useState({});
-  const success = false;
-  let isError = false;
-  const errorMsg = false;
+  const [isError, setIsError] = useState(false);
+  const [success, setSuccess] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const errors = isInfo(employerDetails);
-    if (errors) {
-      isError = true;
-      console.log("Error is set");
+    const error = isInfo(employerDetails);
+    if (Object.keys(error).length !== 0) {
+      console.log("Setting isError to True");
+      setIsError(true);
+      setSuccess(false);
+      return;
     }
     setErrors(errors);
+    setIsError(false);
+    setSuccess(true);
     dispatch(employerDetailsAdd(employerDetails));
   };
 
@@ -440,13 +427,43 @@ function EmployerCompanyDetailsUpdate(props) {
             </form>
           </Grid>
         </Box>
-        {/* {isError && (
-        <Alert variant='danger'>
-          Oops!One or More mandatory fields are missing.
-        </Alert>
-      )} */}
+        {isError && <Alert severity='error'>Check the fields again!</Alert>}
+        {success && (
+          <Alert severity='success'>Details saved successfully!</Alert>
+        )}
       </Container>
-      {/* // : <Redirect to='/' /> */}
+      <Grid
+        container
+        spacing={1}
+        style={{
+          fontSize: "14px",
+          padding: "15px 10px",
+          margin: "0 -20px ",
+        }}>
+        <Grid item style={{ cursor: "pointer" }}>
+          © 2020 Indeed
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Accessibility at Indeed
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Privacy Center
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Cookies
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Privacy
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Terms
+        </Grid>
+      </Grid>
     </>
   );
 }

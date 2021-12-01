@@ -4,11 +4,8 @@ import PropTypes from "prop-types";
 import { Container, Grid, OutlinedInput, Button } from "@material-ui/core";
 import { Box, makeStyles, withStyles, FormHelperText } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-// import { UserReducer, DefaultUser } from "./EmployerDetailsReducer";
-
 import { Link, Redirect } from "react-router-dom";
 import { isInfo } from "./CompanyDetails3Validation";
-import NativeSelect from "@material-ui/core/NativeSelect";
 import { employerDetailsAdd } from "../../../Redux/Actions/EmployerDetailsAction";
 import MuiAlert from "@mui/material/Alert";
 
@@ -158,7 +155,6 @@ function CompanyDetails3({
       setSuccess(false);
       return;
     }
-    // setStep(step + 1);
     if (responseFromServer) {
       // console.log("signup.responseFromServer,", responseFromServer.employerID);
       setemployerDetails({
@@ -167,8 +163,6 @@ function CompanyDetails3({
       });
       console.log("employerDetails", employerDetails);
     }
-
-    // setHome(true);
   };
 
   return (
@@ -180,12 +174,6 @@ function CompanyDetails3({
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
           <Grid item style={{ margin: "25px 0" }}>
             <form className={classes.formStyle}>
-              {/* <FormHelperText className={classes.formhelperText}>
-                Company images*
-              </FormHelperText>
-
-              <br />
-              <br /> */}
               <FormHelperText className={classes.formhelperText}>
                 Mission and Vision*
               </FormHelperText>

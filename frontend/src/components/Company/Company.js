@@ -36,7 +36,6 @@ import { updatePhotoStatus } from "../../Redux/Actions/AdminAction";
 import InputGrid from "./InputGrid";
 import JobDescription from "./JobDescription";
 import { timeDifference } from "./timeDifference";
-//import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 
 import {
   Grid,
@@ -601,17 +600,17 @@ export default function Review(props) {
   const showSnapShot = () => (
     <div>
       <Grid item style={{ marginTop: "20px", marginBottom: "30px" }}>
-        <Typography variant="caption">
+        <Typography variant='caption'>
           {companyDetails.companyName} Careers and Employment
         </Typography>
       </Grid>
       <Grid item style={{ marginTop: "20px", marginBottom: "20px" }}>
-        <Typography variant="h5">
+        <Typography variant='h5'>
           <b>Work happiness</b>
         </Typography>
       </Grid>
       <Grid item style={{ marginTop: "20px", marginBottom: "30px" }}>
-        <Typography variant="caption">
+        <Typography variant='caption'>
           Scores based on about 3 responses to Indeed's survey on work happiness
         </Typography>
       </Grid>
@@ -622,14 +621,12 @@ export default function Review(props) {
           lg={4}
           style={{
             padding: "20px",
-          }}
-        >
-          <Typography variant="">
+          }}>
+          <Typography variant=''>
             <HtmlTooltip
               open={tooltipopen}
-              title="Do people feel happy at work most of the time?"
-              arrow
-            >
+              title='Do people feel happy at work most of the time?'
+              arrow>
               <span>
                 <b>{companyDetails.averageWorkHappinessScore}</b>
               </span>
@@ -643,14 +640,12 @@ export default function Review(props) {
           lg={4}
           style={{
             padding: "20px",
-          }}
-        >
-          <Typography variant="">
+          }}>
+          <Typography variant=''>
             <HtmlTooltip
               open={tooltipopen}
-              title="Do people feel they are achieving most of their goals at work?"
-              arrow
-            >
+              title='Do people feel they are achieving most of their goals at work?'
+              arrow>
               <b>{companyDetails.averageAppreciationScore}</b>
             </HtmlTooltip>
           </Typography>{" "}
@@ -662,14 +657,12 @@ export default function Review(props) {
           lg={4}
           style={{
             padding: "20px",
-          }}
-        >
-          <Typography variant="">
+          }}>
+          <Typography variant=''>
             <HtmlTooltip
               open={tooltipopen}
-              title="Do people feel they often learn something at work?"
-              arrow
-            >
+              title='Do people feel they often learn something at work?'
+              arrow>
               <b>{companyDetails.averageLearningScore}</b>
             </HtmlTooltip>
           </Typography>{" "}
@@ -677,7 +670,7 @@ export default function Review(props) {
         </Grid>
       </Grid>
       <Grid item style={{ marginTop: "100px", marginBottom: "50px" }}>
-        <Typography variant="h5">
+        <Typography variant='h5'>
           <b>About the company</b>
         </Typography>
       </Grid>
@@ -701,8 +694,7 @@ export default function Review(props) {
               border: "2px solid #f2f2f2",
               borderRadius: "10px",
               padding: "20px",
-            }}
-          >
+            }}>
             <div style={{ fontWeight: "600" }}>CEO</div>
             <br />
             <br />
@@ -716,8 +708,7 @@ export default function Review(props) {
               border: "2px solid #f2f2f2",
               borderRadius: "10px",
               padding: "20px",
-            }}
-          >
+            }}>
             <div style={{ fontWeight: "600" }}>Revenue</div>
             <br />
             <br />
@@ -731,8 +722,7 @@ export default function Review(props) {
               border: "2px solid #f2f2f2",
               borderRadius: "10px",
               padding: "20px",
-            }}
-          >
+            }}>
             <div style={{ fontWeight: "600" }}>Company size</div>
             <br />
             <br />
@@ -746,8 +736,7 @@ export default function Review(props) {
               border: "2px solid #f2f2f2",
               borderRadius: "10px",
               padding: "20px",
-            }}
-          >
+            }}>
             <div style={{ fontWeight: "600" }}>Industry</div>
             <br />
             <br />
@@ -763,8 +752,7 @@ export default function Review(props) {
               border: "2px solid #f2f2f2",
               borderRadius: "10px",
               padding: "20px",
-            }}
-          >
+            }}>
             <div style={{ fontWeight: "600" }}>Founded</div>
             <br />
             <br />
@@ -774,14 +762,12 @@ export default function Review(props) {
       </Grid>
       <Grid container style={{ padding: "40px" }}>
         <Typography
-          variant="body2"
-          style={{ color: "#767676", textAlign: "left" }}
-        >
+          variant='body2'
+          style={{ color: "#767676", textAlign: "left" }}>
           {companyDetails.aboutTheCompany.description}
           <Typography
-            variant="body2"
-            style={{ color: "#767676", textAlign: "left" }}
-          >
+            variant='body2'
+            style={{ color: "#767676", textAlign: "left" }}>
             {companyDetails.aboutTheCompany.misssionandvisson}
           </Typography>
         </Typography>
@@ -789,8 +775,8 @@ export default function Review(props) {
     </div>
   );
   const showReviews = () => (
-    <div class="container-fluid">
-      <Typography variant="h4">
+    <div class='container-fluid'>
+      <Typography variant='h4'>
         <b>{companyDetails.companyName} Employee Reviews</b>
       </Typography>
       <Grid
@@ -803,24 +789,21 @@ export default function Review(props) {
           height: "100px",
           boxShadow:
             "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)",
-        }}
-      >
+        }}>
         <FormControl>
           <ButtonGroup
-            variant="outlined"
-            aria-label="outlined button group"
-            style={{ padding: "35px" }}
-          >
-            <Button value="Rating" onClick={(e) => handleSort("overallRating")}>
+            variant='outlined'
+            aria-label='outlined button group'
+            style={{ padding: "35px" }}>
+            <Button value='Rating' onClick={(e) => handleSort("overallRating")}>
               Rating
             </Button>
             <Button
-              value="Helpfullness"
-              onClick={(e) => handleSort("isHelpfulCount")}
-            >
+              value='Helpfullness'
+              onClick={(e) => handleSort("isHelpfulCount")}>
               Helpfullness
             </Button>
-            <Button value="Date" onClick={(e) => handleSort("createdAt")}>
+            <Button value='Date' onClick={(e) => handleSort("createdAt")}>
               Date
             </Button>
           </ButtonGroup>
@@ -828,9 +811,9 @@ export default function Review(props) {
         <FormControl style={{ padding: "37px" }}>
           <Select
             className={classes.outlinedInput}
-            variant="outlined"
+            variant='outlined'
             value={filterValue}
-            name="filterVal"
+            name='filterVal'
             onChange={(e) => setFilterValue(e.target.value)}
             style={{ height: "30px", width: "189px" }}
           >
@@ -871,8 +854,7 @@ export default function Review(props) {
                       item
                       container
                       spacing={4}
-                      style={{ borderBottom: "#00000029 solid 1px" }}
-                    >
+                      style={{ borderBottom: "#00000029 solid 1px" }}>
                       <Grid item container spacing={1}>
                         <Grid item style={{ width: "57px" }}>
                           <h4 style={{ borderBottom: "3px dotted #000" }}>
@@ -880,58 +862,53 @@ export default function Review(props) {
                           </h4>
 
                           <Rating
-                            name="size-small"
+                            name='size-small'
                             style={{ color: "#9d2b6b" }}
                             value={item.overallRating}
-                            size="small"
+                            size='small'
                             precision={0.5}
                             readOnly
                           />
                         </Grid>
                         <Grid item>
                           <Typography
-                            variant="head2"
-                            style={{ fontWeight: "800" }}
-                          >
+                            variant='head2'
+                            style={{ fontWeight: "800" }}>
                             {item.reviewTitle}
                           </Typography>
                           {"  "}
 
                           {item.isApproved === "NotApproved" ? (
                             <button
-                              type="button"
-                              disabled="true"
-                              class="btn btn-danger"
+                              type='button'
+                              disabled='true'
+                              class='btn btn-danger'
                               style={{
                                 height: "26px",
                                 fontWeight: "200",
                                 fontSize: "small",
                                 padding: "4px",
-                              }}
-                            >
+                              }}>
                               <i
-                                class="fa fa-times"
-                                aria-hidden="true"
-                                style={{ color: "white" }}
-                              ></i>{" "}
+                                class='fa fa-times'
+                                aria-hidden='true'
+                                style={{ color: "white" }}></i>{" "}
                               Not Verified
                             </button>
                           ) : (
                             <button
-                              type="button"
-                              class="btn btn-success"
-                              disabled="true"
+                              type='button'
+                              class='btn btn-success'
+                              disabled='true'
                               style={{
                                 height: "26px",
                                 fontWeight: "200",
                                 fontSize: "small",
                                 padding: "4px",
-                              }}
-                            >
+                              }}>
                               <i
-                                class="fas fa-check"
-                                style={{ color: "white" }}
-                              ></i>{" "}
+                                class='fas fa-check'
+                                style={{ color: "white" }}></i>{" "}
                               verified
                             </button>
                           )}
@@ -939,18 +916,16 @@ export default function Review(props) {
                       </Grid>
                       <Grid item container spacing={3}>
                         <Typography
-                          variant="subtitle1"
-                          style={{ marginLeft: "20px" }}
-                        >
+                          variant='subtitle1'
+                          style={{ marginLeft: "20px" }}>
                           {item.yourReview}
                         </Typography>
                       </Grid>
                       <Grid item container spacing={3}>
                         <span>
                           <i
-                            class="fas fa-check"
-                            style={{ color: "green" }}
-                          ></i>
+                            class='fas fa-check'
+                            style={{ color: "green" }}></i>
                         </span>
                         <div spacing={3}>
                           <b> Pros </b>
@@ -959,18 +934,16 @@ export default function Review(props) {
                       </Grid>
                       <Grid item container spacing={3}>
                         <Typography
-                          variant="subtitle1"
-                          style={{ marginLeft: "20px" }}
-                        >
+                          variant='subtitle1'
+                          style={{ marginLeft: "20px" }}>
                           {item.pros}
                         </Typography>
                       </Grid>
                       <Grid item container spacing={3}>
                         <i
-                          class="fa fa-times"
-                          aria-hidden="true"
-                          style={{ color: "red" }}
-                        ></i>
+                          class='fa fa-times'
+                          aria-hidden='true'
+                          style={{ color: "red" }}></i>
                         <br></br>
                         <div spacing={3}>
                           <b>Cons </b>{" "}
@@ -979,9 +952,8 @@ export default function Review(props) {
 
                       <Grid item container spacing={3}>
                         <Typography
-                          variant="subtitle1"
-                          style={{ marginLeft: "20px" }}
-                        >
+                          variant='subtitle1'
+                          style={{ marginLeft: "20px" }}>
                           {item.isApprovedcons}
                         </Typography>
                       </Grid>
@@ -994,12 +966,11 @@ export default function Review(props) {
                           <Grid item container spacing={3}>
                             <FormControl>
                               <ButtonGroup
-                                variant="outlined"
-                                aria-label="outlined button group"
-                                style={{ padding: "1px" }}
-                              >
+                                variant='outlined'
+                                aria-label='outlined button group'
+                                style={{ padding: "1px" }}>
                                 <Button
-                                  value="yes"
+                                  value='yes'
                                   onClick={() => {
                                     item.isHelpfulCount =
                                       item.isHelpfulCount + 1;
@@ -1008,12 +979,11 @@ export default function Review(props) {
                                       item.isHelpfulCount,
                                       item.isNotHelpfulCount
                                     );
-                                  }}
-                                >
+                                  }}>
                                   Yes {item.isHelpfulCount}
                                 </Button>
                                 <Button
-                                  value="no"
+                                  value='no'
                                   onClick={() => {
                                     item.isNotHelpfulCount =
                                       item.isNotHelpfulCount + 1;
@@ -1022,8 +992,7 @@ export default function Review(props) {
                                       item.isHelpfulCount,
                                       item.isNotHelpfulCount
                                     );
-                                  }}
-                                >
+                                  }}>
                                   No {item.isNotHelpfulCount}
                                 </Button>
                               </ButtonGroup>
@@ -1037,13 +1006,12 @@ export default function Review(props) {
                         item.isApproved === "NotApproved" && (
                           <span>
                             <button
-                              type="button"
-                              class="btn btn-info"
+                              type='button'
+                              class='btn btn-info'
                               onClick={() => {
                                 item.isApproved = "Approved";
                                 changeToApproved(item._id);
-                              }}
-                            >
+                              }}>
                               Verify this review
                             </button>
                           </span>
@@ -1074,8 +1042,8 @@ export default function Review(props) {
     </div>
   );
   const showPhotos = () => (
-    <div className="row">
-      <div className="col-md-9">
+    <div className='row'>
+      <div className='col-md-9'>
         <Grid item style={{ marginTop: "20px", marginBottom: "50px" }}>
           <span>
             <CameraAltIcon></CameraAltIcon>{" "}
@@ -1089,8 +1057,7 @@ export default function Review(props) {
                 <GridList
                   cellHeight={200}
                   cols={3}
-                  style={{ width: 800, height: 600 }}
-                >
+                  style={{ width: 800, height: 600 }}>
                   {companyDetails &&
                     companyDetails.photos.map((data) => (
                       <GridListTile key={data.id}>
@@ -1098,9 +1065,9 @@ export default function Review(props) {
                         {data.status ? (
                           <>
                             <button
-                              type="button"
-                              class="btn btn-success"
-                              disabled="true"
+                              type='button'
+                              class='btn btn-success'
+                              disabled='true'
                               style={{
                                 height: "26px",
                                 fontWeight: "200",
@@ -1109,20 +1076,18 @@ export default function Review(props) {
                                 position: "absolute",
                                 top: "2px",
                                 right: "0px",
-                              }}
-                            >
+                              }}>
                               <i
-                                class="fas fa-check"
-                                style={{ color: "white" }}
-                              ></i>{" "}
+                                class='fas fa-check'
+                                style={{ color: "white" }}></i>{" "}
                               verified
                             </button>
                           </>
                         ) : (
                           <>
                             <button
-                              type="button"
-                              class="btn btn-info"
+                              type='button'
+                              class='btn btn-info'
                               style={{
                                 height: "26px",
                                 fontWeight: "200",
@@ -1135,8 +1100,7 @@ export default function Review(props) {
                               onClick={() => {
                                 data.status = true;
                                 handlePhotoSatus(companyDetails._id, data._id);
-                              }}
-                            >
+                              }}>
                               Verify here
                             </button>
                           </>
@@ -1150,8 +1114,7 @@ export default function Review(props) {
                 <GridList
                   cellHeight={200}
                   cols={3}
-                  style={{ width: 800, height: 600 }}
-                >
+                  style={{ width: 800, height: 600 }}>
                   {companyDetails &&
                     companyDetails.photos.map(
                       (data) =>
@@ -1165,9 +1128,9 @@ export default function Review(props) {
                             {data.status ? (
                               <>
                                 <button
-                                  type="button"
-                                  class="btn btn-success"
-                                  disabled="true"
+                                  type='button'
+                                  class='btn btn-success'
+                                  disabled='true'
                                   style={{
                                     height: "26px",
                                     fontWeight: "200",
@@ -1176,21 +1139,19 @@ export default function Review(props) {
                                     position: "absolute",
                                     top: "2px",
                                     right: "0px",
-                                  }}
-                                >
+                                  }}>
                                   <i
-                                    class="fas fa-check"
-                                    style={{ color: "white" }}
-                                  ></i>{" "}
+                                    class='fas fa-check'
+                                    style={{ color: "white" }}></i>{" "}
                                   verified
                                 </button>
                               </>
                             ) : (
                               <>
                                 <button
-                                  type="button"
-                                  class="btn btn-danger"
-                                  disabled="true"
+                                  type='button'
+                                  class='btn btn-danger'
+                                  disabled='true'
                                   style={{
                                     height: "26px",
                                     fontWeight: "200",
@@ -1199,13 +1160,11 @@ export default function Review(props) {
                                     position: "absolute",
                                     top: "2px",
                                     right: "0px",
-                                  }}
-                                >
+                                  }}>
                                   <i
-                                    class="fa fa-times"
-                                    aria-hidden="true"
-                                    style={{ color: "white" }}
-                                  ></i>{" "}
+                                    class='fa fa-times'
+                                    aria-hidden='true'
+                                    style={{ color: "white" }}></i>{" "}
                                   Not Verified
                                 </button>
                               </>
@@ -1226,9 +1185,9 @@ export default function Review(props) {
                                 style={{ position: "relative", height: '200px'  }}
                               />
                               <button
-                                type="button"
-                                class="btn btn-success"
-                                disabled="true"
+                                type='button'
+                                class='btn btn-success'
+                                disabled='true'
                                 style={{
                                   height: "26px",
                                   fontWeight: "200",
@@ -1237,12 +1196,10 @@ export default function Review(props) {
                                   position: "absolute",
                                   top: "2px",
                                   right: "0px",
-                                }}
-                              >
+                                }}>
                                 <i
-                                  class="fas fa-check"
-                                  style={{ color: "white" }}
-                                ></i>{" "}
+                                  class='fas fa-check'
+                                  style={{ color: "white" }}></i>{" "}
                                 verified
                               </button>
                             </GridListTile>
@@ -1257,8 +1214,7 @@ export default function Review(props) {
           <GridList
             cellHeight={200}
             cols={3}
-            style={{ width: 800, height: 600 }}
-          >
+            style={{ width: 800, height: 600 }}>
             {companyDetails &&
               companyDetails.photos &&
               companyDetails.photos.map(
@@ -1271,9 +1227,9 @@ export default function Review(props) {
                         style={{ position: "relative"}}
                       />
                       <button
-                        type="button"
-                        class="btn btn-success"
-                        disabled="true"
+                        type='button'
+                        class='btn btn-success'
+                        disabled='true'
                         style={{
                           height: "26px",
                           fontWeight: "200",
@@ -1282,9 +1238,8 @@ export default function Review(props) {
                           position: "absolute",
                           top: "2px",
                           right: "0px",
-                        }}
-                      >
-                        <i class="fas fa-check" style={{ color: "white" }}></i>{" "}
+                        }}>
+                        <i class='fas fa-check' style={{ color: "white" }}></i>{" "}
                         verified
                       </button>
                     </GridListTile>
@@ -1293,7 +1248,7 @@ export default function Review(props) {
           </GridList>
         )}
       </div>
-      <UplaodButton type="submit" variant="contained" onClick={handlePhotoOpen}>
+      <UplaodButton type='submit' variant='contained' onClick={handlePhotoOpen}>
         Upload photo
       </UplaodButton>
     </div>
@@ -1308,8 +1263,7 @@ export default function Review(props) {
           backgroundColor: "white",
           padding: "15px 10px",
           margin: "50px -20px 0",
-        }}
-      >
+        }}>
         <Grid item style={{ cursor: "pointer" }}>
           ©️ 2020 Indeed
         </Grid>
@@ -1339,11 +1293,10 @@ export default function Review(props) {
   const showSalary = () => (
     <>
       <SearchButton
-        type="submit"
-        variant="contained"
+        type='submit'
+        variant='contained'
         style={{ position: "relative", left: "800px" }}
-        onClick={handleSalaryOpen}
-      >
+        onClick={handleSalaryOpen}>
         Add a Salary
       </SearchButton>
     </>
@@ -1352,46 +1305,49 @@ export default function Review(props) {
     <>
       <Grid
         item
-        style={{ marginTop: "20px", marginBottom: "30px", marginLeft: "100px" }}
-      >
-        <Typography variant="caption">
+        style={{
+          marginTop: "20px",
+          marginBottom: "30px",
+          marginLeft: "100px",
+        }}>
+        <Typography variant='caption'>
           About {companyDetails.companyName}
         </Typography>
       </Grid>
       <Grid
         item
-        style={{ marginTop: "20px", marginBottom: "50px", marginLeft: "100px" }}
-      >
-        <Typography variant="h5">
+        style={{
+          marginTop: "20px",
+          marginBottom: "50px",
+          marginLeft: "100px",
+        }}>
+        <Typography variant='h5'>
           <b>About the company</b>
         </Typography>
         <Grid container style={{ padding: "40px" }}>
           <Typography
-            variant="body2"
-            style={{ color: "#767676", textAlign: "left" }}
-          >
+            variant='body2'
+            style={{ color: "#767676", textAlign: "left" }}>
             {companyDetails.aboutTheCompany.description}
           </Typography>
         </Grid>
-        <Typography variant="h5">
+        <Typography variant='h5'>
           <b>Work Culture</b>
         </Typography>
         <Grid container style={{ padding: "40px" }}>
           <Typography
-            variant="body2"
-            style={{ color: "#767676", textAlign: "left" }}
-          >
+            variant='body2'
+            style={{ color: "#767676", textAlign: "left" }}>
             {companyDetails.aboutTheCompany.workCulture}
           </Typography>
         </Grid>
-        <Typography variant="h5">
+        <Typography variant='h5'>
           <b>Company Values</b>
         </Typography>
         <Grid container style={{ padding: "40px" }}>
           <Typography
-            variant="body2"
-            style={{ color: "#767676", textAlign: "left" }}
-          >
+            variant='body2'
+            style={{ color: "#767676", textAlign: "left" }}>
             {companyDetails.aboutTheCompany.companyValues}
           </Typography>
         </Grid>
@@ -1415,7 +1371,7 @@ export default function Review(props) {
             setValue={setLocation}
             value={location}
             label={"Where"}
-            helperText="Location"
+            helperText='Location'
             classes={classes}
             switchJobSearch={switchJobSearch}
           />
@@ -1426,9 +1382,8 @@ export default function Review(props) {
             md={2}
             sm={2}
             xs={12}
-            className={classes.btn_Container}
-          >
-            <Button color={"primary"} variant="contained" type="submit">
+            className={classes.btn_Container}>
+            <Button color={"primary"} variant='contained' type='submit'>
               Find Jobs
             </Button>
           </Grid>
@@ -1446,8 +1401,7 @@ export default function Review(props) {
                 lg={12}
                 md={12}
                 sm={12}
-                xs={12}
-              >
+                xs={12}>
                 <Box onClick={() => getJobDescription(job)}>
                   <Typography className={classes.job_title}>
                     {job.jobTitle}
@@ -1469,50 +1423,48 @@ export default function Review(props) {
   return (
     <div>
       <Header />
-      <Container maxwidth="xl">
+      <Container maxwidth='xl'>
         <div
-          class="jumbotron text-white jumbotron-image shadow"
+          class='jumbotron text-white jumbotron-image shadow'
           style={{
             backgroundImage: `url(${companyDetails.companyBanner})`,
             backgroundSize: "cover",
             height: "250px",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center center",
-          }}
-        ></div>
+          }}></div>
         <Grid
           container
           style={{
             justifyContent: "space-between",
             alignItems: "center",
             marginBottom: "20px",
-          }}
-        >
+          }}>
           <Grid container item lg={6} md={7} sm={8}>
             <Grid item className={classes.imgCont}>
               <Image
                 src={companyDetails.companyLogo}
-                alt=""
-                width="100px"
+                alt=''
+                width='100px'
                 onError={(e) => {
                   this.src = "https://dummyimage.com/100.png/09f/fff";
                 }}
               />
             </Grid>
             <Grid item style={{ paddingTop: "40px", paddingLeft: "20px" }}>
-              <Typography variant="h5">{companyDetails.companyName}</Typography>
-              <Typography variant="h5">
+              <Typography variant='h5'>{companyDetails.companyName}</Typography>
+              <Typography variant='h5'>
                 {companyDetails.averageRating}
                 {/* <StarIcon style = {{color: "#9d2b6b", paddingRight: "10px"}}/> */}
                 <Rating
-                  name="half-rating-read"
+                  name='half-rating-read'
                   style={{ color: "#9d2b6b", paddingRight: "10px" }}
                   value={rating}
                   precision={0.5}
                   readOnly
                 />
                 {companySpecificReviews && (
-                  <Typography variant="caption">
+                  <Typography variant='caption'>
                     {" "}
                     {companySpecificReviews.length} reviews
                   </Typography>
@@ -1523,10 +1475,9 @@ export default function Review(props) {
           <Grid item>
             <Button
               color={"primary"}
-              variant="contained"
-              type="submit"
-              onClick={handleOpen}
-            >
+              variant='contained'
+              type='submit'
+              onClick={handleOpen}>
               {" "}
               Review this Company{" "}
             </Button>
@@ -1543,8 +1494,7 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("snapshot")}
-          >
+            onClick={() => changePathName("snapshot")}>
             SnapShot
           </Grid>
           <Grid
@@ -1554,8 +1504,7 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("whyjoinus")}
-          >
+            onClick={() => changePathName("whyjoinus")}>
             Why Join Us
           </Grid>
           <Grid
@@ -1565,8 +1514,7 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("reviews")}
-          >
+            onClick={() => changePathName("reviews")}>
             Reviews
           </Grid>
           <Grid
@@ -1576,8 +1524,7 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("salaries")}
-          >
+            onClick={() => changePathName("salaries")}>
             Salaries
           </Grid>
           <Grid
@@ -1587,8 +1534,7 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("photos")}
-          >
+            onClick={() => changePathName("photos")}>
             Photos
           </Grid>
           <Grid
@@ -1598,8 +1544,7 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("jobs")}
-          >
+            onClick={() => changePathName("jobs")}>
             Jobs
           </Grid>
           <Grid
@@ -1609,8 +1554,7 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("qanda")}
-          >
+            onClick={() => changePathName("qanda")}>
             Q&A
           </Grid>
           <Grid
@@ -1620,8 +1564,7 @@ export default function Review(props) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("interviews")}
-          >
+            onClick={() => changePathName("interviews")}>
             Interviews
           </Grid>
         </Grid>
@@ -1636,11 +1579,10 @@ export default function Review(props) {
       </Container>
 
       <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
+        aria-labelledby='simple-modal-title'
+        aria-describedby='simple-modal-description'
         open={open}
-        onClose={handleClose}
-      >
+        onClose={handleClose}>
         <div style={modalStyle} className={classes.paper}>
           <form className={classes.formStyle} onSubmit={reviewSubmithandler}>
             <Grid>
@@ -1652,7 +1594,7 @@ export default function Review(props) {
               </FormHelperText>
               <span style={{ margin: "0px 25px" }}>
                 <Rating
-                  name="simple-controlled"
+                  name='simple-controlled'
                   value={newRating}
                   onChange={(event, newValue) => {
                     setnewRating(newValue);
@@ -1661,7 +1603,7 @@ export default function Review(props) {
               </span>
               <span style={{ margin: "0px 25px" }}>
                 <Rating
-                  name="simple-controlled"
+                  name='simple-controlled'
                   value={workHappinessScore}
                   onChange={(event, newValue) => {
                     setWorkHappinessScore(newValue);
@@ -1670,7 +1612,7 @@ export default function Review(props) {
               </span>
               <span style={{ margin: "0px 45px" }}>
                 <Rating
-                  name="simple-controlled"
+                  name='simple-controlled'
                   value={learningScore}
                   onChange={(event, newValue) => {
                     setLearningScore(newValue);
@@ -1679,7 +1621,7 @@ export default function Review(props) {
               </span>
               <span>
                 <Rating
-                  name="simple-controlled"
+                  name='simple-controlled'
                   value={appreciationScore}
                   onChange={(event, newValue) => {
                     setAppreciationScore(newValue);
@@ -1695,48 +1637,48 @@ export default function Review(props) {
                 <span style={{ margin: "0px 70px" }}>State</span>
               </FormHelperText>
               <TextField
-                type="text"
+                type='text'
                 style={{ width: "150px" }}
                 value={reviewTitle}
                 required
                 onChange={(event) => {
                   setReviewTitle(event.target.value);
                 }}
-                variant="outlined"
-                placeholder="Review Title"
+                variant='outlined'
+                placeholder='Review Title'
               />
               <TextField
-                type="text"
+                type='text'
                 required
                 style={{ width: "150px", margin: "0px 35px" }}
                 value={reviewRole}
                 onChange={(event) => {
                   setReviewRole(event.target.value);
                 }}
-                variant="outlined"
-                placeholder="Review Role"
+                variant='outlined'
+                placeholder='Review Role'
               />
               <TextField
-                type="text"
+                type='text'
                 required
                 style={{ width: "150px", margin: "0px 10px" }}
                 value={city}
                 onChange={(event) => {
                   setCity(event.target.value);
                 }}
-                variant="outlined"
-                placeholder="City"
+                variant='outlined'
+                placeholder='City'
               />
               <TextField
-                type="text"
+                type='text'
                 required
                 style={{ width: "150px" }}
                 value={st}
                 onChange={(event) => {
                   setState(event.target.value);
                 }}
-                variant="outlined"
-                placeholder="State"
+                variant='outlined'
+                placeholder='State'
               />
             </Grid>
             <Grid>
@@ -1746,7 +1688,7 @@ export default function Review(props) {
               <TextField
                 className={classes.outlinedInput}
                 required
-                type="text"
+                type='text'
                 multiline
                 rows={3}
                 rowsMax={4}
@@ -1754,8 +1696,8 @@ export default function Review(props) {
                 onChange={(event) => {
                   setReviewSummary(event.target.value);
                 }}
-                variant="outlined"
-                placeholder="Review Summary"
+                variant='outlined'
+                placeholder='Review Summary'
               />
             </Grid>
             <Grid>
@@ -1772,9 +1714,9 @@ export default function Review(props) {
                 onChange={(event) => {
                   setPros(event.target.value);
                 }}
-                type="text"
-                variant="outlined"
-                placeholder="Pros"
+                type='text'
+                variant='outlined'
+                placeholder='Pros'
               />
             </Grid>
             <Grid>
@@ -1787,13 +1729,13 @@ export default function Review(props) {
                 multiline
                 rows={2}
                 rowsMax={4}
-                type="text"
+                type='text'
                 value={cons}
                 onChange={(event) => {
                   setCons(event.target.value);
                 }}
-                variant="outlined"
-                placeholder="Cons"
+                variant='outlined'
+                placeholder='Cons'
               />
             </Grid>
             <Grid>
@@ -1806,18 +1748,18 @@ export default function Review(props) {
                 multiline
                 rows={2}
                 rowsMax={4}
-                type="text"
+                type='text'
                 value={interviewPrep}
                 onChange={(event) => {
                   setinterviewPrep(event.target.value);
                 }}
-                variant="outlined"
-                placeholder="   Interview Preparation"
+                variant='outlined'
+                placeholder='   Interview Preparation'
               />
             </Grid>
             <br />
             <Grid>
-              <SearchButton type="submit" variant="contained">
+              <SearchButton type='submit' variant='contained'>
                 Post
               </SearchButton>
             </Grid>
@@ -1825,23 +1767,22 @@ export default function Review(props) {
         </div>
       </Modal>
       <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
+        aria-labelledby='simple-modal-title'
+        aria-describedby='simple-modal-description'
         open={photoOpen}
-        onClose={handlePhotoClose}
-      >
+        onClose={handlePhotoClose}>
         <div style={modalStyle} className={classes.photopaper}>
           <form className={classes.formStyle}>
-            <label for="file-upload" id="file-drag">
+            <label for='file-upload' id='file-drag'>
               <div>
                 <div>Select a file</div>
                 <div>Please select an image</div>
 
                 <input
-                  id="file-upload"
-                  type="file"
-                  name="fileUpload"
-                  accept="image/*"
+                  id='file-upload'
+                  type='file'
+                  name='fileUpload'
+                  accept='image/*'
                   multiple
                   onChange={(e) => {
                     let files = [];
@@ -1858,9 +1799,8 @@ export default function Review(props) {
                   left: "150px",
                   top: "100px",
                 }}
-                class="btn btn-primary"
-                onClick={filehandler}
-              >
+                class='btn btn-primary'
+                onClick={filehandler}>
                 Upload
               </button>
             </label>
@@ -1868,11 +1808,10 @@ export default function Review(props) {
         </div>
       </Modal>
       <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
+        aria-labelledby='simple-modal-title'
+        aria-describedby='simple-modal-description'
         open={salaryOpen}
-        onClose={handleSalaryClose}
-      >
+        onClose={handleSalaryClose}>
         <div style={modalStyle} className={classes.paper}>
           <form className={classes.formStyle} onSubmit={salarySubmithandler}>
             <Grid style={{ height: "80px" }}>
@@ -1882,14 +1821,14 @@ export default function Review(props) {
               <TextField
                 className={classes.outlinedInput}
                 required
-                type="text"
+                type='text'
                 value={companyname}
                 required
                 onChange={(event) => {
                   setCompanyName(event.target.value);
                 }}
-                variant="outlined"
-                placeholder=""
+                variant='outlined'
+                placeholder=''
               />
             </Grid>
             <Grid style={{ height: "80px" }}>
@@ -1898,14 +1837,13 @@ export default function Review(props) {
               </FormHelperText>
 
               <RadioGroup
-                aria-label="Working"
+                aria-label='Working'
                 row
-                name="controlled-radio-buttons-group"
+                name='controlled-radio-buttons-group'
                 value={isWorking}
-                onChange={handleisWorkingChange}
-              >
-                <FormControlLabel value="No" control={<Radio />} label="Yes" />
-                <FormControlLabel value="Yes" control={<Radio />} label="No" />
+                onChange={handleisWorkingChange}>
+                <FormControlLabel value='No' control={<Radio />} label='Yes' />
+                <FormControlLabel value='Yes' control={<Radio />} label='No' />
               </RadioGroup>
               {isWorking === "Yes" && (
                 <div
@@ -1914,12 +1852,11 @@ export default function Review(props) {
                     left: "350px",
                     bottom: "80px",
                     marginBottom: "0px",
-                  }}
-                >
+                  }}>
                   <FormHelperText className={classes.formhelperText}>
                     End Date
                   </FormHelperText>
-                  <input type="date" className={classes.formhelperText} />
+                  <input type='date' className={classes.formhelperText} />
                 </div>
               )}
             </Grid>
@@ -1930,10 +1867,10 @@ export default function Review(props) {
               </FormHelperText>
               <TextField
                 className={classes.outlinedInput}
-                type="text"
+                type='text'
                 required
-                variant="outlined"
-                placeholder="Job Title"
+                variant='outlined'
+                placeholder='Job Title'
                 value={salaryJobTitle}
                 onChange={(event) => {
                   setSalaryJobTitle(event.target.value);
@@ -1947,10 +1884,10 @@ export default function Review(props) {
               </FormHelperText>
               <TextField
                 className={classes.outlinedInput}
-                type="text"
+                type='text'
                 required
-                variant="outlined"
-                placeholder="Current Pay"
+                variant='outlined'
+                placeholder='Current Pay'
                 value={newsalary}
                 onChange={(event) => {
                   setNewSalary(event.target.value);
@@ -1965,32 +1902,32 @@ export default function Review(props) {
                 <FormControlLabel
                   style={{ height: "25px" }}
                   control={<GreenCheckbox />}
-                  label="Paid time off"
+                  label='Paid time off'
                 />
                 <FormControlLabel
                   style={{ height: "25px" }}
                   control={<GreenCheckbox />}
-                  label="Health insurance"
+                  label='Health insurance'
                 />
                 <FormControlLabel
                   style={{ height: "25px" }}
                   control={<GreenCheckbox />}
-                  label="Life insurance"
+                  label='Life insurance'
                 />
                 <FormControlLabel
                   style={{ height: "25px" }}
                   control={<GreenCheckbox />}
-                  label="Dental/ vision insurance"
+                  label='Dental/ vision insurance'
                 />
                 <FormControlLabel
                   style={{ height: "25px" }}
                   control={<GreenCheckbox />}
-                  label="Retirement/ 401(k)"
+                  label='Retirement/ 401(k)'
                 />
                 <FormControlLabel
                   style={{ height: "25px" }}
                   control={<GreenCheckbox />}
-                  label="Other benefits"
+                  label='Other benefits'
                 />
               </FormGroup>
             </Grid>
@@ -2000,8 +1937,7 @@ export default function Review(props) {
                 position: "relative",
                 top: "150px",
                 width: "50px",
-              }}
-            >
+              }}>
               <FormHelperText className={classes.formhelperText}>
                 Location
               </FormHelperText>
@@ -2009,9 +1945,9 @@ export default function Review(props) {
                 className={classes.outlinedInput}
                 style={{ width: "150px" }}
                 required
-                type="text"
-                variant="outlined"
-                placeholder="Location"
+                type='text'
+                variant='outlined'
+                placeholder='Location'
                 value={salaryLocation}
                 onChange={(event) => {
                   setSalaryLocation(event.target.value);
@@ -2025,9 +1961,8 @@ export default function Review(props) {
                 position: "relative",
                 left: "400px",
                 top: "80px",
-              }}
-            >
-              <SearchButton type="submit" variant="contained">
+              }}>
+              <SearchButton type='submit' variant='contained'>
                 Post
               </SearchButton>
             </Grid>

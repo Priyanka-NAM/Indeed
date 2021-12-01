@@ -3,13 +3,14 @@ import PropTypes from "prop-types";
 
 import { Container, Grid, OutlinedInput, Button } from "@material-ui/core";
 import { Box, makeStyles, withStyles, FormHelperText } from "@material-ui/core";
-import { useDispatch } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
-
-import NativeSelect from "@material-ui/core/NativeSelect";
-// import { isInfo } from "./CompanyDetails1Validation";
-
+import { isInfo } from "./JobDetails1Validation";
+import MuiAlert from "@mui/material/Alert";
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
+});
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: "#f2f2f2",
@@ -101,9 +102,6 @@ function JobDetails1({ step, setStep, jobDetails, setjobDetails }) {
   console.log("Step Value in Company Details 1 ", step);
   const classes = useStyles();
   const [errors, setErrors] = useState({});
-  const success = false;
-  const isError = false;
-  const errorMsg = false;
 
   const onJobDetailsChange = (e) => {
     setjobDetails({
@@ -143,17 +141,26 @@ function JobDetails1({ step, setStep, jobDetails, setjobDetails }) {
       },
     });
   };
-
+  const [isError, setIsError] = useState(false);
+  const [success, setSuccess] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
-    // const errors = isInfo(jobDetails);
+    const error = isInfo(jobDetails);
+    if (Object.keys(error).length !== 0) {
+      console.log("Setting isError to True");
+      setIsError(true);
+      setSuccess(false);
+      return;
+    }
     setErrors(errors);
     if (Object.keys(errors).length > 0) return;
     setStep(step + 1);
   };
+  const { isAuth } = useSelector((state) => state.login);
 
   return (
     <>
+      {!isAuth && <Redirect to='/employer/' />}
       <Container className={classes.container} maxWidth='xl'>
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
           <Grid item style={{ margin: "25px 0" }}>
@@ -186,7 +193,6 @@ function JobDetails1({ step, setStep, jobDetails, setjobDetails }) {
               />
               <br />
               <br />
-
               <FormHelperText className={classes.formhelperText}>
                 Address*
               </FormHelperText>
@@ -274,8 +280,15 @@ function JobDetails1({ step, setStep, jobDetails, setjobDetails }) {
             </SignInButton>
           </Grid>
         </Box>
+        {isError && (
+          <Alert severity='error'>
+            One or More fields are missing or wrong data!
+          </Alert>
+        )}
+        {success && (
+          <Alert severity='success'>Employer registered successfully!</Alert>
+        )}
       </Container>
-      {/* // : <Redirect to='/' /> */}
     </>
   );
 }

@@ -15,10 +15,9 @@ import {
   employerDetailsGet,
   employerDetailsAdd,
 } from "../../../Redux/Actions/EmployerDetailsAction";
-import { isInfo } from "../EmployerDetails/CompanyDetails1Validation";
 import MuiAlert from "@mui/material/Alert";
-import { Redirect } from "react-router";
-
+import { Redirect } from "react-router-dom";
+import { isInfo } from "./EmployerProfileValidation";
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
 });
@@ -115,7 +114,8 @@ function EmployerProfile(props) {
   const { responseFromServer } = useSelector((state) => state.employerDetails);
   let { signup } = useSelector((state) => state);
   let { isAuth, role, userDetails } = useSelector((state) => state.login);
-
+  const [isError, setIsError] = useState(false);
+  const [success, setSuccess] = useState(false);
   useEffect(() => {
     // if (userDetails.userId && userDetails.userId !== "") {
     //   dispatch(employerDetailsGet(userDetails.userId));
@@ -124,7 +124,6 @@ function EmployerProfile(props) {
     if (signup && signup.responseFromServer) {
       dispatch(employerDetailsGet(signup.responseFromServer.employerID));
     }
-    // dispatch(employerDetailsGet(12));
   }, [props]);
 
   useEffect(() => {
@@ -152,24 +151,25 @@ function EmployerProfile(props) {
     setemployerDetails({ ...employerDetails, state: val });
   };
   const [errors, setErrors] = useState({});
-  const success = false;
-  let isError = false;
-  const errorMsg = false;
-  let message = "";
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const errors = isInfo(employerDetails);
-    if (errors) {
-      isError = true;
-      console.log("Error is set");
+    const error = isInfo(employerDetails);
+    if (Object.keys(error).length !== 0) {
+      console.log("Setting isError to True");
+      setIsError(true);
+      setSuccess(false);
+      return;
     }
     setErrors(errors);
+    setIsError(false);
+    setSuccess(true);
     dispatch(employerDetailsAdd(employerDetails));
   };
 
   return (
     <>
-      {/* {(!isAuth || role !== 1) && <Redirect to='/employer/home' />} */}
+      {!isAuth && <Redirect to='/employer/' />}
       {isError && <Alert severity='error'>Profile update failed!</Alert>}
       <Container className={classes.container} maxWidth='xl'>
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
@@ -310,13 +310,11 @@ function EmployerProfile(props) {
             </form>
           </Grid>
         </Box>
-        {/* {isError && (
-        <Alert variant='danger'>
-          Oops!One or More mandatory fields are missing.
-        </Alert>
-      )} */}
+        {isError && <Alert severity='error'>Check the fields again!</Alert>}
+        {success && (
+          <Alert severity='success'>Details saved successfully!</Alert>
+        )}
       </Container>
-      {/* // : <Redirect to='/' /> */}
     </>
   );
 }
