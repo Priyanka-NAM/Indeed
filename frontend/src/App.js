@@ -39,6 +39,11 @@ function App() {
             path='/employer/jobs-posted/:12'
             component={EmployerJobPostingHome}
           />
+          <Route
+            path='/employer/applicants-page/'
+            component={EmployerJobPostingHome}
+          />
+          
           <Route path='/reports' component={EmployerHomePage} />
         </Router>
       </div>
