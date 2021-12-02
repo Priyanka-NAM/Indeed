@@ -1,8 +1,9 @@
 const Application = require("../Models/ApplicationModel");
+const User = require("../Models/UserModel");
 
 const postJob = async (req, res) => {
-    const {userId, jobId, employerId} = req.body
-    console.log(userId, jobId)
+    const {userId, jobId, employerId, resume} = req.body
+    console.log(userId, jobId, resume)
     try {
         if (userId) {
             const applicationExists = await Application.findOne({$and: [
@@ -31,9 +32,11 @@ const postJob = async (req, res) => {
                     userId,
                     jobId,
                     employerId,
-                    status : "applied"
+                    status : "applied",
+                    resume
                 });
                 if (appResult) {
+                    await User.findOneAndUpdate({_id: userId}, {$push: {"appliedJobs": jobId}}, {new:true})
                     return res.status(200).send("job applied successfully")
                 } else {
                     return res.status(404).send("Resource not found")

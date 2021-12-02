@@ -8,6 +8,9 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import Modal from '@material-ui/core/Modal';
 import { postSavedJobs, deleteSavedJobs, applyJobs } from '../../Redux/Actions/JobsAction';
 import { Redirect } from 'react-router';
+import { getUserProfile } from '../../Redux/Actions/JobsAction';
+import axios from 'axios';
+import { API } from '../../config';
 
 const useStyles = makeStyles(theme=>({
     container:{
@@ -42,7 +45,7 @@ const useStyles = makeStyles(theme=>({
         boxSizing:'border-box',
         width: "600px",
         borderRadius:"10px", 
-        height: "100vh", 
+        height: "120vh", 
         backgroundColor: "white",
         outline:'none',
         padding:'40px',
@@ -59,13 +62,19 @@ function JobDetails({jobData, index}) {
     const [redirectLogin, setLogin] = useState(false)
     const [display, setDisplay] = useState(false)
     const [open, setOpen] = useState(false);
+    const [flag, setFlag] = useState(false)
+    const [resumeFile, setResumeFile] = useState(null)
+    let profile = useSelector(state=>state.jobs.profile);
     
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    useEffect(() => {
-        console.log("view undo", viewUndo)
-    }, [display])
+    useEffect(async () => {
+        const data = {
+            "userId": userId
+        }
+       await dispatch(getUserProfile(data))
+    }, [display, flag])
 
     const displayUndo = (jobId) => {
         const data = {
@@ -93,8 +102,30 @@ function JobDetails({jobData, index}) {
         dispatch(deleteSavedJobs(data))
     }
 
+    const handleChange = (e) => {
+        setResumeFile(e.target.files[0])
+    }
+
     const handleResume = (e) => {
-        console.log(e.target.value)
+        e.preventDefault()
+        console.log(resumeFile)
+        const data = {
+            "userId": userId
+        }
+        const formData = new FormData();
+        formData.append('resume', resumeFile)
+        formData.append('userId', userId)
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        } 
+        axios.post(`${API}/resume/updateResume`, formData, config).then((response) => {
+            setFlag(!flag)
+            console.log(response)
+          }).catch((error) => {
+              console.log(error);
+          })
     }
 
     const handleApplyJob = (jobId, employerId) => {
@@ -102,7 +133,8 @@ function JobDetails({jobData, index}) {
             const data = {
                 "userId": userId,
                 "jobId": jobId,
-                "employerId": employerId
+                "employerId": employerId,
+                "resume": profile.resume
             }
             dispatch(applyJobs(data))
             setOpen(false)
@@ -182,10 +214,12 @@ function JobDetails({jobData, index}) {
                             </Typography>
                             <br  />
                             <form onSubmit={handleResume}>
-                                <input type="file" name="resumeUpload" />
+                                <input type="file" name="resume" onChange={handleChange} />
+                                <br />
+                                {profile && profile.resume && profile.resume.split("\\")[2]}
                                 <br />
                                 <br />
-                                <input type='submit' value='Upload!' />
+                                <input type='submit' value='Upload!' style={{width:"100px", backgroundColor:"#2D5DCE"}} />
                             </form>
                             <br />
                             <Button onClick={() => handleApplyJob(jobData._id,jobData.employerID._id)}

@@ -172,8 +172,7 @@ function EmployerSignup() {
           />
         </Toolbar>
       </AppBar>
-      {success ? alert("User registered successfully") : <></>}
-      {isError ? <Box>{errorMsg}</Box> : <></>}
+
       <Container className={classes.container} maxWidth='xl'>
         <br />
         <br />
@@ -246,7 +245,6 @@ function EmployerSignup() {
           </Grid>
         </Grid>
       </Container>
-      {/* // : <Redirect to='/' /> */}
     </>
   );
 }

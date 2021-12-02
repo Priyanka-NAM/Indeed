@@ -385,6 +385,12 @@ export default function Review(props) {
     setOpen(false);
   };
 
+  let featuredReview = [];
+  if (companySpecificReviews)
+    featuredReview = companySpecificReviews.filter(
+      (val) => val.isFeatured === true
+    );
+
   if (companySpecificReviews) {
     //Filtering reviews Based on the approved and user reviews.
     if (!isAuth) {
@@ -462,15 +468,22 @@ export default function Review(props) {
 
     console.log(jobs);
   }
+
   const [tooltipopen, setTooltipopen] = React.useState(true);
 
   useEffect(() => {
     if (
       props.match.params.pathname === "snapshot" ||
       props.match.params.pathname === "photos"
-    )
+    ) {
       dispatch(getcompaniesDetails({ employerID: props.match.params.id }));
-    else if (props.match.params.pathname === "reviews")
+      dispatch(
+        getCompanySpecificReviews({
+          employerId: props.match.params.id,
+          sort: sortValue,
+        })
+      );
+    } else if (props.match.params.pathname === "reviews")
       dispatch(
         getCompanySpecificReviews({
           employerId: props.match.params.id,
@@ -818,6 +831,27 @@ export default function Review(props) {
             {companyDetails.aboutTheCompany.misssionandvisson}
           </Typography>
         </Typography>
+      </Grid>
+      <Grid item style={{ marginBottom: "50px" }}>
+        <Typography variant="h5" style={{ marginBottom: "50px" }}>
+          <b>Featured Reviews</b>
+        </Typography>
+        {featuredReview &&
+          featuredReview.map((item) => (
+            <ReviewBox
+              key={item.id}
+              rating={item.overallRating}
+              review_title={item.reviewTitle}
+              date={item.date}
+              yourReview={item.yourReview}
+              pros={item.pros}
+              cons={item.cons}
+              helpfulCount={item.isHelpfulCount}
+              isApproved={item.isApproved}
+              isAuth={isAuth}
+              userRole={userDetails.role}
+            />
+          ))}
       </Grid>
     </div>
   );
@@ -1409,7 +1443,11 @@ export default function Review(props) {
     <>
       <Grid
         item
-        style={{ marginTop: "20px", marginBottom: "30px", marginLeft: "100px" }}
+        style={{
+          marginTop: "20px",
+          marginBottom: "30px",
+          marginLeft: "100px",
+        }}
       >
         <Typography variant="caption">
           About {companyDetails.companyName}
@@ -1417,7 +1455,11 @@ export default function Review(props) {
       </Grid>
       <Grid
         item
-        style={{ marginTop: "20px", marginBottom: "50px", marginLeft: "100px" }}
+        style={{
+          marginTop: "20px",
+          marginBottom: "50px",
+          marginLeft: "100px",
+        }}
       >
         <Typography variant="h5">
           <b>About the company</b>

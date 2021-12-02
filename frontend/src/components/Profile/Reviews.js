@@ -15,6 +15,7 @@ function Reviews() {
         const data = {
             "userId": userId
         }
+        console.log(data)
         dispatch(getUserReviews(data))
     }, [])
 

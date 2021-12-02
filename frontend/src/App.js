@@ -31,6 +31,7 @@ import EmployerPieChart from "./components/Employer/EmployerReports/EmployerPieC
 import { FindSalaries } from "./components/FindSalaries/FindSalaries";
 import EmployerMessage from "./components/Employer/EmployerApplicants/EmployerMessage";
 import Reviews from "./components/Profile/Reviews";
+import AppliedJobs from "./components/Profile/AppliedJobs";
 function App() {
   return (
     <ThemeProvider theme={Theme}>
@@ -44,6 +45,8 @@ function App() {
           <Route path="/indeed/profile" component={UserProfile} />
           <Route path="/indeed/messages" component={JobSeekerMessage} />
           <Route path="/indeed/saved-jobs" component={SavedJobs} />
+          <Route path="/indeed/applied-jobs" component={AppliedJobs} />
+          <Route path="/indeed/reviews" component={Reviews} />
           <Route path="/indeed/jobs" component={JobsDisplay} />
           <Route path="/indeed/find-salaries" component={FindSalaries} />
           <Route path="/addemployer" component={EmployerSignup} />

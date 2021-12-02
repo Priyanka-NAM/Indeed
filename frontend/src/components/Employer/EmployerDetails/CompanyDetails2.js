@@ -10,9 +10,13 @@ import {
   Select,
   MenuItem,
 } from "@material-ui/core";
-import { useDispatch } from "react-redux";
 import { isInfo } from "./CompanyDetails2Validation";
-
+import { Redirect } from "react-router-dom";
+import { useSelector } from "react-redux";
+import MuiAlert from "@mui/material/Alert";
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
+});
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: "#f2f2f2",
@@ -117,10 +121,8 @@ function CompanyDetails2({
 }) {
   const classes = useStyles();
   const [errors, setErrors] = useState({});
-
-  const success = false;
-  const isError = false;
-  const errorMsg = false;
+  const [isError, setIsError] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const onEmployerDetailsChange = (e) => {
     setemployerDetails({
@@ -142,17 +144,23 @@ function CompanyDetails2({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const error = isInfo(employerDetails);
     const errors = isInfo(employerDetails);
-    console.log("handle submit", errors);
     setErrors(errors);
+    if (Object.keys(error).length !== 0) {
+      console.log("Setting isError to True");
+      setIsError(true);
+      setSuccess(false);
+      return;
+    }
     if (Object.keys(errors).length > 0) return;
     setStep(step + 1);
   };
+  const { isAuth } = useSelector((state) => state.login);
 
   return (
     <>
-      {success ? alert("User registered successfully") : <></>}
-      {isError ? <Box>{errorMsg}</Box> : <></>}
+      {isAuth && <Redirect to='/employer/home' />}
       <Container className={classes.container} maxWidth='xl'>
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
           <Grid item style={{ margin: "25px 0" }}>
@@ -280,7 +288,7 @@ function CompanyDetails2({
               <OutlinedInput
                 className={classes.outlinedInput}
                 onChange={onAboutCompanyChange}
-                // error={errors.ceo}
+                error={errors.ceo}
                 value={employerDetails.aboutTheCompany.ceo}
                 required
                 type='text'
@@ -312,7 +320,14 @@ function CompanyDetails2({
           </Grid>
         </Box>
       </Container>
-      {/* // : <Redirect to='/' /> */}
+      {isError && (
+        <Alert severity='error'>
+          One or More fields are missing or wrong data!
+        </Alert>
+      )}
+      {success && (
+        <Alert severity='success'>Employer registered successfully!</Alert>
+      )}
     </>
   );
 }

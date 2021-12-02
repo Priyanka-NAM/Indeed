@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Box, Typography, Grid } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import {useDispatch, useSelector} from "react-redux";
-import { fetchAllJobs } from '../../Redux/Actions/JobsAction';
+import { fetchAllJobs, fetchQueriedJobs } from '../../Redux/Actions/JobsAction';
 import { useHistory } from 'react-router-dom';
 import StarIcon from '@material-ui/icons/Star';
 import JobDetails from './JobDetails';
@@ -62,11 +62,11 @@ function JobsDisplay(props) {
             "page": page,
             "limit": limit
         }
-        dispatch(fetchAllJobs(data))
+        dispatch(fetchQueriedJobs(data))
     },[page, limit])
     let boundary = 0;
     if (jobDetailsLength) {
-        boundary = Math.round(jobDetailsLength/limit)
+        boundary = Math.ceil(jobDetailsLength/limit)
     }
     const getJobDetails = (job, index) => {
         setIndex(index)
@@ -99,7 +99,7 @@ function JobsDisplay(props) {
                                 </Typography>
                                 <Typography className={classes.job_subTitle}>
                                     <label style={{cursor:"pointer"}} onClick={() => handleCompany(job.employerID._id)}>{job.companyName}</label> {' '} 
-                                    <label style={{fontSize:"14px", fontWeight:"700"}}>{job.employerID.averageRating} <StarIcon fontSize="small" style={{height:"12px"}} /></label>
+                                    {/* <label style={{fontSize:"14px", fontWeight:"700"}}>{job.employerID.averageRating && <label>job.employerID.averageRating</label>} <StarIcon fontSize="small" style={{height:"12px"}} /></label> */}
                                 </Typography>
                                 <Typography className={classes.job_subTitle}>
                                     {job.jobLocation.address}{' '}
