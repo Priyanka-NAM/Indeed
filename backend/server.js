@@ -25,7 +25,7 @@ app.use("/indeed/employer", employerRoutes);
 app.use("/indeed/employer", jobRoutes);
 app.use("/indeed/admin", AdminRoutes);
 app.use("/indeed/messages",MessageRoutes);
-app.use("/indeed/resume",uploadRoutes);
+app.use("/indeed/upload",uploadRoutes);
 
 connectDB();
 app.get("/", (req, res) => {

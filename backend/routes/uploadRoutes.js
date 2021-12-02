@@ -128,4 +128,111 @@ router.get('/deleteResume/:userID',async(req,res)=>{
     }
 })
 
+
+// cover letter upload control
+
+router.post('/updateCoverLetter',upload.single('cover_letter'),async(req,res)=>{
+    //console.log(req.file.path)
+    const userID = req.body.userID
+    const user = await User.findOne({userId:userID})
+    if(user){
+        if(user.coverLetter === ""){
+            user.coverLetter = req.file.path
+            const coverLetterUploaded = await user.save()
+            if(coverLetterUploaded){
+                res.send("Cover Letter Uploaded Successfully!")
+            }
+            else{
+                res.status(500).json({
+                    error:"Internal Server Error. Please try after sometime"
+                })
+    
+            }
+        }
+        else{
+            const prevcoverLetterPath = user.coverLetter
+            user.coverLetter = req.file.path
+            const coverLetterUploaded = await user.save()
+            if(coverLetterUploaded){
+
+                fs.unlink(prevcoverLetterPath, async(err)=> {
+                    if (err) {
+                        res.status(500).json({error:"Internal Server Error!"})
+                    }
+                    else{
+                        res.send("cover Letter Updated Successfully!");
+                    }
+                   
+                });
+            
+
+            }
+            else{
+
+            }
+            
+        }
+        
+        
+
+    }
+    else{
+        res.status(401).json({error:"user Not found!"})
+    }
+    //res.send(`${req.file.path}`)
+})
+
+router.post('/addcoverLetter',upload.single('cover_letter'),async(req,res)=>{
+    //console.log(req.file.path)
+    const userID = req.body.userID
+    const user = await User.findOne({userId:userID})
+    if(user){
+        user.coverLetter = req.file.path
+        const coverLetterUploaded = await user.save()
+        if(coverLetterUploaded){
+            res.send("Cover Letter Uploaded Successfully!")
+        }
+        else{
+            res.status(500).json({
+                error:"Internal Server Error. Please try after sometime"
+            })
+
+        }
+
+    }
+    else{
+        res.status(401).json({error:"user Not found!"})
+    }
+    //res.send(`${req.file.path}`)
+})
+
+router.get('/deleteCoverLetter/:userID',async(req,res)=>{
+    const userID = req.params.userID
+    const user = await User.findOne({userId:userID})
+    if(user){
+        const coverLetterPath = user.coverLetter
+        fs.unlink(coverLetterPath, async(err)=> {
+            if (err) throw err;
+            // if no error, file has been deleted successfully
+           // console.log('File deleted!');
+           user.coverLetter = ""
+           const userCoverLetterPathUpdated = await user.save()
+           if(userCoverLetterPathUpdated)
+            res.send("cover Letter File Deleted Successfully")
+            else{
+                res.status(500).json({
+                    error:"Internal Server Error. Please try after sometime"
+                })
+            }
+           
+        });
+    }
+    else{
+        res.status(401).json({error:"user Not found!"})
+    }
+
+})
+
+
+
 module.exports = router 

@@ -70,71 +70,64 @@ export default function Header() {
 
   return (
     <div className={classes.root}>
-      <AppBar elevation={0} color={"secondary"} position="static">
+      <AppBar elevation={0} color={"secondary"} position='static'>
         <Toolbar className={classes.toolbar}>
           <Container
             className={classes.header_container}
             disableGutters
-            maxWidth={false}
-          >
+            maxWidth={false}>
             {role !== 2 ? (
               <Box className={classes.header_left}>
-                <Link to="/">
+                <Link to='/'>
                   <img
                     className={classes.logo}
-                    src="/Images/Indeed_logo.png"
-                    alt=""
+                    src='/Images/Indeed_logo.png'
+                    alt=''
                   />
                 </Link>
                 <Box
                   className={classes.link}
-                  display={{ xs: "none", sm: "block", md: "block" }}
-                >
-                  <Typography component={NavLink} variant="h6" to="/">
+                  display={{ xs: "none", sm: "block", md: "block" }}>
+                  <Typography component={NavLink} variant='h6' to='/'>
                     Find Jobs
                   </Typography>
                   <Typography
                     component={NavLink}
-                    variant="h6"
-                    to="/indeed/companyreviews"
-                  >
+                    variant='h6'
+                    to='/indeed/companyreviews'>
                     Company Reviews
                   </Typography>
                   <Typography
                     component={NavLink}
-                    variant="h6"
-                    to="/find-salaries"
-                  >
+                    variant='h6'
+                    to='/indeed/find-salaries'>
                     Find Salary
                   </Typography>
                 </Box>
               </Box>
             ) : (
               <Box className={classes.header_left}>
-                <Link to="/indeed/allcompanies">
+                <Link to='/indeed/allcompanies'>
                   <img
                     className={classes.logo}
-                    src="/Images/Indeed_logo.png"
-                    alt=""
+                    src='/Images/Indeed_logo.png'
+                    alt=''
                   />
                 </Link>
 
                 <Box
                   className={classes.link}
-                  display={{ xs: "none", sm: "block", md: "block" }}
-                >
+                  display={{ xs: "none", sm: "block", md: "block" }}>
                   <Typography
                     component={NavLink}
-                    variant="h6"
-                    to="/indeed/allcompanies"
-                  >
+                    variant='h6'
+                    to='/indeed/allcompanies'>
                     Find Company
                   </Typography>
                   <Typography
                     component={NavLink}
-                    variant="h6"
-                    to="/admindashboard"
-                  >
+                    variant='h6'
+                    to='/admindashboard'>
                     Analytics
                   </Typography>
                 </Box>
@@ -142,29 +135,26 @@ export default function Header() {
             )}
             {isAuth || role === 2 ? (
               <Box className={classes.header_right}>
-                <Link to="/indeed/messages">
+                <Link to='/indeed/messages'>
                   <IconButton
-                    edge="start"
-                    color="inherit"
-                    aria-label="open drawer"
-                  >
+                    edge='start'
+                    color='inherit'
+                    aria-label='open drawer'>
                     <ForumIcon />
                   </IconButton>
                 </Link>
                 <IconButton
-                  edge="start"
-                  color="inherit"
-                  aria-label="open drawer"
-                >
+                  edge='start'
+                  color='inherit'
+                  aria-label='open drawer'>
                   <NotificationsIcon />
                 </IconButton>
                 <UserMenu />
                 <Typography
                   style={{ display: "flex", alignItems: "center" }}
                   component={NavLink}
-                  variant="h6"
-                  to="/"
-                >
+                  variant='h6'
+                  to='/'>
                   Employers/jobs
                 </Typography>
               </Box>
@@ -177,9 +167,8 @@ export default function Header() {
                     color: "#0039C0",
                   }}
                   component={NavLink}
-                  variant="h6"
-                  to="/"
-                >
+                  variant='h6'
+                  to='/'>
                   Upload your resume
                 </Typography>
                 <Typography
@@ -189,17 +178,15 @@ export default function Header() {
                     color: "#0039C0",
                   }}
                   component={NavLink}
-                  variant="h6"
-                  to="/login"
-                >
+                  variant='h6'
+                  to='/login'>
                   Sign in
                 </Typography>
                 <Typography
                   style={{ display: "flex", alignItems: "center" }}
                   component={NavLink}
-                  variant="h6"
-                  to="/"
-                >
+                  variant='h6'
+                  to='/employer'>
                   Employers/jobs
                 </Typography>
               </Box>
