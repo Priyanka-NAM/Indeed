@@ -9,8 +9,6 @@ import {
   makeStyles,
   withStyles,
   FormHelperText,
-  Select,
-  MenuItem,
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { isInfo } from "./EmployerCompanyDetailsUpdateValidation";
@@ -21,7 +19,6 @@ import {
 } from "../../../Redux/Actions/EmployerDetailsAction";
 import MuiAlert from "@mui/material/Alert";
 import { useHistory, Redirect } from "react-router-dom";
-// import isInfo from "./EmployerDetails/CompanyDetails1Validation";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -192,10 +189,11 @@ function EmployerCompanyDetailsUpdate(props) {
     setSuccess(true);
     dispatch(employerDetailsAdd(employerDetails));
   };
+  let { role } = useSelector((state) => state.login.userDetails);
 
   return (
     <>
-      {!isAuth && <Redirect to='/employer/' />}
+      {(!isAuth || role !== 1) && <Redirect to='/login' />}
       <Container className={classes.container} maxWidth='xl'>
         <Box className={classes.boxForm1} sx={{ borderRadius: 16 }}>
           <Grid container justifyContent='center' alignItems='center'>

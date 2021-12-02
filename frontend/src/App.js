@@ -15,7 +15,6 @@ import EmployerJobPost from "./components/Employer/EmployerJobPosting/EmployerJo
 import EmployerHomePage from "./components/Employer/EmployerHomePage/EmployerHomePage";
 import EmployerJobPostingHome from "./components/Employer/EmployerJobPosting/EmployerJobPostingHome";
 import Admindashboard from "./components/Admin/Dashboard";
-import StickyHeadTable from "./components/Employer/EmployerJobPosting/delete";
 import EmployerHeader from "./components/Employer/EmployerHomePage/EmployerHeader";
 import EmployerLandingPage from "./components/Employer/EmployerHomePage/EmployerLandingPage";
 import SavedJobs from "./components/Profile/SavedJobs";
@@ -35,56 +34,55 @@ import AppliedJobs from "./components/Profile/AppliedJobs";
 function App() {
   return (
     <ThemeProvider theme={Theme}>
-      <div className="App">
+      <div className='App'>
         <Router>
-          <Route exact path="/" component={Landing} />
-          <Route path="/indeed" component={Header} />
-          <Route path="/signup" component={Signup} />
-          <Route path="/login" component={Login} />
-          <Route exact path="/company/:id/:pathname" component={Company} />
-          <Route path="/indeed/profile" component={UserProfile} />
-          <Route path="/indeed/messages" component={JobSeekerMessage} />
-          <Route path="/indeed/saved-jobs" component={SavedJobs} />
-          <Route path="/indeed/applied-jobs" component={AppliedJobs} />
-          <Route path="/indeed/reviews" component={Reviews} />
-          <Route path="/indeed/jobs" component={JobsDisplay} />
-          <Route path="/indeed/find-salaries" component={FindSalaries} />
-          <Route path="/addemployer" component={EmployerSignup} />
+          <Route exact path='/' component={Landing} />
+          <Route path='/indeed' component={Header} />
+          <Route path='/signup' component={Signup} />
+          <Route path='/login' component={Login} />
+          <Route exact path='/company/:id/:pathname' component={Company} />
+          <Route path='/indeed/profile' component={UserProfile} />
+          <Route path='/indeed/messages' component={JobSeekerMessage} />
+          <Route path='/indeed/saved-jobs' component={SavedJobs} />
+          <Route path='/indeed/applied-jobs' component={AppliedJobs} />
+          <Route path='/indeed/jobs' component={JobsDisplay} />
+          <Route path='/indeed/find-salaries' component={FindSalaries} />
+          <Route path='/addemployer' component={EmployerSignup} />
           <Route
-            path="/indeed/companyreviews"
+            path='/indeed/companyreviews'
             exact
             component={CompanyReviews}
           />
-          <Route path="/employer" component={EmployerHeader} />
-          <Route path="/employer/send-message" component={EmployerMessage} />
-          <Route path="/employer/postJob" component={EmployerJobPost} />
+          <Route path='/employer' component={EmployerHeader} />
+          <Route path='/employer/send-message' component={EmployerMessage} />
+          <Route path='/employer/postJob' component={EmployerJobPost} />
 
           <Route
-            path="/employer/jobs-posted"
+            path='/employer/jobs-posted'
             component={EmployerJobPostingHome}
           />
           {/* <Route path='/reports' component={EmployerHomePage} /> */}
           {/* <Route path='/employer/home' component={EmployerHomePage} /> */}
           <Route
             exact
-            path="/employer/home/:id/:pathname"
+            path='/employer/home/:id/:pathname'
             component={EmployerHomePage}
           />
-          <Route path="/admindashboard" component={Admindashboard} />
-          <Route exact path="/employer/" component={EmployerLandingPage} />
-          <Route path="/employer/profile" component={EmployerProfile} />
+          <Route path='/admindashboard' component={Admindashboard} />
+          <Route exact path='/employer/' component={EmployerLandingPage} />
+          <Route path='/employer/profile' component={EmployerProfile} />
           <Route
             exact
-            path="/employer/company/update"
+            path='/employer/company/update'
             component={EmployerCompanyDetailsUpdate}
           />
-          <Route path="/employer/showJobDetails" component={EachJobDetails} />
-          <Route path="/employer/reviews" component={EmployerReviews} />
-          <Route path="/employer/reports" component={EmployerPieChart} />
+          <Route path='/employer/showJobDetails' component={EachJobDetails} />
+          <Route path='/employer/reviews' component={EmployerReviews} />
+          <Route path='/employer/reports' component={EmployerPieChart} />
 
-          <Route path="/indeed/allcompanies" component={AdminListCompanies} />
+          <Route path='/indeed/allcompanies' component={AdminListCompanies} />
           <Route
-            path="/employer/applicant-page/:id"
+            path='/employer/applicant-page/:id'
             exact
             component={EmployerJobApplicants}
           />
