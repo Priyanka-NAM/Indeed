@@ -120,4 +120,24 @@ const getUserProfile = async (req, res) => {
     }
 }
 
-module.exports = { updateUserSavedJobs, deleteUserSavedJobs, getUserSavedJobs, getUserAppliedJobs, getUserReviews, getUserProfile }
+const updateUserProfile = async (req, res) => {
+    const {userId} = req.body
+    const update = req.body
+    console.log(userId)
+    try {
+        if (userId) {
+            const user = await User.findOneAndUpdate({_id:userId}, update, {new: true})
+            if (user) {
+                res.status(200).send(user)
+            } else {
+                res.status(404).send("Resource not found")
+            }
+        } else {
+            res.status(401).send("Unauthorized")
+        }   
+    } catch (error) {
+        res.status(500).send("Database error")
+    }
+}
+
+module.exports = { updateUserSavedJobs, deleteUserSavedJobs, getUserSavedJobs, getUserAppliedJobs, getUserReviews, getUserProfile, updateUserProfile }

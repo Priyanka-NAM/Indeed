@@ -11,7 +11,8 @@ import {
     APPLY_JOB,
     USER_PROFILE,
     USER_ERROR,
-    GET_APPLIED_JOBS
+    GET_APPLIED_JOBS,
+    UPDATE_USER_PROFILE
 } from '../Constants/UserConstants';
 
 import { GET_JOB_APPLICANTS_REQUEST, GET_JOB_APPLICANTS_SUCCESS, GET_JOB_APPLICANTS_RESET, GET_JOB_APPLICANTS_FAIL } from '../Constants/JobConstants';
@@ -57,6 +58,11 @@ export const jobReducer = (state = initialState, action) => {
             profile: action.payload
           }
         }
+        case UPDATE_USER_PROFILE:
+          return {
+            ...state,
+            profile: action.payload
+          }
         case USER_ERROR:
           return {
             ...state,
