@@ -107,7 +107,6 @@ const employerSchema = mongoose.Schema({
       },
       count: {
         type: Number,
-        /*required: true,*/
       },
     },
   ],
