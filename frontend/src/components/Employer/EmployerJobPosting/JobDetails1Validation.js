@@ -38,7 +38,8 @@ export const isInfo = (values) => {
   if (
     !values.jobLocation ||
     !values.jobLocation.country ||
-    values.jobLocation.country === ""
+    values.jobLocation.country === "" ||
+    values.jobLocation.country === "Select Country"
   ) {
     errors.country = "Country is required";
   }

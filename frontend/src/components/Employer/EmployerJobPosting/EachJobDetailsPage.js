@@ -155,10 +155,7 @@ function EachJobDetails(props) {
 
   console.log("Job Details ", jobData);
   const classes = useStyles();
-  const [errors, setErrors] = useState({});
-  const success = false;
-  const isError = false;
-  const dispatch = useDispatch();
+
   const userId = useSelector((state) => state.login.userDetails.userId);
   const index = useSelector((state) => state.login.userDetails.userId);
 
@@ -169,29 +166,29 @@ function EachJobDetails(props) {
     console.log("view undo", viewUndo);
   }, [display]);
 
-  const displayUndo = (jobId) => {
-    const data = {
-      jobId: jobId,
-      userId: userId,
-    };
-    let temp = viewUndo;
-    temp[index] = !temp[index];
-    setViewUndo(temp);
-    setDisplay(!display);
-    console.log("---", viewUndo);
-  };
+  // const displayUndo = (jobId) => {
+  //   const data = {
+  //     jobId: jobId,
+  //     userId: userId,
+  //   };
+  //   let temp = viewUndo;
+  //   temp[index] = !temp[index];
+  //   setViewUndo(temp);
+  //   setDisplay(!display);
+  //   console.log("---", viewUndo);
+  // };
 
-  const hideUndo = (jobId) => {
-    console.log("delete");
-    const data = {
-      jobId: jobId,
-      userId: userId,
-    };
-    let temp = viewUndo;
-    temp[index] = !temp[index];
-    setViewUndo(temp);
-    setDisplay(!display);
-  };
+  // const hideUndo = (jobId) => {
+  //   console.log("delete");
+  //   const data = {
+  //     jobId: jobId,
+  //     userId: userId,
+  //   };
+  //   let temp = viewUndo;
+  //   temp[index] = !temp[index];
+  //   setViewUndo(temp);
+  //   setDisplay(!display);
+  // };
 
   return (
     <>
@@ -242,7 +239,7 @@ function EachJobDetails(props) {
               fontSize: "12pt",
               fontWeight: "400",
             }}>
-            {jobData.jobLocation.address} {jobData.jobLocation.city}{" "}
+            {jobData.jobLocation.address}, {jobData.jobLocation.city},{" "}
             {jobData.jobLocation.state}
           </Typography>
         </div>
@@ -321,15 +318,27 @@ function EachJobDetails(props) {
           </Typography>
         </div>
         <div>
-          <Typography
-            variant={"h6"}
-            style={{
-              marginBottom: "2px",
-              fontSize: "10pt",
-              fontWeight: "400",
-            }}>
-            {jobData.isRemote}
-          </Typography>
+          {jobData.isRemote ? (
+            <Typography
+              variant={"h6"}
+              style={{
+                marginBottom: "2px",
+                fontSize: "10pt",
+                fontWeight: "400",
+              }}>
+              Yes
+            </Typography>
+          ) : (
+            <Typography
+              variant={"h6"}
+              style={{
+                marginBottom: "2px",
+                fontSize: "10pt",
+                fontWeight: "400",
+              }}>
+              No
+            </Typography>
+          )}
         </div>
         <hr />
         <div>
@@ -418,6 +427,39 @@ function EachJobDetails(props) {
         </div>
         {/* <FullJobDescription jobData={jobData} /> */}
       </Box>
+      <Grid
+        container
+        spacing={1}
+        style={{
+          fontSize: "14px",
+          backgroundColor: "white",
+          padding: "15px 10px",
+          margin: "0 -20px ",
+        }}>
+        <Grid item style={{ cursor: "pointer" }}>
+          © 2020 Indeed
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Accessibility at Indeed
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Privacy Center
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Cookies
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Privacy
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Terms
+        </Grid>
+      </Grid>
     </>
   );
 }

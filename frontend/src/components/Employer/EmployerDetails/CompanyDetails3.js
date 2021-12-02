@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Container, Grid, OutlinedInput, Button } from "@material-ui/core";
 import { Box, makeStyles, withStyles, FormHelperText } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
+import {  Redirect } from "react-router-dom";
 import { isInfo } from "./CompanyDetails3Validation";
 import { employerDetailsAdd } from "../../../Redux/Actions/EmployerDetailsAction";
 import MuiAlert from "@mui/material/Alert";

@@ -155,6 +155,8 @@ function EmployerProfile(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const error = isInfo(employerDetails);
+    const errors = isInfo(employerDetails);
+    setErrors(errors);
     if (Object.keys(error).length !== 0) {
       console.log("Setting isError to True");
       setIsError(true);
@@ -170,7 +172,7 @@ function EmployerProfile(props) {
   return (
     <>
       {!isAuth && <Redirect to='/employer/' />}
-      {isError && <Alert severity='error'>Profile update failed!</Alert>}
+
       <Container className={classes.container} maxWidth='xl'>
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
           <Grid container justifyContent='center' alignItems='center'>
@@ -310,7 +312,11 @@ function EmployerProfile(props) {
             </form>
           </Grid>
         </Box>
-        {isError && <Alert severity='error'>Check the fields again!</Alert>}
+        {isError && (
+          <Alert severity='error'>
+            One or More fields missing/ or wrong data.Try again!
+          </Alert>
+        )}
         {success && (
           <Alert severity='success'>Details saved successfully!</Alert>
         )}

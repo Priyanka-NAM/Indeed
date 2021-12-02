@@ -137,7 +137,6 @@ function CompanyDetails1({
     const errors = isInfo(employerDetails);
     if (errors) {
       isError = true;
-      console.log("Error is set");
     }
     setErrors(errors);
     if (Object.keys(errors).length > 0) return;
@@ -146,8 +145,6 @@ function CompanyDetails1({
 
   return (
     <>
-      {success ? alert("") : <></>}
-      {isError ? <Box>{errorMsg}</Box> : <></>}
       <Container className={classes.container} maxWidth='xl'>
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
           <Grid item style={{ margin: "25px 0" }}>
@@ -275,11 +272,14 @@ function CompanyDetails1({
             </form>
           </Grid>
         </Box>
-        {/* {isError && (
-          <Alert variant='danger'>
-            Oops!One or More mandatory fields are missing.
+        {isError && (
+          <Alert severity='error'>
+            One or More fields are missing or wrong data!
           </Alert>
-        )} */}
+        )}
+        {success && (
+          <Alert severity='success'>Employer registered successfully!</Alert>
+        )}
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
           <Grid item xs={2} justify='flex-end' style={{ paddingLeft: "50%" }}>
             <SignInButton
@@ -291,7 +291,6 @@ function CompanyDetails1({
           </Grid>
         </Box>
       </Container>
-      {/* // : <Redirect to='/' /> */}
     </>
   );
 }

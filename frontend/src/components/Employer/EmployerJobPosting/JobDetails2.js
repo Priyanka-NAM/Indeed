@@ -122,8 +122,6 @@ function JobDetails2({ step, setStep, jobDetails, setjobDetails }) {
   const classes = useStyles();
   const [errors, setErrors] = useState({});
 
-  const errorMsg = false;
-
   const onjobDetailsChange = (e) => {
     console.log("Radio Buttons Name", e.target.name);
     console.log("Radio Buttons Value", e.target.value);
@@ -156,21 +154,20 @@ function JobDetails2({ step, setStep, jobDetails, setjobDetails }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const error = isInfo(jobDetails);
+    const errors = isInfo(jobDetails);
+    setErrors(errors);
     if (Object.keys(error).length !== 0) {
       console.log("Setting isError to True");
       setIsError(true);
       setSuccess(false);
       return;
     }
-    setErrors(errors);
     if (Object.keys(errors).length > 0) return;
     setStep(step + 1);
   };
 
   return (
     <>
-      {success ? alert("User registered successfully") : <></>}
-      {isError ? <Box>{errorMsg}</Box> : <></>}
       <Container className={classes.container} maxWidth='xl'>
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
           <Grid item style={{ margin: "25px 0" }}>
@@ -342,11 +339,11 @@ function JobDetails2({ step, setStep, jobDetails, setjobDetails }) {
         </Box>
         {isError && (
           <Alert severity='error'>
-            One or More fields are missing or wrong data!
+            One or More fields missing/ or wrong data.Try again!
           </Alert>
         )}
         {success && (
-          <Alert severity='success'>Employer registered successfully!</Alert>
+          <Alert severity='success'>Details Filled successfully!</Alert>
         )}
       </Container>
     </>

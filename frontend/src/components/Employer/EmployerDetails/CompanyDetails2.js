@@ -117,10 +117,6 @@ function CompanyDetails2({
   const classes = useStyles();
   const [errors, setErrors] = useState({});
 
-  const success = false;
-  const isError = false;
-  const errorMsg = false;
-
   const onEmployerDetailsChange = (e) => {
     setemployerDetails({
       ...employerDetails,
@@ -142,7 +138,6 @@ function CompanyDetails2({
   const handleSubmit = (e) => {
     e.preventDefault();
     const errors = isInfo(employerDetails);
-    console.log("handle submit", errors);
     setErrors(errors);
     if (Object.keys(errors).length > 0) return;
     setStep(step + 1);
@@ -309,7 +304,6 @@ function CompanyDetails2({
           </Grid>
         </Box>
       </Container>
-      {/* // : <Redirect to='/' /> */}
     </>
   );
 }

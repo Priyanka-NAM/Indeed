@@ -146,13 +146,15 @@ function JobDetails1({ step, setStep, jobDetails, setjobDetails }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const error = isInfo(jobDetails);
+    const errors = isInfo(jobDetails);
+    setErrors(errors);
     if (Object.keys(error).length !== 0) {
       console.log("Setting isError to True");
       setIsError(true);
       setSuccess(false);
       return;
     }
-    setErrors(errors);
+
     if (Object.keys(errors).length > 0) return;
     setStep(step + 1);
   };
@@ -173,6 +175,7 @@ function JobDetails1({ step, setStep, jobDetails, setjobDetails }) {
                 onChange={onJobDetailsChange}
                 value={jobDetails.jobTitle}
                 name='jobTitle'
+                error={errors.jobTitle}
                 required
                 placeholder='Please enter job title'
                 type='text'
@@ -187,6 +190,7 @@ function JobDetails1({ step, setStep, jobDetails, setjobDetails }) {
                 onChange={onJobDetailsChange}
                 value={jobDetails.companyName}
                 name='companyName'
+                error={errors.companyName}
                 placeholder='Please enter Company Name'
                 required
                 type='text'
@@ -201,6 +205,7 @@ function JobDetails1({ step, setStep, jobDetails, setjobDetails }) {
                 onChange={onJobLocationChange}
                 value={jobDetails.jobLocation.address}
                 required
+                error={errors.address}
                 placeholder='Address Location of job'
                 type='text'
                 name='address'
@@ -282,11 +287,11 @@ function JobDetails1({ step, setStep, jobDetails, setjobDetails }) {
         </Box>
         {isError && (
           <Alert severity='error'>
-            One or More fields are missing or wrong data!
+            One or More fields missing/ or wrong data.Try again!
           </Alert>
         )}
         {success && (
-          <Alert severity='success'>Employer registered successfully!</Alert>
+          <Alert severity='success'>Details Filled successfully!</Alert>
         )}
       </Container>
     </>
