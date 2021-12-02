@@ -12,9 +12,7 @@ const storage = multer.diskStorage({
     filename(req,file,cb){
         cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
     }
-
-    
-})
+}) 
 
 
 function checkFileType(file,cb){
@@ -38,9 +36,11 @@ const upload = multer({
 })
 
 router.post('/updateResume',upload.single('resume'),async(req,res)=>{
-    //console.log(req.file.path)
-    const userID = req.body.userID
-    const user = await User.findOne({userId:userID})
+    const obj = Object.assign({},req.body)
+    console.log(obj)
+    console.log(req.file.path)
+    const userID = obj.userId
+    const user = await User.findOne({_id:userID})
     if(user){
         if(user.resume === ""){
             user.resume = req.file.path
@@ -70,17 +70,10 @@ router.post('/updateResume',upload.single('resume'),async(req,res)=>{
                     }
                    
                 });
-            
-
             }
             else{
-
-            }
-            
+            } 
         }
-        
-        
-
     }
     else{
         res.status(401).json({error:"user Not found!"})
@@ -89,7 +82,7 @@ router.post('/updateResume',upload.single('resume'),async(req,res)=>{
 })
 
 router.post('/addResume',upload.single('resume'),async(req,res)=>{
-    //console.log(req.file.path)
+    console.log(req.file.path)
     const userID = req.body.userID
     const user = await User.findOne({userId:userID})
     if(user){
@@ -102,9 +95,7 @@ router.post('/addResume',upload.single('resume'),async(req,res)=>{
             res.status(500).json({
                 error:"Internal Server Error. Please try after sometime"
             })
-
         }
-
     }
     else{
         res.status(401).json({error:"user Not found!"})
@@ -130,13 +121,11 @@ router.get('/deleteResume/:userID',async(req,res)=>{
                     error:"Internal Server Error. Please try after sometime"
                 })
             }
-           
         });
     }
     else{
         res.status(401).json({error:"user Not found!"})
     }
-
 })
 
 
