@@ -10,9 +10,6 @@ const MessageRoutes = require('./routes/MessageRoutes');
 const uploadRoutes = require('./routes/uploadRoutes')
 const viewCountRoutes = require('./routes/viewCountRouts')
 const cors = require('cors');
-const MessageRoutes = require("./routes/MessageRoutes");
-const uploadRoutes = require("./routes/uploadRoutes");
-const cors = require("cors");
 
 
 const connectDB = require("./config/db");
