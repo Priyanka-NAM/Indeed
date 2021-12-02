@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Container, Box, Typography, Grid } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import {useDispatch, useSelector} from "react-redux";
-import { fetchAllJobs } from '../../Redux/Actions/JobsAction';
-import { Link } from 'react-router-dom';
+import { fetchAllJobs, fetchQueriedJobs } from '../../Redux/Actions/JobsAction';
+import { useHistory } from 'react-router-dom';
 import StarIcon from '@material-ui/icons/Star';
 import JobDetails from './JobDetails';
 import Pagination from '@mui/material/Pagination';
@@ -47,12 +47,14 @@ const useStyles = makeStyles(theme=>({
 function JobsDisplay(props) {
     const classes = useStyles()
     const dispatch = useDispatch()
+    const history = useHistory();
     const jobDetails = useSelector(state=>state.jobs.queriedJobs)
     const allJobDetails = useSelector(state=>state.jobs.allJobs)
+    const jobDetailsLength = useSelector(state=>state.jobs.queriedJobsLength)
     const [jobData,setJobData] = useState(null)
     const [index,setIndex] = useState(null)
     const [page,setPage] = useState(1)
-    const [limit,setLimit] = useState(10)
+    const [limit,setLimit] = useState(3)
     useEffect(() => {
         const data = {
             "job": props.location.state.query.job,
@@ -60,13 +62,11 @@ function JobsDisplay(props) {
             "page": page,
             "limit": limit
         }
-        console.log("data : ", data)
-        console.log("jobs dis : ", data)
-        dispatch(fetchAllJobs(data))
+        dispatch(fetchQueriedJobs(data))
     },[page, limit])
     let boundary = 0;
-    if (allJobDetails) {
-        boundary = Math.round((allJobDetails.length)/limit)
+    if (jobDetailsLength) {
+        boundary = Math.ceil(jobDetailsLength/limit)
     }
     const getJobDetails = (job, index) => {
         setIndex(index)
@@ -79,6 +79,10 @@ function JobsDisplay(props) {
     
     const handleLimit = (e) => {
         setLimit(e.target.value)
+    }
+
+    const handleCompany = (empId) => {
+        history.push(`/company/${empId}/snapshot`);
     }
 
     return ( 
@@ -94,8 +98,8 @@ function JobsDisplay(props) {
                                     {job.jobTitle}
                                 </Typography>
                                 <Typography className={classes.job_subTitle}>
-                                    <Link to='/'>{job.companyName}</Link> {' '} 
-                                    <label style={{fontSize:"14px", fontWeight:"700"}}>{job.employerID.averageRating} <StarIcon fontSize="small" style={{height:"12px"}} /></label>
+                                    <label style={{cursor:"pointer"}} onClick={() => handleCompany(job.employerID._id)}>{job.companyName}</label> {' '} 
+                                    {/* <label style={{fontSize:"14px", fontWeight:"700"}}>{job.employerID.averageRating && <label>job.employerID.averageRating</label>} <StarIcon fontSize="small" style={{height:"12px"}} /></label> */}
                                 </Typography>
                                 <Typography className={classes.job_subTitle}>
                                     {job.jobLocation.address}{' '}

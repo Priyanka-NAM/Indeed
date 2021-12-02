@@ -3,6 +3,9 @@
 // Fetching all the  jobs posted by the employer
 
 const Jobs = require("../Models/JobsModel")
+const redisClient = require('../config/redisClient');
+const { rPopCount } = require("../config/redisClient");
+const { set } = require("mongoose");
 
 const fetchJobs = async (req, res) => {
     console.log("req query : ",req.query)
@@ -91,4 +94,34 @@ const paginationFunc = async (res, page, limit, query) => {
     }
 }
 
-module.exports = fetchJobs
+const fetchMostSearchedJobs = async (req, res) => {
+  // const location = req.query.location
+  // console.log(location)
+  try {
+
+    const data = await redisClient.get('getMostSearchedJobs')
+    if (data) {
+      res.status(200).send(JSON.parse(data));
+    }
+    else{
+      const jobs = await Jobs.find({});
+      console.log(jobs)
+      if(jobs){
+
+        redisClient.setEx('getMostSearchedJobs', 36000, JSON.stringify(jobs));
+        res.status(200).send(jobs);
+      } else {
+        return res.status(400).json({
+          error: error
+        });
+      }
+    }
+} catch (error) {
+  console.log(error)
+  return res.status(500).json({
+        error: error
+        });
+}
+}
+
+module.exports = { fetchJobs, fetchMostSearchedJobs}

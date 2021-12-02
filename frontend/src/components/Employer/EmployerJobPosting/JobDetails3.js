@@ -1,18 +1,16 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Container, Grid, OutlinedInput, Button } from "@material-ui/core";
-import {
-  Box,
-  makeStyles,
-  withStyles,
-  FormHelperText,
-  Select,
-  MenuItem,
-} from "@material-ui/core";
+import { Box, makeStyles, withStyles, FormHelperText } from "@material-ui/core";
 import { useDispatch } from "react-redux";
-// import { isInfo } from "./CompanyDetails2Validation";
 import { employerJobPost } from "../../../Redux/Actions/EmployerJobPostingAction";
+import { isInfo } from "./JobDetails3Validation";
+import { Redirect } from "react-router-dom";
 
+import MuiAlert from "@mui/material/Alert";
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
+});
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: "#f2f2f2",
@@ -114,11 +112,8 @@ function JobDetails3({ step, setStep, jobDetails, setjobDetails }) {
   const classes = useStyles();
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
-
-  const success = false;
-  const isError = false;
-  const errorMsg = false;
-
+  const [isError, setIsError] = useState(false);
+  const [success, setSuccess] = useState(false);
   const onjobDetailsChange = (e) => {
     setjobDetails({
       ...jobDetails,
@@ -139,7 +134,16 @@ function JobDetails3({ step, setStep, jobDetails, setjobDetails }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // const errors = isInfo(jobDetails);
+    const error = isInfo(jobDetails);
+    const errors = isInfo(jobDetails);
+    setErrors(errors);
+    if (Object.keys(error).length !== 0) {
+      console.log("Setting isError to True");
+      setIsError(true);
+      setSuccess(false);
+      return;
+    }
+    setSuccess(true);
     setErrors(errors);
     if (Object.keys(errors).length > 0) return;
     dispatch(employerJobPost(jobDetails));
@@ -147,8 +151,6 @@ function JobDetails3({ step, setStep, jobDetails, setjobDetails }) {
 
   return (
     <>
-      {success ? alert("User registered successfully") : <></>}
-      {isError ? <Box>{errorMsg}</Box> : <></>}
       <Container className={classes.container} maxWidth='xl'>
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
           <Grid item style={{ margin: "25px 0" }}>
@@ -159,7 +161,7 @@ function JobDetails3({ step, setStep, jobDetails, setjobDetails }) {
               <OutlinedInput
                 className={classes.outlinedInputtextarea}
                 onChange={onJobDescription}
-                // error={errors.requirement}
+                error={errors.requirement}
                 value={jobDetails.jobDescription.requirement}
                 required
                 multiline
@@ -176,7 +178,7 @@ function JobDetails3({ step, setStep, jobDetails, setjobDetails }) {
               <OutlinedInput
                 className={classes.outlinedInputtextarea}
                 onChange={onJobDescription}
-                // error={errors.founded}
+                error={errors.responsibilites}
                 value={jobDetails.jobDescription.responsibilites}
                 required
                 multiline
@@ -194,7 +196,7 @@ function JobDetails3({ step, setStep, jobDetails, setjobDetails }) {
               <OutlinedInput
                 className={classes.outlinedInputtextarea}
                 onChange={onJobDescription}
-                // error={errors.ceo}
+                error={errors.moreInfo}
                 value={jobDetails.jobDescription.moreInfo}
                 required
                 multiline
@@ -227,8 +229,16 @@ function JobDetails3({ step, setStep, jobDetails, setjobDetails }) {
             </Grid>
           </Grid>
         </Box>
+        {isError && (
+          <Alert severity='error'>
+            One or More fields missing/ or wrong data.Try again!
+          </Alert>
+        )}
+        {success && (
+          <Alert severity='success'>Job is posted successfully!</Alert>
+        )}
+        {success && <Redirect to='/employer/jobs-posted/' />}
       </Container>
-      {/* // : <Redirect to='/' /> */}
     </>
   );
 }

@@ -235,7 +235,7 @@ export default function EmployerHomePage(props) {
     if (userDetails && userDetails.userId) {
       dispatch(employerDetailsGet(userDetails.userId));
     }
-  });
+  }, [props]);
   const companyDetails = responseFromServer
     ? responseFromServer
     : { aboutTheCompany: {} };
@@ -507,6 +507,8 @@ export default function EmployerHomePage(props) {
 
   return (
     <>
+      {(!isAuth || userDetails.role !== 1) && <Redirect to='/employer/' />}
+
       <div>
         <Container maxwidth='xl' style={{ marginTop: "5%" }}>
           <div

@@ -1,12 +1,13 @@
-const mongoose = require('mongoose') 
+const mongoose = require("mongoose");
 
-const salarySchema = mongoose.Schema({
+const salarySchema = mongoose.Schema(
+  {
     // salaryId: {
     //     type: String,
     //     required: true
     // },
     companyName: {
-        type: String
+      type: String,
     },
     // employerId: {
     //     type: String
@@ -15,29 +16,31 @@ const salarySchema = mongoose.Schema({
     //     type: String
     // },
     isWorking: {
-        type: Boolean
+      type: Boolean,
     },
     endDate: {
-        type: Date
+      type: Date,
     },
     jobTitle: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     jobLocation: {
-        type: String
+      type: String,
     },
     currentPay: {
-        type: String,
-        required: true
+      type: Number,
+      required: true,
     },
     experience: {
-        type: String
+      type: String,
     },
     benifits: {
-        type: String
-    }
-    },{timestamps:true})
-    
-    const Salaries = mongoose.model('Salaries',salarySchema) 
-    module.exports = Salaries
+      type: String,
+    },
+  },
+  { timestamps: true }
+);
+
+const Salaries = mongoose.model("Salaries", salarySchema);
+module.exports = Salaries;

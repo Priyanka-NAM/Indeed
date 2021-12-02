@@ -109,7 +109,8 @@ export default function UserMenu() {
             <ListItemText primary="My Profile" />
           </StyledMenuItem>
         </Link>
-        <Link to = '/indeed/saved-jobs'>
+        <Link to = '/indeed/saved-jobs'
+        style={{ textDecoration: "none", color: "black" }}>
         <StyledMenuItem
           onClick={() => {
             handleClose();
@@ -121,12 +122,16 @@ export default function UserMenu() {
           <ListItemText primary="My Jobs" />
         </StyledMenuItem>
         </Link>
+        <Link
+          to="/indeed/reviews"
+          style={{ textDecoration: "none", color: "black" }}>
         <StyledMenuItem>
           <ListItemIcon>
             <RateReviewIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText primary="My Reviews" />
         </StyledMenuItem>
+        </Link>
         <StyledMenuItem
           onClick={() => {
             handleLogout();

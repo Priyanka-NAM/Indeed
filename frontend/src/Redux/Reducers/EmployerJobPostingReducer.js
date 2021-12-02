@@ -1,6 +1,7 @@
 import {
   EMPLOYER_JOB_POST,
   EMPLOYER_JOB_ERROR,
+  EMPLOYER_LOGOUT,
 } from "../Constants/UserConstants";
 
 const initialState = {
@@ -33,7 +34,10 @@ export const employerJobPostingReducer = (state = initialState, action) => {
         ...state,
         errorResponse: action.payload,
       };
-
+    case EMPLOYER_LOGOUT:
+      return {
+        ...initialState,
+      };
     default:
       return state;
   }

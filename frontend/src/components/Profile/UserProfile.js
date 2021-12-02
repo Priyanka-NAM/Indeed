@@ -1,17 +1,112 @@
-import React from 'react';
-import { Container, Grid, Box, Typography, Button, OutlinedInput } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
+import { Container, Grid, Box, makeStyles, Typography, Button, OutlinedInput } from '@material-ui/core';
 import Header from '../Header/Header';
+import axios from 'axios';
+import { API } from '../../config';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserProfile, updateUserProfile } from '../../Redux/Actions/JobsAction';
+import { validateProfile } from "./ValidateProfile";
+
+const useStyles = makeStyles((theme) => ({
+    errorDisplay: {
+        color: "red",
+        fontWeight: "700",
+    }
+}))
 
 function UserProfile() {
-    const handleEmail = (e) => {
-        console.log(e.target.value)
+    const classes = useStyles();
+    let userId = useSelector(state=>state.login.userDetails.userId);
+    let profile = useSelector(state=>state.jobs.profile);
+
+    const [resumeFile, setResumeFile] = useState(null)
+    const [flag, setFlag] = useState(false)
+    const [name, setName] = useState(null)
+    const [email, setEmail] = useState(null)
+    const [contact, setContact] = useState(null)
+    const [location, setLocation] = useState(null)
+    const [errors, setErrors] = useState({});
+
+    const dispatch = useDispatch();
+
+    useEffect(async () => {
+        const data = {
+            "userId": userId
+        }
+       await dispatch(getUserProfile(data))
+    }, [flag])
+
+    const handleChange = (e) => {
+        setResumeFile(e.target.files[0])
     }
+
     const handleResume = (e) => {
-        console.log(e.target.value)
+        e.preventDefault()
+        console.log(resumeFile)
+        const formData = new FormData();
+        formData.append('resume', resumeFile)
+        formData.append('userId', userId)
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        } 
+        axios.post(`${API}/upload/updateResume`, formData, config).then((response) => {
+            setFlag(!flag)
+            console.log(response)
+          }).catch((error) => {
+              console.log(error);
+          })
     }
+
+    const handleDelete = () => {
+        const data = {
+            "userID": userId
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }
+        axios.get(`${API}/upload/deleteResume`, {
+            params: data
+        }, config)
+        .then((response) => {
+            setFlag(!flag)
+            console.log(response)
+        }).catch((error) => {
+            console.log(error);
+        })
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const data = {
+            name: name,  
+            email: email,
+            contact: contact,
+            location: location
+        };
+    
+        const error = await validateProfile(data);
+        if (Object.keys(error).length !== 0) {
+          setErrors(error);
+        } else {
+          setErrors({});
+          const updatedData = {
+            "userId": userId,
+            "firstName": name,  
+            "email": email,
+            "contact": contact,
+            "location": location
+          }
+          await dispatch(updateUserProfile(updatedData));
+        }
+      };
+
     return (
         <Container>
-            <Box>
+            <Box style={{marginLeft:"450px"}}>
                 <Grid>
                     <Grid item>
                         <Typography variant = "h5">My Profile</Typography>
@@ -20,31 +115,54 @@ function UserProfile() {
                             <Typography style={{ fontWeight:"600", marginTop:"10px"}}>
                                 Name
                             </Typography>
-                            <OutlinedInput type="text" onChange={handleEmail} style={{width:"300px", height:"40px"}} placeholder="Enter name"/>
+                            <OutlinedInput type="text" onChange={(e) => setName(e.target.value)} style={{width:"300px", height:"40px"}} placeholder="Enter name"/>
+                            {errors.name && (
+                                <p className={classes.errorDisplay}>{errors.name}</p>
+                            )}
                             <Typography style={{fontWeight:"600", marginTop:"10px"}}>
                                 Email
                             </Typography>
-                            <OutlinedInput type="email" style={{width:"300px", height:"40px"}} placeholder="Enter email"/>
+                            <OutlinedInput type="email" onChange={(e) => setEmail(e.target.value)} style={{width:"300px", height:"40px"}} placeholder="Enter email"/>
+                            {errors.email && (
+                                <p className={classes.errorDisplay}>{errors.email}</p>
+                            )}
                             <Typography style={{fontWeight:"600", marginTop:"10px"}}>
                                 Contact
                             </Typography>
-                            <OutlinedInput type="text" style={{width:"300px", height:"40px"}} placeholder="Enter contact"/>
+                            <OutlinedInput type="text" onChange={(e) => setContact(e.target.value)} style={{width:"300px", height:"40px"}} placeholder="Enter contact"/>
+                            {errors.contact && (
+                                <p className={classes.errorDisplay}>{errors.contact}</p>
+                            )}
                             <Typography style={{fontWeight:"600", marginTop:"10px"}}>
                                 Location
                             </Typography>
-                            <OutlinedInput type="text" style={{width:"300px", height:"40px"}} placeholder="Enter location"/>
+                            <OutlinedInput type="text" onChange={(e) => setLocation(e.target.value)} style={{width:"300px", height:"40px"}} placeholder="Enter location"/>
+                            {errors.location && (
+                                <p className={classes.errorDisplay}>{errors.location}</p>
+                            )}
                             <Typography style={{fontWeight:"600", marginTop:"10px"}}>
                                 Resume
                             </Typography>
                             <br  />
-                            <form onSubmit={handleResume}>
-                                <input type="file" name="resumeUpload" />
-                                <br />
-                                <br />
-                                <input type='submit' value='Upload!' />
-                            </form>
+                            <Grid container spacing={2}>
+                                <Grid item xs={2}>
+                                    <form onSubmit={handleResume}>
+                                        <input type="file" name="resume" onChange={handleChange} /> 
+                                        <br />
+                                        {profile && profile.resume && profile.resume.split("\\")[2]}
+                                        <br />
+                                        <br />
+                                        <input type='submit' value='Upload Resume' 
+                                        style={{width:"150px", height:"35px", backgroundColor:"#94B8EF"}} />
+                                    </form>
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <Button color='primary' onClick={handleDelete} style={{border:"1px solid black",
+                                    color:"black", backgroundColor:"#94B8EF", marginTop:"75px", marginLeft:"40px"}}>Delete Resume</Button>
+                                </Grid>
+                            </Grid>
                             <br />
-                            <Button style={{ color:"black", backgroundColor:"#2D5DCE", width:"100px"}} variant="contained">Submit</Button>
+                            <Button style={{ color:"black", backgroundColor:"#2D5DCE", width:"100px"}} variant="contained" onClick={handleSubmit}>Submit</Button>
                     </Grid>
                 </Grid>
             </Box>

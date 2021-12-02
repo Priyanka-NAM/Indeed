@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Image } from 'react-bootstrap';
+import { Image } from "react-bootstrap";
 import { styled } from "@mui/material/styles";
-import { GridList, GridListTile } from "@material-ui/core";
+import {
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  GridList,
+  GridListTile,
+  Radio,
+  RadioGroup,
+} from "@material-ui/core";
 import { API } from "../../config";
 import {
   getcompaniesDetails,
@@ -24,6 +32,7 @@ import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import { updateReviewStatus } from "../../Redux/Actions/Company";
 import { employerAllJob } from "../../Redux/Actions/EmployerJobPostingAction";
 import { updateHelpfulCount } from "../../Redux/Actions/Company";
+import { updatePhotoStatus } from "../../Redux/Actions/AdminAction";
 import InputGrid from "./InputGrid";
 import JobDescription from "./JobDescription";
 import { timeDifference } from "./timeDifference";
@@ -118,7 +127,7 @@ const useStyle = makeStyles((theme) => ({
     lineHeight: "1.4rem",
   },
   formhelperText: {
-    color: "#085ff7",
+    color: "#000000",
     paddingLeft: "20px",
     cursor: "pointer",
     fontSize: "17px",
@@ -183,6 +192,19 @@ const FollowButton = withStyles((theme) => ({
     },
   },
 }))(Button);
+const GreenCheckbox = withStyles({
+  root: {
+    color: "black",
+    "&$checked": {
+      color: "black",
+    },
+    "&$disabled": {
+      color: "white",
+    },
+  },
+  checked: {},
+  disabled: {},
+})(Checkbox);
 
 function getModalStyle() {
   const top = 50;
@@ -235,12 +257,23 @@ export default function Review(props) {
     : { aboutTheCompany: {} };
 
   let { responseFromServer: jobs } = useSelector((state) => state.employerJobs);
-  console.log(jobs);
 
   const loginReducer = useSelector((state) => state.login);
   const { isAuth, userDetails } = loginReducer;
   const [images, setImage] = useState([]);
   const [updatePage, setupdatePage] = useState(false);
+  const [companyname, setCompanyName] = useState("");
+  const [salaryJobTitle, setSalaryJobTitle] = useState("");
+  const [newsalary, setNewSalary] = useState("");
+  const [salaryLocation, setSalaryLocation] = useState("");
+
+  const [isWorking, setisWorking] = useState("No");
+
+  const handleisWorkingChange = (event) => {
+    setisWorking(event.target.value);
+    console.log(isWorking);
+  };
+
   const [imageUrl, setImageUrl] = useState([]);
 
   const [newRating, setnewRating] = useState(0);
@@ -255,15 +288,32 @@ export default function Review(props) {
   const [city, setCity] = useState("");
   const [st, setState] = useState("");
   const [photoOpen, setPhotoOpen] = useState(false);
+  const [salaryOpen, setSalaryOpen] = useState(false);
   const [values, setValues] = React.useState([
     "select Review Type",
     "Approved",
     "NotApproved",
   ]);
-  const [filterValue, setFilterValue] = React.useState(["select Review Type"]);
+  const [Ratingvalues, setRatingValues] = React.useState([
+    "select Rating value",
+    1,
+    2,
+    3,
+    4,
+    5,
+  ]);
+  const [filterValue, setFilterValue] = React.useState("select Review Type");
+  const [ratingfilterValue, setratingFilterValue] = React.useState("select Rating value");
   const [sortValue, setSortValue] = React.useState("createdAt");
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(4);
+  const [endvalue, setEndValue] = React.useState(
+    new Date("2014-08-18T21:11:54")
+  );
+
+  const handleChange = (newValue) => {
+    setEndValue(newValue);
+  };
 
   const query = new URLSearchParams(props.location.search);
   const id = query.get("id");
@@ -280,6 +330,16 @@ export default function Review(props) {
     setPhotoOpen(false);
   };
 
+  const handleSalaryClose = () => {
+    setSalaryOpen(false);
+  };
+
+  const handleSalaryOpen = () => {
+    setSalaryOpen(true);
+  };
+  const handlePhotoSatus = (employerId, photoId) => {
+    dispatch(updatePhotoStatus({ employerId, photoId }));
+  };
   const [interviewPrep, setinterviewPrep] = useState("");
 
   const [open, setOpen] = useState(false);
@@ -291,19 +351,20 @@ export default function Review(props) {
   const handleClose = () => {
     setOpen(false);
   };
- 
+
   let { companySpecificReviews } = useSelector(
     (state) => state.companyReviewList
   );
 
-  //Filtering reviews Based on the approved and user reviews.
+  
   if (companySpecificReviews) {
-    if (!isAuth && userDetails.role !== 2) {
+    //Filtering reviews Based on the approved and user reviews.
+    if (!isAuth) {
       let approvedReviews = companySpecificReviews.filter(
         (review) => review.isApproved === "Approved"
       );
       companySpecificReviews = approvedReviews;
-    } else if (userDetails.role !== 2) {
+    } else if (userDetails.role !== 2 ) {
       debugger;
       let approvedReviewsFromOtherUsers = [];
       let userReviews = [];
@@ -319,9 +380,32 @@ export default function Review(props) {
         approvedReviewsFromOtherUsers
       );
     }
+     //sort based on sort value
+    if(sortValue !== "createdAt"){
+      debugger;
+      if(sortValue === "overallRating"){
+        companySpecificReviews.sort(function(a, b) {
+          return b.overallRating - a.overallRating;
+        });
+      }
+      else{
+        companySpecificReviews.sort(function(a, b) {
+          return b.isHelpfulCount - a.isHelpfulCount;
+        });
+      }
+      
+    }
+    
   }
-  //Filter based on approved or not approved
-  if (filterValue === "Approved") {
+    // //Filter based on review ratings
+    if(companySpecificReviews && ratingfilterValue !== "select Rating value"){
+      companySpecificReviews = companySpecificReviews.filter(
+        (review) => review.overallRating === ratingfilterValue
+      );
+     }
+     
+   //Filter based on approved or not approved
+   if (filterValue === "Approved") {
     companySpecificReviews = companySpecificReviews.filter(
       (review) => review.isApproved === "Approved"
     );
@@ -330,35 +414,33 @@ export default function Review(props) {
       (review) => review.isApproved === "NotApproved"
     );
   }
-//Filter on jobs
-if (jobTitle && location && shouldDoJobSerach) {
-  jobs = jobs.filter(
-    (row) =>
-      row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1 ||
-      row.jobLocation.city.indexOf(location.toLowerCase()) > -1
-  );
 
-  console.log(jobs);
-} else if (jobTitle && shouldDoJobSerach) {
-  jobs = jobs.filter(
-    (row) => row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1
-  );
+  //Filter on jobs
+  if (jobTitle && location && shouldDoJobSerach) {
+    jobs = jobs.filter(
+      (row) =>
+        row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1 ||
+        row.jobLocation.city.indexOf(location.toLowerCase()) > -1
+    );
 
-  console.log(jobs);
-} else if (location && shouldDoJobSerach) {
-  jobs = jobs.filter(
-    (row) =>
-      row.jobLocation.city.toLowerCase().indexOf(location.toLowerCase()) >
-      -1
-  );
+    console.log(jobs);
+  } else if (jobTitle && shouldDoJobSerach) {
+    jobs = jobs.filter(
+      (row) => row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1
+    );
 
-  console.log(jobs);
-}
+    console.log(jobs);
+  } else if (location && shouldDoJobSerach) {
+    jobs = jobs.filter(
+      (row) =>
+        row.jobLocation.city.toLowerCase().indexOf(location.toLowerCase()) > -1
+    );
+
+    console.log(jobs);
+  }
   const [tooltipopen, setTooltipopen] = React.useState(true);
 
   useEffect(() => {
-    debugger;
-    console.log(sortValue);
     if (
       props.match.params.pathname === "snapshot" ||
       props.match.params.pathname === "photos"
@@ -374,7 +456,7 @@ if (jobTitle && location && shouldDoJobSerach) {
     else if (props.match.params.pathname === "jobs")
       dispatch(employerAllJob(props.match.params.id));
     setRating(companyDetails.noOfRatings);
-  }, [props.match, sortValue, updatePage, filterValue]);
+  }, [props.match,updatePage,sortValue, filterValue]);
 
   const changePathName = (pathName) => {
     props.history.push(`/company/${props.match.params.id}/${pathName}`);
@@ -424,11 +506,54 @@ if (jobTitle && location && shouldDoJobSerach) {
   };
   const handleJobSearch = (event) => {
     event.preventDefault();
+
+    if (jobTitle && location) {
+      jobs = jobs.filter(
+        (row) =>
+          row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1 ||
+          row.jobLocation.city.indexOf(location.toLowerCase()) > -1
+      );
+
+      console.log(jobs);
+    } else if (jobTitle) {
+      jobs = jobs.filter(
+        (row) => row.jobTitle.toLowerCase().indexOf(jobTitle.toLowerCase()) > -1
+      );
+
+      console.log(jobs);
+    } else if (location) {
+      jobs = jobs.filter(
+        (row) =>
+          row.jobLocation.city.toLowerCase().indexOf(location.toLowerCase()) >
+          -1
+      );
+    }
     setshouldDoJobSerach(true);
   };
+
+  const salarySubmithandler = async (event) => {
+    event.preventDefault();
+    const obj = {
+      jobTitle: salaryJobTitle,
+      currentPay: newsalary,
+      companyName: companyname,
+      jobLocation: salaryLocation,
+    };
+    console.log(obj);
+    await axios
+      .post(`${API}/company/user-salary`, { ...obj })
+      .then((response) => {
+        setSalaryOpen(false);
+        setCompanyName("");
+        setSalaryJobTitle("");
+        setNewSalary("");
+        setSalaryLocation("");
+      });
+  };
+
   const switchJobSearch = () => {
     setshouldDoJobSerach(false);
-  }
+  };
   const reviewSubmithandler = async (event) => {
     setupdatePage(!updatePage);
     event.preventDefault();
@@ -475,17 +600,17 @@ if (jobTitle && location && shouldDoJobSerach) {
   const showSnapShot = () => (
     <div>
       <Grid item style={{ marginTop: "20px", marginBottom: "30px" }}>
-        <Typography variant="caption">
+        <Typography variant='caption'>
           {companyDetails.companyName} Careers and Employment
         </Typography>
       </Grid>
       <Grid item style={{ marginTop: "20px", marginBottom: "20px" }}>
-        <Typography variant="h5">
+        <Typography variant='h5'>
           <b>Work happiness</b>
         </Typography>
       </Grid>
       <Grid item style={{ marginTop: "20px", marginBottom: "30px" }}>
-        <Typography variant="caption">
+        <Typography variant='caption'>
           Scores based on about 3 responses to Indeed's survey on work happiness
         </Typography>
       </Grid>
@@ -496,14 +621,12 @@ if (jobTitle && location && shouldDoJobSerach) {
           lg={4}
           style={{
             padding: "20px",
-          }}
-        >
-          <Typography variant="">
+          }}>
+          <Typography variant=''>
             <HtmlTooltip
               open={tooltipopen}
-              title="Do people feel happy at work most of the time?"
-              arrow
-            >
+              title='Do people feel happy at work most of the time?'
+              arrow>
               <span>
                 <b>{companyDetails.averageWorkHappinessScore}</b>
               </span>
@@ -517,14 +640,12 @@ if (jobTitle && location && shouldDoJobSerach) {
           lg={4}
           style={{
             padding: "20px",
-          }}
-        >
-          <Typography variant="">
+          }}>
+          <Typography variant=''>
             <HtmlTooltip
               open={tooltipopen}
-              title="Do people feel they are achieving most of their goals at work?"
-              arrow
-            >
+              title='Do people feel they are achieving most of their goals at work?'
+              arrow>
               <b>{companyDetails.averageAppreciationScore}</b>
             </HtmlTooltip>
           </Typography>{" "}
@@ -536,14 +657,12 @@ if (jobTitle && location && shouldDoJobSerach) {
           lg={4}
           style={{
             padding: "20px",
-          }}
-        >
-          <Typography variant="">
+          }}>
+          <Typography variant=''>
             <HtmlTooltip
               open={tooltipopen}
-              title="Do people feel they often learn something at work?"
-              arrow
-            >
+              title='Do people feel they often learn something at work?'
+              arrow>
               <b>{companyDetails.averageLearningScore}</b>
             </HtmlTooltip>
           </Typography>{" "}
@@ -551,7 +670,7 @@ if (jobTitle && location && shouldDoJobSerach) {
         </Grid>
       </Grid>
       <Grid item style={{ marginTop: "100px", marginBottom: "50px" }}>
-        <Typography variant="h5">
+        <Typography variant='h5'>
           <b>About the company</b>
         </Typography>
       </Grid>
@@ -559,7 +678,10 @@ if (jobTitle && location && shouldDoJobSerach) {
         <Grid item style={{ flex: 1 }}>
           <Image
             src={companyDetails.companyCeoPicture}
-            onError = {(e) => { e.target.onerror = null; e.target.src = 'https://dummyimage.com/100.png/09f/fff'; }}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "https://dummyimage.com/100.png/09f/fff";
+            }}
             style={{ height: "350px", borderRadius: "10px" }}
           />
         </Grid>
@@ -572,8 +694,7 @@ if (jobTitle && location && shouldDoJobSerach) {
               border: "2px solid #f2f2f2",
               borderRadius: "10px",
               padding: "20px",
-            }}
-          >
+            }}>
             <div style={{ fontWeight: "600" }}>CEO</div>
             <br />
             <br />
@@ -587,8 +708,7 @@ if (jobTitle && location && shouldDoJobSerach) {
               border: "2px solid #f2f2f2",
               borderRadius: "10px",
               padding: "20px",
-            }}
-          >
+            }}>
             <div style={{ fontWeight: "600" }}>Revenue</div>
             <br />
             <br />
@@ -602,8 +722,7 @@ if (jobTitle && location && shouldDoJobSerach) {
               border: "2px solid #f2f2f2",
               borderRadius: "10px",
               padding: "20px",
-            }}
-          >
+            }}>
             <div style={{ fontWeight: "600" }}>Company size</div>
             <br />
             <br />
@@ -617,8 +736,7 @@ if (jobTitle && location && shouldDoJobSerach) {
               border: "2px solid #f2f2f2",
               borderRadius: "10px",
               padding: "20px",
-            }}
-          >
+            }}>
             <div style={{ fontWeight: "600" }}>Industry</div>
             <br />
             <br />
@@ -634,8 +752,7 @@ if (jobTitle && location && shouldDoJobSerach) {
               border: "2px solid #f2f2f2",
               borderRadius: "10px",
               padding: "20px",
-            }}
-          >
+            }}>
             <div style={{ fontWeight: "600" }}>Founded</div>
             <br />
             <br />
@@ -645,14 +762,12 @@ if (jobTitle && location && shouldDoJobSerach) {
       </Grid>
       <Grid container style={{ padding: "40px" }}>
         <Typography
-          variant="body2"
-          style={{ color: "#767676", textAlign: "left" }}
-        >
+          variant='body2'
+          style={{ color: "#767676", textAlign: "left" }}>
           {companyDetails.aboutTheCompany.description}
           <Typography
-            variant="body2"
-            style={{ color: "#767676", textAlign: "left" }}
-          >
+            variant='body2'
+            style={{ color: "#767676", textAlign: "left" }}>
             {companyDetails.aboutTheCompany.misssionandvisson}
           </Typography>
         </Typography>
@@ -660,8 +775,8 @@ if (jobTitle && location && shouldDoJobSerach) {
     </div>
   );
   const showReviews = () => (
-    <div class="container-fluid">
-      <Typography variant="h4">
+    <div class='container-fluid'>
+      <Typography variant='h4'>
         <b>{companyDetails.companyName} Employee Reviews</b>
       </Typography>
       <Grid
@@ -674,24 +789,21 @@ if (jobTitle && location && shouldDoJobSerach) {
           height: "100px",
           boxShadow:
             "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)",
-        }}
-      >
+        }}>
         <FormControl>
           <ButtonGroup
-            variant="outlined"
-            aria-label="outlined button group"
-            style={{ padding: "35px" }}
-          >
-            <Button value="Rating" onClick={(e) => handleSort("overallRating")}>
+            variant='outlined'
+            aria-label='outlined button group'
+            style={{ padding: "35px" }}>
+            <Button value='Rating' onClick={(e) => handleSort("overallRating")}>
               Rating
             </Button>
             <Button
-              value="Helpfullness"
-              onClick={(e) => handleSort("isHelpfulCount")}
-            >
+              value='Helpfullness'
+              onClick={(e) => handleSort("isHelpfulCount")}>
               Helpfullness
             </Button>
-            <Button value="Date" onClick={(e) => handleSort("createdAt")}>
+            <Button value='Date' onClick={(e) => handleSort("createdAt")}>
               Date
             </Button>
           </ButtonGroup>
@@ -699,13 +811,27 @@ if (jobTitle && location && shouldDoJobSerach) {
         <FormControl style={{ padding: "37px" }}>
           <Select
             className={classes.outlinedInput}
-            variant="outlined"
+            variant='outlined'
             value={filterValue}
-            name="filterVal"
+            name='filterVal'
             onChange={(e) => setFilterValue(e.target.value)}
-            style={{ height: "30px" }}
+            style={{ height: "30px", width: "189px" }}
           >
             {values.map((value, index) => {
+              return <MenuItem value={value}>{value}</MenuItem>;
+            })}
+          </Select>
+        </FormControl>
+       <FormControl style={{ padding: "37px", paddingLeft: "50px" }}>
+          <Select
+            className={classes.outlinedInput}
+            variant="outlined"
+            value={ratingfilterValue}
+            name="ratingfilterVal"
+            onChange={(e) => setratingFilterValue(e.target.value)}
+            style={{ height: "30px" , width: "189px" }}
+          >
+            {Ratingvalues.map((value, index) => {
               return <MenuItem value={value}>{value}</MenuItem>;
             })}
           </Select>
@@ -728,8 +854,7 @@ if (jobTitle && location && shouldDoJobSerach) {
                       item
                       container
                       spacing={4}
-                      style={{ borderBottom: "#00000029 solid 1px" }}
-                    >
+                      style={{ borderBottom: "#00000029 solid 1px" }}>
                       <Grid item container spacing={1}>
                         <Grid item style={{ width: "57px" }}>
                           <h4 style={{ borderBottom: "3px dotted #000" }}>
@@ -737,58 +862,53 @@ if (jobTitle && location && shouldDoJobSerach) {
                           </h4>
 
                           <Rating
-                            name="size-small"
+                            name='size-small'
                             style={{ color: "#9d2b6b" }}
                             value={item.overallRating}
-                            size="small"
+                            size='small'
                             precision={0.5}
                             readOnly
                           />
                         </Grid>
                         <Grid item>
                           <Typography
-                            variant="head2"
-                            style={{ fontWeight: "800" }}
-                          >
+                            variant='head2'
+                            style={{ fontWeight: "800" }}>
                             {item.reviewTitle}
                           </Typography>
                           {"  "}
 
                           {item.isApproved === "NotApproved" ? (
                             <button
-                              type="button"
-                              disabled="true"
-                              class="btn btn-danger"
+                              type='button'
+                              disabled='true'
+                              class='btn btn-danger'
                               style={{
                                 height: "26px",
                                 fontWeight: "200",
                                 fontSize: "small",
                                 padding: "4px",
-                              }}
-                            >
+                              }}>
                               <i
-                                class="fa fa-times"
-                                aria-hidden="true"
-                                style={{ color: "white" }}
-                              ></i>{" "}
+                                class='fa fa-times'
+                                aria-hidden='true'
+                                style={{ color: "white" }}></i>{" "}
                               Not Verified
                             </button>
                           ) : (
                             <button
-                              type="button"
-                              class="btn btn-success"
-                              disabled="true"
+                              type='button'
+                              class='btn btn-success'
+                              disabled='true'
                               style={{
                                 height: "26px",
                                 fontWeight: "200",
                                 fontSize: "small",
                                 padding: "4px",
-                              }}
-                            >
+                              }}>
                               <i
-                                class="fas fa-check"
-                                style={{ color: "white" }}
-                              ></i>{" "}
+                                class='fas fa-check'
+                                style={{ color: "white" }}></i>{" "}
                               verified
                             </button>
                           )}
@@ -796,18 +916,16 @@ if (jobTitle && location && shouldDoJobSerach) {
                       </Grid>
                       <Grid item container spacing={3}>
                         <Typography
-                          variant="subtitle1"
-                          style={{ marginLeft: "20px" }}
-                        >
+                          variant='subtitle1'
+                          style={{ marginLeft: "20px" }}>
                           {item.yourReview}
                         </Typography>
                       </Grid>
                       <Grid item container spacing={3}>
                         <span>
                           <i
-                            class="fas fa-check"
-                            style={{ color: "green" }}
-                          ></i>
+                            class='fas fa-check'
+                            style={{ color: "green" }}></i>
                         </span>
                         <div spacing={3}>
                           <b> Pros </b>
@@ -816,18 +934,16 @@ if (jobTitle && location && shouldDoJobSerach) {
                       </Grid>
                       <Grid item container spacing={3}>
                         <Typography
-                          variant="subtitle1"
-                          style={{ marginLeft: "20px" }}
-                        >
+                          variant='subtitle1'
+                          style={{ marginLeft: "20px" }}>
                           {item.pros}
                         </Typography>
                       </Grid>
                       <Grid item container spacing={3}>
                         <i
-                          class="fa fa-times"
-                          aria-hidden="true"
-                          style={{ color: "red" }}
-                        ></i>
+                          class='fa fa-times'
+                          aria-hidden='true'
+                          style={{ color: "red" }}></i>
                         <br></br>
                         <div spacing={3}>
                           <b>Cons </b>{" "}
@@ -836,9 +952,8 @@ if (jobTitle && location && shouldDoJobSerach) {
 
                       <Grid item container spacing={3}>
                         <Typography
-                          variant="subtitle1"
-                          style={{ marginLeft: "20px" }}
-                        >
+                          variant='subtitle1'
+                          style={{ marginLeft: "20px" }}>
                           {item.isApprovedcons}
                         </Typography>
                       </Grid>
@@ -851,12 +966,11 @@ if (jobTitle && location && shouldDoJobSerach) {
                           <Grid item container spacing={3}>
                             <FormControl>
                               <ButtonGroup
-                                variant="outlined"
-                                aria-label="outlined button group"
-                                style={{ padding: "1px" }}
-                              >
+                                variant='outlined'
+                                aria-label='outlined button group'
+                                style={{ padding: "1px" }}>
                                 <Button
-                                  value="yes"
+                                  value='yes'
                                   onClick={() => {
                                     item.isHelpfulCount =
                                       item.isHelpfulCount + 1;
@@ -865,12 +979,11 @@ if (jobTitle && location && shouldDoJobSerach) {
                                       item.isHelpfulCount,
                                       item.isNotHelpfulCount
                                     );
-                                  }}
-                                >
+                                  }}>
                                   Yes {item.isHelpfulCount}
                                 </Button>
                                 <Button
-                                  value="no"
+                                  value='no'
                                   onClick={() => {
                                     item.isNotHelpfulCount =
                                       item.isNotHelpfulCount + 1;
@@ -879,8 +992,7 @@ if (jobTitle && location && shouldDoJobSerach) {
                                       item.isHelpfulCount,
                                       item.isNotHelpfulCount
                                     );
-                                  }}
-                                >
+                                  }}>
                                   No {item.isNotHelpfulCount}
                                 </Button>
                               </ButtonGroup>
@@ -894,13 +1006,12 @@ if (jobTitle && location && shouldDoJobSerach) {
                         item.isApproved === "NotApproved" && (
                           <span>
                             <button
-                              type="button"
-                              class="btn btn-info"
+                              type='button'
+                              class='btn btn-info'
                               onClick={() => {
                                 item.isApproved = "Approved";
                                 changeToApproved(item._id);
-                              }}
-                            >
+                              }}>
                               Verify this review
                             </button>
                           </span>
@@ -931,8 +1042,8 @@ if (jobTitle && location && shouldDoJobSerach) {
     </div>
   );
   const showPhotos = () => (
-    <div className="row">
-      <div className="col-md-9">
+    <div className='row'>
+      <div className='col-md-9'>
         <Grid item style={{ marginTop: "20px", marginBottom: "50px" }}>
           <span>
             <CameraAltIcon></CameraAltIcon>{" "}
@@ -940,50 +1051,204 @@ if (jobTitle && location && shouldDoJobSerach) {
           </span>
         </Grid>
         {isAuth ? (
-          <GridList
-            cellHeight={200}
-            cols={3}
-            style={{ width: 800, height: 600 }}
-          >
-            {companyDetails &&
-              companyDetails.photos.map(
-                (data) =>
-                  data.userId === userDetails.userId && (
-                    <GridListTile key={data.id}>
-                      <img src={data.path} alt={data.status} />
-                    </GridListTile>
-                  )
-              )}
-            {companyDetails &&
-              companyDetails.photos.map(
-                (data) =>
-                  data.status && (
-                    <GridListTile key={data.id}>
-                      <img src={data.path} alt={data.status} />
-                    </GridListTile>
-                  )
-              )}
-          </GridList>
+          <>
+            {userDetails.role === 2 ? (
+              <>
+                <GridList
+                  cellHeight={200}
+                  cols={3}
+                  style={{ width: 800, height: 600 }}>
+                  {companyDetails &&
+                    companyDetails.photos.map((data) => (
+                      <GridListTile key={data.id}>
+                        <img src={data.path} alt={data.status} />
+                        {data.status ? (
+                          <>
+                            <button
+                              type='button'
+                              class='btn btn-success'
+                              disabled='true'
+                              style={{
+                                height: "26px",
+                                fontWeight: "200",
+                                fontSize: "small",
+                                padding: "4px",
+                                position: "absolute",
+                                top: "2px",
+                                right: "0px",
+                              }}>
+                              <i
+                                class='fas fa-check'
+                                style={{ color: "white" }}></i>{" "}
+                              verified
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              type='button'
+                              class='btn btn-info'
+                              style={{
+                                height: "26px",
+                                fontWeight: "200",
+                                fontSize: "small",
+                                padding: "4px",
+                                position: "absolute",
+                                top: "2px",
+                                right: "0px",
+                              }}
+                              onClick={() => {
+                                data.status = true;
+                                handlePhotoSatus(companyDetails._id, data._id);
+                              }}>
+                              Verify here
+                            </button>
+                          </>
+                        )}
+                      </GridListTile>
+                    ))}
+                </GridList>
+              </>
+            ) : (
+              <>
+                <GridList
+                  cellHeight={200}
+                  cols={3}
+                  style={{ width: 800, height: 600 }}>
+                  {companyDetails &&
+                    companyDetails.photos.map(
+                      (data) =>
+                        data.userId === userDetails.userId && (
+                          <GridListTile key={data.id}>
+                            <img
+                              src={data.path}
+                              alt={data.status}
+                              style={{ position: "relative" , height: '200px' }}
+                            />
+                            {data.status ? (
+                              <>
+                                <button
+                                  type='button'
+                                  class='btn btn-success'
+                                  disabled='true'
+                                  style={{
+                                    height: "26px",
+                                    fontWeight: "200",
+                                    fontSize: "small",
+                                    padding: "4px",
+                                    position: "absolute",
+                                    top: "2px",
+                                    right: "0px",
+                                  }}>
+                                  <i
+                                    class='fas fa-check'
+                                    style={{ color: "white" }}></i>{" "}
+                                  verified
+                                </button>
+                              </>
+                            ) : (
+                              <>
+                                <button
+                                  type='button'
+                                  class='btn btn-danger'
+                                  disabled='true'
+                                  style={{
+                                    height: "26px",
+                                    fontWeight: "200",
+                                    fontSize: "small",
+                                    padding: "4px",
+                                    position: "absolute",
+                                    top: "2px",
+                                    right: "0px",
+                                  }}>
+                                  <i
+                                    class='fa fa-times'
+                                    aria-hidden='true'
+                                    style={{ color: "white" }}></i>{" "}
+                                  Not Verified
+                                </button>
+                              </>
+                            )}
+                          </GridListTile>
+                        )
+                    )}
+                  {companyDetails &&
+                    companyDetails.photos.map(
+                      (data) =>
+                        data.status &&
+                        data.userId !== userDetails.userId && (
+                          <>
+                            <GridListTile key={data.id}>
+                              <img
+                                src={data.path}
+                                alt={data.status}
+                                style={{ position: "relative", height: '200px'  }}
+                              />
+                              <button
+                                type='button'
+                                class='btn btn-success'
+                                disabled='true'
+                                style={{
+                                  height: "26px",
+                                  fontWeight: "200",
+                                  fontSize: "small",
+                                  padding: "4px",
+                                  position: "absolute",
+                                  top: "2px",
+                                  right: "0px",
+                                }}>
+                                <i
+                                  class='fas fa-check'
+                                  style={{ color: "white" }}></i>{" "}
+                                verified
+                              </button>
+                            </GridListTile>
+                          </>
+                        )
+                    )}
+                </GridList>
+              </>
+            )}
+          </>
         ) : (
           <GridList
             cellHeight={200}
             cols={3}
-            style={{ width: 800, height: 600 }}
-          >
+            style={{ width: 800, height: 600 }}>
             {companyDetails &&
               companyDetails.photos &&
               companyDetails.photos.map(
                 (data) =>
                   data.status && (
                     <GridListTile key={data.id}>
-                      <img src={data.path} alt={data.status} />
+                      <img
+                        src={data.path}
+                        alt={data.status}
+                        style={{ position: "relative"}}
+                      />
+                      <button
+                        type='button'
+                        class='btn btn-success'
+                        disabled='true'
+                        style={{
+                          height: "26px",
+                          fontWeight: "200",
+                          fontSize: "small",
+                          padding: "4px",
+                          position: "absolute",
+                          top: "2px",
+                          right: "0px",
+                        }}>
+                        <i class='fas fa-check' style={{ color: "white" }}></i>{" "}
+                        verified
+                      </button>
                     </GridListTile>
                   )
               )}
           </GridList>
         )}
       </div>
-      <UplaodButton type="submit" variant="contained" onClick={handlePhotoOpen}>
+      <UplaodButton type='submit' variant='contained' onClick={handlePhotoOpen}>
         Upload photo
       </UplaodButton>
     </div>
@@ -998,8 +1263,7 @@ if (jobTitle && location && shouldDoJobSerach) {
           backgroundColor: "white",
           padding: "15px 10px",
           margin: "50px -20px 0",
-        }}
-      >
+        }}>
         <Grid item style={{ cursor: "pointer" }}>
           ©️ 2020 Indeed
         </Grid>
@@ -1026,50 +1290,64 @@ if (jobTitle && location && shouldDoJobSerach) {
       </Grid>
     </div>
   );
+  const showSalary = () => (
+    <>
+      <SearchButton
+        type='submit'
+        variant='contained'
+        style={{ position: "relative", left: "800px" }}
+        onClick={handleSalaryOpen}>
+        Add a Salary
+      </SearchButton>
+    </>
+  );
   const showWhyJoinUs = () => (
     <>
       <Grid
         item
-        style={{ marginTop: "20px", marginBottom: "30px", marginLeft: "100px" }}
-      >
-        <Typography variant="caption">
+        style={{
+          marginTop: "20px",
+          marginBottom: "30px",
+          marginLeft: "100px",
+        }}>
+        <Typography variant='caption'>
           About {companyDetails.companyName}
         </Typography>
       </Grid>
       <Grid
         item
-        style={{ marginTop: "20px", marginBottom: "50px", marginLeft: "100px" }}
-      >
-        <Typography variant="h5">
+        style={{
+          marginTop: "20px",
+          marginBottom: "50px",
+          marginLeft: "100px",
+        }}>
+        <Typography variant='h5'>
           <b>About the company</b>
         </Typography>
         <Grid container style={{ padding: "40px" }}>
           <Typography
-            variant="body2"
-            style={{ color: "#767676", textAlign: "left" }}
-          >
+            variant='body2'
+            style={{ color: "#767676", textAlign: "left" }}>
             {companyDetails.aboutTheCompany.description}
           </Typography>
         </Grid>
-        <Typography variant="h5">
+        <Typography variant='h5'>
           <b>Work Culture</b>
         </Typography>
         <Grid container style={{ padding: "40px" }}>
           <Typography
-            variant="body2"
-            style={{ color: "#767676", textAlign: "left" }}
-          >
+            variant='body2'
+            style={{ color: "#767676", textAlign: "left" }}>
             {companyDetails.aboutTheCompany.workCulture}
           </Typography>
         </Grid>
-        <Typography variant="h5">
+        <Typography variant='h5'>
           <b>Company Values</b>
         </Typography>
         <Grid container style={{ padding: "40px" }}>
           <Typography
-            variant="body2"
-            style={{ color: "#767676", textAlign: "left" }}
-          >
+            variant='body2'
+            style={{ color: "#767676", textAlign: "left" }}>
             {companyDetails.aboutTheCompany.companyValues}
           </Typography>
         </Grid>
@@ -1087,15 +1365,13 @@ if (jobTitle && location && shouldDoJobSerach) {
             helperText={"Job Title"}
             classes={classes}
             switchJobSearch={switchJobSearch}
-
-            
           />
 
           <InputGrid
             setValue={setLocation}
             value={location}
             label={"Where"}
-            helperText="Location"
+            helperText='Location'
             classes={classes}
             switchJobSearch={switchJobSearch}
           />
@@ -1106,9 +1382,8 @@ if (jobTitle && location && shouldDoJobSerach) {
             md={2}
             sm={2}
             xs={12}
-            className={classes.btn_Container}
-          >
-            <Button color={"primary"} variant="contained" type="submit">
+            className={classes.btn_Container}>
+            <Button color={"primary"} variant='contained' type='submit'>
               Find Jobs
             </Button>
           </Grid>
@@ -1126,8 +1401,7 @@ if (jobTitle && location && shouldDoJobSerach) {
                 lg={12}
                 md={12}
                 sm={12}
-                xs={12}
-              >
+                xs={12}>
                 <Box onClick={() => getJobDescription(job)}>
                   <Typography className={classes.job_title}>
                     {job.jobTitle}
@@ -1149,48 +1423,48 @@ if (jobTitle && location && shouldDoJobSerach) {
   return (
     <div>
       <Header />
-      <Container maxwidth="xl">
+      <Container maxwidth='xl'>
         <div
-          class="jumbotron text-white jumbotron-image shadow"
+          class='jumbotron text-white jumbotron-image shadow'
           style={{
             backgroundImage: `url(${companyDetails.companyBanner})`,
             backgroundSize: "cover",
             height: "250px",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center center",
-          }}
-        ></div>
+          }}></div>
         <Grid
           container
           style={{
             justifyContent: "space-between",
             alignItems: "center",
             marginBottom: "20px",
-          }}
-        >
+          }}>
           <Grid container item lg={6} md={7} sm={8}>
             <Grid item className={classes.imgCont}>
               <Image
                 src={companyDetails.companyLogo}
-                alt=""
-                width="100px"
-                onError={(e) => {  this.src = 'https://dummyimage.com/100.png/09f/fff'; }}
+                alt=''
+                width='100px'
+                onError={(e) => {
+                  this.src = "https://dummyimage.com/100.png/09f/fff";
+                }}
               />
             </Grid>
             <Grid item style={{ paddingTop: "40px", paddingLeft: "20px" }}>
-              <Typography variant="h5">{companyDetails.companyName}</Typography>
-              <Typography variant="h5">
+              <Typography variant='h5'>{companyDetails.companyName}</Typography>
+              <Typography variant='h5'>
                 {companyDetails.averageRating}
                 {/* <StarIcon style = {{color: "#9d2b6b", paddingRight: "10px"}}/> */}
                 <Rating
-                  name="half-rating-read"
+                  name='half-rating-read'
                   style={{ color: "#9d2b6b", paddingRight: "10px" }}
                   value={rating}
                   precision={0.5}
                   readOnly
                 />
                 {companySpecificReviews && (
-                  <Typography variant="caption">
+                  <Typography variant='caption'>
                     {" "}
                     {companySpecificReviews.length} reviews
                   </Typography>
@@ -1201,10 +1475,9 @@ if (jobTitle && location && shouldDoJobSerach) {
           <Grid item>
             <Button
               color={"primary"}
-              variant="contained"
-              type="submit"
-              onClick={handleOpen}
-            >
+              variant='contained'
+              type='submit'
+              onClick={handleOpen}>
               {" "}
               Review this Company{" "}
             </Button>
@@ -1221,8 +1494,7 @@ if (jobTitle && location && shouldDoJobSerach) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("snapshot")}
-          >
+            onClick={() => changePathName("snapshot")}>
             SnapShot
           </Grid>
           <Grid
@@ -1232,8 +1504,7 @@ if (jobTitle && location && shouldDoJobSerach) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("whyjoinus")}
-          >
+            onClick={() => changePathName("whyjoinus")}>
             Why Join Us
           </Grid>
           <Grid
@@ -1243,8 +1514,7 @@ if (jobTitle && location && shouldDoJobSerach) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("reviews")}
-          >
+            onClick={() => changePathName("reviews")}>
             Reviews
           </Grid>
           <Grid
@@ -1254,8 +1524,7 @@ if (jobTitle && location && shouldDoJobSerach) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("salaries")}
-          >
+            onClick={() => changePathName("salaries")}>
             Salaries
           </Grid>
           <Grid
@@ -1265,8 +1534,7 @@ if (jobTitle && location && shouldDoJobSerach) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("photos")}
-          >
+            onClick={() => changePathName("photos")}>
             Photos
           </Grid>
           <Grid
@@ -1276,8 +1544,7 @@ if (jobTitle && location && shouldDoJobSerach) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("jobs")}
-          >
+            onClick={() => changePathName("jobs")}>
             Jobs
           </Grid>
           <Grid
@@ -1287,8 +1554,7 @@ if (jobTitle && location && shouldDoJobSerach) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("qanda")}
-          >
+            onClick={() => changePathName("qanda")}>
             Q&A
           </Grid>
           <Grid
@@ -1298,8 +1564,7 @@ if (jobTitle && location && shouldDoJobSerach) {
                 ? classes.activeTab
                 : classes.optionTab
             }
-            onClick={() => changePathName("interviews")}
-          >
+            onClick={() => changePathName("interviews")}>
             Interviews
           </Grid>
         </Grid>
@@ -1309,15 +1574,15 @@ if (jobTitle && location && shouldDoJobSerach) {
         {props.match.params.pathname === "photos" && showPhotos()}
         {props.match.params.pathname === "whyjoinus" && showWhyJoinUs()}
         {props.match.params.pathname === "jobs" && showJobs()}
+        {props.match.params.pathname === "salaries" && showSalary()}
         {showFooter()}
       </Container>
 
       <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
+        aria-labelledby='simple-modal-title'
+        aria-describedby='simple-modal-description'
         open={open}
-        onClose={handleClose}
-      >
+        onClose={handleClose}>
         <div style={modalStyle} className={classes.paper}>
           <form className={classes.formStyle} onSubmit={reviewSubmithandler}>
             <Grid>
@@ -1329,7 +1594,7 @@ if (jobTitle && location && shouldDoJobSerach) {
               </FormHelperText>
               <span style={{ margin: "0px 25px" }}>
                 <Rating
-                  name="simple-controlled"
+                  name='simple-controlled'
                   value={newRating}
                   onChange={(event, newValue) => {
                     setnewRating(newValue);
@@ -1338,7 +1603,7 @@ if (jobTitle && location && shouldDoJobSerach) {
               </span>
               <span style={{ margin: "0px 25px" }}>
                 <Rating
-                  name="simple-controlled"
+                  name='simple-controlled'
                   value={workHappinessScore}
                   onChange={(event, newValue) => {
                     setWorkHappinessScore(newValue);
@@ -1347,7 +1612,7 @@ if (jobTitle && location && shouldDoJobSerach) {
               </span>
               <span style={{ margin: "0px 45px" }}>
                 <Rating
-                  name="simple-controlled"
+                  name='simple-controlled'
                   value={learningScore}
                   onChange={(event, newValue) => {
                     setLearningScore(newValue);
@@ -1356,7 +1621,7 @@ if (jobTitle && location && shouldDoJobSerach) {
               </span>
               <span>
                 <Rating
-                  name="simple-controlled"
+                  name='simple-controlled'
                   value={appreciationScore}
                   onChange={(event, newValue) => {
                     setAppreciationScore(newValue);
@@ -1372,48 +1637,48 @@ if (jobTitle && location && shouldDoJobSerach) {
                 <span style={{ margin: "0px 70px" }}>State</span>
               </FormHelperText>
               <TextField
-                type="text"
+                type='text'
                 style={{ width: "150px" }}
                 value={reviewTitle}
                 required
                 onChange={(event) => {
                   setReviewTitle(event.target.value);
                 }}
-                variant="outlined"
-                placeholder="Review Title"
+                variant='outlined'
+                placeholder='Review Title'
               />
               <TextField
-                type="text"
+                type='text'
                 required
                 style={{ width: "150px", margin: "0px 35px" }}
                 value={reviewRole}
                 onChange={(event) => {
                   setReviewRole(event.target.value);
                 }}
-                variant="outlined"
-                placeholder="Review Role"
+                variant='outlined'
+                placeholder='Review Role'
               />
               <TextField
-                type="text"
+                type='text'
                 required
                 style={{ width: "150px", margin: "0px 10px" }}
                 value={city}
                 onChange={(event) => {
                   setCity(event.target.value);
                 }}
-                variant="outlined"
-                placeholder="City"
+                variant='outlined'
+                placeholder='City'
               />
               <TextField
-                type="text"
+                type='text'
                 required
                 style={{ width: "150px" }}
                 value={st}
                 onChange={(event) => {
                   setState(event.target.value);
                 }}
-                variant="outlined"
-                placeholder="State"
+                variant='outlined'
+                placeholder='State'
               />
             </Grid>
             <Grid>
@@ -1423,7 +1688,7 @@ if (jobTitle && location && shouldDoJobSerach) {
               <TextField
                 className={classes.outlinedInput}
                 required
-                type="text"
+                type='text'
                 multiline
                 rows={3}
                 rowsMax={4}
@@ -1431,8 +1696,8 @@ if (jobTitle && location && shouldDoJobSerach) {
                 onChange={(event) => {
                   setReviewSummary(event.target.value);
                 }}
-                variant="outlined"
-                placeholder="Review Summary"
+                variant='outlined'
+                placeholder='Review Summary'
               />
             </Grid>
             <Grid>
@@ -1449,9 +1714,9 @@ if (jobTitle && location && shouldDoJobSerach) {
                 onChange={(event) => {
                   setPros(event.target.value);
                 }}
-                type="text"
-                variant="outlined"
-                placeholder="Pros"
+                type='text'
+                variant='outlined'
+                placeholder='Pros'
               />
             </Grid>
             <Grid>
@@ -1464,13 +1729,13 @@ if (jobTitle && location && shouldDoJobSerach) {
                 multiline
                 rows={2}
                 rowsMax={4}
-                type="text"
+                type='text'
                 value={cons}
                 onChange={(event) => {
                   setCons(event.target.value);
                 }}
-                variant="outlined"
-                placeholder="Cons"
+                variant='outlined'
+                placeholder='Cons'
               />
             </Grid>
             <Grid>
@@ -1483,18 +1748,18 @@ if (jobTitle && location && shouldDoJobSerach) {
                 multiline
                 rows={2}
                 rowsMax={4}
-                type="text"
+                type='text'
                 value={interviewPrep}
                 onChange={(event) => {
                   setinterviewPrep(event.target.value);
                 }}
-                variant="outlined"
-                placeholder="   Interview Preparation"
+                variant='outlined'
+                placeholder='   Interview Preparation'
               />
             </Grid>
             <br />
             <Grid>
-              <SearchButton type="submit" variant="contained">
+              <SearchButton type='submit' variant='contained'>
                 Post
               </SearchButton>
             </Grid>
@@ -1502,23 +1767,22 @@ if (jobTitle && location && shouldDoJobSerach) {
         </div>
       </Modal>
       <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
+        aria-labelledby='simple-modal-title'
+        aria-describedby='simple-modal-description'
         open={photoOpen}
-        onClose={handlePhotoClose}
-      >
+        onClose={handlePhotoClose}>
         <div style={modalStyle} className={classes.photopaper}>
           <form className={classes.formStyle}>
-            <label for="file-upload" id="file-drag">
+            <label for='file-upload' id='file-drag'>
               <div>
                 <div>Select a file</div>
                 <div>Please select an image</div>
 
                 <input
-                  id="file-upload"
-                  type="file"
-                  name="fileUpload"
-                  accept="image/*"
+                  id='file-upload'
+                  type='file'
+                  name='fileUpload'
+                  accept='image/*'
                   multiple
                   onChange={(e) => {
                     let files = [];
@@ -1535,12 +1799,173 @@ if (jobTitle && location && shouldDoJobSerach) {
                   left: "150px",
                   top: "100px",
                 }}
-                class="btn btn-primary"
-                onClick={filehandler}
-              >
+                class='btn btn-primary'
+                onClick={filehandler}>
                 Upload
               </button>
             </label>
+          </form>
+        </div>
+      </Modal>
+      <Modal
+        aria-labelledby='simple-modal-title'
+        aria-describedby='simple-modal-description'
+        open={salaryOpen}
+        onClose={handleSalaryClose}>
+        <div style={modalStyle} className={classes.paper}>
+          <form className={classes.formStyle} onSubmit={salarySubmithandler}>
+            <Grid style={{ height: "80px" }}>
+              <FormHelperText className={classes.formhelperText}>
+                What's Your Company ?
+              </FormHelperText>
+              <TextField
+                className={classes.outlinedInput}
+                required
+                type='text'
+                value={companyname}
+                required
+                onChange={(event) => {
+                  setCompanyName(event.target.value);
+                }}
+                variant='outlined'
+                placeholder=''
+              />
+            </Grid>
+            <Grid style={{ height: "80px" }}>
+              <FormHelperText className={classes.formhelperText}>
+                Are you Currently working ?
+              </FormHelperText>
+
+              <RadioGroup
+                aria-label='Working'
+                row
+                name='controlled-radio-buttons-group'
+                value={isWorking}
+                onChange={handleisWorkingChange}>
+                <FormControlLabel value='No' control={<Radio />} label='Yes' />
+                <FormControlLabel value='Yes' control={<Radio />} label='No' />
+              </RadioGroup>
+              {isWorking === "Yes" && (
+                <div
+                  style={{
+                    position: "relative",
+                    left: "350px",
+                    bottom: "80px",
+                    marginBottom: "0px",
+                  }}>
+                  <FormHelperText className={classes.formhelperText}>
+                    End Date
+                  </FormHelperText>
+                  <input type='date' className={classes.formhelperText} />
+                </div>
+              )}
+            </Grid>
+
+            <Grid style={{ height: "80px" }}>
+              <FormHelperText className={classes.formhelperText}>
+                Whats Your Job Title?
+              </FormHelperText>
+              <TextField
+                className={classes.outlinedInput}
+                type='text'
+                required
+                variant='outlined'
+                placeholder='Job Title'
+                value={salaryJobTitle}
+                onChange={(event) => {
+                  setSalaryJobTitle(event.target.value);
+                }}
+              />
+            </Grid>
+
+            <Grid style={{ height: "80px" }}>
+              <FormHelperText className={classes.formhelperText}>
+                Pay
+              </FormHelperText>
+              <TextField
+                className={classes.outlinedInput}
+                type='text'
+                required
+                variant='outlined'
+                placeholder='Current Pay'
+                value={newsalary}
+                onChange={(event) => {
+                  setNewSalary(event.target.value);
+                }}
+              />
+            </Grid>
+            <Grid style={{ height: "80px" }}>
+              <FormHelperText className={classes.formhelperText}>
+                Beneifts
+              </FormHelperText>
+              <FormGroup>
+                <FormControlLabel
+                  style={{ height: "25px" }}
+                  control={<GreenCheckbox />}
+                  label='Paid time off'
+                />
+                <FormControlLabel
+                  style={{ height: "25px" }}
+                  control={<GreenCheckbox />}
+                  label='Health insurance'
+                />
+                <FormControlLabel
+                  style={{ height: "25px" }}
+                  control={<GreenCheckbox />}
+                  label='Life insurance'
+                />
+                <FormControlLabel
+                  style={{ height: "25px" }}
+                  control={<GreenCheckbox />}
+                  label='Dental/ vision insurance'
+                />
+                <FormControlLabel
+                  style={{ height: "25px" }}
+                  control={<GreenCheckbox />}
+                  label='Retirement/ 401(k)'
+                />
+                <FormControlLabel
+                  style={{ height: "25px" }}
+                  control={<GreenCheckbox />}
+                  label='Other benefits'
+                />
+              </FormGroup>
+            </Grid>
+            <Grid
+              style={{
+                height: "80px",
+                position: "relative",
+                top: "150px",
+                width: "50px",
+              }}>
+              <FormHelperText className={classes.formhelperText}>
+                Location
+              </FormHelperText>
+              <TextField
+                className={classes.outlinedInput}
+                style={{ width: "150px" }}
+                required
+                type='text'
+                variant='outlined'
+                placeholder='Location'
+                value={salaryLocation}
+                onChange={(event) => {
+                  setSalaryLocation(event.target.value);
+                }}
+              />
+            </Grid>
+            <br />
+            <Grid
+              style={{
+                height: "80px",
+                position: "relative",
+                left: "400px",
+                top: "80px",
+              }}>
+              <SearchButton type='submit' variant='contained'>
+                Post
+              </SearchButton>
+            </Grid>
           </form>
         </div>
       </Modal>

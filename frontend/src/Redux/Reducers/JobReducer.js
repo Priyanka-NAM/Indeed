@@ -1,11 +1,18 @@
 import {
     FETCH_ALL_JOBS,
     FETCH_QUERIED_JOBS,
+    FETCH_Q_JOBS,
     JOB_ERROR,
     POST_SAVED_JOBS,
     DELETE_SAVED_JOBS,
     GET_SAVED_JOBS,
-    APPLY_JOB
+    GET_USER_REVIEWS,
+    REVIEW_ERROR,
+    APPLY_JOB,
+    USER_PROFILE,
+    USER_ERROR,
+    GET_APPLIED_JOBS,
+    UPDATE_USER_PROFILE
 } from '../Constants/UserConstants';
 
 import { GET_JOB_APPLICANTS_REQUEST, GET_JOB_APPLICANTS_SUCCESS, GET_JOB_APPLICANTS_RESET, GET_JOB_APPLICANTS_FAIL } from '../Constants/JobConstants';
@@ -15,23 +22,57 @@ const initialState = {
     successResponse: null, 
     errorResponse: null,
     queriedJobs: null,
-    savedJobs: null
+    savedJobs: null,
+    appliedJobs: null,
+    reviews: null,
+    queriedJobsLength: 0,
+    profile: null
 } 
   
 export const jobReducer = (state = initialState, action) => {
       switch (action.type) {
         case FETCH_ALL_JOBS:
-          console.log("jobs reducer : ", action.payload)
           return { 
             ...state,
             allJobs: action.payload  
           };
         case FETCH_QUERIED_JOBS:
-          console.log("jobs reducer : ", action.payload)
           return { 
             ...state,
-            queriedJobs: action.payload  
+            queriedJobs: action.payload,
           };
+        case FETCH_Q_JOBS:
+          return {
+            ...state, 
+            queriedJobsLength: action.payload.length
+          }
+        case GET_USER_REVIEWS: {
+          return {
+            ...state,
+            reviews: action.payload
+          }
+        }
+        case USER_PROFILE: {
+          return {
+            ...state,
+            profile: action.payload
+          }
+        }
+        case UPDATE_USER_PROFILE:
+          return {
+            ...state,
+            profile: action.payload
+          }
+        case USER_ERROR:
+          return {
+            ...state,
+            errorResponse: action.payload
+          }
+        case REVIEW_ERROR:
+          return {
+            ...state,
+            errorResponse: action.payload
+          }
         case POST_SAVED_JOBS:
           return {
             ...state,
@@ -41,6 +82,11 @@ export const jobReducer = (state = initialState, action) => {
           return {
             ...state,
             savedJobs: action.payload
+          }
+        case GET_APPLIED_JOBS:
+          return {
+            ...state,
+            appliedJobs: action.payload
           }
         case DELETE_SAVED_JOBS:
           return {
