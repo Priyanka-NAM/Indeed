@@ -1,9 +1,9 @@
 const mysql = require("mysql");
 
 const pool = mysql.createPool({
-  host: "indeed.cxz6a21rgeds.us-east-1.rds.amazonaws.com",
+  host: "indeed.cgpwh4cefk7y.us-east-2.rds.amazonaws.com",
   user: "admin",
-  password: "12345678",
+  password: "dontaskmypassword",
   database: "indeed",
   port: 3306,
   debug: false,
