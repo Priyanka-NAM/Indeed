@@ -27,7 +27,8 @@ router.get('/addViewCount/:employerID', async (req, res) => {
 
         )
         //employer.views.count = result
-        res.send("View Count incremented")
+        if(employer)
+            res.send("View Count incremented")
 
         //const result = await employer.views.
     }
@@ -69,6 +70,31 @@ router.get('/getViewCount/:employerID', async (req, res) => {
     if (employerViewsByDay) {
         const result = employerViewsByDay.views
         res.status(200).send(result)
+    }
+    else {
+        
+            res.status(404).send("Employer's Id not found")
+        
+
+    }
+
+
+})
+
+router.get('/getTopViewCountsByDay/:day', async (req, res) => {
+    const day = req.params.day
+    /*var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const d = new Date();
+    //let day = d.getDay()
+    const dayName = days[day]*/
+    
+    const employerViewsByDay = await Employer.find({'views.day':day}).sort({'views.count':-1}).limit(10).select('employerName')
+    
+
+    if (employerViewsByDay) {
+        
+       
+        res.status(200).send(employerViewsByDay)
     }
     else {
         
