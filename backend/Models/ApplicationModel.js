@@ -16,7 +16,14 @@ const applicationSchema = mongoose.Schema({
             ref: 'Jobs',
             required:true
         },
+        emailId:{
+            type: String,
+            required: true
+        },
         resume: {
+            type: String
+        },
+        cv:{
             type: String
         },
         status: {

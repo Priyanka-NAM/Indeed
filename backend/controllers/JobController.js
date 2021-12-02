@@ -108,23 +108,19 @@ const getAllJobs = async (req, res) => {
 };
 
 const getJobApplicants = async (req, res) => {
-  try {
-    const jobApplicants = await Jobs.findById({ _id: req.params.id });
 
-    if (jobApplicants) {
-      const applicants = [];
+  try{
+    const jobApplicants = await Applications.find({$and:[{jobId: req.params.jobId},{employerId: req.params.employerId}]});
 
-      for (let i = 0; i < jobApplicants.applicants.length; i++) {
-        applicants.push(
-          await Users.findById({ _id: jobApplicants.applicants[i] })
-        );
-      }
-
-      res.status(200).send(applicants);
-    } else {
-      res.status(400).send("Error: Unable to get Job Applicants");
+    if(jobApplicants.length > 0){
+      res.status(200).send(jobApplicants);
     }
-  } catch (error) {
+    else{
+      res.status(200).send("No Job Applicants for this job");
+    }
+
+  }
+  catch (error) {
     res.status(500).send("Internal Server Error");
   }
 };
