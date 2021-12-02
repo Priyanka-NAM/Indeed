@@ -45,6 +45,7 @@ export const loginReducer = (state = initialState, action) => {
         ...state,
         userDetails: {},
         isAuth: false,
+        accErr: false
       };
     case EMPLOYER_LOGOUT:
       localStorage.removeItem("login");
@@ -53,6 +54,7 @@ export const loginReducer = (state = initialState, action) => {
         userDetails: {},
         responseFromServer: {},
         isAuth: false,
+        accErr: false
       };
     default:
       return state;

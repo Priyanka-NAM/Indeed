@@ -1,13 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Grid, Box, Typography, Button, OutlinedInput } from '@material-ui/core';
 import Header from '../Header/Header';
+import axios from 'axios';
+import { API } from '../../config';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserProfile } from '../../Redux/Actions/JobsAction';
 
 function UserProfile() {
+    let userId = useSelector(state=>state.login.userDetails.userId);
+    let profile = useSelector(state=>state.jobs.profile);
+
+    const [resumeFile, setResumeFile] = useState(null)
+    const [flag, setFlag] = useState(false)
+    const dispatch = useDispatch();
+
+    useEffect(async () => {
+        const data = {
+            "userId": userId
+        }
+       await dispatch(getUserProfile(data))
+    }, [flag])
+
     const handleEmail = (e) => {
         console.log(e.target.value)
     }
+
+    const handleChange = (e) => {
+        setResumeFile(e.target.files[0])
+    }
+
     const handleResume = (e) => {
-        console.log(e.target.value)
+        e.preventDefault()
+        console.log(resumeFile)
+        const data = {
+            "userId": userId
+        }
+        const formData = new FormData();
+        formData.append('resume', resumeFile)
+        formData.append('userId', userId)
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        } 
+        axios.post(`${API}/resume/updateResume`, formData, config).then((response) => {
+            setFlag(!flag)
+            console.log(response)
+          }).catch((error) => {
+              console.log(error);
+          })
     }
     return (
         <Container>
@@ -38,7 +79,9 @@ function UserProfile() {
                             </Typography>
                             <br  />
                             <form onSubmit={handleResume}>
-                                <input type="file" name="resumeUpload" />
+                                <input type="file" name="resume" onChange={handleChange} /> 
+                                <br />
+                                {profile && profile.resume}
                                 <br />
                                 <br />
                                 <input type='submit' value='Upload!' />

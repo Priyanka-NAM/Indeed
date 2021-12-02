@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import SearchGrid from './SearchGrid';
 import { useHistory } from 'react-router-dom';
 import { Redirect } from 'react-router';
-import { fetchQJobs } from '../../Redux/Actions/JobsAction';
+import { fetchQJobs, fetchAllJobs } from '../../Redux/Actions/JobsAction';
 
 const useStyles = makeStyles((theme) => ({
     autoComplete: {
@@ -28,13 +28,16 @@ function Body(props) {
     const classes = useStyles();
     const history = useHistory()
     const dispatch = useDispatch()
-    // useEffect(() => {
-    //     const data = {
-    //         "job": '',
-    //         "location": ''
-    //     }
-    //     dispatch(fetchAllJobs(data))
-    // },[])
+
+    useEffect(() => {
+      const data = {
+        job: "",
+        location: "",
+        page: 0,
+        limit: 0,
+      };
+      dispatch(fetchAllJobs(data));
+    }, []);
 
     const [redirectJobs, setRedirectJobs] = useState(null)
     const [job,setJob] = useState('');

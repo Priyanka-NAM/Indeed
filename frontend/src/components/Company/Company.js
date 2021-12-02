@@ -36,7 +36,6 @@ import { updatePhotoStatus } from "../../Redux/Actions/AdminAction";
 import InputGrid from "./InputGrid";
 import JobDescription from "./JobDescription";
 import { timeDifference } from "./timeDifference";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 
 import {
   Grid,
