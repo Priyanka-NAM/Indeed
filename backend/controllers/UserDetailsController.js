@@ -102,14 +102,17 @@ const getUserReviews = async (req, res) => {
 }
 
 const getUserProfile = async (req, res) => {
-    const {userId} = req.query
-    console.log(userId)
+
+    const {userId} = req.query;
+
     try {
         if (userId) {
             const user = await User.findById({_id:userId})
             if (user) {
+                console.log(user);
                 res.status(200).send(user)
             } else {
+                console.log("user");
                 res.status(404).send("Resource not found")
             }
         } else {

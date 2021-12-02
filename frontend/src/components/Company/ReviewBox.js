@@ -8,10 +8,9 @@ import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import {updateReviewStatus} from "../../Redux/Actions/Company";
 
 
-export function ReviewBox({id, rating, review_title, date, yourReview, pros, cons ,helpfulCount,isApproved,isAuth, userRole, sortVal,filterValue}) {
+export function ReviewBox({id, rating, review_title, date, yourReview, pros, cons ,helpfulCount,isApproved,isAuth, userRole}) {
     const dispatch = useDispatch();
     const [isApprovedByAdmin, setisApprovedByAdmin] = useState(isApproved);
-    const [filterVal, setFilterVal] = useState(filterValue);
     
     const changeToApproved = () => {
         debugger;
@@ -20,7 +19,7 @@ export function ReviewBox({id, rating, review_title, date, yourReview, pros, con
     }
     useEffect(() => {
         
-    }, [isApprovedByAdmin, sortVal, filterVal])
+    }, [isApprovedByAdmin])
     return (
             <Grid item container spacing={4} style={{borderBottom: '#00000029 solid 1px'}}>
             <Grid item container spacing={1}>
@@ -76,16 +75,6 @@ export function ReviewBox({id, rating, review_title, date, yourReview, pros, con
                     {cons}
                 </Typography>
             </Grid>
-            <span style={{fontSize: "small"}}>Was this review helpfull?</span>
-            <Grid item container spacing={3}>
-            <div><ThumbUpAltIcon></ThumbUpAltIcon></div>{helpfulCount}
-             </Grid>
-         
-             {isAuth && userRole == 2 && isApprovedByAdmin === "NotApproved"  && (
-                        <span>
-                            <button type="button" class="btn btn-info" onClick={changeToApproved}>Verify this review</button>
-                        </span>
-                    )}
 
         </Grid>
     )

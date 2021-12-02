@@ -170,7 +170,6 @@ function Signup() {
                             <Select onChange={ onRoleChange } value={role}>
                             <MenuItem value={0}>JobSeeker</MenuItem>
                             <MenuItem value={1}>Employer</MenuItem>
-                            <MenuItem value={2}>Admin</MenuItem>
                             </Select>
                             {errors.role && (
                                 <p className={classes.errorDisplay}>{errors.role}</p>
