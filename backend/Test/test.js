@@ -6,7 +6,7 @@ const app = require("../server");
 
 const agent = chai.request.agent(app);
 
-describe("Signin Testing Employer", () => {
+describe("Login Functionality Testing", () => {
   it("Email is Required", (done) => {
     agent
       .post("/indeed/users/public/login")
@@ -64,23 +64,8 @@ describe("Signin Testing Employer", () => {
   }).timeout(4000);
 });
 
-describe(" Get Employer Profile", () => {
-  it("Get Employer Profile", (done) => {
-    agent
-      .get("/indeed/employer/profile")
-      .then((res) => {
-        expect(res.body).to.equal(0);
-        done();
-      })
-      .catch((error) => {
-        console.log(error);
-        done(e);
-      });
-  });
-});
-
-describe("Employer Post Jobs", () => {
-  it("Job Post Sucessfull", (done) => {
+describe("Employer Functionality", () => {
+  it(" Employer Post Jobs - Job Post Sucessfull", (done) => {
     agent
       .post("/indeed/employer/post-job")
       .send({
@@ -118,4 +103,97 @@ describe("Employer Post Jobs", () => {
         done(e);
       });
   });
+});
+
+describe(" Job Seeker Functionality Testing", () => {
+  it("Get Company Specific Reviews", (done) => {
+    agent
+      .get(
+        "/indeed/company/company-specific-reviews?employerId=619f0cdd8188bc6c174294cf"
+      )
+      .then((res) => {
+        expect(res.body.map((e) => e.employerId)).to.include(
+          "619f0cdd8188bc6c174294cf"
+        );
+        done();
+      })
+      .catch((error) => {
+        console.log(error);
+        done(e);
+      });
+  }).timeout(4000);
+
+  it(" Apply Jobs", (done) => {
+    agent
+      .post("/indeed/users/apply-job")
+      .send({
+        userId: "61a8e7e59c6ac29ed713a581",
+        jobId: "61a903761f983d599cf51879",
+        employerId: "61a85f42397f6d36470922ab",
+      })
+      .then((res) => {
+        expect(res.text).equal("job already applied");
+        done();
+      })
+      .catch((error) => {
+        console.log(error);
+        done(e);
+      });
+  });
+
+  it(" Post Saved Jobs", (done) => {
+    agent
+      .post("/indeed/users/saved-jobs")
+      .send({
+        userId: "61a8e7e59c6ac29ed713a581",
+        jobId: "61a903761f983d599cf51879",
+      })
+      .then((res) => {
+        expect(res.text).equal("Job already added to saved jobs");
+        done();
+      })
+      .catch((error) => {
+        console.log(error);
+        done(e);
+      });
+  });
+});
+
+describe("Admin Functionality Testing", () => {
+  it("Get Top rated Companies", (done) => {
+    agent
+      .get("/indeed/admin/get-top-ratedcomapnies")
+      .then((res) => {
+        expect(res.body).to.have.length.above(0);
+        done();
+      })
+      .catch((error) => {
+        console.log(error);
+        done(e);
+      });
+  }).timeout(4000);
+  it("Get Top rated Ceos", (done) => {
+    agent
+      .get("/indeed/admin/get-top-rated-ceos")
+      .then((res) => {
+        expect(res.body).to.have.lengthOf(10);
+        done();
+      })
+      .catch((error) => {
+        console.log(error);
+        done(e);
+      });
+  }).timeout(4000);
+  // it("Five Job Seekers based on total accepted reviews", (done) => {
+  //   agent
+  //     .get("/indeed/admin/get-top-acceptedreview-users")
+  //     .then((res) => {
+  //       expect(res.body).to.have.lengthOf(5);
+  //       done();
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       done(e);
+  //     });
+  // }).timeout(4000);
 });
