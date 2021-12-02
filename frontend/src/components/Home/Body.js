@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import SearchGrid from './SearchGrid';
 import { useHistory } from 'react-router-dom';
 import { Redirect } from 'react-router';
-import { fetchQJobs, fetchAllJobs } from '../../Redux/Actions/JobsAction';
+import { fetchQJobs, fetchAllJobs, fetchQueriedJobs } from '../../Redux/Actions/JobsAction';
 
 const useStyles = makeStyles((theme) => ({
     autoComplete: {
