@@ -24,8 +24,8 @@ app.use("/indeed/company", companyRouter);
 app.use("/indeed/employer", employerRoutes);
 app.use("/indeed/employer", jobRoutes);
 app.use("/indeed/admin", AdminRoutes);
-app.use("/indeed/messages",MessageRoutes);
-app.use("/indeed/upload",uploadRoutes);
+app.use("/indeed/messages", MessageRoutes);
+app.use("/indeed/upload", uploadRoutes);
 
 connectDB();
 app.get("/", (req, res) => {
@@ -34,4 +34,4 @@ app.get("/", (req, res) => {
 console.log("my first command");
 app.listen(5001, console.log("API Started.."));
 
-// module.exports = app;
+module.exports = app;
