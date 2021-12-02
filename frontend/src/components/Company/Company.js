@@ -36,6 +36,7 @@ import { updatePhotoStatus } from "../../Redux/Actions/AdminAction";
 import InputGrid from "./InputGrid";
 import JobDescription from "./JobDescription";
 import { timeDifference } from "./timeDifference";
+import Pagination from "@mui/material/Pagination";
 //import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 
 import {
@@ -257,7 +258,12 @@ export default function Review(props) {
     ? responseFromServer
     : { aboutTheCompany: {} };
 
-  let { responseFromServer: jobs } = useSelector((state) => state.employerJobs);
+  let { responseFromServer: jobs, length } = useSelector(
+    (state) => state.employerJobs
+  );
+  let { companySpecificReviews } = useSelector(
+    (state) => state.companyReviewList
+  );
 
   const loginReducer = useSelector((state) => state.login);
   const { isAuth, userDetails } = loginReducer;
@@ -290,6 +296,11 @@ export default function Review(props) {
   const [st, setState] = useState("");
   const [photoOpen, setPhotoOpen] = useState(false);
   const [salaryOpen, setSalaryOpen] = useState(false);
+  const [joblimit, setJobLimit] = useState(length);
+  const [reviewlimit, setReviewLimit] = useState(5);
+  const [page, setPage] = useState(1);
+  const [isfirst, setIsFirst] = useState(true);
+
   const [values, setValues] = React.useState([
     "select Review Type",
     "Approved",
@@ -303,8 +314,29 @@ export default function Review(props) {
     4,
     5,
   ]);
+  const handleLimit = (e) => {
+    setJobLimit(e.target.value);
+    setReviewLimit(e.target.value);
+
+    setIsFirst(false);
+  };
+  const handlePage = (e, value) => {
+    setPage(value);
+
+    setIsFirst(false);
+  };
+  let boundary = 0;
+
+  boundary = Math.ceil(length / joblimit);
+
+  let boundaryReview = 0;
+
+  boundaryReview = Math.ceil(companyDetails.noOfRatings / reviewlimit);
+
   const [filterValue, setFilterValue] = React.useState("select Review Type");
-  const [ratingfilterValue, setratingFilterValue] = React.useState("select Rating value");
+  const [ratingfilterValue, setratingFilterValue] = React.useState(
+    "select Rating value"
+  );
   const [sortValue, setSortValue] = React.useState("createdAt");
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(4);
@@ -353,11 +385,6 @@ export default function Review(props) {
     setOpen(false);
   };
 
-  let { companySpecificReviews } = useSelector(
-    (state) => state.companyReviewList
-  );
-
-  
   if (companySpecificReviews) {
     //Filtering reviews Based on the approved and user reviews.
     if (!isAuth) {
@@ -365,8 +392,7 @@ export default function Review(props) {
         (review) => review.isApproved === "Approved"
       );
       companySpecificReviews = approvedReviews;
-    } else if (userDetails.role !== 2 ) {
-      debugger;
+    } else if (userDetails.role !== 2) {
       let approvedReviewsFromOtherUsers = [];
       let userReviews = [];
       approvedReviewsFromOtherUsers = companySpecificReviews.filter(
@@ -381,32 +407,29 @@ export default function Review(props) {
         approvedReviewsFromOtherUsers
       );
     }
-     //sort based on sort value
-    if(sortValue !== "createdAt"){
+    //sort based on sort value
+    if (sortValue !== "createdAt") {
       debugger;
-      if(sortValue === "overallRating"){
-        companySpecificReviews.sort(function(a, b) {
+      if (sortValue === "overallRating") {
+        companySpecificReviews.sort(function (a, b) {
           return b.overallRating - a.overallRating;
         });
-      }
-      else{
-        companySpecificReviews.sort(function(a, b) {
+      } else {
+        companySpecificReviews.sort(function (a, b) {
           return b.isHelpfulCount - a.isHelpfulCount;
         });
       }
-      
     }
-    
   }
-    // //Filter based on review ratings
-    if(companySpecificReviews && ratingfilterValue !== "select Rating value"){
-      companySpecificReviews = companySpecificReviews.filter(
-        (review) => review.overallRating === ratingfilterValue
-      );
-     }
-     
-   //Filter based on approved or not approved
-   if (filterValue === "Approved") {
+  // //Filter based on review ratings
+  if (companySpecificReviews && ratingfilterValue !== "select Rating value") {
+    companySpecificReviews = companySpecificReviews.filter(
+      (review) => review.overallRating === ratingfilterValue
+    );
+  }
+
+  //Filter based on approved or not approved
+  if (filterValue === "Approved") {
     companySpecificReviews = companySpecificReviews.filter(
       (review) => review.isApproved === "Approved"
     );
@@ -452,12 +475,22 @@ export default function Review(props) {
         getCompanySpecificReviews({
           employerId: props.match.params.id,
           sort: sortValue,
+          page,
+          limit: reviewlimit,
         })
       );
     else if (props.match.params.pathname === "jobs")
-      dispatch(employerAllJob(props.match.params.id));
+      dispatch(employerAllJob(props.match.params.id, page, joblimit, isfirst));
     setRating(companyDetails.noOfRatings);
-  }, [props.match,updatePage,sortValue, filterValue]);
+  }, [
+    props.match,
+    updatePage,
+    sortValue,
+    filterValue,
+    page,
+    joblimit,
+    reviewlimit,
+  ]);
 
   const changePathName = (pathName) => {
     props.history.push(`/company/${props.match.params.id}/${pathName}`);
@@ -839,14 +872,14 @@ export default function Review(props) {
             })}
           </Select>
         </FormControl>
-       <FormControl style={{ padding: "37px", paddingLeft: "50px" }}>
+        <FormControl style={{ padding: "37px", paddingLeft: "50px" }}>
           <Select
             className={classes.outlinedInput}
             variant="outlined"
             value={ratingfilterValue}
             name="ratingfilterVal"
             onChange={(e) => setratingFilterValue(e.target.value)}
-            style={{ height: "30px" , width: "189px" }}
+            style={{ height: "30px", width: "189px" }}
           >
             {Ratingvalues.map((value, index) => {
               return <MenuItem value={value}>{value}</MenuItem>;
@@ -1071,6 +1104,27 @@ export default function Review(props) {
           </Grid>
         </div>
       )}
+      <Grid container style={{ margin: "100px 0px" }}>
+        <Grid item xs={3}>
+          <label>Rows per page</label>&nbsp;&nbsp;
+          <select onChange={handleLimit}>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option selected>5</option>
+            <option>6</option>
+          </select>
+        </Grid>
+        <Grid item xs={9}>
+          <Pagination
+            count={boundaryReview}
+            page={page}
+            onChange={handlePage}
+          />
+        </Grid>
+      </Grid>
+      <Box style={{ marginTop: "30px" }}></Box>
     </div>
   );
   const showPhotos = () => (
@@ -1160,7 +1214,7 @@ export default function Review(props) {
                             <img
                               src={data.path}
                               alt={data.status}
-                              style={{ position: "relative" , height: '200px' }}
+                              style={{ position: "relative", height: "200px" }}
                             />
                             {data.status ? (
                               <>
@@ -1223,7 +1277,10 @@ export default function Review(props) {
                               <img
                                 src={data.path}
                                 alt={data.status}
-                                style={{ position: "relative", height: '200px'  }}
+                                style={{
+                                  position: "relative",
+                                  height: "200px",
+                                }}
                               />
                               <button
                                 type="button"
@@ -1268,7 +1325,7 @@ export default function Review(props) {
                       <img
                         src={data.path}
                         alt={data.status}
-                        style={{ position: "relative"}}
+                        style={{ position: "relative" }}
                       />
                       <button
                         type="button"
@@ -1464,6 +1521,23 @@ export default function Review(props) {
         </Grid>
         {jobData ? <JobDescription jobData={jobData} /> : <></>}
       </Box>
+      <Grid container style={{ margin: "100px 0px" }}>
+        <Grid item xs={3}>
+          <label>Rows per page</label>&nbsp;&nbsp;
+          <select onChange={handleLimit}>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+          </select>
+        </Grid>
+        <Grid item xs={9}>
+          <Pagination count={boundary} page={page} onChange={handlePage} />
+        </Grid>
+      </Grid>
+      <Box style={{ marginTop: "30px" }}></Box>
     </>
   );
   return (
