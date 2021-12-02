@@ -1,103 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useLocation } from "react-router-dom";
 
-import PropTypes from "prop-types";
-
-import {
-  Container,
-  Grid,
-  OutlinedInput,
-  Button,
-  AppBar,
-  Toolbar,
-} from "@material-ui/core";
-import { Box, makeStyles, withStyles, Typography } from "@material-ui/core";
-import { useDispatch, useSelector } from "react-redux";
+import { Grid } from "@material-ui/core";
+import { Box, makeStyles, Typography } from "@material-ui/core";
+import { useSelector } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
-import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
-import StarIcon from "@material-ui/icons/Star";
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-// import { postSavedJobs, deleteSavedJobs } from "../../Redux/Actions/JobsAction";
-import NativeSelect from "@material-ui/core/NativeSelect";
-
-// import { isInfo } from "./CompanyDetails1Validation";
-import FullJobDescription from "./../../Jobs/FullJobDescription";
-
-// const useStyles = makeStyles((theme) => ({
-//   container: {
-//     backgroundColor: "#f2f2f2",
-
-//     display: "flex",
-//     flexDirection: "column",
-//     alignItems: "center",
-//   },
-//   boxImg: {
-//     width: "450px",
-//     display: "flex",
-//     height: "40px",
-//     justifyContent: "center",
-//     margin: "60px 0 30px",
-//   },
-//   imgLogo: {
-//     height: "130px",
-//   },
-//   inddedLogo: {
-//     height: "40px",
-//   },
-//   boxForm: {
-//     backgroundColor: "#ffffff",
-//     width: "650px",
-//     padding: "20px",
-//   },
-//   outlinedInput: {
-//     borderRadius: "10px",
-//     border: "0.5px solid #2D2D2D",
-//     height: "42px",
-//     width: "100%",
-//     margin: "10px 0",
-//   },
-//   h5: {
-//     fontWeight: "bold",
-//     fontSize: "1.4rem",
-//     fontFamily:
-//       "Noto Sans, Helvetica Neue , Helvetica, Arial, Liberation Sans, Roboto, Noto, sans-serif",
-//   },
-//   h4: {
-//     fontSize: "1.75rem",
-//     fontWeight: "bold",
-//     fontFamily:
-//       "Noto Sans, Helvetica Neue , Helvetica, Arial, Liberation Sans, Roboto, Noto, sans-serif",
-//   },
-//   formhelperText: {
-//     fontWeight: "600",
-//     fontSize: "17.5px",
-//     color: "#4b4b4b",
-//   },
-//   checkbox: {
-//     marginBottom: "10px",
-//   },
-//   button: {
-//     width: "300px",
-//     borderRadius: "20px",
-//     height: "40px",
-//     backgroundColor: "#164081",
-//   },
-//   divider: {
-//     backgroundColor: "#f2f2f2",
-//     heigth: "10px",
-//     width: "150px",
-//     margin: "0 30px",
-//   },
-//   pageBreak: {
-//     backgroundColor: "#f2f2f2",
-//     heigth: "10px",
-//     width: "440px",
-//     margin: "30px 30px 20px",
-//   },
-//   formStyle: {
-//     width: "100%",
-//   },
-// }));
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -148,50 +55,20 @@ const useStyles = makeStyles((theme) => ({
 
 function EachJobDetails(props) {
   let location = useLocation();
-  let jobData = {};
-  if (location.state.row) {
+  let jobData = { jobLocation: {}, jobDescription: {} };
+  if (location.state && location.state.row) {
     jobData = location.state.row.eachjob;
   }
 
   console.log("Job Details ", jobData);
   const classes = useStyles();
 
-  const userId = useSelector((state) => state.login.userDetails.userId);
-  const index = useSelector((state) => state.login.userDetails.userId);
-
-  const [viewUndo, setViewUndo] = useState([]);
-  const [display, setDisplay] = useState(false);
-
-  useEffect(() => {
-    console.log("view undo", viewUndo);
-  }, [display]);
-
-  // const displayUndo = (jobId) => {
-  //   const data = {
-  //     jobId: jobId,
-  //     userId: userId,
-  //   };
-  //   let temp = viewUndo;
-  //   temp[index] = !temp[index];
-  //   setViewUndo(temp);
-  //   setDisplay(!display);
-  //   console.log("---", viewUndo);
-  // };
-
-  // const hideUndo = (jobId) => {
-  //   console.log("delete");
-  //   const data = {
-  //     jobId: jobId,
-  //     userId: userId,
-  //   };
-  //   let temp = viewUndo;
-  //   temp[index] = !temp[index];
-  //   setViewUndo(temp);
-  //   setDisplay(!display);
-  // };
-
+  const isAuth = useSelector((state) => state.login.isAuth);
+  console.log("isAuth of each job", isAuth);
   return (
     <>
+      {!isAuth && <Redirect to='/login' />}
+
       <Box className={classes.container}>
         <Grid container justifyContent='center' alignItems='center'>
           <Grid item xs={6}>

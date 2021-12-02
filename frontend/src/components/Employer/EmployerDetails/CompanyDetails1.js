@@ -1,21 +1,18 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-import {
-  Container,
-  Grid,
-  OutlinedInput,
-  Button,
-  TextField,
-} from "@material-ui/core";
-import Alert from "react-bootstrap/Alert";
+import { Container, Grid, OutlinedInput, Button } from "@material-ui/core";
 import { Box, makeStyles, withStyles, FormHelperText } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
+import { Redirect } from "react-router-dom";
 
 import NativeSelect from "@material-ui/core/NativeSelect";
 import { isInfo } from "./CompanyDetails1Validation";
-
+import MuiAlert from "@mui/material/Alert";
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
+});
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: "#f2f2f2",
@@ -113,10 +110,8 @@ function CompanyDetails1({
   const classes = useStyles();
   const dispatch = useDispatch();
   const [errors, setErrors] = useState({});
-  const success = false;
-  let isError = false;
-  const errorMsg = false;
-
+  const [isError, setIsError] = useState(false);
+  const [success, setSuccess] = useState(false);
   const onEmployerDetailsChange = (e) => {
     setemployerDetails({
       ...employerDetails,
@@ -134,17 +129,23 @@ function CompanyDetails1({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const error = isInfo(employerDetails);
     const errors = isInfo(employerDetails);
-    if (errors) {
-      isError = true;
-    }
     setErrors(errors);
+    if (Object.keys(error).length !== 0) {
+      console.log("Setting isError to True");
+      setIsError(true);
+      setSuccess(false);
+      return;
+    }
     if (Object.keys(errors).length > 0) return;
     setStep(step + 1);
   };
+  const { isAuth } = useSelector((state) => state.login);
 
   return (
     <>
+      {isAuth && <Redirect to='/employer/home' />}
       <Container className={classes.container} maxWidth='xl'>
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
           <Grid item style={{ margin: "25px 0" }}>
@@ -272,14 +273,7 @@ function CompanyDetails1({
             </form>
           </Grid>
         </Box>
-        {isError && (
-          <Alert severity='error'>
-            One or More fields are missing or wrong data!
-          </Alert>
-        )}
-        {success && (
-          <Alert severity='success'>Employer registered successfully!</Alert>
-        )}
+
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
           <Grid item xs={2} justify='flex-end' style={{ paddingLeft: "50%" }}>
             <SignInButton
@@ -291,6 +285,14 @@ function CompanyDetails1({
           </Grid>
         </Box>
       </Container>
+      {isError && (
+        <Alert severity='error'>
+          One or More fields are missing or wrong data!
+        </Alert>
+      )}
+      {success && (
+        <Alert severity='success'>Employer registered successfully!</Alert>
+      )}
     </>
   );
 }
