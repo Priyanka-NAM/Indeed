@@ -10,7 +10,6 @@ import { Box, Container } from "@material-ui/core";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import UserMenu from "./UserMenu";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllJobs } from "../../Redux/Actions/JobsAction";
 import { Link, Redirect } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -68,15 +67,7 @@ export default function Header() {
   } else {
     isAuth = true;
   }
-  useEffect(() => {
-    const data = {
-      job: "",
-      location: "",
-      page: 0,
-      limit: 0,
-    };
-    dispatch(fetchAllJobs(data));
-  }, []);
+
   return (
     <div className={classes.root}>
       <AppBar elevation={0} color={"secondary"} position='static'>
