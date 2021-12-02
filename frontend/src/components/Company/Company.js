@@ -906,8 +906,10 @@ export default function Review(props) {
                             style={{ fontWeight: "800" }}>
                             {item.reviewTitle}
                           </Typography>
+                          
                           {"  "}
-
+                         {userDetails.userId === item.userId && (<i class="fas fa-user"></i>)}
+                          {" "}
                           {item.isApproved === "NotApproved" ? (
                             <button
                               type='button'
