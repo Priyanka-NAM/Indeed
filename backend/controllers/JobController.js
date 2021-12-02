@@ -97,6 +97,7 @@ const getAllJobs = async (req, res) => {
 
   console.log("Req.params", employerID); // get the data from request body which is in json and put it in variables called user and password
 
+
   if (!page && !limit) {
     const employerExists = await Jobs.findOne({ employerID: employerID });
     if (!employerExists) {
@@ -127,7 +128,10 @@ const getAllJobs = async (req, res) => {
       }
       res.send(getJobs);
     }
+
   }
+  res.send(getJobs);
+  //}
 };
 
 const getJobApplicants = async (req, res) => {

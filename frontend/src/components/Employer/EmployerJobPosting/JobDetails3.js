@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { employerJobPost } from "../../../Redux/Actions/EmployerJobPostingAction";
 import { isInfo } from "./JobDetails3Validation";
 import { Redirect } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import MuiAlert from "@mui/material/Alert";
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -114,6 +115,8 @@ function JobDetails3({ step, setStep, jobDetails, setjobDetails }) {
   const dispatch = useDispatch();
   const [isError, setIsError] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { userId } = useSelector((state) => state.login.userDetails);
+
   const onjobDetailsChange = (e) => {
     setjobDetails({
       ...jobDetails,
@@ -145,8 +148,8 @@ function JobDetails3({ step, setStep, jobDetails, setjobDetails }) {
     }
     setSuccess(true);
     setErrors(errors);
-    if (Object.keys(errors).length > 0) return;
-    dispatch(employerJobPost(jobDetails));
+    console.log("Before job post dispatch call");
+    dispatch(employerJobPost({ ...jobDetails, employerID: userId }));
   };
 
   return (

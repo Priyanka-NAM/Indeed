@@ -236,6 +236,13 @@ export default function EmployerHomePage(props) {
       dispatch(employerDetailsGet(userDetails.userId));
     }
   }, [props]);
+
+  useEffect(() => {
+    if (userDetails && userDetails.userId) {
+      dispatch(employerDetailsGet(userDetails.userId));
+    }
+  }, [photoOpen]);
+
   const companyDetails = responseFromServer
     ? responseFromServer
     : { aboutTheCompany: {} };
@@ -507,7 +514,7 @@ export default function EmployerHomePage(props) {
 
   return (
     <>
-      {(!isAuth || userDetails.role !== 1) && <Redirect to='/employer/' />}
+      {(!isAuth || userDetails.role !== 1) && <Redirect to='/login' />}
 
       <div>
         <Container maxwidth='xl' style={{ marginTop: "5%" }}>
