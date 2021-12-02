@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable no-unused-expressions */
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Image } from "react-bootstrap";
 import { styled } from "@mui/material/styles";
@@ -246,10 +247,12 @@ const UplaodButton = withStyles((theme) => ({
 }))(Button);
 
 export default function Review(props) {
+  let btnRef = useRef();
   const classes = useStyle();
   const [modalStyle] = React.useState(getModalStyle);
   const [jobTitle, setJobTitle] = useState("");
   const [location, setLocation] = useState("");
+  const[anyButtonChecked, setanyButtonChecked] = useState([]);
   const [shouldDoJobSerach, setshouldDoJobSerach] = useState(false);
   const { responseFromServer } = useSelector((state) => state.companyDetails);
   const companyDetails = responseFromServer
@@ -266,7 +269,6 @@ export default function Review(props) {
   const [salaryJobTitle, setSalaryJobTitle] = useState("");
   const [newsalary, setNewSalary] = useState("");
   const [salaryLocation, setSalaryLocation] = useState("");
-
   const [isWorking, setisWorking] = useState("No");
 
   const handleisWorkingChange = (event) => {
@@ -376,7 +378,7 @@ export default function Review(props) {
           review.userId !== userDetails.userId
       );
       userReviews = companySpecificReviews.filter(
-        (review) => review.userId == userDetails.userId
+        (review) => review.userId === userDetails.userId
       );
       companySpecificReviews = userReviews.concat(
         approvedReviewsFromOtherUsers
@@ -877,7 +879,7 @@ export default function Review(props) {
           </Grid>
           <Grid container spacing={10}>
             {companySpecificReviews &&
-              companySpecificReviews.map((item) => {
+              companySpecificReviews.map((item, index) => {
                 return (
                   <>
                     <Grid
@@ -1002,11 +1004,15 @@ export default function Review(props) {
                                 aria-label='outlined button group'
                                 style={{ padding: "1px" }}>
                                 <Button
+                                 ref={btnRef}
+                                 id={item._id}
                                   value='yes'
-                                  onClick={() => {
+                                  disabled = {item.userId === userDetails.userId ||  anyButtonChecked[index] }
+                                  onClick={(e) => {
+                                    anyButtonChecked[index] = true;
                                     item.isHelpfulCount =
-                                      item.isHelpfulCount + 1;
-                                    handleHelpfulCount(
+                                      item.isHelpfulCount + 1;                                    
+                                      handleHelpfulCount(
                                       item._id,
                                       item.isHelpfulCount,
                                       item.isNotHelpfulCount
@@ -1016,9 +1022,12 @@ export default function Review(props) {
                                 </Button>
                                 <Button
                                   value='no'
-                                  onClick={() => {
+                                  disabled = {item.userId === userDetails.userId ||  anyButtonChecked[index] }
+                                  onClick={(e) => {
+                                    anyButtonChecked[index] = true;
                                     item.isNotHelpfulCount =
                                       item.isNotHelpfulCount + 1;
+                                      e.target.disabled = true;
                                     handleHelpfulCount(
                                       item._id,
                                       item.isHelpfulCount,
@@ -1084,7 +1093,7 @@ export default function Review(props) {
         </Grid>
         {isAuth ? (
           <>
-            {userDetails.role === 2 ? (
+            {userDetails && userDetails.role === 2 ? (
               <>
                 <GridList
                   cellHeight={200}
@@ -1147,7 +1156,7 @@ export default function Review(props) {
                   cellHeight={200}
                   cols={3}
                   style={{ width: 800, height: 600 }}>
-                  {companyDetails &&
+                  {companyDetails && companyDetails.photos &&
                     companyDetails.photos.map(
                       (data) =>
                         data.userId === userDetails.userId && (
@@ -1280,9 +1289,12 @@ export default function Review(props) {
           </GridList>
         )}
       </div>
-      <UplaodButton type='submit' variant='contained' onClick={handlePhotoOpen}>
+      {userDetails && userDetails.role !== 2 && (
+        <UplaodButton type='submit' variant='contained' onClick={handlePhotoOpen}>
         Upload photo
       </UplaodButton>
+      )}
+      
     </div>
   );
   const showFooter = () => (
@@ -1324,13 +1336,16 @@ export default function Review(props) {
   );
   const showSalary = () => (
     <>
-      <SearchButton
-        type='submit'
-        variant='contained'
-        style={{ position: "relative", left: "800px" }}
-        onClick={handleSalaryOpen}>
-        Add a Salary
-      </SearchButton>
+    {/* {userDetails.role !== 0 && ( */}
+    <SearchButton
+    type='submit'
+    variant='contained'
+    style={{ position: "relative", left: "800px" }}
+    onClick={handleSalaryOpen}>
+    Add a Salary
+  </SearchButton>
+    {/* )} */}
+    
     </>
   );
   const showWhyJoinUs = () => (
@@ -1505,20 +1520,23 @@ export default function Review(props) {
             </Grid>
           </Grid>
           <Grid item>
-            <Button
+            {userDetails && userDetails.role !== 2 && (
+              <Button
               color={"primary"}
               variant='contained'
               type='submit'
               onClick={handleOpen}>
               {" "}
               Review this Company{" "}
-            </Button>
+              </Button>
+            )}
+           
             <br />
             {/* <Typography variant="caption" >Get weekly updates, new jobs, and reviews</Typography> */}
           </Grid>
         </Grid>
 
-        <Grid container style={{ height: "40px" }}>
+        <Grid container style={{ height: "40px", paddingLeft: "15%"}}>
           <Grid
             item
             className={
@@ -1529,7 +1547,8 @@ export default function Review(props) {
             onClick={() => changePathName("snapshot")}>
             SnapShot
           </Grid>
-          <Grid
+          {userDetails && userDetails.role !== 2 && (
+            <Grid
             item
             className={
               props.match.params.pathname === "whyjoinus"
@@ -1539,6 +1558,8 @@ export default function Review(props) {
             onClick={() => changePathName("whyjoinus")}>
             Why Join Us
           </Grid>
+          )}
+          
           <Grid
             item
             className={
@@ -1549,7 +1570,8 @@ export default function Review(props) {
             onClick={() => changePathName("reviews")}>
             Reviews
           </Grid>
-          <Grid
+          {userDetails && userDetails.role !== 2 && (
+            <Grid
             item
             className={
               props.match.params.pathname === "salaries"
@@ -1559,6 +1581,8 @@ export default function Review(props) {
             onClick={() => changePathName("salaries")}>
             Salaries
           </Grid>
+          )}
+          
           <Grid
             item
             className={
@@ -1569,7 +1593,8 @@ export default function Review(props) {
             onClick={() => changePathName("photos")}>
             Photos
           </Grid>
-          <Grid
+          {userDetails && userDetails.role !== 2 && (
+            <Grid
             item
             className={
               props.match.params.pathname === "jobs"
@@ -1579,7 +1604,9 @@ export default function Review(props) {
             onClick={() => changePathName("jobs")}>
             Jobs
           </Grid>
-          <Grid
+          )}
+          
+          {/* <Grid
             item
             className={
               props.match.params.pathname === "qanda"
@@ -1598,14 +1625,14 @@ export default function Review(props) {
             }
             onClick={() => changePathName("interviews")}>
             Interviews
-          </Grid>
+          </Grid> */}
         </Grid>
         <hr style={{ marginTop: 0 }}></hr>
         {props.match.params.pathname === "snapshot" && showSnapShot()}
         {props.match.params.pathname === "reviews" && showReviews()}
         {props.match.params.pathname === "photos" && showPhotos()}
         {props.match.params.pathname === "whyjoinus" && showWhyJoinUs()}
-        {props.match.params.pathname === "jobs" && showJobs()}
+        {props.match.params.pathname === "jobs" && userDetails.role !== 2 && showJobs()}
         {props.match.params.pathname === "salaries" && showSalary()}
         {showFooter()}
       </Container>
