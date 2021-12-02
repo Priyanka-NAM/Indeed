@@ -507,7 +507,7 @@ export default function EmployerHomePage(props) {
 
   return (
     <>
-      {!isAuth && <Redirect to='/employer/' />}
+      {(!isAuth || userDetails.role !== 1) && <Redirect to='/employer/' />}
 
       <div>
         <Container maxwidth='xl' style={{ marginTop: "5%" }}>
