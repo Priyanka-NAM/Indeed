@@ -102,9 +102,6 @@ function EmployerJobPost() {
     },
   });
   let [step, setStep] = useState(1);
-  const success = false;
-  const isError = false;
-  const errorMsg = false;
 
   function showStep(step, setStep, jobDetails, setjobDetails) {
     switch (step) {

@@ -128,7 +128,7 @@ function EmployerCompanyDetailsUpdate(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
   let [employerDetails, setemployerDetails] = useState({ aboutTheCompany: {} });
-  let { isAuth, accErr, userDetails } = useSelector((state) => state.login);
+  let { isAuth, userDetails } = useSelector((state) => state.login);
 
   let { responseFromServer } = useSelector((state) => state.employerDetails);
   let { signup } = useSelector((state) => state);
@@ -179,6 +179,8 @@ function EmployerCompanyDetailsUpdate(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const error = isInfo(employerDetails);
+    const errors = isInfo(employerDetails);
+    setErrors(errors);
     if (Object.keys(error).length !== 0) {
       console.log("Setting isError to True");
       setIsError(true);
@@ -427,7 +429,11 @@ function EmployerCompanyDetailsUpdate(props) {
             </form>
           </Grid>
         </Box>
-        {isError && <Alert severity='error'>Check the fields again!</Alert>}
+        {isError && (
+          <Alert severity='error'>
+            One or More fields missing/ or wrong data.Try again!
+          </Alert>
+        )}
         {success && (
           <Alert severity='success'>Details saved successfully!</Alert>
         )}

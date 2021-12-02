@@ -1,17 +1,26 @@
 export const isInfo = (values) => {
   let errors = {};
-  if (!values.industry || values.industry === "") {
-    errors.industry = "industry is required";
-  }
-  if (!values.salary || values.salary === "" || values.salary < 0) {
-    errors.salary = "salary is required";
+
+  if (
+    !values.jobDescription ||
+    !values.jobDescription.requirement ||
+    values.jobDescription.requirement === ""
+  ) {
+    errors.requirement = "requirement is required";
   }
   if (
     !values.jobDescription ||
-    !values.jobDescription.compensation ||
-    values.jobDescription.compensation === ""
+    !values.jobDescription.responsibilites ||
+    values.jobDescription.responsibilites === ""
   ) {
-    errors.compensation = "compensation is required";
+    errors.responsibilites = "responsibilites is required";
+  }
+  if (
+    !values.jobDescription ||
+    !values.jobDescription.moreInfo ||
+    values.jobDescription.moreInfo === ""
+  ) {
+    errors.moreInfo = "moreInfo is required";
   }
 
   return errors;

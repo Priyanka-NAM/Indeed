@@ -23,6 +23,20 @@ export const isInfo = (values) => {
   }
   if (
     !values.aboutTheCompany ||
+    !values.aboutTheCompany.headQuarters ||
+    values.aboutTheCompany.headQuarters === ""
+  ) {
+    errors.headQuarters = "headQuarters is required";
+  }
+  if (
+    !values.aboutTheCompany ||
+    !values.aboutTheCompany.ceo ||
+    values.aboutTheCompany.ceo === ""
+  ) {
+    errors.ceo = "ceo is required";
+  }
+  if (
+    !values.aboutTheCompany ||
     !values.aboutTheCompany.industry ||
     values.aboutTheCompany.industry === ""
   ) {

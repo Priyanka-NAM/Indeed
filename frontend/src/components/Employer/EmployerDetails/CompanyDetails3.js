@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Container, Grid, OutlinedInput, Button } from "@material-ui/core";
 import { Box, makeStyles, withStyles, FormHelperText } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { isInfo } from "./CompanyDetails3Validation";
 import { employerDetailsAdd } from "../../../Redux/Actions/EmployerDetailsAction";
 import MuiAlert from "@mui/material/Alert";
@@ -116,6 +116,7 @@ function CompanyDetails3({
 }) {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const [errors, setErrors] = useState({});
   const [isError, setIsError] = useState(false);
   const [success, setSuccess] = useState(false);
   const signup = useSelector((state) => state.signup);
@@ -149,8 +150,9 @@ function CompanyDetails3({
   const handleSubmit = (e) => {
     e.preventDefault();
     const error = isInfo(employerDetails);
+    const errors = isInfo(employerDetails);
+    setErrors(errors);
     if (Object.keys(error).length !== 0) {
-      console.log("Setting isError to True");
       setIsError(true);
       setSuccess(false);
       return;
@@ -187,6 +189,7 @@ function CompanyDetails3({
                 required
                 variant='outlined'
                 name='misssionandvisson'
+                error={errors.misssionandvisson}
               />
               <br />
               <br />
@@ -203,6 +206,7 @@ function CompanyDetails3({
                 required
                 variant='outlined'
                 name='description'
+                error={errors.description}
               />
               <br />
               <br />
@@ -219,6 +223,7 @@ function CompanyDetails3({
                 type='textArea'
                 variant='outlined'
                 name='companyValues'
+                error={errors.companyValues}
               />
               <br />
               <br />
@@ -236,6 +241,7 @@ function CompanyDetails3({
                 rows={4}
                 variant='outlined'
                 name='workCulture'
+                error={errors.workCulture}
               />
             </form>
           </Grid>
