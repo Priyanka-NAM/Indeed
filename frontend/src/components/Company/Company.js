@@ -255,7 +255,7 @@ export default function Review(props) {
   const companyDetails = responseFromServer
     ? responseFromServer
     : { aboutTheCompany: {} };
-
+  // const [featuredReview, setFeaturedReview] = useState([]);
   let { responseFromServer: jobs } = useSelector((state) => state.employerJobs);
 
   const loginReducer = useSelector((state) => state.login);
@@ -355,8 +355,10 @@ export default function Review(props) {
   let { companySpecificReviews } = useSelector(
     (state) => state.companyReviewList
   );
+  let featuredReview = [];
+  if(companySpecificReviews)
+    featuredReview = (companySpecificReviews.filter((val)=> val.isFeatured === true));
 
-  
   if (companySpecificReviews) {
     //Filtering reviews Based on the approved and user reviews.
     if (!isAuth) {
@@ -438,15 +440,22 @@ export default function Review(props) {
 
     console.log(jobs);
   }
+
+
+  
+  
   const [tooltipopen, setTooltipopen] = React.useState(true);
 
   useEffect(() => {
-    if (
-      props.match.params.pathname === "snapshot" ||
-      props.match.params.pathname === "photos"
-    )
+    if ( props.match.params.pathname === "snapshot" || props.match.params.pathname === "photos"){
       dispatch(getcompaniesDetails({ employerID: props.match.params.id }));
-    else if (props.match.params.pathname === "reviews")
+       dispatch(
+        getCompanySpecificReviews({
+          employerId: props.match.params.id,
+          sort: sortValue,
+        })
+       )}
+    else if (props.match.params.pathname === "reviews" )
       dispatch(
         getCompanySpecificReviews({
           employerId: props.match.params.id,
@@ -771,6 +780,27 @@ export default function Review(props) {
             {companyDetails.aboutTheCompany.misssionandvisson}
           </Typography>
         </Typography>
+      </Grid>
+      <Grid item style={{  marginBottom: "50px" }}>
+        <Typography variant='h5'  style={{  marginBottom: "50px" }}>
+          <b>Featured Reviews</b>
+        </Typography>
+         {featuredReview && (
+           featuredReview.map((item)=> 
+           <ReviewBox
+           key={item.id}
+           rating={item.overallRating}
+           review_title={item.reviewTitle}
+           date={item.date}
+           yourReview={item.yourReview}
+           pros={item.pros}
+           cons={item.cons}
+           helpfulCount={item.isHelpfulCount}
+           isApproved = {item.isApproved}
+           isAuth={isAuth}
+           userRole = {userDetails.role}
+         />)
+         )}
       </Grid>
     </div>
   );
