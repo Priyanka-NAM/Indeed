@@ -4,6 +4,8 @@
 
 const Jobs = require("../Models/JobsModel")
 const redisClient = require('../config/redisClient');
+const { rPopCount } = require("../config/redisClient");
+const { set } = require("mongoose");
 
 const fetchJobs = async (req, res) => {
     console.log("req query : ",req.query)
@@ -93,26 +95,30 @@ const paginationFunc = async (res, page, limit, query) => {
 }
 
 const fetchMostSearchedJobs = async (req, res) => {
-  const location = req.query.location
+  // const location = req.query.location
+  // console.log(location)
   try {
-    redisClient.get('getMostSearchedJobs', async (err, data) => {
-        if (data) {
-            res.status(200).send(JSON.parse(data));
-        }
-        else {
-          const jobs = await Jobs.find({"jobLocation.city":location});
-          if(jobs){
-            redisClient.setex('getMostSearchedJobs', 36000, JSON.stringify(jobs));
-            res.status(200).send(jobs);
-          } else {
-            return res.status(400).json({
-              error: error
-            });
-          }
-        }
-    })
+
+    const data = await redisClient.get('getMostSearchedJobs')
+    if (data) {
+      res.status(200).send(JSON.parse(data));
+    }
+    else{
+      const jobs = await Jobs.find({});
+      console.log(jobs)
+      if(jobs){
+
+        redisClient.setEx('getMostSearchedJobs', 36000, JSON.stringify(jobs));
+        res.status(200).send(jobs);
+      } else {
+        return res.status(400).json({
+          error: error
+        });
+      }
+    }
 } catch (error) {
-  return res.status(400).json({
+  console.log(error)
+  return res.status(500).json({
         error: error
         });
 }
