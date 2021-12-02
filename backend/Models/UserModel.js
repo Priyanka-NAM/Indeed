@@ -16,6 +16,9 @@ const userSchema = mongoose.Schema({
         resume: {
             type: String,
         },
+        coverLetter: {
+            type: String,
+        },
         noOfAcceptedReviews: {
             type: Number,
             default: 0,
