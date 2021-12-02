@@ -7,6 +7,7 @@ import {
 const initialState = {
   errorResponse: null,
   responseFromServer: [],
+  length: 0,
 };
 
 export const employerJobsReducer = (state = initialState, action) => {
@@ -16,9 +17,15 @@ export const employerJobsReducer = (state = initialState, action) => {
         ...state,
         responseFromServer: action.payload,
       };
-    case EMPLOYER_ALL_JOBS_ERROR:
+    case "EMPLOYER_JOB_LENGTH": {
       return {
         ...state,
+        length: action.payload,
+      };
+    }
+    case EMPLOYER_ALL_JOBS_ERROR:
+      return {
+        ...initialState,
         errorResponse: action.payload,
       };
     case EMPLOYER_LOGOUT:
