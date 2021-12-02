@@ -45,6 +45,7 @@ const loginUser = (req, res) => {
               results["email"] = result[0].email;
               results["role"] = result[0].role;
               if (result[0].role === 0) {
+                console.log("---", result[0].userId)
                 const moongoresults = await User.findOne({
                   userId: result[0].userId,
                 });

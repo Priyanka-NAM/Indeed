@@ -86,52 +86,47 @@ const Home = (props) => {
       });
   };
 
-  return (
-    <Container style={styles.container}>
-      <Body />
-      <div style={styles.linkContainer}>
-        <label style={styles.link} onClick={handleOpen}>
-          {`Post your resume - `}
-        </label>
-        It only takes a few seconds
-      </div>
-      <Modal
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        open={open}
-        onClose={handleClose}>
-        <Box className={classes.applyJob}>
-          <Typography variant='h4' component='h2'>
-            Resume upload
-          </Typography>
-          <hr />
-          <Grid item>
-            <Typography style={{ fontWeight: "600", marginTop: "10px" }}>
-              Resume
-            </Typography>
-            <br />
-            <form onSubmit={handleResume}>
-              <input type='file' name='resume' onChange={handleChange} />
-              <br />
-              {/* {profile && profile.resume.split("\\")[2]} */}
-              <br />
-              <br />
-              <input
-                type='submit'
-                value='Upload!'
-                style={{ width: "100px", backgroundColor: "#2D5DCE" }}
-              />
-            </form>
-            <br />
-          </Grid>
-        </Box>
-      </Modal>
-    </Container>
-  );
-};
+    return (
+        <Container style={styles.container}>
+            <Body />
+            <div style={styles.linkContainer}>
+                <label style={styles.link} onClick={handleOpen} >
+                    {`Post your resume - `} 
+                </label>
+                It only takes a few seconds
+            </div>
+            <Modal style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center"
+                    }}
+                    open={open}
+                    onClose={handleClose}>
+                    <Box className={classes.applyJob}>
+                    <Typography variant="h4" component="h2">
+                        Resume upload
+                    </Typography>
+                    <hr />
+                    <Grid item>
+                            <Typography style={{fontWeight:"600", marginTop:"10px"}}>
+                                Resume
+                            </Typography>
+                            <br  />
+                            <form onSubmit={handleResume}>
+                                <input type="file" name="resume" onChange={handleChange} />
+                                <br />
+                                {profile && profile.resume && profile.resume.split("\\")[2]}
+                                <br />
+                                <br />
+                                <input type='submit' value='Upload!' style={{width:"100px", backgroundColor:"#2D5DCE"}} />
+                            </form>
+                            <br />
+                    </Grid>
+                    </Box>
+                </Modal>
+        </Container>
+    );
+}
 
 export default Home;

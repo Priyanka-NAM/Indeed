@@ -185,7 +185,7 @@ function SavedJobs() {
                             <form onSubmit={handleResume}>
                                 <input type="file" name="resume" onChange={handleChange} />
                                 <br />
-                                {profile && profile.resume.split("\\")[2]}
+                                {profile && profile.resume && profile.resume.split("\\")[2]}
                                 <br />
                                 <br />
                                 <input type='submit' value='Upload!' style={{width:"100px", backgroundColor:"#2D5DCE"}} />

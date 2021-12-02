@@ -102,11 +102,34 @@ const getUserReviews = async (req, res) => {
 }
 
 const getUserProfile = async (req, res) => {
-    const {userId} = req.query
-    console.log(userId)
+
+    const {userId} = req.query;
+
     try {
         if (userId) {
             const user = await User.findById({_id:userId})
+            if (user) {
+                console.log(user);
+                res.status(200).send(user)
+            } else {
+                console.log("user");
+                res.status(404).send("Resource not found")
+            }
+        } else {
+            res.status(401).send("Unauthorized")
+        }   
+    } catch (error) {
+        res.status(500).send("Database error")
+    }
+}
+
+const updateUserProfile = async (req, res) => {
+    const {userId} = req.body
+    const update = req.body
+    console.log(userId)
+    try {
+        if (userId) {
+            const user = await User.findOneAndUpdate({_id:userId}, update, {new: true})
             if (user) {
                 res.status(200).send(user)
             } else {
@@ -120,4 +143,4 @@ const getUserProfile = async (req, res) => {
     }
 }
 
-module.exports = { updateUserSavedJobs, deleteUserSavedJobs, getUserSavedJobs, getUserAppliedJobs, getUserReviews, getUserProfile }
+module.exports = { updateUserSavedJobs, deleteUserSavedJobs, getUserSavedJobs, getUserAppliedJobs, getUserReviews, getUserProfile, updateUserProfile }
