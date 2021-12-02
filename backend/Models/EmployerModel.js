@@ -101,13 +101,10 @@ const employerSchema = mongoose.Schema({
   ],
   views: [
     {
-      day: {
-        type: String,
-      },
-      count: {
-        type: Number,
-      },
-    },
+
+      type:Object
+    }
+
   ],
   timeStamp: {
     type: Date,

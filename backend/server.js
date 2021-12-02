@@ -12,6 +12,7 @@ const viewCountRoutes = require('./routes/viewCountRouts')
 const cors = require('cors');
 
 
+
 const connectDB = require("./config/db");
 require("./config/mysqldb");
 app.use(cors());
