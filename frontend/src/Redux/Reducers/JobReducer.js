@@ -8,7 +8,10 @@ import {
     GET_SAVED_JOBS,
     GET_USER_REVIEWS,
     REVIEW_ERROR,
-    APPLY_JOB
+    APPLY_JOB,
+    USER_PROFILE,
+    USER_ERROR,
+    GET_APPLIED_JOBS
 } from '../Constants/UserConstants';
 
 import { GET_JOB_APPLICANTS_REQUEST, GET_JOB_APPLICANTS_SUCCESS, GET_JOB_APPLICANTS_RESET, GET_JOB_APPLICANTS_FAIL } from '../Constants/JobConstants';
@@ -19,8 +22,10 @@ const initialState = {
     errorResponse: null,
     queriedJobs: null,
     savedJobs: null,
+    appliedJobs: null,
     reviews: null,
-    queriedJobsLength: 0
+    queriedJobsLength: 0,
+    profile: null
 } 
   
 export const jobReducer = (state = initialState, action) => {
@@ -46,6 +51,17 @@ export const jobReducer = (state = initialState, action) => {
             reviews: action.payload
           }
         }
+        case USER_PROFILE: {
+          return {
+            ...state,
+            profile: action.payload
+          }
+        }
+        case USER_ERROR:
+          return {
+            ...state,
+            errorResponse: action.payload
+          }
         case REVIEW_ERROR:
           return {
             ...state,
@@ -60,6 +76,11 @@ export const jobReducer = (state = initialState, action) => {
           return {
             ...state,
             savedJobs: action.payload
+          }
+        case GET_APPLIED_JOBS:
+          return {
+            ...state,
+            appliedJobs: action.payload
           }
         case DELETE_SAVED_JOBS:
           return {

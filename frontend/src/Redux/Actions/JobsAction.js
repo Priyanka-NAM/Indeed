@@ -6,9 +6,12 @@ import {
     POST_SAVED_JOBS,
     DELETE_SAVED_JOBS,
     GET_SAVED_JOBS,
+    GET_APPLIED_JOBS,
     GET_USER_REVIEWS,
     REVIEW_ERROR,
-    APPLY_JOB
+    APPLY_JOB,
+    USER_PROFILE,
+    USER_ERROR
 } from '../Constants/UserConstants';
 import {
     GET_JOB_APPLICANTS_REQUEST,
@@ -139,6 +142,29 @@ export const getSavedJobs = (data) => (dispatch) => {
     })
 }
 
+export const getAppliedJobs = (data) => (dispatch) => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }
+    Axios.get(`${API}/users/applied-jobs`, {
+        params:data
+    }, config)
+    .then((response) => {
+        dispatch({
+            type: GET_APPLIED_JOBS,
+            payload: response.data
+        })
+    })
+    .catch((error) => {
+        dispatch({
+            type: JOB_ERROR,
+            payload: error
+        })
+    })
+}
+
 export const getUserReviews = (data) => (dispatch) => {
     const config = {
         headers: {
@@ -157,6 +183,29 @@ export const getUserReviews = (data) => (dispatch) => {
     .catch((error) => {
         dispatch({
             type: REVIEW_ERROR,
+            payload: error
+        })
+    })
+}
+
+export const getUserProfile = (data) => (dispatch) => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }
+    Axios.get(`${API}/users/profile`, {
+        params:data
+    }, config)
+    .then((response) => {
+        dispatch({
+            type: USER_PROFILE,
+            payload: response.data
+        })
+    })
+    .catch((error) => {
+        dispatch({
+            type: USER_ERROR,
             payload: error
         })
     })

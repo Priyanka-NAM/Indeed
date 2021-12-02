@@ -35,6 +35,7 @@ const createUser = async (req, res) => {
               msg: error,
             });
           }
+          console.log(insertResult,"===")
           if (role === 0) {
             createMongoUser(req, res, insertResult.insertId);
           } else {

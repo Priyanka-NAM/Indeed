@@ -63,6 +63,25 @@ const getUserSavedJobs = async (req, res) => {
     }
 }
 
+const getUserAppliedJobs = async (req, res) => {
+    const {userId} = req.query
+    console.log(userId)
+    try {
+        if (userId) {
+            const jobs = await User.findOne({_id: userId}, {appliedJobs:1, _id:0}).populate('appliedJobs')
+            if (jobs) {
+                res.status(200).send(jobs)
+            } else {
+                res.status(404).send("Resource not found")
+            }
+        } else {
+            res.status(401).send("Unauthorized")
+        }   
+    } catch (error) {
+        res.status(500).send("Database error")
+    }
+}
+
 const getUserReviews = async (req, res) => {
     const {userId} = req.query
     console.log(userId)
@@ -82,4 +101,23 @@ const getUserReviews = async (req, res) => {
     }
 }
 
-module.exports = { updateUserSavedJobs, deleteUserSavedJobs, getUserSavedJobs, getUserReviews }
+const getUserProfile = async (req, res) => {
+    const {userId} = req.query
+    console.log(userId)
+    try {
+        if (userId) {
+            const user = await User.findById({_id:userId})
+            if (user) {
+                res.status(200).send(user)
+            } else {
+                res.status(404).send("Resource not found")
+            }
+        } else {
+            res.status(401).send("Unauthorized")
+        }   
+    } catch (error) {
+        res.status(500).send("Database error")
+    }
+}
+
+module.exports = { updateUserSavedJobs, deleteUserSavedJobs, getUserSavedJobs, getUserAppliedJobs, getUserReviews, getUserProfile }

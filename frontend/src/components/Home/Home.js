@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Box, Button, Typography, makeStyles, OutlinedInput, Grid } from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
+import Modal from '@material-ui/core/Modal';
 import Body from './Body';
+import axios from 'axios';
+import { API } from '../../config';
+import { getUserProfile } from '../../Redux/Actions/JobsAction';
+
 const styles = {
     container:{
         padding:'0px 10vw',
@@ -13,20 +19,102 @@ const styles = {
     },
     link:{
         fontWeight:'bolder',
-        color: '#0039C0'
+        color: '#0039C0',
+        cursor: 'pointer'
     }
 };
+
+const useStyles = makeStyles((theme)=>({
+    applyJob: {
+        boxSizing:'border-box',
+        width: "600px",
+        borderRadius:"10px", 
+        height: "100vh", 
+        backgroundColor: "white",
+        outline:'none',
+        padding:'40px',
+    }
+}))
 const Home = (props) => {
-    
+    const classes = useStyles();
+    const dispatch = useDispatch();
+    let userId = useSelector(state=>state.login.userDetails.userId);
+    let profile = useSelector(state=>state.jobs.profile);
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const [resumeFile, setResumeFile] = useState(null)
+    const [flag, setFlag] = useState(false)
+
+    useEffect(async () => {
+        const data = {
+            "userId": userId
+        }
+       await dispatch(getUserProfile(data))
+    }, [flag])
+
+    const handleChange = (e) => {
+        setResumeFile(e.target.files[0])
+    }
+
+    const handleResume = (e) => {
+        e.preventDefault()
+        console.log(resumeFile)
+        const formData = new FormData();
+        formData.append('resume', resumeFile)
+        formData.append('userId', userId)
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        } 
+        axios.post(`${API}/resume/updateResume`, formData, config).then((response) => {
+            setFlag(!flag)
+            console.log(response)
+          }).catch((error) => {
+              console.log(error);
+          })
+    }
+
     return (
         <Container style={styles.container}>
             <Body />
             <div style={styles.linkContainer}>
-                <Link style={styles.link} to="/">
+                <label style={styles.link} onClick={handleOpen} >
                     {`Post your resume - `} 
-                </Link>
+                </label>
                 It only takes a few seconds
             </div>
+            <Modal style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center"
+                    }}
+                    open={open}
+                    onClose={handleClose}>
+                    <Box className={classes.applyJob}>
+                    <Typography variant="h4" component="h2">
+                        Resume upload
+                    </Typography>
+                    <hr />
+                    <Grid item>
+                            <Typography style={{fontWeight:"600", marginTop:"10px"}}>
+                                Resume
+                            </Typography>
+                            <br  />
+                            <form onSubmit={handleResume}>
+                                <input type="file" name="resume" onChange={handleChange} />
+                                <br />
+                                {profile && profile.resume.split("\\")[2]}
+                                <br />
+                                <br />
+                                <input type='submit' value='Upload!' style={{width:"100px", backgroundColor:"#2D5DCE"}} />
+                            </form>
+                            <br />
+                    </Grid>
+                    </Box>
+                </Modal>
         </Container>
     );
 }
