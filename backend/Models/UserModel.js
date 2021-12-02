@@ -10,6 +10,9 @@ const userSchema = mongoose.Schema({
             type: Number,
             required: true
         },
+        firstName: {
+            type: String
+        },
         location: {
             type: String,
         },
