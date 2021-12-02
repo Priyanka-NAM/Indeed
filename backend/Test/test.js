@@ -62,6 +62,22 @@ describe("Login Functionality Testing", () => {
         done(e);
       });
   }).timeout(4000);
+
+  it("Job Seeker SignUp", (done) => {
+    agent
+      .post("/indeed/users/public/signup")
+      // CHANGE EMAIL ID FOR EVERY RUN
+      .send({ email: "742@gmail.com", password: "742", role: 0 })
+      .then((res) => {
+        console.log("res.body", res.text);
+        expect(res.body).to.have.property("role", 0);
+        done();
+      })
+      .catch((error) => {
+        console.log(error);
+        done(e);
+      });
+  });
 });
 
 describe("Employer Functionality", () => {
@@ -184,16 +200,16 @@ describe("Admin Functionality Testing", () => {
         done(e);
       });
   }).timeout(4000);
-  // it("Five Job Seekers based on total accepted reviews", (done) => {
-  //   agent
-  //     .get("/indeed/admin/get-top-acceptedreview-users")
-  //     .then((res) => {
-  //       expect(res.body).to.have.lengthOf(5);
-  //       done();
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       done(e);
-  //     });
-  // }).timeout(4000);
+  it("Five Job Seekers based on total accepted reviews", (done) => {
+    agent
+      .get("/indeed/admin/get-top-acceptedreview-users")
+      .then((res) => {
+        expect(res.body).to.have.lengthOf(5);
+        done();
+      })
+      .catch((error) => {
+        console.log(error);
+        done(e);
+      });
+  }).timeout(4000);
 });

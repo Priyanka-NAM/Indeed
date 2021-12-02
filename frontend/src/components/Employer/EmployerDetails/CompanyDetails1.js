@@ -142,10 +142,14 @@ function CompanyDetails1({
     setStep(step + 1);
   };
   const { isAuth } = useSelector((state) => state.login);
+  const { role } = useSelector((state) => state.login.userDetails);
+  let { userDetails } = useSelector((state) => state.login);
+
+  const employerUrl = `/employer/home/${userDetails.userId}/company`;
 
   return (
     <>
-      {isAuth && <Redirect to='/employer/home' />}
+      {isAuth && role === 1 && <Redirect to={employerUrl} />}
       <Container className={classes.container} maxWidth='xl'>
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
           <Grid item style={{ margin: "25px 0" }}>

@@ -159,10 +159,11 @@ function JobDetails1({ step, setStep, jobDetails, setjobDetails }) {
     setStep(step + 1);
   };
   const { isAuth } = useSelector((state) => state.login);
+  const { role } = useSelector((state) => state.login.userDetails);
 
   return (
     <>
-      {!isAuth && <Redirect to='/employer/' />}
+      {(!isAuth || role !== 1) && <Redirect to='/login' />}
       <Container className={classes.container} maxWidth='xl'>
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
           <Grid item style={{ margin: "25px 0" }}>

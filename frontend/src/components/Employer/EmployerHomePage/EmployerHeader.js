@@ -78,6 +78,7 @@ const useStyles = makeStyles((theme) => ({
 function EmployerHeader() {
   const classes = useStyles();
   const isAuth = useSelector((state) => state.login.isAuth);
+  const { role } = useSelector((state) => state.login.userDetails);
   const [redirectLanding, setLanding] = useState(null);
 
   const dispatch = useDispatch();
@@ -115,7 +116,7 @@ function EmployerHeader() {
             />
           </Typography>
 
-          {isAuth && (
+          {isAuth && role === 1 && (
             <>
               <Typography
                 to='/employer/jobs-posted/'
