@@ -9,6 +9,10 @@ const get_all_companies = require('./services/AdminServices/getAllCompanies')
 const top_accepted_rated_ceos = require('./services/AdminServices/getTopRatedCEOs')
 const top_accepted_review_users = require('./services/AdminServices/getTopAcceptedReviewUsersService')
 const update_user_saved_jobs = require('./services/UserServices/updateUserSavedJobsService')
+const update_employer = require('./services/EmployerServices/updateEmployerService')
+const get_employer_details = require('./services/EmployerServices/getEmployerDetailsService')
+const upload_employer_pics = require('./services/EmployerServices/companyPicsUploadService')
+const employer_review_update = require('./services/EmployerServices/updateEmployerReview')
 
 function handleTopicRequest(topic_name,fname){
     //var topic_name = 'root_topic';
@@ -50,3 +54,7 @@ handleTopicRequest('top_accepted_review_users',top_accepted_review_users)
 handleTopicRequest('update_user_saved_jobs', update_user_saved_jobs)
 handleTopicRequest('update_user_saved_jobs', update_user_saved_jobs)
 handleTopicRequest('update_user_saved_jobs', update_user_saved_jobs)
+handleTopicRequest('update_employer', update_employer)
+handleTopicRequest('get_employer_details', get_employer_details)
+handleTopicRequest('upload_employer_pics', upload_employer_pics)
+handleTopicRequest('employer_review_update', employer_review_update)
