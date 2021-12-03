@@ -27,6 +27,7 @@ import EmployerJobApplicants from "./components/Employer/EmployerApplicants/Empl
 import JobSeekerMessage from "./components/Messages/JobSeekerMessage";
 
 import EmployerPieChart from "./components/Employer/EmployerReports/EmployerPieChart";
+import AdminJobPieChart from "./components/AdminCompany/AdminJobPieChart";
 import { FindSalaries } from "./components/FindSalaries/FindSalaries";
 import EmployerMessage from "./components/Employer/EmployerApplicants/EmployerMessage";
 import Reviews from "./components/Profile/Reviews";
@@ -80,6 +81,7 @@ function App() {
           <Route path='/employer/showJobDetails' component={EachJobDetails} />
           <Route path='/employer/reviews' component={EmployerReviews} />
           <Route path='/employer/reports' component={EmployerPieChart} />
+          <Route path='/indeed/admin/reports/:empid' component={AdminJobPieChart} />
 
           <Route path='/indeed/allcompanies' component={AdminListCompanies} />
           <Route
