@@ -29,7 +29,7 @@ import SearchIcon from "@material-ui/icons/Search";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "aliceblue",
     padding: 0,
     display: "flex",
     flexDirection: "column",
@@ -148,14 +148,15 @@ export function FindSalaries() {
             xl={7}
           >
             <Grid item>
-              <Typography className={classes.h3} variant="h3">
+              <Typography className={classes.h3} variant="h5">
                 Find a career you'll love
               </Typography>
-              <Typography className={classes.h5} variant="h5">
+              <Typography variant="h6">
                 Explore which careers have the highest job satisfaction, best
                 salaries, and more
               </Typography>
             </Grid>
+            <Grid>
             <form onSubmit={handleSubmit} style={{ display: "flex" }}>
               <Grid item>
                 <TextField
@@ -201,6 +202,9 @@ export function FindSalaries() {
                 </SearchButton>
               </Grid>
             </form>
+
+            </Grid>
+            
           </Grid>
         </Grid>
       </Container>

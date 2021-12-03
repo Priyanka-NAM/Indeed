@@ -61,6 +61,7 @@ function App() {
             path='/employer/jobs-posted'
             component={EmployerJobPostingHome}
           />
+          <Route path='/indeed/reviews' component={Reviews} />
           {/* <Route path='/reports' component={EmployerHomePage} /> */}
           {/* <Route path='/employer/home' component={EmployerHomePage} /> */}
           <Route
