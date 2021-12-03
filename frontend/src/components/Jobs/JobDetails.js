@@ -64,7 +64,8 @@ function JobDetails({jobData, index}) {
     const [flag, setFlag] = useState(false)
     const [resumeFile, setResumeFile] = useState(null)
     let profile = useSelector(state=>state.jobs.profile);
-    let isApplied = useSelector(state=>state.jobs.isApplied);
+    const isApplied = useSelector(state=>state.jobs.isApplied);
+    const jobResponse = useSelector(state=>state.jobs.jobResponse);
     
     const handleOpen = () => {
         if (!isAuth) {
@@ -190,6 +191,7 @@ function JobDetails({jobData, index}) {
                     Apply Now
                 </Button>
                 {isApplied && <p style={{color: "red", fontWeight: "700"}}>Job Already Applied</p>}
+                {jobResponse && <p style={{color: "blue", fontWeight: "700"}}>Job Applied Successfully</p>}
                 <Modal style={{
                     display: "flex",
                     flexDirection: "column",

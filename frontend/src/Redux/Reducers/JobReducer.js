@@ -28,7 +28,8 @@ const initialState = {
     reviews: null,
     queriedJobsLength: 0,
     profile: null,
-    isApplied: false
+    isApplied: false,
+    jobResponse: false
 } 
   
 export const jobReducer = (state = initialState, action) => {
@@ -100,7 +101,8 @@ export const jobReducer = (state = initialState, action) => {
         case APPLY_JOB:
           return {
             ...state,
-            successResponse: action.payload
+            successResponse: action.payload,
+            jobResponse: true
           }
         case JOB_APPLY_ERROR:
           return {

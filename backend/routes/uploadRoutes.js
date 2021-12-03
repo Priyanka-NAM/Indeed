@@ -52,7 +52,6 @@ router.post('/updateResume',upload.single('resume'),async(req,res)=>{
                 res.status(500).json({
                     error:"Internal Server Error. Please try after sometime"
                 })
-    
             }
         }
         else{
