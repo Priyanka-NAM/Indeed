@@ -17,7 +17,10 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { employerAllJob } from "../../../Redux/Actions/EmployerJobPostingAction";
 import { Redirect } from "react-router-dom";
-
+import MuiAlert from "@mui/material/Alert";
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
+});
 const useStyles = makeStyles((theme) => ({
   body: {
     backgroundColor: "black",
@@ -124,15 +127,15 @@ function EmployerJobPostingHome(props) {
   }
   const dispatch = useDispatch();
   const { responseFromServer } = useSelector((state) => state.employerJobs);
+  const { userDetails } = useSelector((state) => state.login);
+  const [IsWarning, setIsWarning] = useState(false);
 
   useEffect(() => {
-    // if (userDetails.userId && userDetails.userId !== "") {
-    //   dispatch(employerAllJob(userDetails.userId));
-    // }
-    dispatch(employerAllJob("61a07e89e5d016c47d56338a"));
-    console.log("test data");
+    if (userDetails && userDetails.userId && userDetails.userId !== "") {
+      dispatch(employerAllJob(userDetails.userId));
+    }
+    // dispatch(employerAllJob("61a07e89e5d016c47d56338a"));
   }, [props]);
-  console.log("respone data", responseFromServer);
   let rows = [];
   if (responseFromServer.length > 0) {
     rows = responseFromServer.map((eachjob) => {
@@ -171,14 +174,15 @@ function EmployerJobPostingHome(props) {
       minWidth: 100,
     },
   ];
+  const { role } = useSelector((state) => state.login.userDetails);
 
   return (
     <>
-      {!isAuth && <Redirect to='/employer' />}
+      {(!isAuth || role !== 1) && <Redirect to='/login' />}
       <div
         style={{
           paddingTop: "3%",
-          backgroundColor: "#f2f2f2",
+          // backgroundColor: "#f2f2f2",
           height: "100%",
         }}>
         <MuiThemeProvider theme={theme} />
@@ -211,6 +215,8 @@ function EmployerJobPostingHome(props) {
           <Grid item xs={2} style={{ paddingLeft: "80%" }}></Grid>
           <br />
           <div style={{ height: 400, width: "80%", marginLeft: "10%" }}>
+            {/* {IsWarning && <Alert severity='error'>No Jobs to display!</Alert>} */}
+
             <Paper className={classes.root}>
               <TableContainer className={classes.tablecontainer}>
                 <Table stickyHeader>
@@ -300,42 +306,41 @@ function EmployerJobPostingHome(props) {
           </div>
           <br />
           <br />
-
-          <Grid
-            container
-            spacing={1}
-            style={{
-              fontSize: "14px",
-              padding: "15px 10px",
-              margin: "0 -20px ",
-            }}>
-            <Grid item style={{ cursor: "pointer" }}>
-              © 2020 Indeed
-            </Grid>
-            <Grid item>-</Grid>
-            <Grid item style={{ cursor: "pointer" }}>
-              Accessibility at Indeed
-            </Grid>
-            <Grid item>-</Grid>
-            <Grid item style={{ cursor: "pointer" }}>
-              Privacy Center
-            </Grid>
-            <Grid item>-</Grid>
-            <Grid item style={{ cursor: "pointer" }}>
-              Cookies
-            </Grid>
-            <Grid item>-</Grid>
-            <Grid item style={{ cursor: "pointer" }}>
-              Privacy
-            </Grid>
-            <Grid item>-</Grid>
-            <Grid item style={{ cursor: "pointer" }}>
-              Terms
-            </Grid>
-          </Grid>
         </Container>
-        {/* // : <Redirect to='/' /> */}
       </div>
+      {/* <Grid
+        container
+        spacing={1}
+        style={{
+          fontSize: "14px",
+          backgroundColor: "white",
+          padding: "15px 10px",
+          margin: "0 -20px ",
+        }}>
+        <Grid item style={{ cursor: "pointer" }}>
+          © 2020 Indeed
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Accessibility at Indeed
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Privacy Center
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Cookies
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Privacy
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Terms
+        </Grid>
+      </Grid> */}
     </>
   );
 }

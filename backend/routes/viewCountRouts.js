@@ -8,7 +8,7 @@ router.get('/addViewCount/:employerID', async (req, res) => {
     const d = new Date();
     let day = d.getDay()
     const dayName = days[day]
-    const employerViewsByDay = await Employer.findOne({ employerID: employerID, 'views.day': dayName })
+    const employerViewsByDay = await Employer.findOne({ _id: employerID, 'views.day': dayName })
     //var result = employerViewsByDay.views.count
     //result = result+1
 
@@ -17,7 +17,7 @@ router.get('/addViewCount/:employerID', async (req, res) => {
         let count = result[0].count
         count = count + 1
         //console.log(count)
-        const employer = await Employer.updateOne({ employerID: employerID, 'views.day': dayName },
+        const employer = await Employer.updateOne({ _id: employerID, 'views.day': dayName },
             {
                 $set: {
                     "views.$.count": count
@@ -27,7 +27,8 @@ router.get('/addViewCount/:employerID', async (req, res) => {
 
         )
         //employer.views.count = result
-        res.send("View Count incremented")
+        if(employer)
+            res.send("View Count incremented")
 
         //const result = await employer.views.
     }
@@ -69,6 +70,29 @@ router.get('/getViewCount/:employerID', async (req, res) => {
     if (employerViewsByDay) {
         const result = employerViewsByDay.views
         res.status(200).send(result)
+    }
+    else {
+        
+            res.status(404).send("Employer's Id not found")
+        
+
+    }
+
+
+})
+
+router.get('/getTopViewCountsByDay/:day', async (req, res) => {
+    const day = req.params.day
+    /*var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const d = new Date();
+    //let day = d.getDay()
+    const dayName = days[day]*/
+    
+    let employerViewsByDay = await Employer.find({'views.day':day}, ["companyName", "views"] ).sort({'views.count':-1}).limit(10);
+    
+
+    if (employerViewsByDay) {
+        res.status(200).send(employerViewsByDay)
     }
     else {
         

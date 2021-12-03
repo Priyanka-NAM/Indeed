@@ -156,11 +156,12 @@ function CompanyDetails2({
     if (Object.keys(errors).length > 0) return;
     setStep(step + 1);
   };
-  const { isAuth } = useSelector((state) => state.login);
+  // const { isAuth } = useSelector((state) => state.login);
+  const { responseFromServer } = useSelector((state) => state.signup);
 
   return (
     <>
-      {isAuth && <Redirect to='/employer/home' />}
+      {responseFromServer.role !== 1 && <Redirect to='/employer/home' />}
       <Container className={classes.container} maxWidth='xl'>
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
           <Grid item style={{ margin: "25px 0" }}>

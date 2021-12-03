@@ -114,8 +114,9 @@ exports.findReviewById = async (req, res, next, id) => {
 };
 
 exports.getUserReviews = async (req, res) => {
+  console.log("inside");
   try {
-    const review = await Reviews.find({ user: req.body.id }).populate("user");
+    const review = await Reviews.find({ userId: req.query.userId });
     req.review = review;
     if (!review) {
       return res.status(400).json({
@@ -123,7 +124,6 @@ exports.getUserReviews = async (req, res) => {
       });
     }
     res.send(review);
-   
   } catch (error) {
     return res.status(400).json({
       error: error,
@@ -180,11 +180,6 @@ exports.getSpecificCompanyReviews = async (req, res) => {
         error: error,
       });
     }
-    res.send(review);
-  } catch (error) {
-    return res.status(400).json({
-      error: error,
-    });
   }
 };
 
@@ -273,11 +268,14 @@ exports.UpdateReviewStatus = async (req, res) => {
 };
 
 exports.UpdateHelpfulCount = async (req, res) => {
-  console.log()
+  console.log();
   try {
     const review = await Reviews.findOneAndUpdate(
       { _id: req.body.reviewid },
-      { isHelpfulCount: req.body.helpfulcount, isNotHelpfulCount: req.body.nothelpfulcount }
+      {
+        isHelpfulCount: req.body.helpfulcount,
+        isNotHelpfulCount: req.body.nothelpfulcount,
+      }
     );
     if (!review) {
       return res.status(400).json({

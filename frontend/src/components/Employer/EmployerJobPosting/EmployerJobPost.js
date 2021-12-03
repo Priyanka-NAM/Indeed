@@ -144,10 +144,11 @@ function EmployerJobPost() {
     }
   }
   const isAuth = useSelector((state) => state.login.isAuth);
+  const { role } = useSelector((state) => state.login.userDetails);
 
   return (
     <>
-      {!isAuth && <Redirect to='/login' />}
+      {(!isAuth || role !== 1) && <Redirect to='/login' />}
       <Container className={classes.container} maxWidth='xl'>
         <br />
         <br />
@@ -184,42 +185,40 @@ function EmployerJobPost() {
         </Box>
         <br />
         <br />
-
-        <Grid
-          container
-          spacing={1}
-          style={{
-            fontSize: "14px",
-            backgroundColor: "white",
-            padding: "15px 10px",
-            margin: "0 -20px ",
-          }}>
-          <Grid item style={{ cursor: "pointer" }}>
-            © 2020 Indeed
-          </Grid>
-          <Grid item>-</Grid>
-          <Grid item style={{ cursor: "pointer" }}>
-            Accessibility at Indeed
-          </Grid>
-          <Grid item>-</Grid>
-          <Grid item style={{ cursor: "pointer" }}>
-            Privacy Center
-          </Grid>
-          <Grid item>-</Grid>
-          <Grid item style={{ cursor: "pointer" }}>
-            Cookies
-          </Grid>
-          <Grid item>-</Grid>
-          <Grid item style={{ cursor: "pointer" }}>
-            Privacy
-          </Grid>
-          <Grid item>-</Grid>
-          <Grid item style={{ cursor: "pointer" }}>
-            Terms
-          </Grid>
-        </Grid>
       </Container>
-      {/* // : <Redirect to='/' /> */}
+      <Grid
+        container
+        spacing={1}
+        style={{ 
+          fontSize: "14px",
+          backgroundColor: "white",
+          padding: "15px 10px",
+          margin: "0 -20px ",
+        }}>
+        <Grid item style={{ cursor: "pointer" }}>
+          © 2020 Indeed
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Accessibility at Indeed
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Privacy Center
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Cookies
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Privacy
+        </Grid>
+        <Grid item>-</Grid>
+        <Grid item style={{ cursor: "pointer" }}>
+          Terms
+        </Grid>
+      </Grid>
     </>
   );
 }

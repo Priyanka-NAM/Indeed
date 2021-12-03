@@ -11,32 +11,32 @@ import { getUserProfile } from '../../Redux/Actions/JobsAction';
 import { Link } from 'react-router-dom';
 
 const styles = {
-    container:{
-        padding:'0px 10vw',
-        marginTop:'80px'
-    },
-    linkContainer:{
-        marginLeft: '150px',
-        marginTop:'30px'
-    },
-    link:{
-        fontWeight:'bolder',
-        color: '#0039C0',
-        cursor: 'pointer'
-    }
+  container: {
+    padding: "0px 10vw",
+    marginTop: "80px",
+  },
+  linkContainer: {
+    marginLeft: "150px",
+    marginTop: "30px",
+  },
+  link: {
+    fontWeight: "bolder",
+    color: "#0039C0",
+    cursor: "pointer",
+  },
 };
 
-const useStyles = makeStyles((theme)=>({
-    applyJob: {
-        boxSizing:'border-box',
-        width: "600px",
-        borderRadius:"10px", 
-        height: "100vh", 
-        backgroundColor: "white",
-        outline:'none',
-        padding:'40px',
-    }
-}))
+const useStyles = makeStyles((theme) => ({
+  applyJob: {
+    boxSizing: "border-box",
+    width: "600px",
+    borderRadius: "10px",
+    height: "100vh",
+    backgroundColor: "white",
+    outline: "none",
+    padding: "40px",
+  },
+}));
 const Home = (props) => {
     const classes = useStyles();
     const history = useHistory();
@@ -58,16 +58,16 @@ const Home = (props) => {
     const [resumeFile, setResumeFile] = useState(null)
     const [flag, setFlag] = useState(false)
 
-    useEffect(async () => {
-        const data = {
-            "userId": userId
-        }
-       await dispatch(getUserProfile(data))
-    }, [flag])
+  useEffect(async () => {
+    const data = {
+      userId: userId,
+    };
+    await dispatch(getUserProfile(data));
+  }, [flag]);
 
-    const handleChange = (e) => {
-        setResumeFile(e.target.files[0])
-    }
+  const handleChange = (e) => {
+    setResumeFile(e.target.files[0]);
+  };
 
     const handleResume = (e) => {
         e.preventDefault()
