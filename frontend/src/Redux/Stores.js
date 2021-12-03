@@ -7,6 +7,7 @@ import {
   CompanyListReviewReducer,
   UpdateReviewStatusReducer,
   UpdateHelpfulCountReducer,
+  getFeaturedReviewsReducer,
 } from "./Reducers/CompanyReducer";
 import { companyReviewReducer } from "./Reducers/CompanyReviewReducer";
 import {
@@ -54,12 +55,11 @@ const appReducer = combineReducers({
   updatePhotoStatus: updatePhotoStatusReducer,
   jobApplicants: jobApplicantsReducer,
   salary: companySalaryReducer,
+  featuredReviews:getFeaturedReviewsReducer,
   updateViewCount: updateViewCountReducer,
   getTopViewCount: getTopViewCountReducer,
   userjob: userJobReducer,
   employerReport: employerReportReducer,
-  updateViewCount: updateViewCountReducer,
-  getTopViewCount: getTopViewCountReducer,
 });
 
 // const rootReducer = (state, action) => {

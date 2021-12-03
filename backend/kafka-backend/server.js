@@ -8,6 +8,7 @@ const top_reviewed_companies = require('./services/AdminServices/getTopReviewedC
 const get_all_companies = require('./services/AdminServices/getAllCompanies')
 const top_accepted_rated_ceos = require('./services/AdminServices/getTopRatedCEOs')
 const top_accepted_review_users = require('./services/AdminServices/getTopAcceptedReviewUsersService')
+const update_user_saved_jobs = require('./services/UserServices/updateUserSavedJobsService')
 
 function handleTopicRequest(topic_name,fname){
     //var topic_name = 'root_topic';
@@ -46,3 +47,6 @@ handleTopicRequest('top_reviewed_companies', top_reviewed_companies)
 handleTopicRequest('get_all_companies', get_all_companies)
 handleTopicRequest('top_accepted_rated_ceos', top_accepted_rated_ceos)
 handleTopicRequest('top_accepted_review_users',top_accepted_review_users)
+handleTopicRequest('update_user_saved_jobs', update_user_saved_jobs)
+handleTopicRequest('update_user_saved_jobs', update_user_saved_jobs)
+handleTopicRequest('update_user_saved_jobs', update_user_saved_jobs)

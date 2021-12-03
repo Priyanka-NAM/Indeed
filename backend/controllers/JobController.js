@@ -105,7 +105,6 @@ const getAllJobs = async (req, res) => {
 };
 
 const getJobApplicants = async (req, res) => {
-
   try{
     const jobApplicants = await Applications.find({$and:[{jobId: req.params.jobId},{employerId: req.params.employerId}]});
 
@@ -122,17 +121,43 @@ const getJobApplicants = async (req, res) => {
   }
 };
 
+const updateJobApplication = async(req, res) => {
+  try{
+    const application = await Applications.findOne({$and: [{userId: req.body.userId},{jobId: req.body.jobId},{employerId: req.body.employerId}]});
+
+    if(application){
+      application.set({
+        status: req.body.status
+      })
+
+      await application.save()
+
+      res.status(200).send(application);
+    }
+    else{
+      res.status(400).send("Job Application not found")
+    }
+  }
+  catch(error){
+    res.status(500).send("Internal Server Error");
+  }
+}
+
 const jobApplications = async (req, res) => {
   const employerID = mongoose.Types.ObjectId(req.params.id);
   const dateYear = req.params.year;
   let currDate, nextDate;
-  if (dateYear == 1990) {
+  if (dateYear === "1990") {
+    console.log("Current Year ", dateYear);
     currDate = new Date(1990, 0, 1);
     nextDate = new Date();
   } else {
+    console.log("Not Current Year ", dateYear);
     currDate = new Date(dateYear, 0, 1);
     nextDate = new Date(dateYear, 11, 31);
   }
+  console.log("Aggregation Year ", currDate.toString());
+  console.log("Next Aggregation Year ", nextDate.toString());
   console.log("Req.params", employerID);
   try {
     const TotalApplications = await Applications.aggregate([
@@ -167,14 +192,17 @@ const eachJobApplications = async (req, res) => {
   const employerID = mongoose.Types.ObjectId(req.params.id);
   const dateYear = req.params.year;
   let currDate, nextDate;
-  if (dateYear === 1990) {
+  if (dateYear === "1990") {
+    console.log("Current Year ", dateYear);
     currDate = new Date(1990, 0, 1);
     nextDate = new Date();
   } else {
+    console.log("Not Current Year ", dateYear);
     currDate = new Date(dateYear, 0, 1);
     nextDate = new Date(dateYear, 11, 31);
   }
   console.log("Aggregation Year ", currDate.toString());
+  console.log("Next Aggregation Year ", nextDate.toString());
   console.log("Req.params", employerID);
   try {
     const TotalApplications = await Applications.aggregate([
@@ -259,4 +287,5 @@ module.exports = {
   getJobApplicants,
   jobApplications,
   eachJobApplications,
+  updateJobApplication
 };

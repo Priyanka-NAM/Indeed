@@ -46,15 +46,13 @@ function SavedJobs() {
     const classes = useStyles();
     const dispatch = useDispatch();
     let { userDetails } = useSelector((state) => state.login);
-    let sJobs  = useSelector((state) => state.jobs.savedJobs);
-    let aJobs  = useSelector((state) => state.jobs.appliedJobs);
-    let profile = useSelector(state=>state.jobs.profile);
-    const isAuth = useSelector(state=>state.login.isAuth)
-    
+    let sJobs = useSelector((state) => state.jobs.savedJobs);
+    let aJobs = useSelector((state) => state.jobs.appliedJobs);
+    let profile = useSelector((state) => state.jobs.profile);
     const [open, setOpen] = useState(false);
-    const {email} = userDetails
-    const [resumeFile, setResumeFile] = useState(null)
-    const [flag, setFlag] = useState(false)
+    const { email } = userDetails;
+    const [resumeFile, setResumeFile] = useState(null);
+    const [flag, setFlag] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
@@ -70,67 +68,74 @@ function SavedJobs() {
     }
 
     const handleResume = (e) => {
-        e.preventDefault()
-        console.log(resumeFile)
+        e.preventDefault();
+        console.log(resumeFile);
         const formData = new FormData();
-        formData.append('resume', resumeFile)
-        formData.append('userId', userId)
+        formData.append("resume", resumeFile);
+        formData.append("userId", userId);
         const config = {
             headers: {
-                'content-type': 'multipart/form-data'
-            }
-        } 
-        axios.post(`${API}/upload/updateResume`, formData, config).then((response) => {
-            setFlag(!flag)
-            console.log(response)
-          }).catch((error) => {
-              console.log(error);
-          })
-    }
+                "content-type": "multipart/form-data",
+            },
+        };
+        axios
+            .post(`${API}/upload/updateResume`, formData, config)
+            .then((response) => {
+                setFlag(!flag);
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
 
     const handleApplyJob = (jobId, employerId) => {
         const data = {
-            "userId": userId,
-            "jobId": jobId,
-            "employerId": employerId,
-            "resume": profile.resume,
-            "email": profile.email
-        }
-        console.log("emp id", employerId)
-        dispatch(applyJobs(data))
-        setOpen(false)
-    }
+            userId: userId,
+            jobId: jobId,
+            employerId: employerId,
+            resume: profile.resume,
+        };
+        console.log("emp id", employerId);
+        dispatch(applyJobs(data));
+        setOpen(false);
+    };
 
-    let savedJobs = null
+    let savedJobs = null;
     if (sJobs) {
-        savedJobs = sJobs.savedJobs
+        savedJobs = sJobs.savedJobs;
     }
-    let appliedJobs = null
+    let appliedJobs = null;
     if (aJobs) {
-        appliedJobs = aJobs.appliedJobs 
+        appliedJobs = aJobs.appliedJobs;
     }
     const { userId } = userDetails;
     useEffect(() => {
         const data = {
-            "userId": userId
-        }
-        dispatch(getSavedJobs(data))
-        dispatch(getAppliedJobs(data))
-    }, [])
+            userId: userId,
+        };
+        dispatch(getSavedJobs(data));
+        dispatch(getAppliedJobs(data));
+    }, []);
     return (
-        <Container style={{display:'flex'}}>
-            {!isAuth && <Redirect to='/login'/>}
+        <Container style={{ display: "flex" }}>
             <Box>
-                <Typography variant={'h5'} style={{fontSize:'30px',marginBottom:'20px'}}>
+                <Typography
+                    variant={"h5"}
+                    style={{ fontSize: "30px", marginBottom: "20px" }}>
                     My Jobs
                 </Typography>
-                <ul style={{display:'flex',marginBottom:'20px'}}>
-                    <NavLink to="/indeed/saved-jobs" activeStyle={{
-                        color:"#0145E3",
-                        textDecoration:'underline'}} style={{fontSize:'20px',marginRight:"30px"}}>
+                <ul style={{ display: "flex", marginBottom: "20px" }}>
+                    <NavLink
+                        to='/indeed/saved-jobs'
+                        activeStyle={{
+                            color: "#0145E3",
+                            textDecoration: "underline",
+                        }}
+                        style={{ fontSize: "20px", marginRight: "30px" }}>
                         Saved {savedJobs && savedJobs.length}
                     </NavLink>
-                    <NavLink to="/indeed/applied-jobs" style={{fontSize:'20px'}}>
+                    <NavLink to='/indeed/applied-jobs' style={{ fontSize: "20px" }}>
                         Applied {appliedJobs && appliedJobs.length}
                     </NavLink>
                 </ul>

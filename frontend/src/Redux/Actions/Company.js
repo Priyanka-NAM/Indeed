@@ -7,6 +7,8 @@ import {
   UPDATE_REVIEW_STATUS_FAIL,
   UPDATE_HELPFUL_COUNT_SUCCESS,
   UPDATE_HELPFUL_COUNT_FAIL,
+  COMPANY_LIST_FEATURE_REVIEWS_SUCCESS,
+  COMPANY_LIST_FEATURE_REVIEWS_FAIL,
 } from "../Constants/Company";
 
 import Axios from "axios";
@@ -119,6 +121,33 @@ export const updateHelpfulCount = (data) => (dispatch) => {
     });
 };
 
+export const getFeaturedReviews = (data) => (dispatch) => {
+
+  console.log(data);
+  const config = {
+    headers: {
+      "content-type": "application/x-www-form-urlencoded",
+      Accept: "application/json",
+    },
+  };
+  Axios.get(
+    `${API}/company/company-specific-featured-reviews?employerId=${data.employerId}`,
+    config
+  )
+    .then((response) => {
+      dispatch({
+        type: COMPANY_LIST_FEATURE_REVIEWS_SUCCESS,
+        payload: response.data,
+    });
+})
+.catch((error) => {
+  dispatch({
+    type: COMPANY_LIST_FEATURE_REVIEWS_FAIL,
+    payload: error,
+  });
+});
+};
+
 export const useremployerAllJob = (employerID, page, limit) => (dispatch) => {
   // const { employerID } = JSON.parse(localStorage.getItem("user"));
   console.log(page, limit);
@@ -144,7 +173,6 @@ export const useremployerAllJob = (employerID, page, limit) => (dispatch) => {
       });
     })
     .catch((error) => {
-      console.log("Error from backend", error);
       dispatch({
         type: "USER_EMPLOYER_ALL_JOBS_ERROR",
         payload: error,

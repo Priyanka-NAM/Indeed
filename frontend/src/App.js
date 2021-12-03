@@ -31,6 +31,7 @@ import { FindSalaries } from "./components/FindSalaries/FindSalaries";
 import EmployerMessage from "./components/Employer/EmployerApplicants/EmployerMessage";
 import Reviews from "./components/Profile/Reviews";
 import AppliedJobs from "./components/Profile/AppliedJobs";
+import ApplicantProfilePage from "./components/Employer/EmployerApplicants/ApplicantProfilePage";
 function App() {
   return (
     <ThemeProvider theme={Theme}>
@@ -62,6 +63,7 @@ function App() {
             path='/employer/jobs-posted'
             component={EmployerJobPostingHome}
           />
+          <Route path='/indeed/reviews' component={Reviews} />
           {/* <Route path='/reports' component={EmployerHomePage} /> */}
           {/* <Route path='/employer/home' component={EmployerHomePage} /> */}
           <Route
@@ -82,8 +84,10 @@ function App() {
           <Route path='/employer/reports' component={EmployerPieChart} />
 
           <Route path='/indeed/allcompanies' component={AdminListCompanies} />
+          <Route path='/employer/applicant-page/:jobId&:employerId' exact component={EmployerJobApplicants} />
+          <Route path='/employer/applicant-profile/:userId&:jobId&:employerId' exact component={ApplicantProfilePage}/>
           <Route
-            path='/employer/applicant-page/:id'
+            path='/employer/applicant-page/:jobId&:employerId'
             exact
             component={EmployerJobApplicants}
           />
