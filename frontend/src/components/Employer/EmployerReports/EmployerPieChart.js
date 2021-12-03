@@ -121,7 +121,9 @@ function EmployerPieChart(props) {
   let data = [];
 
   useEffect(() => {
-    dispatch(employerPieReports(userId));
+    let currDate = new Date();
+    let year = currDate.getFullYear();
+    dispatch(employerPieReports(userId, year - 1));
   }, [clicked]);
 
   if (employerReport.responseFromServerPie !== null) {

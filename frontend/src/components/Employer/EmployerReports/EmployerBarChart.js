@@ -14,52 +14,6 @@ import { Stack, Animation } from "@devexpress/dx-react-chart";
 import { useDispatch, useSelector } from "react-redux";
 import { employerBarReports } from "./../../../Redux/Actions/EmployerReportsAction";
 
-// export const data = [
-//   {
-//     country: "Back end Developer",
-//     gold: 36,
-//     silver: 38,
-//     bronze: 36,
-//   },
-
-//   {
-//     country: "Frontend Engineer",
-//     gold: 23,
-//     silver: 21,
-//     bronze: 28,
-//   },
-//   {
-//     country: "Mechincal Engineer",
-//     gold: 14,
-//     silver: 15,
-//     bronze: 17,
-//   },
-//   {
-//     country: "Mechincal Engineer",
-//     gold: 14,
-//     silver: 15,
-//     bronze: 17,
-//   },
-//   {
-//     country: "Mechincal Engineer",
-//     gold: 14,
-//     silver: 15,
-//     bronze: 17,
-//   },
-//   {
-//     country: "Software Engineer",
-//     gold: 16,
-//     silver: 10,
-//     bronze: 15,
-//   },
-//   {
-//     country: "Software Engineer",
-//     gold: 16,
-//     silver: 10,
-//     bronze: 15,
-//   },
-// ];
-
 const legendStyles = () => ({
   root: {
     display: "flex",
@@ -91,7 +45,9 @@ function EmployerBarChart(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(employerBarReports(userId));
+    let currDate = new Date();
+    let year = currDate.getFullYear();
+    dispatch(employerBarReports(userId, year - 1));
   }, [clicked]);
 
   let chartData = [];
