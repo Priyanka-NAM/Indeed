@@ -19,6 +19,18 @@ const update_helpful_count = require("./services/CompanyServices/UpdateHelpfulCo
 const upload_photo = require("./services/CompanyServices/UploadPhotoService");
 const upload_photo_status = require("./services/CompanyServices/UploadPhotoStatusService");
 const user_review = require("./services/CompanyServices/UserReviewService");
+const update_user_saved_jobs = require("./services/UserServices/updateUserSavedJobsService");
+const update_employer = require("./services/EmployerServices/updateEmployerService");
+const get_employer_details = require("./services/EmployerServices/getEmployerDetailsService");
+const upload_employer_pics = require("./services/EmployerServices/companyPicsUploadService");
+const employer_review_update = require("./services/EmployerServices/updateEmployerReview");
+const delete_user_saved_jobs = require("./services/UserServices/deleteUserSavedJobs");
+const get_user_saved_jobs = require("./services/UserServices/getUserSavedJobs");
+const get_user_applied_jobs = require("./services/UserServices/getUserAppliedJobs");
+const get_user_reviews = require("./services/UserServices/getUserReviews");
+const get_user_profile = require("./services/UserServices/getUserProfile");
+const update_user_profile = require("./services/UserServices/updateUserProfile");
+const fetch_all_jobs = require("./services/UserServices/fetchAllJobs");
 
 function handleTopicRequest(topic_name, fname) {
   //var topic_name = 'root_topic';
@@ -43,12 +55,16 @@ function handleTopicRequest(topic_name, fname) {
         },
       ];
       producer.send(payloads, function (err, data) {
+        if (err) {
+          console.log(err);
+        }
         console.log(data);
       });
       return;
     });
   });
 }
+
 // Add your TOPICs here
 //first argument is topic name
 //second argument is a function that will handle this topic request
@@ -68,3 +84,21 @@ handleTopicRequest("update_helpful_count", update_helpful_count);
 handleTopicRequest("upload_photo", upload_photo);
 handleTopicRequest("upload_photo_status", upload_photo_status);
 handleTopicRequest("user_review", user_review);
+handleTopicRequest("top_rated_companies", top_rated_companies);
+handleTopicRequest("top_reviewed_companies", top_reviewed_companies);
+handleTopicRequest("get_all_companies", get_all_companies);
+handleTopicRequest("top_accepted_rated_ceos", top_accepted_rated_ceos);
+handleTopicRequest("top_accepted_review_users", top_accepted_review_users);
+handleTopicRequest("update_user_saved_jobs", update_user_saved_jobs);
+
+handleTopicRequest("update_employer", update_employer);
+handleTopicRequest("get_employer_details", get_employer_details);
+handleTopicRequest("upload_employer_pics", upload_employer_pics);
+handleTopicRequest("employer_review_update", employer_review_update);
+handleTopicRequest("delete_user_saved_jobs", delete_user_saved_jobs);
+handleTopicRequest("get_user_saved_jobs", get_user_saved_jobs);
+handleTopicRequest("get_user_applied_jobs", get_user_applied_jobs);
+handleTopicRequest("get_user_reviews", get_user_reviews);
+handleTopicRequest("get_user_profile", get_user_profile);
+handleTopicRequest("update_user_profile", update_user_profile);
+handleTopicRequest("fetch_all_jobs", fetch_all_jobs);

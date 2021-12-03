@@ -1,9 +1,9 @@
-// const redis = require("redis");
-// const { redisPort , redisHost} = require("./config");
+const redis = require("redis");
+const { redisPort , redisHost} = require("./config");
 
-// console.log(redisHost)
-// console.log(redisPort)
-// const redisClient = redis.createClient(redisPort, redisHost);
+console.log(redisHost)
+console.log(redisPort)
+const redisClient = redis.createClient(redisPort, redisHost);
 
 // redisClient.on('error', (err) => console.log(err))
 
@@ -18,4 +18,4 @@
 //     }
 // });
 
-// module.exports = redisClient;
+module.exports = redisClient;

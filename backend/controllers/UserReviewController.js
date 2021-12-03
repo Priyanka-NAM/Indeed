@@ -3,6 +3,7 @@ const Employer = require("../Models/EmployerModel");
 const User = require("../Models/UserModel");
 
 const kafka = require("../kafka/client");
+const redisClient = require("../config/redisClient");
 
 exports.postUserReview = async (req, res) => {
   console.log("Post User Review");
@@ -16,6 +17,7 @@ exports.postUserReview = async (req, res) => {
     }
   });
 };
+
 exports.findReviewById = async (req, res, next, id) => {
   try {
     const review = await Reviews.findById(id);
@@ -109,4 +111,31 @@ exports.UpdateHelpfulCount = async (req, res) => {
       res.status(200).json(results);
     }
   });
+};
+exports.featuredReviewsForSpecificcompany = async (req, res) => {
+  console.log("get featured reviews reviews");
+  try {
+    const key = req.query.employerId.toString();
+    console.log(key);
+    const data = await redisClient.get(key);
+    if (data) {
+      console.log("get key");
+      return res.status(200).send(JSON.parse(data));
+    }
+    const review = await Reviews.find({
+      employerId: req.query.employerId,
+      isFeatured: true,
+    });
+    if (!review) {
+      return res.status(400).json({
+        error: error,
+      });
+    }
+    redisClient.setEx(key, 36000, JSON.stringify(review));
+    res.send(review);
+  } catch (error) {
+    return res.status(400).json({
+      error: error,
+    });
+  }
 };

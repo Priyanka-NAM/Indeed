@@ -59,14 +59,21 @@ function JobDetails({jobData, index}) {
     const isAuth = useSelector(state=>state.login.isAuth)
     const {userId, email} = useSelector(state=>state.login.userDetails)
     const [viewUndo, setViewUndo] = useState([])
-    const [redirectLogin, setLogin] = useState(false)
     const [display, setDisplay] = useState(false)
     const [open, setOpen] = useState(false);
     const [flag, setFlag] = useState(false)
     const [resumeFile, setResumeFile] = useState(null)
     let profile = useSelector(state=>state.jobs.profile);
+    const isApplied = useSelector(state=>state.jobs.isApplied);
+    const jobResponse = useSelector(state=>state.jobs.jobResponse);
     
-    const handleOpen = () => setOpen(true);
+    const handleOpen = () => {
+        if (!isAuth) {
+            history.push('/login');
+        } else {
+            setOpen(true)
+        }
+    };
     const handleClose = () => setOpen(false);
 
     useEffect(async () => {
@@ -77,16 +84,20 @@ function JobDetails({jobData, index}) {
     }, [display, flag])
 
     const displayUndo = (jobId) => {
-        const data = {
-            "jobId": jobId,
-            "userId": userId
+        if (!isAuth) {
+            history.push('/login');
+        } else {
+            const data = {
+                "jobId": jobId,
+                "userId": userId
+            }
+            let temp = viewUndo
+            temp[index] = !temp[index]
+            setViewUndo(temp)
+            setDisplay(!display)
+            dispatch(postSavedJobs(data))
+            console.log("---", viewUndo)
         }
-        let temp = viewUndo
-        temp[index] = !temp[index]
-        setViewUndo(temp)
-        setDisplay(!display)
-        dispatch(postSavedJobs(data))
-        console.log("---", viewUndo)
     }
 
     const hideUndo = (jobId) => {
@@ -120,7 +131,7 @@ function JobDetails({jobData, index}) {
                 'content-type': 'multipart/form-data'
             }
         } 
-        axios.post(`${API}/resume/updateResume`, formData, config).then((response) => {
+        axios.post(`${API}/upload/updateResume`, formData, config).then((response) => {
             setFlag(!flag)
             console.log(response)
           }).catch((error) => {
@@ -134,12 +145,13 @@ function JobDetails({jobData, index}) {
                 "userId": userId,
                 "jobId": jobId,
                 "employerId": employerId,
-                "resume": profile.resume
+                "resume": profile.resume,
+                "email": profile.email
             }
             dispatch(applyJobs(data))
             setOpen(false)
         } else {
-            setLogin(true)
+            history.push('/login');
         }
     }
 
@@ -153,17 +165,16 @@ function JobDetails({jobData, index}) {
 
     return (
         <Box className={classes.container}>
-            {redirectLogin && <Redirect to='/login' />}
             <Typography variant={'h5'} style={{marginBottom:'10px'}}>
                 {jobData.jobTitle}
             </Typography>
             <Box style={{marginBottom:'10px'}}>
             <div style={{fontSize:"14px", fontWeight:"700"}}>
             <label style={{cursor:"pointer"}} onClick={() => handleCompany(jobData.employerID._id)}>{jobData.companyName}</label>{'  '}
-                {jobData.employerID.averageRating}
+                {/* {jobData.employerID.averageRating} */}
                 <StarIcon fontSize="small" style={{height:"12px"}} />
-                {'  '}<label onClick={() => handleReviews(jobData.employerID._id)}
-                 style={{color:"#3A74F2", cursor:"pointer"}}>{jobData.employerID.noOfRatings + ' reviews'}</label>
+                {/* {'  '}<label onClick={() => handleReviews(jobData.employerID._id)}
+                 style={{color:"#3A74F2", cursor:"pointer"}}>{jobData.employerID.noOfRatings + ' reviews'}</label> */}
             </div>
             <div style={{fontWeight:"700"}}>
             {jobData.jobLocation.address}{' '}
@@ -179,6 +190,8 @@ function JobDetails({jobData, index}) {
                 <Button className={classes.link} onClick={handleOpen} style={{marginTop:'10px', marginBottom:'30px'}}>
                     Apply Now
                 </Button>
+                {isApplied && <p style={{color: "red", fontWeight: "700"}}>Job Already Applied</p>}
+                {jobResponse && <p style={{color: "blue", fontWeight: "700"}}>Job Applied Successfully</p>}
                 <Modal style={{
                     display: "flex",
                     flexDirection: "column",
@@ -216,7 +229,15 @@ function JobDetails({jobData, index}) {
                             <form onSubmit={handleResume}>
                                 <input type="file" name="resume" onChange={handleChange} />
                                 <br />
-                                {profile && profile.resume && profile.resume.split("\\")[2]}
+                                <br />
+                                        {profile && profile.resume && 
+                                       <Link to={"/"+profile.resume.split("\\")[3]} target="_blank" download 
+                                       style={{marginTop:"10px", textDecoration:"none"}}>
+                                       Download your resume here <br />
+                                       {profile.resume.split("\\")[3]+ ' '}
+                                       <i className="fa fa-download"></i>
+                                       </Link>
+                                        }
                                 <br />
                                 <br />
                                 <input type='submit' value='Upload!' style={{width:"100px", backgroundColor:"#2D5DCE"}} />

@@ -7,7 +7,7 @@ const fs = require('fs');
 //console.log("Fired!")
 const storage = multer.diskStorage({
     destination(req,file,cb){
-        cb(null,'../uploads/')
+        cb(null,'../frontend/public')
     },
     filename(req,file,cb){
         cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
@@ -52,7 +52,6 @@ router.post('/updateResume',upload.single('resume'),async(req,res)=>{
                 res.status(500).json({
                     error:"Internal Server Error. Please try after sometime"
                 })
-    
             }
         }
         else{
