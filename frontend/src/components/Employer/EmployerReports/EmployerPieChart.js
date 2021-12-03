@@ -116,9 +116,11 @@ function EmployerPieChart() {
     { _id: "Applicants Rejected", count: 20 },
     { _id: "Applicants Selected", count: 40 },
   ];
+  const { role } = useSelector((state) => state.login.userDetails);
+
   return (
     <>
-      {!isAuth && <Redirect to='/employer' />}
+      {(!isAuth || role !== 1) && <Redirect to='/login' />}
 
       <Container className={classes.container1} maxWidth='xl'>
         <Box className={classes.container} sx={{ borderRadius: 16 }}>

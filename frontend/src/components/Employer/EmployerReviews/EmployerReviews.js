@@ -162,10 +162,11 @@ function EmployerReviews(props) {
     dispatch(employerReviewUpdate({ _id: row._id }));
   };
   const isAuth = useSelector((state) => state.login.isAuth);
+  const { role } = useSelector((state) => state.login.userDetails);
 
   return (
     <>
-      {!isAuth && <Redirect to='/employer' />}
+      {(!isAuth || role !== 1) && <Redirect to='/login' />}
       <Container className={classes.container1} maxWidth='xl'>
         <Box className={classes.container}>
           <Grid container justifyContent='center' alignItems='center'>

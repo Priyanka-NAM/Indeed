@@ -113,15 +113,13 @@ function EmployerProfile(props) {
   let [employerDetails, setemployerDetails] = useState({});
   const { responseFromServer } = useSelector((state) => state.employerDetails);
   let { signup } = useSelector((state) => state);
-  let { isAuth, role, userDetails } = useSelector((state) => state.login);
+  let { isAuth, userDetails } = useSelector((state) => state.login);
   const [isError, setIsError] = useState(false);
   const [success, setSuccess] = useState(false);
   useEffect(() => {
-    // if (userDetails.userId && userDetails.userId !== "") {
-    //   dispatch(employerDetailsGet(userDetails.userId));
-    // }
-
-    if (signup && signup.responseFromServer) {
+    if (userDetails && userDetails.userId) {
+      dispatch(employerDetailsGet(userDetails.userId));
+    } else if (signup && signup.responseFromServer) {
       dispatch(employerDetailsGet(signup.responseFromServer.employerID));
     }
   }, [props]);
@@ -168,10 +166,11 @@ function EmployerProfile(props) {
     setSuccess(true);
     dispatch(employerDetailsAdd(employerDetails));
   };
+  let { role } = useSelector((state) => state.login.userDetails);
 
   return (
     <>
-      {!isAuth && <Redirect to='/employer/' />}
+      {(!isAuth || role !== 1) && <Redirect to='/login' />}
 
       <Container className={classes.container} maxWidth='xl'>
         <Box className={classes.boxForm} sx={{ borderRadius: 16 }}>
