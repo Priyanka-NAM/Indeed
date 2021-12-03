@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Image } from "react-bootstrap";
 import { styled } from "@mui/material/styles";
+import ReactPaginate from "react-paginate";
 import {
   Checkbox,
   FormControlLabel,
@@ -21,7 +22,7 @@ import axios from "axios";
 // import { ReviewBox } from "../Review/ReviewBox";
 import Header from "../Header/Header";
 import StarIcon from "@material-ui/icons/Star";
-import { Rating } from "@mui/material";
+import { Pagination, Rating } from "@mui/material";
 import { ReviewBox } from "./ReviewBox";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 
@@ -31,15 +32,13 @@ import { TextField } from "@material-ui/core";
 import { SearchButton } from "../CompanyReviews/CompanyReviews";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import { updateReviewStatus } from "../../Redux/Actions/Company";
-import { employerAllJob } from "../../Redux/Actions/EmployerJobPostingAction";
+import { useremployerAllJob } from "../../Redux/Actions/Company";
 import { updateHelpfulCount } from "../../Redux/Actions/Company";
 import { updatePhotoStatus } from "../../Redux/Actions/AdminAction";
 import InputGrid from "./InputGrid";
 import JobDescription from "./JobDescription";
 import { timeDifference } from "./timeDifference";
-import {updateViewCount} from "../../Redux/Actions/AdminAction";
-import Pagination from "@mui/material/Pagination";
-//import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import { updateViewCount } from "../../Redux/Actions/AdminAction";
 
 import {
   Grid,
@@ -255,7 +254,7 @@ export default function Review(props) {
   const [modalStyle] = React.useState(getModalStyle);
   const [jobTitle, setJobTitle] = useState("");
   const [location, setLocation] = useState("");
-  const[anyButtonChecked, setanyButtonChecked] = useState([]);
+  const [anyButtonChecked, setanyButtonChecked] = useState([]);
   const [shouldDoJobSerach, setshouldDoJobSerach] = useState(false);
   const { responseFromServer } = useSelector((state) => state.companyDetails);
   const companyDetails = responseFromServer
@@ -265,7 +264,7 @@ export default function Review(props) {
   const [triggerUpdateViewCount, settriggerUpdateViewCount] = useState(true);
 
   let { responseFromServer: jobs, length } = useSelector(
-    (state) => state.employerJobs
+    (state) => state.userjob
   );
   let { companySpecificReviews } = useSelector(
     (state) => state.companyReviewList
@@ -301,8 +300,25 @@ export default function Review(props) {
   const [st, setState] = useState("");
   const [photoOpen, setPhotoOpen] = useState(false);
   const [salaryOpen, setSalaryOpen] = useState(false);
-  const [joblimit, setJobLimit] = useState(length);
-  const [reviewlimit, setReviewLimit] = useState(5);
+  const [joblimit, setJobLimit] = useState(100);
+  const [current, setCurrentPage] = useState(1);
+  const [reviewsPerPage, setReviewsPerPage] = useState(5);
+
+  let indexOfLastPost = current * reviewsPerPage;
+  let indexOffirst = indexOfLastPost - reviewsPerPage;
+
+  const handlePageClick = ({ selected }) => {
+    setCurrentPage(selected);
+    indexOfLastPost = current * reviewsPerPage;
+    indexOffirst = indexOfLastPost - reviewsPerPage;
+  };
+
+  // companySpecificReviews = companySpecificReviews.slice(
+  //   indexOffirst,
+  //   indexOfLastPost
+  // );
+  // console.log(companySpecificReviews)
+
   const [page, setPage] = useState(1);
   const [isfirst, setIsFirst] = useState(true);
 
@@ -321,7 +337,6 @@ export default function Review(props) {
   ]);
   const handleLimit = (e) => {
     setJobLimit(e.target.value);
-    setReviewLimit(e.target.value);
 
     setIsFirst(false);
   };
@@ -333,10 +348,6 @@ export default function Review(props) {
   let boundary = 0;
 
   boundary = Math.ceil(length / joblimit);
-
-  let boundaryReview = 0;
-
-  boundaryReview = Math.ceil(companyDetails.noOfRatings / reviewlimit);
 
   const [filterValue, setFilterValue] = React.useState("select Review Type");
   const [ratingfilterValue, setratingFilterValue] = React.useState(
@@ -449,6 +460,12 @@ export default function Review(props) {
       (review) => review.isApproved === "NotApproved"
     );
   }
+  const pageCount = Math.ceil(companySpecificReviews.length / reviewsPerPage);
+  companySpecificReviews = companySpecificReviews.slice(
+    indexOffirst,
+    indexOfLastPost
+  );
+  console.log(companySpecificReviews);
 
   //Filter on jobs
   if (jobTitle && location && shouldDoJobSerach) {
@@ -492,27 +509,21 @@ export default function Review(props) {
       dispatch(
         getCompanySpecificReviews({
           employerId: props.match.params.id,
-          sort: sortValue
+          sort: sortValue,
         })
       );
     else if (props.match.params.pathname === "jobs")
-      dispatch(employerAllJob(props.match.params.id, page, joblimit, isfirst));
+      dispatch(useremployerAllJob(props.match.params.id, page, joblimit));
     setRating(companyDetails.noOfRatings);
-    debugger;
-    if(triggerUpdateViewCount && (!isAuth || (userDetails && userDetails.role === 0))){
-      dispatch(updateViewCount({employerId: props.match.params.id }));
+
+    if (
+      triggerUpdateViewCount &&
+      (!isAuth || (userDetails && userDetails.role === 0))
+    ) {
+      dispatch(updateViewCount({ employerId: props.match.params.id }));
       settriggerUpdateViewCount(false);
     }
-  }, [
-    props.match,
-    updatePage,
-    sortValue,
-    filterValue,
-    page,
-    joblimit,
-    reviewlimit,
-  ]);
- 
+  }, [props.match, updatePage, sortValue, filterValue, page, joblimit]);
 
   const changePathName = (pathName) => {
     props.history.push(`/company/${props.match.params.id}/${pathName}`);
@@ -651,8 +662,7 @@ export default function Review(props) {
             employerId: props.match.params.id,
             sort: sortValue,
           })
-        )
-
+        );
       })
       .catch((error) => {});
   };
@@ -976,10 +986,10 @@ export default function Review(props) {
                           >
                             {item.reviewTitle}
                           </Typography>
-                          
                           {"  "}
-                         {userDetails.userId === item.userId && (<i class="fas fa-user"></i>)}
-                          {" "}
+                          {userDetails.userId === item.userId && (
+                            <i class="fas fa-user"></i>
+                          )}{" "}
                           {item.isApproved === "NotApproved" ? (
                             <button
                               type="button"
@@ -1082,15 +1092,18 @@ export default function Review(props) {
                                 style={{ padding: "1px" }}
                               >
                                 <Button
-                                 ref={btnRef}
-                                 id={item._id}
-                                  value='yes'
-                                  disabled = {item.userId === userDetails.userId ||  anyButtonChecked[index] }
+                                  ref={btnRef}
+                                  id={item._id}
+                                  value="yes"
+                                  disabled={
+                                    item.userId === userDetails.userId ||
+                                    anyButtonChecked[index]
+                                  }
                                   onClick={(e) => {
                                     anyButtonChecked[index] = true;
                                     item.isHelpfulCount =
-                                      item.isHelpfulCount + 1;                                    
-                                      handleHelpfulCount(
+                                      item.isHelpfulCount + 1;
+                                    handleHelpfulCount(
                                       item._id,
                                       item.isHelpfulCount,
                                       item.isNotHelpfulCount
@@ -1100,13 +1113,16 @@ export default function Review(props) {
                                   Yes {item.isHelpfulCount}
                                 </Button>
                                 <Button
-                                  value='no'
-                                  disabled = {item.userId === userDetails.userId ||  anyButtonChecked[index] }
+                                  value="no"
+                                  disabled={
+                                    item.userId === userDetails.userId ||
+                                    anyButtonChecked[index]
+                                  }
                                   onClick={(e) => {
                                     anyButtonChecked[index] = true;
                                     item.isNotHelpfulCount =
                                       item.isNotHelpfulCount + 1;
-                                      e.target.disabled = true;
+                                    e.target.disabled = true;
                                     handleHelpfulCount(
                                       item._id,
                                       item.isHelpfulCount,
@@ -1159,6 +1175,14 @@ export default function Review(props) {
                 );
               })}
           </Grid>
+          <ReactPaginate
+            className="pagination"
+            breakLabel="..."
+            nextLabel="next >"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={5}
+            pageCount={pageCount}
+          />
         </div>
       )}
     </div>
@@ -1240,8 +1264,10 @@ export default function Review(props) {
                 <GridList
                   cellHeight={200}
                   cols={3}
-                  style={{ width: 800, height: 600 }}>
-                  {companyDetails && companyDetails.photos &&
+                  style={{ width: 800, height: 600 }}
+                >
+                  {companyDetails &&
+                    companyDetails.photos &&
                     companyDetails.photos.map(
                       (data) =>
                         data.userId === userDetails.userId && (
@@ -1386,11 +1412,14 @@ export default function Review(props) {
         )}
       </div>
       {userDetails && userDetails.role !== 2 && (
-        <UplaodButton type='submit' variant='contained' onClick={handlePhotoOpen}>
-        Upload photo
-      </UplaodButton>
+        <UplaodButton
+          type="submit"
+          variant="contained"
+          onClick={handlePhotoOpen}
+        >
+          Upload photo
+        </UplaodButton>
       )}
-      
     </div>
   );
   const showFooter = () => (
@@ -1433,16 +1462,16 @@ export default function Review(props) {
   );
   const showSalary = () => (
     <>
-     {userDetails.role !== 0 && ( 
-    <SearchButton
-    type='submit'
-    variant='contained'
-    style={{ position: "relative", left: "800px" }}
-    onClick={handleSalaryOpen}>
-    Add a Salary
-  </SearchButton>
-   )} 
-    
+      {userDetails.role !== 0 && (
+        <SearchButton
+          type="submit"
+          variant="contained"
+          style={{ position: "relative", left: "800px" }}
+          onClick={handleSalaryOpen}
+        >
+          Add a Salary
+        </SearchButton>
+      )}
     </>
   );
   const showWhyJoinUs = () => (
@@ -1633,10 +1662,10 @@ export default function Review(props) {
                   precision={0.5}
                   readOnly
                 />
-                {companySpecificReviews && (
+                {companyDetails.noOfRatings && (
                   <Typography variant="caption">
                     {" "}
-                    {companySpecificReviews.length} reviews
+                    {companyDetails.noOfRatings} reviews
                   </Typography>
                 )}
               </Typography>
@@ -1645,22 +1674,22 @@ export default function Review(props) {
           <Grid item>
             {userDetails && userDetails.role !== 2 && (
               <Button
-              color={"primary"}
-              variant="contained"
-              type="submit"
-              onClick={handleOpen}
-            >
-              {" "}
-              Review this Company{" "}
+                color={"primary"}
+                variant="contained"
+                type="submit"
+                onClick={handleOpen}
+              >
+                {" "}
+                Review this Company{" "}
               </Button>
             )}
-           
+
             <br />
             {/* <Typography variant="caption" >Get weekly updates, new jobs, and reviews</Typography> */}
           </Grid>
         </Grid>
 
-        <Grid container style={{ height: "40px", paddingLeft: "15%"}}>
+        <Grid container style={{ height: "40px", paddingLeft: "15%" }}>
           <Grid
             item
             className={
@@ -1674,18 +1703,18 @@ export default function Review(props) {
           </Grid>
           {userDetails && userDetails.role !== 2 && (
             <Grid
-            item
-            className={
-              props.match.params.pathname === "whyjoinus"
-                ? classes.activeTab
-                : classes.optionTab
-            }
-            onClick={() => changePathName("whyjoinus")}
-          >
-            Why Join Us
-          </Grid>
+              item
+              className={
+                props.match.params.pathname === "whyjoinus"
+                  ? classes.activeTab
+                  : classes.optionTab
+              }
+              onClick={() => changePathName("whyjoinus")}
+            >
+              Why Join Us
+            </Grid>
           )}
-          
+
           <Grid
             item
             className={
@@ -1699,18 +1728,18 @@ export default function Review(props) {
           </Grid>
           {userDetails && userDetails.role !== 2 && (
             <Grid
-            item
-            className={
-              props.match.params.pathname === "salaries"
-                ? classes.activeTab
-                : classes.optionTab
-            }
-            onClick={() => changePathName("salaries")}
-          >
-            Salaries
-          </Grid>
+              item
+              className={
+                props.match.params.pathname === "salaries"
+                  ? classes.activeTab
+                  : classes.optionTab
+              }
+              onClick={() => changePathName("salaries")}
+            >
+              Salaries
+            </Grid>
           )}
-          
+
           <Grid
             item
             className={
@@ -1724,18 +1753,18 @@ export default function Review(props) {
           </Grid>
           {userDetails && userDetails.role !== 2 && (
             <Grid
-            item
-            className={
-              props.match.params.pathname === "jobs"
-                ? classes.activeTab
-                : classes.optionTab
-            }
-            onClick={() => changePathName("jobs")}
-          >
-            Jobs
-          </Grid>
+              item
+              className={
+                props.match.params.pathname === "jobs"
+                  ? classes.activeTab
+                  : classes.optionTab
+              }
+              onClick={() => changePathName("jobs")}
+            >
+              Jobs
+            </Grid>
           )}
-          
+
           {/* <Grid
             item
             className={
@@ -1764,7 +1793,9 @@ export default function Review(props) {
         {props.match.params.pathname === "reviews" && showReviews()}
         {props.match.params.pathname === "photos" && showPhotos()}
         {props.match.params.pathname === "whyjoinus" && showWhyJoinUs()}
-        {props.match.params.pathname === "jobs" && userDetails.role !== 2 && showJobs()}
+        {props.match.params.pathname === "jobs" &&
+          userDetails.role !== 2 &&
+          showJobs()}
         {props.match.params.pathname === "salaries" && showSalary()}
         {showFooter()}
       </Container>
