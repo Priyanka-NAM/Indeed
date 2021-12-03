@@ -37,6 +37,7 @@ import { updatePhotoStatus } from "../../Redux/Actions/AdminAction";
 import InputGrid from "./InputGrid";
 import JobDescription from "./JobDescription";
 import { timeDifference } from "./timeDifference";
+import {updateViewCount} from "../../Redux/Actions/AdminAction";
 
 import {
   Grid,
@@ -260,6 +261,7 @@ export default function Review(props) {
     : { aboutTheCompany: {} };
   // const [featuredReview, setFeaturedReview] = useState([]);
   let { responseFromServer: jobs } = useSelector((state) => state.employerJobs);
+  const [triggerUpdateViewCount, settriggerUpdateViewCount] = useState(true);
 
   const loginReducer = useSelector((state) => state.login);
   const { isAuth, userDetails } = loginReducer;
@@ -467,6 +469,11 @@ export default function Review(props) {
     else if (props.match.params.pathname === "jobs")
       dispatch(employerAllJob(props.match.params.id));
     setRating(companyDetails.noOfRatings);
+    debugger;
+    if(triggerUpdateViewCount && (!isAuth || (userDetails && userDetails.role === 0))){
+      dispatch(updateViewCount({employerId: props.match.params.id }));
+      settriggerUpdateViewCount(false);
+    }
   }, [props.match,updatePage,sortValue, filterValue]);
 
   const changePathName = (pathName) => {

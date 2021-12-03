@@ -14,6 +14,10 @@ import {
     ADMIN_LIST_ALL_COMPANIES_FAIL,
     ADMIN_UPDATE_PHOTO_STATUS_SUCCESS,
     ADMIN_UPDATE_PHOTO_STATUS_FAIL,
+    ADMIN_UPDATE_VIEW_COUNT_SUCCESS,
+    ADMIN_UPDATE_VIEW_COUNT_FAIL,
+    ADMIN_GET_TOP_VIEW_COUNT_SUCCESS,
+    ADMIN_GET_TOP_VIEW_COUNT_FAIL,
 
   } from '../Constants/AdminConstants';
 
@@ -167,6 +171,51 @@ const initialState1 = {
           return {
               ...state,
               updatePhotoStatusError: action.payload
+            };
+      default:
+        return { ...state };
+    }
+  };
+
+
+  const initialState7 = {
+    updateViewCount: null,
+    updateViewCountError: null
+  }
+
+  export const updateViewCountReducer = (state = initialState7 , action) => {
+    switch (action.type) {
+      case ADMIN_UPDATE_VIEW_COUNT_SUCCESS:
+          return { 
+              ...state,
+              updateViewCount: action.payload, 
+              };
+      case ADMIN_UPDATE_VIEW_COUNT_FAIL:
+          return {
+              ...state,
+              updateViewCountError: action.payload
+            };
+      default:
+        return { ...state };
+    }
+  };
+
+  const initialState8 = {
+    topViewCounts: null,
+    topViewCountsError: null
+  }
+
+  export const getTopViewCountReducer = (state = initialState8 , action) => {
+    switch (action.type) {
+      case ADMIN_GET_TOP_VIEW_COUNT_SUCCESS:
+          return { 
+              ...state,
+              topViewCounts: action.payload, 
+              };
+      case ADMIN_GET_TOP_VIEW_COUNT_FAIL:
+          return {
+              ...state,
+              topViewCountsError: action.payload
             };
       default:
         return { ...state };

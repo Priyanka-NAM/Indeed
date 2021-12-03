@@ -15,7 +15,6 @@ export default function LineGraph() {
     useEffect(() => {
         dispatch(getAllReviews());
      }, [])
-     debugger;
  console.log(AllReviews);
    let state = {};
    
