@@ -33,7 +33,7 @@ export const CompanyDetailsReducer = (state = initialState, action) => {
   }
 };
 const initialState1 = {
-  companySpecificReviews: null,
+  companySpecificReviews: [],
   companySpecificReviewsError: null,
 };
 

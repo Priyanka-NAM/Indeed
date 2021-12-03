@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Image } from "react-bootstrap";
 import { styled } from "@mui/material/styles";
+import ReactPaginate from "react-paginate";
 import {
   Checkbox,
   FormControlLabel,
@@ -21,7 +22,7 @@ import axios from "axios";
 // import { ReviewBox } from "../Review/ReviewBox";
 import Header from "../Header/Header";
 import StarIcon from "@material-ui/icons/Star";
-import { Rating } from "@mui/material";
+import { Pagination, Rating } from "@mui/material";
 import { ReviewBox } from "./ReviewBox";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 
@@ -38,8 +39,6 @@ import InputGrid from "./InputGrid";
 import JobDescription from "./JobDescription";
 import { timeDifference } from "./timeDifference";
 import { updateViewCount } from "../../Redux/Actions/AdminAction";
-import Pagination from "@mui/material/Pagination";
-//import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 
 import {
   Grid,
@@ -302,6 +301,23 @@ export default function Review(props) {
   const [photoOpen, setPhotoOpen] = useState(false);
   const [salaryOpen, setSalaryOpen] = useState(false);
   const [joblimit, setJobLimit] = useState(100);
+  const [current, setCurrentPage] = useState(1);
+  const [reviewsPerPage, setReviewsPerPage] = useState(5);
+
+  let indexOfLastPost = current * reviewsPerPage;
+  let indexOffirst = indexOfLastPost - reviewsPerPage;
+
+  const handlePageClick = ({ selected }) => {
+    setCurrentPage(selected);
+    indexOfLastPost = current * reviewsPerPage;
+    indexOffirst = indexOfLastPost - reviewsPerPage;
+  };
+
+  // companySpecificReviews = companySpecificReviews.slice(
+  //   indexOffirst,
+  //   indexOfLastPost
+  // );
+  // console.log(companySpecificReviews)
 
   const [page, setPage] = useState(1);
   const [isfirst, setIsFirst] = useState(true);
@@ -444,6 +460,12 @@ export default function Review(props) {
       (review) => review.isApproved === "NotApproved"
     );
   }
+  const pageCount = Math.ceil(companySpecificReviews.length / reviewsPerPage);
+  companySpecificReviews = companySpecificReviews.slice(
+    indexOffirst,
+    indexOfLastPost
+  );
+  console.log(companySpecificReviews);
 
   //Filter on jobs
   if (jobTitle && location && shouldDoJobSerach) {
@@ -1153,6 +1175,14 @@ export default function Review(props) {
                 );
               })}
           </Grid>
+          <ReactPaginate
+            className="pagination"
+            breakLabel="..."
+            nextLabel="next >"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={5}
+            pageCount={pageCount}
+          />
         </div>
       )}
     </div>
@@ -1632,10 +1662,10 @@ export default function Review(props) {
                   precision={0.5}
                   readOnly
                 />
-                {companySpecificReviews && (
+                {companyDetails.noOfRatings && (
                   <Typography variant="caption">
                     {" "}
-                    {companySpecificReviews.length} reviews
+                    {companyDetails.noOfRatings} reviews
                   </Typography>
                 )}
               </Typography>
