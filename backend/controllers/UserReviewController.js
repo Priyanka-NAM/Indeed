@@ -1,6 +1,8 @@
 const Reviews = require("../Models/ReviewsModel");
 const Employer = require("../Models/EmployerModel");
 const User = require("../Models/UserModel");
+const redisClient = require('../config/redisClient');
+
 exports.postUserReview = async (req, res) => {
   console.log("Post User Review");
   const {
@@ -46,6 +48,15 @@ exports.postUserReview = async (req, res) => {
       throw err;
     }
   });
+  const key = employerId.toString() + 'isHelpful'
+  if (newReview) {
+    const reviews = await Reviews.find({ employerId }).sort({
+      isHelpfulCount: -1,
+    });
+    if (reviews) {
+      redisClient.setEx(key, 36000, JSON.stringify(reviews));
+    }
+  }
   console.log(employerId);
   let emp = await Employer.findById(employerId);
   let averageWorkHappinessScore = 0;
@@ -122,22 +133,48 @@ exports.getUserReviews = async (req, res) => {
 
 exports.getSpecificCompanyReviews = async (req, res) => {
   const sortVal = req.query.sort ? req.query.sort : "createdAt";
+  const employerId = req.query.employerId
   try {
     let review;
-    if (sortVal === "overallRating")
-      review = await Reviews.find({ employerId: req.query.employerId }).sort({
+    if (sortVal === "overallRating") { 
+       review = await Reviews.find({ employerId: req.query.employerId }).sort({
         overallRating: -1,
       });
-    else if (sortVal === "isHelpfulCount")
-      review = await Reviews.find({ employerId: req.query.employerId }).sort({
-        isHelpfulCount: -1,
-      });
-    else
+    }
+    else if (sortVal === "isHelpfulCount") {
+      try {
+        const key = employerId.toString() + 'isHelpful'
+        console.log(key)
+        const data = await redisClient.get(key)
+        if (data) {
+          console.log("get key")
+          return res.status(200).send(JSON.parse(data))
+        } else {
+          console.log("set key")
+          const reviews = await Reviews.find({ employerId: req.query.employerId }).sort({
+            isHelpfulCount: -1,
+          });
+          if (reviews) {
+            redisClient.setEx(key, 36000, JSON.stringify(reviews));
+            return res.status(200).send(reviews);
+          } else {
+            return res.status(400).json({
+              error: error
+            });
+          }
+        }
+      } catch (err) {
+        console.log(error)
+        return res.status(500).json({
+          error: error
+        });
+      }
+    }
+    else {
       review = await Reviews.find({ employerId: req.query.employerId }).sort({
         createdAt: -1,
       });
-
-    req.review = review;
+  }
     if (!review) {
       return res.status(400).json({
         error: error,

@@ -454,7 +454,7 @@ export default function Review(props) {
           employerId: props.match.params.id,
           sort: sortValue,
         })
-       )}
+       )} 
     else if (props.match.params.pathname === "reviews" )
       dispatch(
         getCompanySpecificReviews({
@@ -575,7 +575,7 @@ export default function Review(props) {
         appreciationScore,
         reviewRole,
         reviewTitle,
-        city,
+        city, 
         state: st,
         yourReview: reviewSummary,
         employerId: props.match.params.id,

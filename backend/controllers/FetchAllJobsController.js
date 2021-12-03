@@ -98,7 +98,6 @@ const fetchMostSearchedJobs = async (req, res) => {
   // const location = req.query.location
   // console.log(location)
   try {
-
     const data = await redisClient.get('getMostSearchedJobs')
     if (data) {
       res.status(200).send(JSON.parse(data));
@@ -107,7 +106,6 @@ const fetchMostSearchedJobs = async (req, res) => {
       const jobs = await Jobs.find({});
       console.log(jobs)
       if(jobs){
-
         redisClient.setEx('getMostSearchedJobs', 36000, JSON.stringify(jobs));
         res.status(200).send(jobs);
       } else {
