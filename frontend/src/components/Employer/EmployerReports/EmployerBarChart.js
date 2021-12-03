@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import Paper from "@material-ui/core/Paper";
 import {
   Chart,
@@ -10,6 +11,8 @@ import {
 } from "@devexpress/dx-react-chart-material-ui";
 import { withStyles } from "@material-ui/core/styles";
 import { Stack, Animation } from "@devexpress/dx-react-chart";
+import { useDispatch, useSelector } from "react-redux";
+import { employerPieReports } from "./../../../Redux/Actions/EmployerReportsAction";
 
 // export const data = [
 //   {
@@ -80,53 +83,21 @@ const Label = withStyles(legendLabelStyles, { name: "LegendLabel" })(
   legendLabelBase
 );
 
-function EmployerBarChart() {
-  const chartData = [
-    {
-      country: "Back end ",
-      gold: 36,
-      silver: 38,
-      bronze: 36,
-    },
+function EmployerBarChart(props) {
+  const employerReport = useSelector((state) => state.employerReport);
+  const { role, userId } = useSelector((state) => state.login.userDetails);
 
-    {
-      country: "Frontend Engineer",
-      gold: 23,
-      silver: 21,
-      bronze: 28,
-    },
+  const dispatch = useDispatch();
 
-    {
-      country: "Mechincal",
-      gold: 14,
-      silver: 15,
-      bronze: 17,
-    },
-    {
-      country: "C Engineer",
-      gold: 14,
-      silver: 15,
-      bronze: 17,
-    },
-    {
-      country: "Software Engineer",
-      gold: 16,
-      silver: 10,
-      bronze: 15,
-    },
-    {
-      country: "W Engineer",
-      gold: 16,
-      silver: 10,
-      bronze: 15,
-    },
-    {
-      country: "G Engineer",
-      gold: 16,
-      silver: 10,
-      bronze: 15,
-    },
-  ];
+  useEffect(() => {
+    dispatch(employerPieReports(userId));
+  }, [props]);
+
+  let chartData = [];
+  if (employerReport.responseFromServerPie) {
+    chartData = employerReport.responseFromServerBar;
+  }
+
   return (
     <Paper style={{ width: "50%" }}>
       <Chart data={chartData}>

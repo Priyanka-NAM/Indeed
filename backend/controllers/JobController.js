@@ -9,26 +9,24 @@ const Users = require("../Models/UserModel");
 const Reviews = require("../Models/ReviewsModel");
 const Applications = require("../Models/ApplicationModel");
 const createJob = async (req, res) => {
-  // get the data from request body which is in json and put it in variables called user and password
-  // const jobExists = await Jobs.findOne({ jobId });
-  console.log("req.body for jobs", req.body);
+  try {
+    const job = await Jobs.create({
+      ...req.body,
+    });
 
-  // if (jobExists) {
-  //   res.status("400").send("Error");
-  // } else {
-  const job = await Jobs.create({
-    ...req.body,
-  });
-
-  if (job) {
-    console.log("Created!");
-    console.log(job);
-    res.status(201).send(job);
-  } else {
-    res.status("400");
-    throw new Error("400 Bad Request: Please try again later. ");
+    if (job) {
+      console.log("Created!");
+      console.log(job);
+      res.status(201).send(job);
+    } else {
+      res.status("400");
+      throw new Error("400 Bad Request: Please try again later. ");
+    }
+  } catch (error) {
+    return res.status(400).json({
+      error: error,
+    });
   }
-  //}
 };
 
 /* 
@@ -36,54 +34,54 @@ const createJob = async (req, res) => {
 /indeed/employer/update-job
 Employer Update Job Route
  */
-const updateJob = async (req, res) => {
-  const {
-    jobId,
-    jobTitle,
-    employerID,
-    companyName,
-    jobLocation,
-    jobType,
-    isRemote,
-    salary,
-    jobDescription,
-  } = req.body; // get the data from request body which is in json and put it in variables called user and password
-  console.log("requestis", req);
-  const jobExists = await Jobs.findOne({ jobId });
-  if (!jobExists) {
-    res.status("400").send("Error");
-  } else {
-    const job = await jobExists.updateOne({
-      jobId,
-      jobTitle,
-      employerID,
-      companyName,
-      jobLocation,
-      jobType,
-      isRemote,
-      salary,
-      jobDescription,
-    });
+// const updateJob = async (req, res) => {
+//   const {
+//     jobId,
+//     jobTitle,
+//     employerID,
+//     companyName,
+//     jobLocation,
+//     jobType,
+//     isRemote,
+//     salary,
+//     jobDescription,
+//   } = req.body; // get the data from request body which is in json and put it in variables called user and password
+//   console.log("requestis", req);
+//   const jobExists = await Jobs.findOne({ jobId });
+//   if (!jobExists) {
+//     res.status("400").send("Error");
+//   } else {
+//     const job = await jobExists.updateOne({
+//       jobId,
+//       jobTitle,
+//       employerID,
+//       companyName,
+//       jobLocation,
+//       jobType,
+//       isRemote,
+//       salary,
+//       jobDescription,
+//     });
 
-    if (job) {
-      console.log("Updated!");
-      res.status(201).json({
-        jobId,
-        jobTitle,
-        employerID,
-        companyName,
-        jobLocation,
-        jobType,
-        isRemote,
-        salary,
-        jobDescription,
-      });
-    } else {
-      res.status("400");
-      throw new Error("400 Bad Request: Please try again later. ");
-    }
-  }
-};
+//     if (job) {
+//       console.log("Updated!");
+//       res.status(201).json({
+//         jobId,
+//         jobTitle,
+//         employerID,
+//         companyName,
+//         jobLocation,
+//         jobType,
+//         isRemote,
+//         salary,
+//         jobDescription,
+//       });
+//     } else {
+//       res.status("400");
+//       throw new Error("400 Bad Request: Please try again later. ");
+//     }
+//   }
+// };
 
 /* 
 @ Get
@@ -92,19 +90,22 @@ Employer Get All Jobs
  */
 
 const getAllJobs = async (req, res) => {
-  const { employerID } = req.params;
-  console.log("Req.params", employerID); // get the data from request body which is in json and put it in variables called user and password
-  console.log("requestis", req);
-  // const employerExists = await Jobs.findOne({ employerID: employerID });
-  // if (!employerExists) {
-  //   res.status("400").send("Employer Not found");
-  // } else {
-  const getJobs = await Jobs.find({ employerID: employerID });
-  if (!getJobs) {
-    res.status("200").send("Jobs Not found");
+  try {
+    const job = await Jobs.create({
+      ...req.body,
+    });
+
+    const { employerID } = req.params;
+    const getJobs = await Jobs.find({ employerID: employerID });
+    if (!getJobs) {
+      res.status("200").send("Jobs Not found");
+    }
+    res.send(getJobs);
+  } catch (error) {
+    return res.status(400).json({
+      error: error,
+    });
   }
-  res.send(getJobs);
-  //}
 };
 
 const getJobApplicants = async (req, res) => {
@@ -130,34 +131,26 @@ const getJobApplicants = async (req, res) => {
 };
 
 const jobApplications = async (req, res) => {
-  // const employerID = req.params.id;
   const employerID = mongoose.Types.ObjectId(req.params.id);
-  console.log("Req.params", employerID); // get the data from request body which is in json and put it in variables called user and password
+  console.log("Req.params", employerID);
   const TotalApplications = await Applications.aggregate([
     {
       $match: { employerId: employerID },
     },
     { $group: { _id: "$status", count: { $sum: 1 } } },
   ]);
-  // .match({ employerId: employerID })
-  // .group({ _id: "$status", count: { $sum: 1 } });
 
   if (!TotalApplications) {
     res.status("400").send("Employer Applications Not found");
     return;
   } else {
-    // const getJobs = await Jobs.find({ employerID });
-    // if (!getJobs) {
-    //   res.status("200").send("Jobs Not found");
-    // }
     res.send(TotalApplications);
   }
 };
 
 const eachJobApplications = async (req, res) => {
-  // const employerID = req.params.id;
   const employerID = mongoose.Types.ObjectId(req.params.id);
-  console.log("Req.params", employerID); // get the data from request body which is in json and put it in variables called user and password
+  console.log("Req.params", employerID);
   const TotalApplications = await Applications.aggregate([
     {
       $match: { employerId: employerID },
@@ -169,8 +162,6 @@ const eachJobApplications = async (req, res) => {
       },
     },
   ]);
-  // .match({ employerId: employerID })
-  // .group({ _id: "$status", count: { $sum: 1 } });
 
   if (!TotalApplications) {
     res.status("400").send("Employer Applications Not found");

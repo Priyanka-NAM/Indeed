@@ -47,9 +47,7 @@ const getEmployerDetails = async (req, res) => {
 
 const companyPicsUpload = async (req, res) => {
   const { employerID, urls, fieldName } = req.body;
-
   let emp = await Employer.findOne({ _id: employerID });
-
   if (!emp) {
     res.status("400").send("Error. Employer doesn't Exist.");
   } else {
