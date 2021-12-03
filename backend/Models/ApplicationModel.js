@@ -22,6 +22,9 @@ const applicationSchema = mongoose.Schema({
         resume: {
             type: String
         },
+        cv:{
+            type: String
+        },
         status: {
             type: String,
         },

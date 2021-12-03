@@ -119,6 +119,8 @@ const useStyles = makeStyles((theme) => ({
 const EmployerJobApplicants = ({ match }) => {
   const classes = useStyles();
 
+  const { jobId, employerId } = match.params
+
   const theme = createMuiTheme({
     palette: {
       background: {
@@ -127,8 +129,8 @@ const EmployerJobApplicants = ({ match }) => {
     },
   });
 
-  const createData = (applicantEmail, applicantResume, applicantStatus) => {
-    return { applicantEmail, applicantResume, applicantStatus };
+  const createData = (userId, applicantEmail,applicantStatus, applicantResume, applicantCv) => {
+    return { userId, applicantEmail,applicantStatus, applicantResume, applicantCv };
   };
 
   const dispatch = useDispatch();
@@ -140,7 +142,7 @@ const EmployerJobApplicants = ({ match }) => {
 
   if (applicants.length > 0) {
     rows = applicants.map((eachApplicant) => {
-      return createData(eachApplicant.email, eachApplicant.resume, "APPLIED");
+      return createData(eachApplicant.userId, eachApplicant.emailId, eachApplicant.status, eachApplicant.resume, eachApplicant.cv);
     });
   }
 
@@ -157,14 +159,15 @@ const EmployerJobApplicants = ({ match }) => {
   };
 
   useEffect(() => {
-    dispatch(getJobApplicants(match.params.id));
+    dispatch(getJobApplicants(jobId, employerId));
   }, [match]);
 
   const columns = [
     { id: "Applicant Email", label: "Applicant Email" },
-    { id: "View Resume", label: "View Resume" },
     { id: "Application Status", label: "Application Status" },
-    { id: "Message", label: "Send Message" },
+    { id: "View Resume", label: "View Resume" },
+    { id: "View CV", label: "View CV" },
+    { id: "Message", label: "Send Message" }
   ];
   const isAuth = useSelector((state) => state.login.isAuth);
 
@@ -196,8 +199,21 @@ const EmployerJobApplicants = ({ match }) => {
                     <TableBody>
                       <TableRow role='checkbox' tabIndex={-1} key={row.code}>
                         <TableCell style={{ flex: 3 }}>
-                          <Typography variant='h5' component='h2'>
-                            {row.applicantEmail}
+                          <Link
+                              style={{ textDecoration: "none" }}
+                              to={{
+                                pathname: `/employer/applicant-profile/${jobData._id}&${jobData.employerID}`,
+                                state: {},
+                              }}>
+                          >
+                            <Typography variant='h5' component='h2'>
+                              {row.applicantEmail}
+                            </Typography>
+                          </Link>
+                        </TableCell>
+                        <TableCell style={{ flex: 1 }}>
+                          <Typography variant='h6' component='h2' align='inherit'>
+                            {row.applicantStatus==="applied" ? "Applied" : row.applicantStatus}
                           </Typography>
                         </TableCell>
                         <TableCell style={{ flex: 1 }}>
@@ -214,11 +230,6 @@ const EmployerJobApplicants = ({ match }) => {
                               View Resume
                             </Link>
                           </Button>
-                        </TableCell>
-                        <TableCell style={{ flex: 3 }}>
-                          <Typography variant='h5' component='h2'>
-                            {row.applicantStatus}
-                          </Typography>
                         </TableCell>
                         <TableCell style={{ flex: 1 }}>
                           <Button

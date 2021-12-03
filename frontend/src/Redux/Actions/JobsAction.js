@@ -255,12 +255,12 @@ export const applyJobs = (data) => (dispatch) => {
     })
 }
 
-export const getJobApplicants = (id) => async(dispatch) => {
+export const getJobApplicants = (jobId, employerId) => async(dispatch) => {
     try{
         dispatch({
             type: GET_JOB_APPLICANTS_REQUEST
         })
-        const { data } = await Axios.get(`${API}/employer/job-applicants/${id}`)
+        const { data } = await Axios.get(`${API}/employer/job-applicants/${jobId}&${employerId}`)
         dispatch({
             type: GET_JOB_APPLICANTS_SUCCESS,
             payload: data

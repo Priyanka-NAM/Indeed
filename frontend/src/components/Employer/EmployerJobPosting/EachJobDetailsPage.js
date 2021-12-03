@@ -91,7 +91,7 @@ function EachJobDetails(props) {
           <Link
             style={{ textDecoration: "none" }}
             to={{
-              pathname: `/employer/applicant-page/${jobData._id}`,
+              pathname: `/employer/applicant-page/${jobData._id}&${jobData.employerID}`,
               state: {},
             }}>
             <Typography variant={"h5"} style={{ marginBottom: "2px" }}>

@@ -82,11 +82,7 @@ function App() {
           <Route path='/employer/reports' component={EmployerPieChart} />
 
           <Route path='/indeed/allcompanies' component={AdminListCompanies} />
-          <Route
-            path='/employer/applicant-page/:id'
-            exact
-            component={EmployerJobApplicants}
-          />
+          <Route path='/employer/applicant-page/:jobId&:employerId' exact component={EmployerJobApplicants} />
         </Router>
       </div>
     </ThemeProvider>
