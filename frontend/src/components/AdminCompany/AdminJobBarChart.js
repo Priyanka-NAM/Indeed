@@ -37,7 +37,7 @@ const Label = withStyles(legendLabelStyles, { name: "LegendLabel" })(
   legendLabelBase
 );
 
-function AdminJobBarChart({empid}) {
+function AdminJobBarChart({ empid }) {
   const employerReport = useSelector((state) => state.employerReport);
   const { role, userId } = useSelector((state) => state.login.userDetails);
   const { clicked, setClicked } = useState(false);
@@ -68,20 +68,20 @@ function AdminJobBarChart({empid}) {
           color='#42A5F5'
         />
         <BarSeries
-          name='Applicants Selected'
-          valueField='rejected'
-          argumentField='jobTitle'
-          color='#9CCC65'
-        />
-        <BarSeries
           name='Applicants Rejected'
-          valueField='selected'
+          valueField='rejected'
           argumentField='jobTitle'
           color='#FF7043'
         />
+        <BarSeries
+          name='Applicants Selected'
+          valueField='selected'
+          argumentField='jobTitle'
+          color='#9CCC65'
+        />
         <Animation />
         <Legend position='bottom' rootComponent={Root} labelComponent={Label} />
-        <Title text='Jobs 2020' />
+        <Title text='Jobs 2021' />
         <Stack />
       </Chart>
     </Paper>
