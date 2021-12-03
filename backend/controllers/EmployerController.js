@@ -9,6 +9,7 @@ const { pool } = require("../config/mysqldb");
 const Employer = require("../Models/EmployerModel");
 const Review = require("../Models/ReviewsModel");
 const bcrypt = require("bcryptjs");
+const redisClient = require('../config/redisClient');
 
 const updateEmployer = async (req, res) => {
   try {
@@ -90,9 +91,10 @@ const employerReviewUpdate = async (req, res) => {
       if (err) {
         throw err;
       } else {
-         const key = (req.body.employerId).toString();
-          const updatedReviews = await Reviews.find({ employerId: req.body.employerId, isFeatured: true })
+          const key = (req.body.employerId).toString();
+          const updatedReviews = await Review.find({ employerId: req.body.employerId, isFeatured: true })
           if (updatedReviews) {
+            console.log("set key");
             redisClient.setEx(key, 36000, JSON.stringify(updatedReviews));
           }
        

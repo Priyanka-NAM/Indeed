@@ -101,7 +101,7 @@ export const UpdateHelpfulCountReducer = (state = initialState3, action) => {
 
 
 const initialState4 = {
-  getFeaturedReview: null,
+  FeaturedReview: null,
   getFeaturedReviewsError: null,
 };
 
@@ -110,7 +110,7 @@ export const getFeaturedReviewsReducer = (state = initialState4, action) => {
     case COMPANY_LIST_FEATURE_REVIEWS_SUCCESS:
       return {
         ...state,
-        getFeaturedReview: action.payload,
+        FeaturedReview: action.payload,
       };
     case COMPANY_LIST_FEATURE_REVIEWS_FAIL:
       return {

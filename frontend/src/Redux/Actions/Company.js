@@ -122,6 +122,7 @@ export const updateHelpfulCount = (data) => (dispatch) => {
 };
 
 export const getFeaturedReviews = (data) => (dispatch) => {
+
   console.log(data);
   const config = {
     headers: {
@@ -136,6 +137,7 @@ export const getFeaturedReviews = (data) => (dispatch) => {
     .then((response) => {
       dispatch({
         type: COMPANY_LIST_FEATURE_REVIEWS_SUCCESS,
+        payload: response.data,
     });
 })
 .catch((error) => {

@@ -270,9 +270,10 @@ export default function Review(props) {
   let { companySpecificReviews } = useSelector(
     (state) => state.companyReviewList
   );
-  let { getFeaturedReview } = useSelector(
+  let { FeaturedReview } = useSelector(
     (state) => state.featuredReviews
   );
+  console.log(FeaturedReview);
   const loginReducer = useSelector((state) => state.login);
   const { isAuth, userDetails } = loginReducer;
   const [images, setImage] = useState([]);
@@ -862,8 +863,8 @@ export default function Review(props) {
         <Typography variant="h5" style={{ marginBottom: "50px" }}>
           <b>Featured Reviews</b>
         </Typography>
-        {getFeaturedReview &&
-          getFeaturedReview.map((item) => (
+        {FeaturedReview &&
+          FeaturedReview.map((item) => (
             <ReviewBox
               key={item.id}
               rating={item.overallRating}
