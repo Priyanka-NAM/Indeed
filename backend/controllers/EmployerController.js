@@ -92,7 +92,7 @@ const getEmployerDetails = async (req, res) => {
 };
 
 const companyPicsUpload = async (req, res) => {
-  kafka.make_request('upload_employer_pics', req.body, (err, results) => {
+  /*kafka.make_request('upload_employer_pics', req.body, (err, results) => {
     if (err) {
         res.status(500).json({
             error: err
@@ -109,8 +109,8 @@ const companyPicsUpload = async (req, res) => {
 
         }
     }
-})
-  /*
+})*/
+  
   const { employerID, urls, fieldName } = req.body;
   try {
     let emp = await Employer.findOne({ _id: employerID });
@@ -132,7 +132,7 @@ const companyPicsUpload = async (req, res) => {
     }
   } catch (error) {
     res.status(500).send("Database error");
-  }*/
+  }
 };
 
 const employerReviewUpdate = async (req, res) => {

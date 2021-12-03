@@ -8,6 +8,7 @@ const handle_request = async(msg, callback) => {
         });
 
         if (job) {
+            console.log(job)
             //res.status(201).send(job);
             callback(null, job);
         } else {
