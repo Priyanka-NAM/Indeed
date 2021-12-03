@@ -15,7 +15,11 @@ const {
   getUserSalary,
 } = require("../controllers/UserSalaryController");
 const getHomePage = require("../controllers/CompanyHomePage");
-const { uploadPhoto, updatePhotoStatus} = require("../controllers/UserPhotoController");
+const {
+  uploadPhoto,
+  updatePhotoStatus,
+} = require("../controllers/UserPhotoController");
+const { getAllUserJobs } = require("../controllers/UserJobController");
 const router = express.Router();
 
 router.param("reviewId", findReviewById);
@@ -32,6 +36,6 @@ router.put("/review/update-review-status", UpdateReviewStatus);
 router.put("/review/update-helpful-count", UpdateHelpfulCount);
 router.get("/companyreviews", getCompanyReviews);
 router.post("/uploadphoto", uploadPhoto);
+router.get("/jobs", getAllUserJobs);
 router.put("/update-photo-status", updatePhotoStatus);
 module.exports = router;
-

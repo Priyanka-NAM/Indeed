@@ -307,7 +307,7 @@ function JobDetails2({ step, setStep, jobDetails, setjobDetails }) {
                 value={jobDetails.jobDescription.compensation}
                 error={errors.compensation}
                 required
-                type='text'
+                type='number'
                 variant='outlined'
                 name='compensation'
               />

@@ -116,7 +116,8 @@ function EmployerReviews(props) {
     console.log("companySpecificReviews");
     dispatch(
       getCompanySpecificReviews({
-        employerId: "619f0cdd8188bc6c174294cf", // userDetails.userId,
+        // employerId: "619f0cdd8188bc6c174294cf", // userDetails.userId,
+        employerId: userDetails.userId,
       })
     );
     console.log("payload Details ", companySpecificReviews);
@@ -125,7 +126,8 @@ function EmployerReviews(props) {
   useEffect(() => {
     dispatch(
       getCompanySpecificReviews({
-        employerId: "619f0cdd8188bc6c174294cf", //userDetails.userId,
+        // employerId: "619f0cdd8188bc6c174294cf", //userDetails.userId,
+        employerId: userDetails.userId,
       })
     );
     setClicked(false);
@@ -134,7 +136,8 @@ function EmployerReviews(props) {
   useEffect(() => {
     dispatch(
       getCompanySpecificReviews({
-        employerId: "619f0cdd8188bc6c174294cf", //userDetails.userId,
+        // employerId: "619f0cdd8188bc6c174294cf", //userDetails.userId,
+        employerId: userDetails.userId,
       })
     );
   }, [responseFromServer]);
@@ -159,7 +162,9 @@ function EmployerReviews(props) {
 
   const featureHandler = (row) => {
     setClicked(true);
-    dispatch(employerReviewUpdate({ _id: row._id }));
+    dispatch(
+      employerReviewUpdate({ _id: row._id, employerId: userDetails.userId })
+    );
   };
   const isAuth = useSelector((state) => state.login.isAuth);
   const { role } = useSelector((state) => state.login.userDetails);
@@ -286,10 +291,11 @@ function EmployerReviews(props) {
           })}
         </Box>
       </Container>
-      <Grid
+      {/* <Grid
         container
         spacing={1}
         style={{
+          position: "sticky",
           fontSize: "14px",
           backgroundColor: "white",
           padding: "15px 10px",
@@ -318,7 +324,7 @@ function EmployerReviews(props) {
         <Grid item style={{ cursor: "pointer" }}>
           Terms
         </Grid>
-      </Grid>
+      </Grid> */}
     </>
   );
 }
