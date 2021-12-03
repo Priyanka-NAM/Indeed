@@ -32,41 +32,13 @@ const createJob = async (req, res) => {
 };
 
 /* 
-@ Update
-/indeed/employer/update-job
-Employer Update Job Route
+@ Get
+/indeed/employer/jobs-posted
+Employer Get All Jobs
  */
-// const updateJob = async (req, res) => {
-//   const {
-//     jobId,
-//     jobTitle,
-//     employerID,
-//     companyName,
-//     jobLocation,
-//     jobType,
-//     isRemote,
-//     salary,
-//     jobDescription,
-//   } = req.body; // get the data from request body which is in json and put it in variables called user and password
-//   console.log("requestis", req);
-//   const jobExists = await Jobs.findOne({ jobId });
-//   if (!jobExists) {
-//     res.status("400").send("Error");
-//   } else {
-//     const job = await jobExists.updateOne({
-//       jobId,
-//       jobTitle,
-//       employerID,
-//       companyName,
-//       jobLocation,
-//       jobType,
-//       isRemote,
-//       salary,
-//       jobDescription,
-//     });
-/*const updateJob = async (req, res) => {
 
-  kafka.make_request('update_job', req.body, (err, results) => {
+const getAllJobs = async (req, res) => {
+  kafka.make_request('get_all_jobs', req.params, (err, results) => {
     if (err) {
       res.status(500).json({
         error: err
@@ -79,102 +51,60 @@ Employer Update Job Route
       }
       else{
         res.status(400).json({
-          error: "Please try again later"
+          error: "Resource not found"
+        })
+      }
+    }
+  })
+};
+
+const getJobApplicants = async (req, res) => {
+
+  const { jobId, employerId } = req.params
+  kafka.make_request('get_job_applicants', { jobId, employerId }, (err, results) => {
+    if (err) {
+      res.status(500).json({
+        error: err
+      })
+
+    }
+    else {
+      if(results){
+        res.status(200).send(results)
+      }
+      else{
+        res.status(400).json({
+          error: "Resource not found"
         })
       }
     }
   })
 
-  const {
-    jobId,
-    jobTitle,
-    employerID,
-    companyName,
-    jobLocation,
-    jobType,
-    isRemote,
-    salary,
-    jobDescription,
-  } = req.body; // get the data from request body which is in json and put it in variables called user and password
-  console.log("requestis", req);
-  const jobExists = await Jobs.findOne({ jobId });
-  if (!jobExists) {
-    res.status("400").send("Error");
-  } else {
-    const job = await jobExists.updateOne({
-      jobId,
-      jobTitle,
-      employerID,
-      companyName,
-      jobLocation,
-      jobType,
-      isRemote,
-      salary,
-      jobDescription,
-    });
-
-    if (job) {
-      console.log("Updated!");
-      res.status(201).json({
-        jobId,
-        jobTitle,
-        employerID,
-        companyName,
-        jobLocation,
-        jobType,
-        isRemote,
-        salary,
-        jobDescription,
-      });
-    } else {
-      res.status("400");
-      throw new Error("400 Bad Request: Please try again later. ");
-    }
-  }
-};*/
-
-/* 
-@ Get
-/indeed/employer/jobs-posted
-Employer Get All Jobs
- */
-
-const getAllJobs = async (req, res) => {
-  try {
-    // const job = await Jobs.create({
-    //   ...req.body,
-    // });
-
-    const { employerID } = req.params;
-    const getJobs = await Jobs.find({ employerID: employerID });
-    if (!getJobs) {
-      res.status("200").send("Jobs Not found");
-    }
-    res.send(getJobs);
-  } catch (error) {
-    res.status(500).send("Database error");
-  }
-};
-
-const getJobApplicants = async (req, res) => {
-  try{
-    const jobApplicants = await Applications.find({$and:[{jobId: req.params.jobId},{employerId: req.params.employerId}]});
-
-    if(jobApplicants.length > 0){
-      res.status(200).send(jobApplicants);
-    }
-    else{
-      res.status(200).send("No Job Applicants for this job");
-    }
-
-  }
-  catch (error) {
-    res.status(500).send("Internal Server Error");
-  }
 };
 
 const updateJobApplication = async(req, res) => {
-  try{
+
+  const { jobId, employerId, userId, status } = req.body
+  kafka.make_request('update_job_application', { jobId, employerId, userId, status }, (err, results) => {
+    if (err) {
+      res.status(500).json({
+        error: err
+      })
+
+    }
+    else {
+      if(results){
+        res.status(200).send(results)
+      }
+      else{
+        res.status(400).json({
+          error: "Resource not found"
+        })
+      }
+    }
+  })
+
+  /*try{
     const application = await Applications.findOne({$and: [{userId: req.body.userId},{jobId: req.body.jobId},{employerId: req.body.employerId}]});
 
     if(application){
@@ -192,7 +122,7 @@ const updateJobApplication = async(req, res) => {
   }
   catch(error){
     res.status(500).send("Internal Server Error");
-  }
+  }*/
 }
 
 const jobApplications = async (req, res) => {

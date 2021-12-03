@@ -33,6 +33,9 @@ const get_user_profile = require("./services/UserServices/getUserProfile");
 const update_user_profile = require("./services/UserServices/updateUserProfile");
 const fetch_all_jobs = require("./services/UserServices/fetchAllJobs");
 const create_job = require('./services/EmployerServices/createJobService');
+const get_all_jobs = require('./services/EmployerServices/getAllJobsService');
+const get_job_applicants = require('./services/EmployerServices/getJobApplicantsService');
+const update_job_application = require('./services/EmployerServices/updateJobApplicationService');
 
 function handleTopicRequest(topic_name, fname) {
   //var topic_name = 'root_topic';
@@ -117,3 +120,6 @@ handleTopicRequest('get_user_profile', get_user_profile)
 handleTopicRequest('update_user_profile', update_user_profile)
 handleTopicRequest('fetch_all_jobs', fetch_all_jobs)
 handleTopicRequest('create_job', create_job)
+handleTopicRequest('get_all_jobs', get_all_jobs)
+handleTopicRequest('get_job_applicants', get_job_applicants)
+handleTopicRequest('update_job_application', update_job_application)
