@@ -17,6 +17,8 @@ import {
   getTopRatedCeosReducer,
   getAllCompaniesReducer,
   updatePhotoStatusReducer,
+  updateViewCountReducer,
+  getTopViewCountReducer,
 } from "./Reducers/AdminReducers";
 import { jobReducer, jobApplicantsReducer } from "./Reducers/JobReducer";
 import { JOBSEEKER_LOGOUT } from "./Constants/UserConstants";
@@ -50,6 +52,8 @@ const appReducer = combineReducers({
   updatePhotoStatus: updatePhotoStatusReducer,
   jobApplicants: jobApplicantsReducer,
   salary: companySalaryReducer,
+  updateViewCount:updateViewCountReducer,
+  getTopViewCount:getTopViewCountReducer,
 });
 
 // const rootReducer = (state, action) => {

@@ -103,8 +103,9 @@ exports.findReviewById = async (req, res, next, id) => {
 };
 
 exports.getUserReviews = async (req, res) => {
+  console.log("inside");
   try {
-    const review = await Reviews.find({ user: req.body.id }).populate("user");
+    const review = await Reviews.find({ userId: req.query.userId });
     req.review = review;
     if (!review) {
       return res.status(400).json({

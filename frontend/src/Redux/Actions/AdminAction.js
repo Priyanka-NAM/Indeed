@@ -13,6 +13,11 @@ import {
     ADMIN_LIST_ALL_COMPANIES_FAIL,
     ADMIN_UPDATE_PHOTO_STATUS_SUCCESS,
     ADMIN_UPDATE_PHOTO_STATUS_FAIL,
+    ADMIN_UPDATE_VIEW_COUNT_SUCCESS,
+    ADMIN_UPDATE_VIEW_COUNT_FAIL,
+    ADMIN_GET_TOP_VIEW_COUNT_SUCCESS,
+    ADMIN_GET_TOP_VIEW_COUNT_FAIL,
+
 
   } from '../Constants/AdminConstants';
 
@@ -143,3 +148,44 @@ import {
                         });
                         
                         }
+
+                            export const getTopViewCount= (data) => (dispatch) => {
+                                const config = {
+                                    headers: {
+                                      'content-type': 'application/x-www-form-urlencoded',
+                                      Accept: 'application/json'
+                                    },
+                                  }
+                                Axios.get(`${API}/admin/getTopViewCountsByDay/${data.day}`, 
+                              config)
+                                .then((response) => {
+                                    dispatch({
+                                        type :ADMIN_GET_TOP_VIEW_COUNT_SUCCESS,
+                                        payload : response.data 
+                                    })
+                                })
+                                .catch(error => {
+                                    dispatch({
+                                        type: ADMIN_GET_TOP_VIEW_COUNT_FAIL,
+                                        payload: error
+                                    })
+                                });
+                            }
+                           
+                            export const updateViewCount = (data) => (dispatch) => {
+   
+                                Axios.get(`${API}/admin/addViewCount/${data.employerId}`)
+                                .then((response) => {
+                                    dispatch({
+                                        type : ADMIN_UPDATE_VIEW_COUNT_SUCCESS,
+                                        payload : response.data 
+                                    })
+                                })
+                                .catch(error => {
+                                    dispatch({
+                                        type: ADMIN_UPDATE_VIEW_COUNT_FAIL,
+                                        payload: error
+                                    })
+                                });
+                                
+                                }

@@ -45,7 +45,6 @@ export default function DonutChart(props) {
         dispatch(getTopReviewedCompanies());
       }, []);
     const formatNumber = (num) => {
-        debugger;
       return num.toString("").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     };
     return (

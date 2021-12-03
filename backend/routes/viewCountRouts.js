@@ -8,7 +8,7 @@ router.get('/addViewCount/:employerID', async (req, res) => {
     const d = new Date();
     let day = d.getDay()
     const dayName = days[day]
-    const employerViewsByDay = await Employer.findOne({ employerID: employerID, 'views.day': dayName })
+    const employerViewsByDay = await Employer.findOne({ _id: employerID, 'views.day': dayName })
     //var result = employerViewsByDay.views.count
     //result = result+1
 
@@ -17,7 +17,7 @@ router.get('/addViewCount/:employerID', async (req, res) => {
         let count = result[0].count
         count = count + 1
         //console.log(count)
-        const employer = await Employer.updateOne({ employerID: employerID, 'views.day': dayName },
+        const employer = await Employer.updateOne({ _id: employerID, 'views.day': dayName },
             {
                 $set: {
                     "views.$.count": count
@@ -88,12 +88,10 @@ router.get('/getTopViewCountsByDay/:day', async (req, res) => {
     //let day = d.getDay()
     const dayName = days[day]*/
     
-    const employerViewsByDay = await Employer.find({'views.day':day}).sort({'views.count':-1}).limit(10).select('employerName')
+    let employerViewsByDay = await Employer.find({'views.day':day}, ["companyName", "views"] ).sort({'views.count':-1}).limit(10);
     
 
     if (employerViewsByDay) {
-        
-       
         res.status(200).send(employerViewsByDay)
     }
     else {
