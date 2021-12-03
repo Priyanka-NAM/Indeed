@@ -2,8 +2,8 @@ const Application = require("../Models/ApplicationModel");
 const User = require("../Models/UserModel");
 
 const postJob = async (req, res) => {
-    const {userId, jobId, employerId, resume} = req.body
-    console.log(userId, jobId, resume)
+    const {userId, jobId, employerId, emailId, status, resume, cv} = req.body
+    console.log(userId, jobId, emailId, status, resume, cv)
     try {
         if (userId) {
             const applicationExists = await Application.findOne({$and: [
@@ -32,8 +32,10 @@ const postJob = async (req, res) => {
                     userId,
                     jobId,
                     employerId,
-                    status : "applied",
-                    resume
+                    emailId,
+                    status,
+                    resume,
+                    cv
                 });
                 if (appResult) {
                     await User.findOneAndUpdate({_id: userId}, {$push: {"appliedJobs": jobId}}, {new:true})
