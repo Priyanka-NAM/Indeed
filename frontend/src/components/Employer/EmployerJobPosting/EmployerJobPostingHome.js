@@ -138,7 +138,7 @@ function EmployerJobPostingHome(props) {
   useEffect(() => {
     if (userDetails && userDetails.userId && userDetails.userId !== "") {
       dispatch(employerAllJob(userDetails.userId));
-      dispatch(employerBarReports(userDetails.userId));
+      dispatch(employerBarReports(userDetails.userId, 1990));
     }
     // dispatch(employerAllJob("61a07e89e5d016c47d56338a"));
   }, [props]);
@@ -181,6 +181,7 @@ function EmployerJobPostingHome(props) {
     },
   ];
   const { role } = useSelector((state) => state.login.userDetails);
+  console.log("responseFromServerBar ", responseFromServerBar);
 
   return (
     <>
@@ -277,11 +278,25 @@ function EmployerJobPostingHome(props) {
                                 }}>
                                 {responseFromServerBar !== null &&
                                 responseFromServerBar.find(
-                                  (ele) => ele.jobId === row.eachjob._id
+                                  (ele) =>
+                                    ele.jobId.toString() ===
+                                    row.eachjob._id.toString()
                                 )
                                   ? responseFromServerBar.find(
-                                      (ele) => ele.jobId === row.eachjob._id
-                                    )["applied"]
+                                      (ele) =>
+                                        ele.jobId.toString() ===
+                                        row.eachjob._id.toString()
+                                    )["applied"] +
+                                    responseFromServerBar.find(
+                                      (ele) =>
+                                        ele.jobId.toString() ===
+                                        row.eachjob._id.toString()
+                                    )["selected"] +
+                                    responseFromServerBar.find(
+                                      (ele) =>
+                                        ele.jobId.toString() ===
+                                        row.eachjob._id.toString()
+                                    )["rejected"]
                                   : 0}
 
                                 <span>{" Applicants"}</span>

@@ -13,6 +13,6 @@ router.post("/post-job", createJob);
 router.post("/update-job", updateJob);
 router.get("/jobs-posted/:employerID", getAllJobs);
 router.get("/job-applicants/:id", getJobApplicants);
-router.get("/jobapplications/aggregate/:id", jobApplications);
-router.get("/eachjobapplications/aggregate/:id", eachJobApplications);
+router.get("/jobapplications/aggregate/:id/:year", jobApplications);
+router.get("/eachjobapplications/aggregate/:id/:year", eachJobApplications);
 module.exports = router;
