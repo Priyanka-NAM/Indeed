@@ -120,7 +120,7 @@ function EmployerPieChart() {
 
   return (
     <>
-      {(!isAuth || role !== 1) && <Redirect to='/login' />}
+      {(!isAuth || role !== 1 ) && <Redirect to='/login' />}
 
       <Container className={classes.container1} maxWidth='xl'>
         <Box className={classes.container} sx={{ borderRadius: 16 }}>
