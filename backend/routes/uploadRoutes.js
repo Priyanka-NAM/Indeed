@@ -103,9 +103,10 @@ router.post('/addResume',upload.single('resume'),async(req,res)=>{
     //res.send(`${req.file.path}`)
 })
 
-router.get('/deleteResume/:userID',async(req,res)=>{
-    const userID = req.params.userID
-    const user = await User.findOne({userId:userID})
+router.get('/deleteResume',async(req,res)=>{
+    const userID = req.query.userID
+    console.log(userID)
+    const user = await User.findOne({_id:userID})
     if(user){
         const resumePath = user.resume
         fs.unlink(resumePath, async(err)=> {

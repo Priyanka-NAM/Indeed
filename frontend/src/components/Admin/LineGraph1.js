@@ -16,7 +16,6 @@ export default function LineGraph1() {
     useEffect(() => {
         dispatch(getTopRatedCeos());
      }, [])
-     debugger;
  console.log(TopRatedCeos);
    let state = {};
    
