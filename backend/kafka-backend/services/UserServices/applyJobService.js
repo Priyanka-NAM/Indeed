@@ -1,8 +1,9 @@
+const Application = require('../../../Models/ApplicationModel')
 const User = require('../../../Models/UserModel')
 
 const handle_request = async(msg, callback) => {
 
-    const {userId, jobId, employerId,email, resume} = msg
+    const {userId, jobId, employerId, email, resume} = msg
     try {
         if (userId) {
             const applicationExists = await Application.findOne({$and: [
@@ -31,9 +32,10 @@ const handle_request = async(msg, callback) => {
                     resume: resume,
                     emailId: email
                 });
+
+                //console.log("App Result : ", appResult);
                 if (appResult) {
                     await User.findOneAndUpdate({_id: userId}, {$push: {"appliedJobs": jobId}}, {new:true})
-
                     callback(null, "Job Applied Successfully")
                 } else {
                     const error = {

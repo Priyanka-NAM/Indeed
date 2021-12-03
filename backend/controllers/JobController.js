@@ -8,8 +8,10 @@ const Jobs = require("../Models/JobsModel");
 const Users = require("../Models/UserModel");
 const Reviews = require("../Models/ReviewsModel");
 const Applications = require("../Models/ApplicationModel");
+const kafka = require("../kafka/client");
 const createJob = async (req, res) => {
-  try {
+
+  /*try {
     const job = await Jobs.create({
       ...req.body,
     });
@@ -24,7 +26,7 @@ const createJob = async (req, res) => {
     }
   } catch (error) {
     res.status(500).send("Database error");
-  }
+  }*/
 };
 
 /* 

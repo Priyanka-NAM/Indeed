@@ -4,7 +4,7 @@ const kafka = require("../kafka/client");
 
 const postJob = async (req, res) => {
 
-    kafka.make_request('post_job', req.body, (err, results) => {
+    kafka.make_request('apply_job', req.body, (err, results) => {
         if (err) {
             res.status(500).json({
                 error: err

@@ -20,6 +20,7 @@ const upload_photo = require("./services/CompanyServices/UploadPhotoService");
 const upload_photo_status = require("./services/CompanyServices/UploadPhotoStatusService");
 const user_review = require("./services/CompanyServices/UserReviewService");
 const update_user_saved_jobs = require("./services/UserServices/updateUserSavedJobsService");
+const apply_job = require('./services/UserServices/applyJobService')
 const update_employer = require("./services/EmployerServices/updateEmployerService");
 const get_employer_details = require("./services/EmployerServices/getEmployerDetailsService");
 const upload_employer_pics = require("./services/EmployerServices/companyPicsUploadService");
@@ -84,13 +85,8 @@ handleTopicRequest("update_helpful_count", update_helpful_count);
 handleTopicRequest("upload_photo", upload_photo);
 handleTopicRequest("upload_photo_status", upload_photo_status);
 handleTopicRequest("user_review", user_review);
-handleTopicRequest("top_rated_companies", top_rated_companies);
-handleTopicRequest("top_reviewed_companies", top_reviewed_companies);
-handleTopicRequest("get_all_companies", get_all_companies);
-handleTopicRequest("top_accepted_rated_ceos", top_accepted_rated_ceos);
-handleTopicRequest("top_accepted_review_users", top_accepted_review_users);
 handleTopicRequest("update_user_saved_jobs", update_user_saved_jobs);
-
+handleTopicRequest("apply_job", apply_job)
 handleTopicRequest("update_employer", update_employer);
 handleTopicRequest("get_employer_details", get_employer_details);
 handleTopicRequest("upload_employer_pics", upload_employer_pics);
