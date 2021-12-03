@@ -124,6 +124,28 @@ const getJobApplicants = async (req, res) => {
   }
 };
 
+const updateJobApplication = async(req, res) => {
+  try{
+    const application = await Applications.findOne({$and: [{userId: req.body.userId},{jobId: req.body.jobId},{employerId: req.body.employerId}]});
+
+    if(application){
+      application.set({
+        status: req.body.status
+      })
+
+      await application.save()
+
+      res.status(200).send(application);
+    }
+    else{
+      res.status(400).send("Job Application not found")
+    }
+  }
+  catch(error){
+    res.status(500).send("Internal Server Error");
+  }
+}
+
 const jobApplications = async (req, res) => {
   // const employerID = req.params.id;
   const employerID = mongoose.Types.ObjectId(req.params.id);
@@ -216,4 +238,5 @@ module.exports = {
   getJobApplicants,
   jobApplications,
   eachJobApplications,
+  updateJobApplication
 };

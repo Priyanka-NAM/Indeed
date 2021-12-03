@@ -19,7 +19,9 @@ import {
     GET_JOB_APPLICANTS_REQUEST,
     GET_JOB_APPLICANTS_SUCCESS,
     GET_JOB_APPLICANTS_FAIL,
-    GET_JOB_APPLICANTS_RESET
+    UPDATE_APPLICATION_STATUS_SUCCESS,
+    UPDATE_APPLICATION_STATUS_REQUEST,
+    UPDATE_APPLICATION_STATUS_FAIL
 } from '../Constants/JobConstants';
 import Axios from 'axios'; 
 import { API } from '../../config';
@@ -269,6 +271,26 @@ export const getJobApplicants = (jobId, employerId) => async(dispatch) => {
     catch(error){
         dispatch({
             type: GET_JOB_APPLICANTS_FAIL,
+            payload: error.response && error.response.data.message ? error.response.data.message : error.message
+        })
+    }
+}
+
+export const updateJobApplicationStatus = (userId, jobId, employerId, status) => async(dispatch) => {
+
+    try{
+        dispatch({
+            type: UPDATE_APPLICATION_STATUS_REQUEST
+        })
+        const { data } = await Axios.put(`${API}/employer/update-application`, {userId, jobId, employerId, status})
+        dispatch({
+            type: UPDATE_APPLICATION_STATUS_SUCCESS,
+            payload: data
+        })
+    }
+    catch(error){
+        dispatch({
+            type: UPDATE_APPLICATION_STATUS_FAIL,
             payload: error.response && error.response.data.message ? error.response.data.message : error.message
         })
     }

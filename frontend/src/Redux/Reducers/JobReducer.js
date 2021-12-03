@@ -16,7 +16,7 @@ import {
     UPDATE_USER_PROFILE
 } from '../Constants/UserConstants';
 
-import { GET_JOB_APPLICANTS_REQUEST, GET_JOB_APPLICANTS_SUCCESS, GET_JOB_APPLICANTS_RESET, GET_JOB_APPLICANTS_FAIL } from '../Constants/JobConstants';
+import { GET_JOB_APPLICANTS_REQUEST, GET_JOB_APPLICANTS_SUCCESS, GET_JOB_APPLICANTS_RESET, GET_JOB_APPLICANTS_FAIL, UPDATE_APPLICATION_STATUS_REQUEST, UPDATE_APPLICATION_STATUS_FAIL, UPDATE_APPLICATION_STATUS_SUCCESS } from '../Constants/JobConstants';
   
 const initialState = {
     allJobs: null,
@@ -128,6 +128,21 @@ export const jobApplicantsReducer = (state = {applicants: []}, action) => {
             return { error: action.payload }
         case GET_JOB_APPLICANTS_RESET:
             return { applicants: [] }
+        default:
+            return state
+    }
+}
+
+export const updateApplicationReducer = (state = {applicant: {}}, action) => {
+
+    switch(action.type){
+        case UPDATE_APPLICATION_STATUS_REQUEST:
+            return { applicant: {}}
+        case UPDATE_APPLICATION_STATUS_SUCCESS:
+            console.log(action.payload)
+            return { success: true,  applicant: action.payload }
+        case UPDATE_APPLICATION_STATUS_FAIL:
+            return { success: false, error: action.payload }
         default:
             return state
     }

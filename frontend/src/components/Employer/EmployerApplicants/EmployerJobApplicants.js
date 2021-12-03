@@ -22,7 +22,7 @@ import CardContent from "@material-ui/core/CardContent";
 import TablePagination from "@material-ui/core/TablePagination";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import { getJobApplicants } from "../../../Redux/Actions/JobsAction";
+import {getJobApplicants, getUserProfile} from "../../../Redux/Actions/JobsAction";
 import { Redirect } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -129,6 +129,8 @@ const EmployerJobApplicants = ({ match }) => {
     },
   });
 
+  const profile = useSelector(state=>state.jobs.profile);
+
   const createData = (userId, applicantEmail,applicantStatus, applicantResume, applicantCv) => {
     return { userId, applicantEmail,applicantStatus, applicantResume, applicantCv };
   };
@@ -169,13 +171,11 @@ const EmployerJobApplicants = ({ match }) => {
     { id: "View CV", label: "View CV" },
     { id: "Message", label: "Send Message" }
   ];
-  const isAuth = useSelector((state) => state.login.isAuth);
 
   return (
     <>
-      {/* {!isAuth && <Redirect to='/employer' />} */}
 
-      <div style={{ height: 400, width: "80%", marginLeft: "10%" }}>
+      <div style={{ height: 400, width: "80%", marginLeft: "10%", marginTop: "2%"}}>
         <Paper className={classes.root}>
           <TableContainer>
             <Table stickyHeader>
@@ -202,17 +202,16 @@ const EmployerJobApplicants = ({ match }) => {
                           <Link
                               style={{ textDecoration: "none" }}
                               to={{
-                                pathname: `/employer/applicant-profile/${jobData._id}&${jobData.employerID}`,
+                                pathname: `/employer/applicant-profile/${row.userId}&${jobId}&${employerId}`,
                                 state: {},
                               }}>
-                          >
                             <Typography variant='h5' component='h2'>
                               {row.applicantEmail}
                             </Typography>
                           </Link>
                         </TableCell>
                         <TableCell style={{ flex: 1 }}>
-                          <Typography variant='h6' component='h2' align='inherit'>
+                          <Typography variant='h5' component='h2' align='inherit'>
                             {row.applicantStatus==="applied" ? "Applied" : row.applicantStatus}
                           </Typography>
                         </TableCell>
@@ -221,14 +220,31 @@ const EmployerJobApplicants = ({ match }) => {
                             variant='outlined'
                             color='#065FF7'
                             style={{ color: "#065FF7" }}>
-                            <Link
-                              style={{ textDecoration: "none" }}
-                              to={{
-                                pathname: "/employer/showJobDetails",
-                                state: { row },
-                              }}>
+                            <Typography>
+                              {row.resume &&
+                                  <Link to={"/"+row.resume.split("\\")[3]} target="_blank" download style={{marginTop:"10px"}}>
+                                    Download your resume here {' '}
+                                    <i className="fa fa-download" />
+                                  </Link>
+                              }
                               View Resume
-                            </Link>
+                            </Typography>
+                          </Button>
+                        </TableCell>
+                        <TableCell style={{ flex: 1 }}>
+                          <Button
+                              variant='outlined'
+                              color='#065FF7'
+                              style={{ color: "#065FF7" }}>
+                            <Typography>
+                              {row.resume &&
+                                  <Link to={"/"+row.resume.split("\\")[3]} target="_blank" download style={{marginTop:"10px"}}>
+                                    Download your resume here {' '}
+                                    <i className="fa fa-download" />
+                                  </Link>
+                              }
+                              View CV
+                            </Typography>
                           </Button>
                         </TableCell>
                         <TableCell style={{ flex: 1 }}>

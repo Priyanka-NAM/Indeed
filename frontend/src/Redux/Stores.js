@@ -20,7 +20,7 @@ import {
   updateViewCountReducer,
   getTopViewCountReducer,
 } from "./Reducers/AdminReducers";
-import { jobReducer, jobApplicantsReducer } from "./Reducers/JobReducer";
+import { jobReducer, jobApplicantsReducer, updateApplicationReducer } from "./Reducers/JobReducer";
 import { JOBSEEKER_LOGOUT } from "./Constants/UserConstants";
 import { employerJobPostingReducer } from "./Reducers/EmployerJobPostingReducer";
 import { employerJobsReducer } from "./Reducers/EmployerJobsReducer";
@@ -54,6 +54,7 @@ const appReducer = combineReducers({
   salary: companySalaryReducer,
   updateViewCount:updateViewCountReducer,
   getTopViewCount:getTopViewCountReducer,
+  updateJobApplication: updateApplicationReducer
 });
 
 // const rootReducer = (state, action) => {
