@@ -102,3 +102,20 @@ handleTopicRequest("get_user_reviews", get_user_reviews);
 handleTopicRequest("get_user_profile", get_user_profile);
 handleTopicRequest("update_user_profile", update_user_profile);
 handleTopicRequest("fetch_all_jobs", fetch_all_jobs);
+handleTopicRequest('top_rated_companies', top_rated_companies)
+handleTopicRequest('top_reviewed_companies', top_reviewed_companies)
+handleTopicRequest('get_all_companies', get_all_companies)
+handleTopicRequest('top_accepted_rated_ceos', top_accepted_rated_ceos)
+handleTopicRequest('top_accepted_review_users',top_accepted_review_users)
+handleTopicRequest('update_user_saved_jobs', update_user_saved_jobs)
+handleTopicRequest('update_employer', update_employer)
+handleTopicRequest('get_employer_details', get_employer_details)
+handleTopicRequest('upload_employer_pics', upload_employer_pics)
+handleTopicRequest('employer_review_update', employer_review_update)
+handleTopicRequest('delete_user_saved_jobs', delete_user_saved_jobs)
+handleTopicRequest('get_user_saved_jobs', get_user_saved_jobs)
+handleTopicRequest('get_user_applied_jobs', get_user_applied_jobs)
+handleTopicRequest('get_user_reviews', get_user_reviews)
+handleTopicRequest('get_user_profile', get_user_profile)
+handleTopicRequest('update_user_profile', update_user_profile)
+handleTopicRequest('fetch_all_jobs', fetch_all_jobs)
