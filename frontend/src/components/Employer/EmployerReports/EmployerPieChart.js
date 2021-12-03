@@ -160,9 +160,9 @@ function EmployerPieChart(props) {
                 <PieSeries
                   valueField='count'
                   argumentField='_id'
-                  name='Applicants Selected'
+                  name='Applicants'
                 />
-                <Title text='Total Applicants' />
+                <Title text='Total Applicants 2020' />
                 <Animation />
                 <Legend />
               </Chart>
