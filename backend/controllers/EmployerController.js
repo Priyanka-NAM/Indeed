@@ -78,7 +78,7 @@ const companyPicsUpload = async (req, res) => {
 };
 
 const employerReviewUpdate = async (req, res) => {
-  const { _id } = req.body;
+  const { _id, employerId } = req.body;
   try {
     let review = await Review.findOne({ _id: _id });
 

@@ -162,7 +162,9 @@ function EmployerReviews(props) {
 
   const featureHandler = (row) => {
     setClicked(true);
-    dispatch(employerReviewUpdate({ _id: row._id }));
+    dispatch(
+      employerReviewUpdate({ _id: row._id, employerId: userDetails.userId })
+    );
   };
   const isAuth = useSelector((state) => state.login.isAuth);
   const { role } = useSelector((state) => state.login.userDetails);
