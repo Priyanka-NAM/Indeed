@@ -18,6 +18,8 @@ import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { employerAllJob } from "../../../Redux/Actions/EmployerJobPostingAction";
 import { Redirect } from "react-router-dom";
 import MuiAlert from "@mui/material/Alert";
+import { employerBarReports } from "./../../../Redux/Actions/EmployerReportsAction";
+
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
 });
@@ -127,12 +129,16 @@ function EmployerJobPostingHome(props) {
   }
   const dispatch = useDispatch();
   const { responseFromServer } = useSelector((state) => state.employerJobs);
+  const { responseFromServerBar } = useSelector(
+    (state) => state.employerReport
+  );
   const { userDetails } = useSelector((state) => state.login);
   const [IsWarning, setIsWarning] = useState(false);
 
   useEffect(() => {
     if (userDetails && userDetails.userId && userDetails.userId !== "") {
       dispatch(employerAllJob(userDetails.userId));
+      dispatch(employerBarReports(userDetails.userId));
     }
     // dispatch(employerAllJob("61a07e89e5d016c47d56338a"));
   }, [props]);
@@ -269,7 +275,16 @@ function EmployerJobPostingHome(props) {
                                   pathname: "/employer/showJobDetails",
                                   state: { row },
                                 }}>
-                                3 <span>Applicants</span>
+                                {responseFromServerBar !== null &&
+                                responseFromServerBar.find(
+                                  (ele) => ele.jobId === row.eachjob._id
+                                )
+                                  ? responseFromServerBar.find(
+                                      (ele) => ele.jobId === row.eachjob._id
+                                    )["applied"]
+                                  : 0}
+
+                                <span>{" Applicants"}</span>
                               </Typography>
                             </TableCell>
                             <TableCell style={{ flex: 1 }}>
