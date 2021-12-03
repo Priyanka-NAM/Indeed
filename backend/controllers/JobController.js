@@ -36,6 +36,34 @@ const createJob = async (req, res) => {
 /indeed/employer/update-job
 Employer Update Job Route
  */
+// const updateJob = async (req, res) => {
+//   const {
+//     jobId,
+//     jobTitle,
+//     employerID,
+//     companyName,
+//     jobLocation,
+//     jobType,
+//     isRemote,
+//     salary,
+//     jobDescription,
+//   } = req.body; // get the data from request body which is in json and put it in variables called user and password
+//   console.log("requestis", req);
+//   const jobExists = await Jobs.findOne({ jobId });
+//   if (!jobExists) {
+//     res.status("400").send("Error");
+//   } else {
+//     const job = await jobExists.updateOne({
+//       jobId,
+//       jobTitle,
+//       employerID,
+//       companyName,
+//       jobLocation,
+//       jobType,
+//       isRemote,
+//       salary,
+//       jobDescription,
+//     });
 /*const updateJob = async (req, res) => {
 
   kafka.make_request('update_job', req.body, (err, results) => {
@@ -286,10 +314,10 @@ const eachJobApplications = async (req, res) => {
             if (TotalApplications[i]._id.status === "applied") {
               processedResult[j].applied += TotalApplications[i].count;
             }
-            if (TotalApplications[i]._id.status === "rejected") {
+            if (TotalApplications[i]._id.status === "Rejected") {
               processedResult[j].rejected += TotalApplications[i].count;
             }
-            if (TotalApplications[i]._id.status === "selected") {
+            if (TotalApplications[i]._id.status === "Selected") {
               processedResult[j].selected += TotalApplications[i].count;
             }
           }
