@@ -28,12 +28,16 @@ const postJob = async (req, res) => {
                 // }
             } else {
                 console.log("create else")
+                const resumefile = null
+                if (!resume) {
+                    resumefile = "."
+                }
                 const appResult = await Application.create({
                     userId : userId,
                     jobId: jobId,
                     employerId: employerId,
                     status : "Applied",
-                    resume: resume,
+                    resume: resumefile,
                     emailId: email
                 });
                 if (appResult) {

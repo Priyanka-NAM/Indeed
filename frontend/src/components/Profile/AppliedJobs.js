@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { getSavedJobs, applyJobs, getAppliedJobs } from '../../Redux/Actions/JobsAction';
 import { Redirect } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 function AppliedJobs() {
     const dispatch = useDispatch();
@@ -12,6 +13,7 @@ function AppliedJobs() {
     let sJobs  = useSelector((state) => state.jobs.savedJobs);
     let aJobs  = useSelector((state) => state.jobs.appliedJobs);
     const isAuth = useSelector(state=>state.login.isAuth)
+    const history = useHistory()
 
     let savedJobs = null
     if (sJobs) {
@@ -29,6 +31,11 @@ function AppliedJobs() {
         dispatch(getSavedJobs(data))
         dispatch(getAppliedJobs(data))
     }, [])
+
+    const handleCompany = (empId) => {
+        history.push(`/company/${empId}/snapshot`);
+    }
+
     return (
         <Container style={{display:'flex'}}>
             {!isAuth && <Redirect to='/login'/>}
@@ -56,7 +63,7 @@ function AppliedJobs() {
                                 {job.jobTitle}
                             </Typography>
                             <Box style={{marginBottom:'15px'}}>
-                                    {job.companyName}<br />
+                            <label style={{cursor:"pointer"}} onClick={() => handleCompany(job.employerID._id)}>{job.companyName}</label>{'  '}<br />
                                     {job.jobLocation.city}
                                     {', '}{job.jobLocation.state}
                             </Box>
