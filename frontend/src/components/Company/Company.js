@@ -3,7 +3,6 @@ import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Image } from "react-bootstrap";
 import { styled } from "@mui/material/styles";
-import ReactPaginate from "react-paginate";
 import {
   Checkbox,
   FormControlLabel,
@@ -270,6 +269,7 @@ export default function Review(props) {
   let { companySpecificReviews } = useSelector(
     (state) => state.companyReviewList
   );
+  
   let { FeaturedReview } = useSelector(
     (state) => state.featuredReviews
   );
@@ -307,16 +307,15 @@ export default function Review(props) {
   const [joblimit, setJobLimit] = useState(100);
   const [current, setCurrentPage] = useState(1);
   const [reviewsPerPage, setReviewsPerPage] = useState(5);
+  // companySpecificReviews = companySpecificReviews.slice(
+  //   indexOffirst,
+  //   indexOfLastPost
+  // );
 
-  let indexOfLastPost = current * reviewsPerPage;
-  let indexOffirst = indexOfLastPost - reviewsPerPage;
+  // let indexOfLastPost = current * reviewsPerPage;
+  // let indexOffirst = indexOfLastPost - reviewsPerPage;
 
-  const handlePageClick = ({ selected }) => {
-    setCurrentPage(selected);
-    indexOfLastPost = current * reviewsPerPage;
-    indexOffirst = indexOfLastPost - reviewsPerPage;
-  };
-
+  
   // companySpecificReviews = companySpecificReviews.slice(
   //   indexOffirst,
   //   indexOfLastPost
@@ -464,12 +463,7 @@ export default function Review(props) {
       (review) => review.isApproved === "NotApproved"
     );
   }
-  const pageCount = Math.ceil(companySpecificReviews.length / reviewsPerPage);
-  companySpecificReviews = companySpecificReviews.slice(
-    indexOffirst,
-    indexOfLastPost
-  );
-  console.log(companySpecificReviews);
+  
 
   //Filter on jobs
   if (jobTitle && location && shouldDoJobSerach) {
@@ -498,17 +492,12 @@ export default function Review(props) {
   const [tooltipopen, setTooltipopen] = React.useState(true);
 
   useEffect(() => {
+    debugger;
     if (
       props.match.params.pathname === "snapshot" ||
       props.match.params.pathname === "photos"
     ) {
       dispatch(getcompaniesDetails({ employerID: props.match.params.id }));
-      // dispatch(
-      //   getCompanySpecificReviews({
-      //     employerId: props.match.params.id,
-      //     sort: sortValue,
-      //   })
-      // );
       dispatch(getFeaturedReviews({employerId: props.match.params.id}));
      
     } else if (props.match.params.pathname === "reviews")
@@ -526,6 +515,8 @@ export default function Review(props) {
       dispatch(updateViewCount({employerId: props.match.params.id }));
       settriggerUpdateViewCount(false);
     }
+
+    
   }, [props.match, updatePage, sortValue, filterValue, page, joblimit]);
 
   const changePathName = (pathName) => {
@@ -1178,14 +1169,10 @@ export default function Review(props) {
                 );
               })}
           </Grid>
-          <ReactPaginate
-            className="pagination"
-            breakLabel="..."
-            nextLabel="next >"
-            onPageChange={handlePageClick}
-            pageRangeDisplayed={5}
-            pageCount={pageCount}
-          />
+          <Grid>
+
+          </Grid>
+         
         </div>
       )}
     </div>
@@ -1465,7 +1452,7 @@ export default function Review(props) {
   );
   const showSalary = () => (
     <>
-      {userDetails.role !== 0 && (
+      {userDetails && userDetails.role !== 2 && (
         <SearchButton
           type="submit"
           variant="contained"
