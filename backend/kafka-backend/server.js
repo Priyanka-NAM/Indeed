@@ -32,6 +32,7 @@ const get_user_reviews = require("./services/UserServices/getUserReviews");
 const get_user_profile = require("./services/UserServices/getUserProfile");
 const update_user_profile = require("./services/UserServices/updateUserProfile");
 const fetch_all_jobs = require("./services/UserServices/fetchAllJobs");
+const create_job = require('./services/EmployerServices/createJobService');
 
 function handleTopicRequest(topic_name, fname) {
   //var topic_name = 'root_topic';
@@ -115,3 +116,4 @@ handleTopicRequest('get_user_reviews', get_user_reviews)
 handleTopicRequest('get_user_profile', get_user_profile)
 handleTopicRequest('update_user_profile', update_user_profile)
 handleTopicRequest('fetch_all_jobs', fetch_all_jobs)
+handleTopicRequest('create_job', create_job)

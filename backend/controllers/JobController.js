@@ -11,22 +11,24 @@ const Applications = require("../Models/ApplicationModel");
 const kafka = require("../kafka/client");
 const createJob = async (req, res) => {
 
-  /*try {
-    const job = await Jobs.create({
-      ...req.body,
-    });
+  kafka.make_request('create_job', req.body, (err, results) => {
+    if (err) {
+      res.status(500).json({
+        error: err
+      })
 
-    if (job) {
-      console.log("Created!");
-      console.log(job);
-      res.status(201).send(job);
-    } else {
-      res.status("400");
-      throw new Error("400 Bad Request: Please try again later. ");
     }
-  } catch (error) {
-    res.status(500).send("Database error");
-  }*/
+    else {
+      if(results){
+        res.status(200).send(results)
+      }
+      else{
+        res.status(400).json({
+          error: "Please try again later"
+        })
+      }
+    }
+  })
 };
 
 /* 
@@ -34,7 +36,27 @@ const createJob = async (req, res) => {
 /indeed/employer/update-job
 Employer Update Job Route
  */
-const updateJob = async (req, res) => {
+/*const updateJob = async (req, res) => {
+
+  kafka.make_request('update_job', req.body, (err, results) => {
+    if (err) {
+      res.status(500).json({
+        error: err
+      })
+
+    }
+    else {
+      if(results){
+        res.status(200).send(results)
+      }
+      else{
+        res.status(400).json({
+          error: "Please try again later"
+        })
+      }
+    }
+  })
+
   const {
     jobId,
     jobTitle,
@@ -81,7 +103,7 @@ const updateJob = async (req, res) => {
       throw new Error("400 Bad Request: Please try again later. ");
     }
   }
-};
+};*/
 
 /* 
 @ Get
@@ -284,7 +306,6 @@ const eachJobApplications = async (req, res) => {
 
 module.exports = {
   createJob,
-  updateJob,
   getAllJobs,
   getJobApplicants,
   jobApplications,
