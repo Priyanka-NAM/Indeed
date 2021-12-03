@@ -15,4 +15,5 @@ router.get("/jobs-posted/:employerID", getAllJobs);
 router.get("/job-applicants/:jobId&:employerId", getJobApplicants);
 router.get("/jobapplications/aggregate/:id", jobApplications);
 router.get("/eachjobapplications/aggregate/:id", eachJobApplications);
+
 module.exports = router;
