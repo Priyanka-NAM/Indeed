@@ -492,9 +492,7 @@ export default function Review(props) {
       dispatch(
         getCompanySpecificReviews({
           employerId: props.match.params.id,
-          sort: sortValue,
-          page,
-          limit: reviewlimit,
+          sort: sortValue
         })
       );
     else if (props.match.params.pathname === "jobs")
@@ -554,13 +552,13 @@ export default function Review(props) {
               });
           }
         });
-    }
+    } 
   };
   const changeToApproved = (id) => {
-    dispatch(updateReviewStatus({ reviewid: id }));
+    dispatch(updateReviewStatus({ reviewid: id, employerId: props.match.params.id}));
   };
   const handleHelpfulCount = (reviewid, helpfulcount, nothelpfulcount) => {
-    dispatch(updateHelpfulCount({ reviewid, helpfulcount, nothelpfulcount }));
+    dispatch(updateHelpfulCount({ reviewid, helpfulcount, nothelpfulcount, employerId:props.match.params.id }));
   };
   const handleJobSearch = (event) => {
     event.preventDefault();
@@ -648,10 +646,15 @@ export default function Review(props) {
         setCity("");
         setState("");
         setinterviewPrep("");
+        dispatch(
+          getCompanySpecificReviews({
+            employerId: props.match.params.id,
+            sort: sortValue,
+          })
+        )
+
       })
       .catch((error) => {});
-
-    window.location.reload();
   };
 
   //SnapShot page strats here
@@ -1158,27 +1161,6 @@ export default function Review(props) {
           </Grid>
         </div>
       )}
-      <Grid container style={{ margin: "100px 0px" }}>
-        <Grid item xs={3}>
-          <label>Rows per page</label>&nbsp;&nbsp;
-          <select onChange={handleLimit}>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option selected>5</option>
-            <option>6</option>
-          </select>
-        </Grid>
-        <Grid item xs={9}>
-          <Pagination
-            count={boundaryReview}
-            page={page}
-            onChange={handlePage}
-          />
-        </Grid>
-      </Grid>
-      <Box style={{ marginTop: "30px" }}></Box>
     </div>
   );
   const showPhotos = () => (

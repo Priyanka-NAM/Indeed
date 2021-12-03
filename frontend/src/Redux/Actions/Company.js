@@ -75,9 +75,9 @@ export const updateReviewStatus = (data) => (dispatch) => {
       "content-type": "application/x-www-form-urlencoded",
       Accept: "application/json",
     },
-  };
+  }; 
   Axios.put(
-    `${API}/company/review/update-review-status?reviewid=${data.reviewid}`,
+    `${API}/company/review/update-review-status?reviewid=${data.reviewid}&employerId=${data.employerId}`,
     data
   )
     .then((response) => {
@@ -102,7 +102,7 @@ export const updateHelpfulCount = (data) => (dispatch) => {
     },
   };
   Axios.put(
-    `${API}/company/review/update-helpful-count?reviewid=${data.reviewid}&helpfulcount=${data.helpfulcount}&nothelpfulcount=${data.nothelpfulcount}`,
+    `${API}/company/review/update-helpful-count?reviewid=${data.reviewid}&helpfulcount=${data.helpfulcount}&nothelpfulcount=${data.nothelpfulcount}&employerId=${data.employerId}`,
     data
   )
     .then((response) => {

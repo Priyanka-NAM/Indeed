@@ -171,15 +171,19 @@ exports.getSpecificCompanyReviews = async (req, res) => {
       }
     }
     else {
+      console.log("here")
       review = await Reviews.find({ employerId: req.query.employerId }).sort({
         createdAt: -1,
       });
+      if (!review) {
+        return res.status(400).json({
+          error: error,
+        });
+      }
+      res.status(200).send(review)
   }
-    if (!review) {
-      return res.status(400).json({
-        error: error,
-      });
-    }
+  } catch (err) {
+    res.status(500).send(err)
   }
 };
 
@@ -246,11 +250,22 @@ exports.getCompanyReviews = async (req, res) => {
 };
 
 exports.UpdateReviewStatus = async (req, res) => {
+  console.log(req.query.employerId)
   try {
     const review = await Reviews.findOneAndUpdate(
       { _id: req.body.reviewid },
       { isApproved: "Approved" }
     );
+    if (review) {
+      const key = req.query.employerId.toString()+'isHelpful'
+      const updatedReviews = await Reviews.find({ employerId: req.query.employerId }).sort({
+        isHelpfulCount: -1,
+      });
+      if (updatedReviews) {
+        redisClient.setEx(key, 36000, JSON.stringify(updatedReviews));
+        //return res.status(200).send(review);
+      }
+    }
     if (!review) {
       return res.status(400).json({
         error: error,
@@ -268,7 +283,7 @@ exports.UpdateReviewStatus = async (req, res) => {
 };
 
 exports.UpdateHelpfulCount = async (req, res) => {
-  console.log();
+  console.log(req.query);
   try {
     const review = await Reviews.findOneAndUpdate(
       { _id: req.body.reviewid },
@@ -277,12 +292,23 @@ exports.UpdateHelpfulCount = async (req, res) => {
         isNotHelpfulCount: req.body.nothelpfulcount,
       }
     );
+    if (review) {
+      const key = req.query.employerId.toString()+'isHelpful'
+      const updatedReviews = await Reviews.find({ employerId: req.query.employerId }).sort({
+        isHelpfulCount: -1,
+      });
+      if (updatedReviews) {
+        redisClient.setEx(key, 36000, JSON.stringify(updatedReviews));
+        //return res.status(200).send(review);
+      }
+    }
+    
     if (!review) {
       return res.status(400).json({
         error: error,
       });
     }
-    res.send(review);
+    res.status(200).send(review);
   } catch (error) {
     return res.status(400).json({
       error: error,
