@@ -68,16 +68,16 @@ function EmployerBarChart(props) {
           color='#42A5F5'
         />
         <BarSeries
-          name='Applicants Selected'
+          name='Applicants Rejected'
           valueField='rejected'
           argumentField='jobTitle'
-          color='#9CCC65'
+          color='#FF7043'
         />
         <BarSeries
-          name='Applicants Rejected'
+          name='Applicants Selected'
           valueField='selected'
           argumentField='jobTitle'
-          color='#FF7043'
+          color='#9CCC65'
         />
         <Animation />
         <Legend position='bottom' rootComponent={Root} labelComponent={Label} />
