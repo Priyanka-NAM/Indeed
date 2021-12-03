@@ -501,7 +501,7 @@ export default function Review(props) {
       dispatch(employerAllJob(props.match.params.id, page, joblimit, isfirst));
     setRating(companyDetails.noOfRatings);
     debugger;
-    if(triggerUpdateViewCount && (!isAuth || (userDetails && (userDetails.role !== 2 && userDetails.userId !== props.match.params.id)))){
+    if(triggerUpdateViewCount && (!isAuth || (userDetails && (userDetails.userId !== props.match.params.id)))){
       dispatch(updateViewCount({employerId: props.match.params.id }));
       settriggerUpdateViewCount(false);
     }
