@@ -110,6 +110,7 @@ function EmployerPieChart(props) {
   const isAuth = useSelector((state) => state.login.isAuth);
   const employerReport = useSelector((state) => state.employerReport);
   const { role, userId } = useSelector((state) => state.login.userDetails);
+  const { clicked, setClicked } = useState(false);
 
   const dispatch = useDispatch();
 
@@ -121,9 +122,9 @@ function EmployerPieChart(props) {
 
   useEffect(() => {
     dispatch(employerPieReports(userId));
-  }, [props]);
+  }, [clicked]);
 
-  if (employerReport.responseFromServerPie) {
+  if (employerReport.responseFromServerPie !== null) {
     data = employerReport.responseFromServerPie;
   }
 

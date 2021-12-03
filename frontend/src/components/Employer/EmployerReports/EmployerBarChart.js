@@ -12,7 +12,7 @@ import {
 import { withStyles } from "@material-ui/core/styles";
 import { Stack, Animation } from "@devexpress/dx-react-chart";
 import { useDispatch, useSelector } from "react-redux";
-import { employerPieReports } from "./../../../Redux/Actions/EmployerReportsAction";
+import { employerBarReports } from "./../../../Redux/Actions/EmployerReportsAction";
 
 // export const data = [
 //   {
@@ -86,15 +86,16 @@ const Label = withStyles(legendLabelStyles, { name: "LegendLabel" })(
 function EmployerBarChart(props) {
   const employerReport = useSelector((state) => state.employerReport);
   const { role, userId } = useSelector((state) => state.login.userDetails);
+  const { clicked, setClicked } = useState(false);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(employerPieReports(userId));
-  }, [props]);
+    dispatch(employerBarReports(userId));
+  }, [clicked]);
 
   let chartData = [];
-  if (employerReport.responseFromServerPie) {
+  if (employerReport.responseFromServerBar !== null) {
     chartData = employerReport.responseFromServerBar;
   }
 
