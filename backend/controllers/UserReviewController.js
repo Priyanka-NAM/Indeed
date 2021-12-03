@@ -103,8 +103,9 @@ exports.findReviewById = async (req, res, next, id) => {
 };
 
 exports.getUserReviews = async (req, res) => {
+  console.log("inside");
   try {
-    const review = await Reviews.find({ user: req.body.id }).populate("user");
+    const review = await Reviews.find({ userId: req.query.userId });
     req.review = review;
     if (!review) {
       return res.status(400).json({
@@ -112,7 +113,6 @@ exports.getUserReviews = async (req, res) => {
       });
     }
     res.send(review);
-   
   } catch (error) {
     return res.status(400).json({
       error: error,
@@ -122,32 +122,73 @@ exports.getUserReviews = async (req, res) => {
 
 exports.getSpecificCompanyReviews = async (req, res) => {
   const sortVal = req.query.sort ? req.query.sort : "createdAt";
-  try {
-    let review;
-    if (sortVal === "overallRating")
-      review = await Reviews.find({ employerId: req.query.employerId }).sort({
-        overallRating: -1,
-      });
-    else if (sortVal === "isHelpfulCount")
-      review = await Reviews.find({ employerId: req.query.employerId }).sort({
-        isHelpfulCount: -1,
-      });
-    else
-      review = await Reviews.find({ employerId: req.query.employerId }).sort({
-        createdAt: -1,
-      });
+  const { page, limit } = req.query;
+  if (!page && !limit) {
+    try {
+      let review;
+      if (sortVal === "overallRating")
+        review = await Reviews.find({ employerId: req.query.employerId }).sort({
+          overallRating: -1,
+        });
+      else if (sortVal === "isHelpfulCount")
+        review = await Reviews.find({ employerId: req.query.employerId }).sort({
+          isHelpfulCount: -1,
+        });
+      else
+        review = await Reviews.find({ employerId: req.query.employerId }).sort({
+          createdAt: -1,
+        });
 
-    req.review = review;
-    if (!review) {
+      req.review = review;
+      if (!review) {
+        return res.status(400).json({
+          error: error,
+        });
+      }
+      res.send(review);
+    } catch (error) {
       return res.status(400).json({
         error: error,
       });
     }
-    res.send(review);
-  } catch (error) {
-    return res.status(400).json({
-      error: error,
-    });
+  } else {
+    const startIndex = (page - 1) * limit;
+    try {
+      let review;
+      if (sortVal === "overallRating")
+        review = await Reviews.find({ employerId: req.query.employerId })
+          .sort({
+            overallRating: -1,
+          })
+          .limit(parseInt(limit))
+          .skip(startIndex);
+      else if (sortVal === "isHelpfulCount")
+        review = await Reviews.find({ employerId: req.query.employerId })
+          .sort({
+            isHelpfulCount: -1,
+          })
+          .limit(parseInt(limit))
+          .skip(startIndex);
+      else
+        review = await Reviews.find({ employerId: req.query.employerId })
+          .sort({
+            createdAt: -1,
+          })
+          .limit(parseInt(limit))
+          .skip(startIndex);
+
+      req.review = review;
+      if (!review) {
+        return res.status(400).json({
+          error: error,
+        });
+      }
+      res.send(review);
+    } catch (error) {
+      return res.status(400).json({
+        error: error,
+      });
+    }
   }
 };
 
@@ -236,11 +277,14 @@ exports.UpdateReviewStatus = async (req, res) => {
 };
 
 exports.UpdateHelpfulCount = async (req, res) => {
-  console.log()
+  console.log();
   try {
     const review = await Reviews.findOneAndUpdate(
       { _id: req.body.reviewid },
-      { isHelpfulCount: req.body.helpfulcount, isNotHelpfulCount: req.body.nothelpfulcount }
+      {
+        isHelpfulCount: req.body.helpfulcount,
+        isNotHelpfulCount: req.body.nothelpfulcount,
+      }
     );
     if (!review) {
       return res.status(400).json({

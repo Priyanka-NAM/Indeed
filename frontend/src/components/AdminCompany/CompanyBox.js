@@ -96,7 +96,7 @@ export function CompanyBox({
           md={4}
           sm={4}
           xs={4}
-          onClick={() => history.push(`/company/${id}/jobs`)}
+          onClick={() => history.push(`/employer/reports`)}
         >
           Jobs
         </Grid>
