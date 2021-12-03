@@ -492,17 +492,12 @@ export default function Review(props) {
   const [tooltipopen, setTooltipopen] = React.useState(true);
 
   useEffect(() => {
+    debugger;
     if (
       props.match.params.pathname === "snapshot" ||
       props.match.params.pathname === "photos"
     ) {
       dispatch(getcompaniesDetails({ employerID: props.match.params.id }));
-      // dispatch(
-      //   getCompanySpecificReviews({
-      //     employerId: props.match.params.id,
-      //     sort: sortValue,
-      //   })
-      // );
       dispatch(getFeaturedReviews({employerId: props.match.params.id}));
      
     } else if (props.match.params.pathname === "reviews")
@@ -1457,7 +1452,7 @@ export default function Review(props) {
   );
   const showSalary = () => (
     <>
-      {userDetails.role !== 0 && (
+      {userDetails && userDetails.role !== 2 && (
         <SearchButton
           type="submit"
           variant="contained"
