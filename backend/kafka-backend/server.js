@@ -38,6 +38,8 @@ const get_job_applicants = require('./services/EmployerServices/getJobApplicants
 const update_job_application = require('./services/EmployerServices/updateJobApplicationService');
 const send_message = require('./services/MessagesServices/sendMessage')
 const reply_message = require('./services/MessagesServices/replyMessage')
+const get_message = require('./services/MessagesServices/getMessage')
+const get_distinct_employer = require('./services/MessagesServices/getDistinctEmployer')
 
 function handleTopicRequest(topic_name, fname) {
   //var topic_name = 'root_topic';
@@ -80,23 +82,23 @@ handleTopicRequest("top_reviewed_companies", top_reviewed_companies);
 handleTopicRequest("get_all_companies", get_all_companies);
 handleTopicRequest("top_accepted_rated_ceos", top_accepted_rated_ceos);
 handleTopicRequest("top_accepted_review_users", top_accepted_review_users);
-handleTopicRequest("post_salary", post_salary);
-handleTopicRequest("get_salary", get_salary);
-handleTopicRequest("post_review", post_review);
-handleTopicRequest("company_specific_review", company_specific_review);
-handleTopicRequest("get_all_reviews", get_all_reviews);
-handleTopicRequest("company_review", company_review);
-handleTopicRequest("update_review", update_review);
-handleTopicRequest("update_helpful_count", update_helpful_count);
-handleTopicRequest("upload_photo", upload_photo);
-handleTopicRequest("upload_photo_status", upload_photo_status);
-handleTopicRequest("user_review", user_review);
+// handleTopicRequest("post_salary", post_salary);
+// handleTopicRequest("get_salary", get_salary);
+// handleTopicRequest("post_review", post_review);
+// handleTopicRequest("company_specific_review", company_specific_review);
+// handleTopicRequest("get_all_reviews", get_all_reviews);
+// handleTopicRequest("company_review", company_review);
+// handleTopicRequest("update_review", update_review);
+// handleTopicRequest("update_helpful_count", update_helpful_count);
+// handleTopicRequest("upload_photo", upload_photo);
+// handleTopicRequest("upload_photo_status", upload_photo_status);
+// handleTopicRequest("user_review", user_review);
 handleTopicRequest("update_user_saved_jobs", update_user_saved_jobs);
-handleTopicRequest("apply_job", apply_job)
-handleTopicRequest("update_employer", update_employer);
-handleTopicRequest("get_employer_details", get_employer_details);
-handleTopicRequest("upload_employer_pics", upload_employer_pics);
-handleTopicRequest("employer_review_update", employer_review_update);
+// handleTopicRequest("apply_job", apply_job)
+// handleTopicRequest("update_employer", update_employer);
+// handleTopicRequest("get_employer_details", get_employer_details);
+// handleTopicRequest("upload_employer_pics", upload_employer_pics);
+// handleTopicRequest("employer_review_update", employer_review_update);
 handleTopicRequest("delete_user_saved_jobs", delete_user_saved_jobs);
 handleTopicRequest("get_user_saved_jobs", get_user_saved_jobs);
 handleTopicRequest("get_user_applied_jobs", get_user_applied_jobs);
@@ -104,9 +106,11 @@ handleTopicRequest("get_user_reviews", get_user_reviews);
 handleTopicRequest("get_user_profile", get_user_profile);
 handleTopicRequest("update_user_profile", update_user_profile);
 handleTopicRequest("fetch_all_jobs", fetch_all_jobs);
-handleTopicRequest('create_job', create_job)
-handleTopicRequest('get_all_jobs', get_all_jobs)
-handleTopicRequest('get_job_applicants', get_job_applicants)
-handleTopicRequest('update_job_application', update_job_application)
+// handleTopicRequest('create_job', create_job)
+// handleTopicRequest('get_all_jobs', get_all_jobs)
+// handleTopicRequest('get_job_applicants', get_job_applicants)
+// handleTopicRequest('update_job_application', update_job_application)
 handleTopicRequest('send_message', send_message)
 handleTopicRequest('reply_message', reply_message)
+handleTopicRequest('get_message', get_message)
+handleTopicRequest('get_distinct_employer', get_distinct_employer)
