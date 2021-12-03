@@ -1,8 +1,29 @@
 const Application = require("../Models/ApplicationModel");
 const User = require("../Models/UserModel");
+const kafka = require("../kafka/client");
 
 const postJob = async (req, res) => {
-    const {userId, jobId, employerId,email, resume} = req.body
+
+    kafka.make_request('post_job', req.body, (err, results) => {
+        if (err) {
+            res.status(500).json({
+                error: err
+            })
+
+        }
+        else {
+            if(results){
+                res.status(200).send(results)
+            }
+            else{
+                res.status(400).json({
+                    error: "Resource Not Found"
+                })
+            }
+        }
+    })
+
+    /*const {userId, jobId, employerId,email, resume} = req.body
     console.log(userId, jobId, resume, email)
     try {
         if (userId) {
@@ -20,12 +41,6 @@ const postJob = async (req, res) => {
             console.log("app exists", applicationExists)
             if (applicationExists) {
                 return res.status(409).send("job already applied")
-                // const appResult = await Application.findOneAndUpdate({userId}, {jobId, status:"applied"}, {new:true})
-                // if (appResult) {
-                //     return res.status(200).send("job updated successfully")
-                // } else {
-                //     return res.status(404).send("Resource not found")
-                // }
             } else {
                 console.log("create else")
                 const resumefile = null
@@ -52,7 +67,7 @@ const postJob = async (req, res) => {
         }   
     } catch (error) {
         res.status(500).send("Database error")
-    }
+    }*/
 } 
 
 module.exports = { postJob }
