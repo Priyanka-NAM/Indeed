@@ -144,7 +144,8 @@ function JobDetails({jobData, index}) {
                 "userId": userId,
                 "jobId": jobId,
                 "employerId": employerId,
-                "resume": profile.resume
+                "resume": profile.resume,
+                "email": profile.email
             }
             dispatch(applyJobs(data))
             setOpen(false)
