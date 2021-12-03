@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { getDistinctEmployer, getMessages, replyMessageAction } from '../../Redux/Actions/MessagesAction';
 import TextField from '@mui/material/TextField';
+import { Redirect } from 'react-router';
 
 const useStyles = makeStyles(theme=>({
     msg_section: {
@@ -32,6 +33,7 @@ function JobSeekerMessage() {
     let employerDetails = useSelector(state=>state.messages.employerDetails)
     let conversation = useSelector(state=>state.messages.conversation)
     let successResponse = useSelector(state=>state.messages.successResponse)
+    const isAuth = useSelector(state=>state.login.isAuth)
 
     const [open, setOpen] = useState(false)
     //const [flag, setFlag] = useState(false)
@@ -85,6 +87,7 @@ function JobSeekerMessage() {
 
     return (
         <Container>
+            {!isAuth && <Redirect to='/login'/>}
             <Grid container spacing={2}>
                 <Grid item xs={3} className={classes.msg_section}>
                 <Typography variant="h5">

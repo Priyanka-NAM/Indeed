@@ -1,6 +1,8 @@
 const Reviews = require("../Models/ReviewsModel");
 const Employer = require("../Models/EmployerModel");
 const User = require("../Models/UserModel");
+const redisClient = require('../config/redisClient');
+
 exports.postUserReview = async (req, res) => {
   console.log("Post User Review");
   const {
@@ -46,6 +48,15 @@ exports.postUserReview = async (req, res) => {
       throw err;
     }
   });
+  const key = employerId.toString() + 'isHelpful'
+  if (newReview) {
+    const reviews = await Reviews.find({ employerId }).sort({
+      isHelpfulCount: -1,
+    });
+    if (reviews) {
+      redisClient.setEx(key, 36000, JSON.stringify(reviews));
+    }
+  }
   console.log(employerId);
   let emp = await Employer.findById(employerId);
   let averageWorkHappinessScore = 0;
@@ -122,73 +133,57 @@ exports.getUserReviews = async (req, res) => {
 
 exports.getSpecificCompanyReviews = async (req, res) => {
   const sortVal = req.query.sort ? req.query.sort : "createdAt";
-  const { page, limit } = req.query;
-  if (!page && !limit) {
-    try {
-      let review;
-      if (sortVal === "overallRating")
-        review = await Reviews.find({ employerId: req.query.employerId }).sort({
-          overallRating: -1,
-        });
-      else if (sortVal === "isHelpfulCount")
-        review = await Reviews.find({ employerId: req.query.employerId }).sort({
-          isHelpfulCount: -1,
-        });
-      else
-        review = await Reviews.find({ employerId: req.query.employerId }).sort({
-          createdAt: -1,
-        });
-
-      req.review = review;
-      if (!review) {
-        return res.status(400).json({
-          error: error,
-        });
-      }
-      res.send(review);
-    } catch (error) {
-      return res.status(400).json({
-        error: error,
+  const employerId = req.query.employerId
+  try {
+    let review;
+    if (sortVal === "overallRating") { 
+       review = await Reviews.find({ employerId: req.query.employerId }).sort({
+        overallRating: -1,
       });
     }
-  } else {
-    const startIndex = (page - 1) * limit;
-    try {
-      let review;
-      if (sortVal === "overallRating")
-        review = await Reviews.find({ employerId: req.query.employerId })
-          .sort({
-            overallRating: -1,
-          })
-          .limit(parseInt(limit))
-          .skip(startIndex);
-      else if (sortVal === "isHelpfulCount")
-        review = await Reviews.find({ employerId: req.query.employerId })
-          .sort({
+    else if (sortVal === "isHelpfulCount") {
+      try {
+        const key = employerId.toString() + 'isHelpful'
+        console.log(key)
+        const data = await redisClient.get(key)
+        if (data) {
+          console.log("get key")
+          return res.status(200).send(JSON.parse(data))
+        } else {
+          console.log("set key")
+          const reviews = await Reviews.find({ employerId: req.query.employerId }).sort({
             isHelpfulCount: -1,
-          })
-          .limit(parseInt(limit))
-          .skip(startIndex);
-      else
-        review = await Reviews.find({ employerId: req.query.employerId })
-          .sort({
-            createdAt: -1,
-          })
-          .limit(parseInt(limit))
-          .skip(startIndex);
-
-      req.review = review;
+          });
+          if (reviews) {
+            redisClient.setEx(key, 36000, JSON.stringify(reviews));
+            return res.status(200).send(reviews);
+          } else {
+            return res.status(400).json({
+              error: error
+            });
+          }
+        }
+      } catch (err) {
+        console.log(error)
+        return res.status(500).json({
+          error: error
+        });
+      }
+    }
+    else {
+      console.log("here")
+      review = await Reviews.find({ employerId: req.query.employerId }).sort({
+        createdAt: -1,
+      });
       if (!review) {
         return res.status(400).json({
           error: error,
         });
       }
-      res.send(review);
-    } catch (error) {
-      return res.status(400).json({
-        error: error,
-      });
-    }
+      res.status(200).send(review)
+  }
+  } catch (err) {
+    res.status(500).send(err)
   }
 };
 
@@ -255,11 +250,22 @@ exports.getCompanyReviews = async (req, res) => {
 };
 
 exports.UpdateReviewStatus = async (req, res) => {
+  console.log(req.query.employerId)
   try {
     const review = await Reviews.findOneAndUpdate(
       { _id: req.body.reviewid },
       { isApproved: "Approved" }
     );
+    if (review) {
+      const key = req.query.employerId.toString()+'isHelpful'
+      const updatedReviews = await Reviews.find({ employerId: req.query.employerId }).sort({
+        isHelpfulCount: -1,
+      });
+      if (updatedReviews) {
+        redisClient.setEx(key, 36000, JSON.stringify(updatedReviews));
+        //return res.status(200).send(review);
+      }
+    }
     if (!review) {
       return res.status(400).json({
         error: error,
@@ -277,7 +283,7 @@ exports.UpdateReviewStatus = async (req, res) => {
 };
 
 exports.UpdateHelpfulCount = async (req, res) => {
-  console.log();
+  console.log(req.query);
   try {
     const review = await Reviews.findOneAndUpdate(
       { _id: req.body.reviewid },
@@ -286,12 +292,23 @@ exports.UpdateHelpfulCount = async (req, res) => {
         isNotHelpfulCount: req.body.nothelpfulcount,
       }
     );
+    if (review) {
+      const key = req.query.employerId.toString()+'isHelpful'
+      const updatedReviews = await Reviews.find({ employerId: req.query.employerId }).sort({
+        isHelpfulCount: -1,
+      });
+      if (updatedReviews) {
+        redisClient.setEx(key, 36000, JSON.stringify(updatedReviews));
+        //return res.status(200).send(review);
+      }
+    }
+    
     if (!review) {
       return res.status(400).json({
         error: error,
       });
     }
-    res.send(review);
+    res.status(200).send(review);
   } catch (error) {
     return res.status(400).json({
       error: error,

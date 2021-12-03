@@ -22,7 +22,7 @@ import CardContent from "@material-ui/core/CardContent";
 import TablePagination from "@material-ui/core/TablePagination";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import { getJobApplicants } from "../../../Redux/Actions/JobsAction";
+import {getJobApplicants, getUserProfile} from "../../../Redux/Actions/JobsAction";
 import { Redirect } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -119,6 +119,8 @@ const useStyles = makeStyles((theme) => ({
 const EmployerJobApplicants = ({ match }) => {
   const classes = useStyles();
 
+  const { jobId, employerId } = match.params
+
   const theme = createMuiTheme({
     palette: {
       background: {
@@ -127,8 +129,10 @@ const EmployerJobApplicants = ({ match }) => {
     },
   });
 
-  const createData = (applicantEmail, applicantResume, applicantStatus) => {
-    return { applicantEmail, applicantResume, applicantStatus };
+  const profile = useSelector(state=>state.jobs.profile);
+
+  const createData = (userId, applicantEmail,applicantStatus, applicantResume, applicantCv) => {
+    return { userId, applicantEmail,applicantStatus, applicantResume, applicantCv };
   };
 
   const dispatch = useDispatch();
@@ -140,7 +144,7 @@ const EmployerJobApplicants = ({ match }) => {
 
   if (applicants.length > 0) {
     rows = applicants.map((eachApplicant) => {
-      return createData(eachApplicant.email, eachApplicant.resume, "APPLIED");
+      return createData(eachApplicant.userId, eachApplicant.emailId, eachApplicant.status, eachApplicant.resume, eachApplicant.cv);
     });
   }
 
@@ -157,22 +161,21 @@ const EmployerJobApplicants = ({ match }) => {
   };
 
   useEffect(() => {
-    dispatch(getJobApplicants(match.params.id));
+    dispatch(getJobApplicants(jobId, employerId));
   }, [match]);
 
   const columns = [
     { id: "Applicant Email", label: "Applicant Email" },
-    { id: "View Resume", label: "View Resume" },
     { id: "Application Status", label: "Application Status" },
-    { id: "Message", label: "Send Message" },
+    { id: "View Resume", label: "View Resume" },
+    { id: "View CV", label: "View CV" },
+    { id: "Message", label: "Send Message" }
   ];
-  const isAuth = useSelector((state) => state.login.isAuth);
 
   return (
     <>
-      {/* {!isAuth && <Redirect to='/employer' />} */}
 
-      <div style={{ height: 400, width: "80%", marginLeft: "10%" }}>
+      <div style={{ height: 400, width: "80%", marginLeft: "10%", marginTop: "2%"}}>
         <Paper className={classes.root}>
           <TableContainer>
             <Table stickyHeader>
@@ -196,8 +199,20 @@ const EmployerJobApplicants = ({ match }) => {
                     <TableBody>
                       <TableRow role='checkbox' tabIndex={-1} key={row.code}>
                         <TableCell style={{ flex: 3 }}>
-                          <Typography variant='h5' component='h2'>
-                            {row.applicantEmail}
+                          <Link
+                              style={{ textDecoration: "none" }}
+                              to={{
+                                pathname: `/employer/applicant-profile/${row.userId}&${jobId}&${employerId}`,
+                                state: {},
+                              }}>
+                            <Typography variant='h5' component='h2'>
+                              {row.applicantEmail}
+                            </Typography>
+                          </Link>
+                        </TableCell>
+                        <TableCell style={{ flex: 1 }}>
+                          <Typography variant='h5' component='h2' align='inherit'>
+                            {row.applicantStatus==="applied" ? "Applied" : row.applicantStatus}
                           </Typography>
                         </TableCell>
                         <TableCell style={{ flex: 1 }}>
@@ -205,20 +220,32 @@ const EmployerJobApplicants = ({ match }) => {
                             variant='outlined'
                             color='#065FF7'
                             style={{ color: "#065FF7" }}>
-                            <Link
-                              style={{ textDecoration: "none" }}
-                              to={{
-                                pathname: "/employer/showJobDetails",
-                                state: { row },
-                              }}>
+                            <Typography>
+                              {row.resume &&
+                                  <Link to={"/"+row.resume.split("\\")[3]} target="_blank" download style={{marginTop:"10px"}}>
+                                    Download your resume here {' '}
+                                    <i className="fa fa-download" />
+                                  </Link>
+                              }
                               View Resume
-                            </Link>
+                            </Typography>
                           </Button>
                         </TableCell>
-                        <TableCell style={{ flex: 3 }}>
-                          <Typography variant='h5' component='h2'>
-                            {row.applicantStatus}
-                          </Typography>
+                        <TableCell style={{ flex: 1 }}>
+                          <Button
+                              variant='outlined'
+                              color='#065FF7'
+                              style={{ color: "#065FF7" }}>
+                            <Typography>
+                              {row.resume &&
+                                  <Link to={"/"+row.resume.split("\\")[3]} target="_blank" download style={{marginTop:"10px"}}>
+                                    Download your resume here {' '}
+                                    <i className="fa fa-download" />
+                                  </Link>
+                              }
+                              View CV
+                            </Typography>
+                          </Button>
                         </TableCell>
                         <TableCell style={{ flex: 1 }}>
                           <Button

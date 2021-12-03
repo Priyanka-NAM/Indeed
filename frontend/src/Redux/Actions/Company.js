@@ -75,9 +75,9 @@ export const updateReviewStatus = (data) => (dispatch) => {
       "content-type": "application/x-www-form-urlencoded",
       Accept: "application/json",
     },
-  };
+  }; 
   Axios.put(
-    `${API}/company/review/update-review-status?reviewid=${data.reviewid}`,
+    `${API}/company/review/update-review-status?reviewid=${data.reviewid}&employerId=${data.employerId}`,
     data
   )
     .then((response) => {
@@ -102,7 +102,7 @@ export const updateHelpfulCount = (data) => (dispatch) => {
     },
   };
   Axios.put(
-    `${API}/company/review/update-helpful-count?reviewid=${data.reviewid}&helpfulcount=${data.helpfulcount}&nothelpfulcount=${data.nothelpfulcount}`,
+    `${API}/company/review/update-helpful-count?reviewid=${data.reviewid}&helpfulcount=${data.helpfulcount}&nothelpfulcount=${data.nothelpfulcount}&employerId=${data.employerId}`,
     data
   )
     .then((response) => {
@@ -114,6 +114,39 @@ export const updateHelpfulCount = (data) => (dispatch) => {
     .catch((error) => {
       dispatch({
         type: UPDATE_REVIEW_STATUS_FAIL,
+        payload: error,
+      });
+    });
+};
+
+export const useremployerAllJob = (employerID, page, limit) => (dispatch) => {
+  // const { employerID } = JSON.parse(localStorage.getItem("user"));
+  console.log(page, limit);
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  // const newdata = { ...data, employerID: "61a07e89e5d016c47d56338a" };
+  console.log("data", employerID);
+
+  let url = `${API}/company/jobs?employerID=${employerID}`;
+  if (page && limit) {
+    url = url + `&page=${page}&limit=${limit}`;
+    console.log(url);
+  }
+
+  Axios.get(url, config)
+    .then((response) => {
+      dispatch({
+        type: "USER_EMPLOYER_ALL_JOBS",
+        payload: response.data,
+      });
+    })
+    .catch((error) => {
+      console.log("Error from backend", error);
+      dispatch({
+        type: "USER_EMPLOYER_ALL_JOBS_ERROR",
         payload: error,
       });
     });

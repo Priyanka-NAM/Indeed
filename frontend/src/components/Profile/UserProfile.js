@@ -6,6 +6,7 @@ import { API } from '../../config';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserProfile, updateUserProfile } from '../../Redux/Actions/JobsAction';
 import { validateProfile } from "./ValidateProfile";
+import { Link, Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     errorDisplay: {
@@ -18,6 +19,7 @@ function UserProfile() {
     const classes = useStyles();
     let userId = useSelector(state=>state.login.userDetails.userId);
     let profile = useSelector(state=>state.jobs.profile);
+    const isAuth = useSelector(state=>state.login.isAuth)
 
     const [resumeFile, setResumeFile] = useState(null)
     const [flag, setFlag] = useState(false)
@@ -106,6 +108,7 @@ function UserProfile() {
 
     return (
         <Container>
+            {!isAuth && <Redirect to='/login' />}
             <Box style={{marginLeft:"450px"}}>
                 <Grid>
                     <Grid item>
@@ -149,7 +152,13 @@ function UserProfile() {
                                     <form onSubmit={handleResume}>
                                         <input type="file" name="resume" onChange={handleChange} /> 
                                         <br />
-                                        {profile && profile.resume && profile.resume.split("\\")[2]}
+                                        <br />
+                                        {profile && profile.resume && 
+                                        <Link to={"/"+profile.resume.split("\\")[3]} target="_blank" download style={{marginTop:"10px"}}>
+                                        Download your resume here {' '}
+                                        <i className="fa fa-download"></i>
+                                        </Link>
+                                        }
                                         <br />
                                         <br />
                                         <input type='submit' value='Upload Resume' 
@@ -158,7 +167,7 @@ function UserProfile() {
                                 </Grid>
                                 <Grid item xs={4}>
                                     <Button color='primary' onClick={handleDelete} style={{border:"1px solid black",
-                                    color:"black", backgroundColor:"#94B8EF", marginTop:"75px", marginLeft:"40px"}}>Delete Resume</Button>
+                                    color:"black", backgroundColor:"#94B8EF", marginTop:"125px", marginLeft:"40px"}}>Delete Resume</Button>
                                 </Grid>
                             </Grid>
                             <br />

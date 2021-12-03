@@ -4,13 +4,14 @@ import React, { useReducer, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { getSavedJobs, applyJobs, getAppliedJobs } from '../../Redux/Actions/JobsAction';
-
+import { Redirect } from 'react-router-dom';
 
 function AppliedJobs() {
     const dispatch = useDispatch();
     let { userDetails } = useSelector((state) => state.login);
     let sJobs  = useSelector((state) => state.jobs.savedJobs);
     let aJobs  = useSelector((state) => state.jobs.appliedJobs);
+    const isAuth = useSelector(state=>state.login.isAuth)
 
     let savedJobs = null
     if (sJobs) {
@@ -30,6 +31,7 @@ function AppliedJobs() {
     }, [])
     return (
         <Container style={{display:'flex'}}>
+            {!isAuth && <Redirect to='/login'/>}
             <Box>
                 <Typography variant={'h5'} style={{fontSize:'30px',marginBottom:'20px'}}>
                     My Jobs

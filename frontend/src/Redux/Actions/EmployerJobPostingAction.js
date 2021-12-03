@@ -15,7 +15,7 @@ export const employerJobPost = (data) => (dispatch) => {
     },
   };
   // const newdata = { ...data, employerID: "61a07e89e5d016c47d56338a" };
-  console.log("Request data before job post call ", data);
+  // console.log("Request data before job post call ", data);
   Axios.post(`${API}/employer/post-job`, data, config)
     .then((response) => {
       dispatch({

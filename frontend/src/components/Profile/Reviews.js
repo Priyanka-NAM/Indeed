@@ -4,12 +4,14 @@ import { useEffect } from 'react';
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserReviews } from '../../Redux/Actions/JobsAction';
+import { Redirect } from 'react-router-dom';
 
 function Reviews() {
     const dispatch = useDispatch();
     const history = useHistory();
     let userId = useSelector(state=>state.login.userDetails.userId);
     let reviews = useSelector(state=>state.jobs.reviews);
+    const isAuth = useSelector(state=>state.login.isAuth)
 
     useEffect(() => {
         const data = {
@@ -25,6 +27,7 @@ function Reviews() {
 
     return ( 
         <Container style={{display:'flex'}}>
+            {!isAuth && <Redirect to='/login'/>}
             <Grid container spacing={2}>
             <Grid item xs ={12}>
                 <Typography variant={'h5'} style={{fontSize:'30px',marginBottom:'20px'}}>

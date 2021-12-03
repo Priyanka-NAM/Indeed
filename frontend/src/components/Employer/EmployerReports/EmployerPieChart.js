@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Paper from "@material-ui/core/Paper";
 import {
   Chart,
@@ -22,7 +22,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Stack, Animation } from "@devexpress/dx-react-chart";
 import { withStyles } from "@material-ui/core/styles";
+
 import EmployerBarChart from "./EmployerBarChart";
+import { employerPieReports } from "./../../../Redux/Actions/EmployerReportsAction";
 const legendStyles = () => ({
   root: {
     display: "flex",
@@ -102,25 +104,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function EmployerPieChart() {
+function EmployerPieChart(props) {
   // Sample data
   const classes = useStyles();
   const isAuth = useSelector((state) => state.login.isAuth);
+  const employerReport = useSelector((state) => state.employerReport);
+  const { role, userId } = useSelector((state) => state.login.userDetails);
+  const { clicked, setClicked } = useState(false);
+
+  const dispatch = useDispatch();
 
   // Data from backend
   //   const data = [
   //       {_id: "applied", count: 5}
   //   ]
-  const data = [
-    { _id: "Applicants Applied", count: 80 },
-    { _id: "Applicants Rejected", count: 20 },
-    { _id: "Applicants Selected", count: 40 },
-  ];
-  const { role } = useSelector((state) => state.login.userDetails);
+  let data = [];
+
+  useEffect(() => {
+    let currDate = new Date();
+    let year = currDate.getFullYear();
+    dispatch(employerPieReports(userId, year - 1));
+  }, [clicked]);
+
+  if (employerReport.responseFromServerPie !== null) {
+    data = employerReport.responseFromServerPie;
+  }
 
   return (
     <>
-      {(!isAuth || role !== 1) && <Redirect to='/login' />}
+      {/* {(!isAuth || role !== 1 || role !== 2) && <Redirect to='/login' />} */}
 
       <Container className={classes.container1} maxWidth='xl'>
         <Box className={classes.container} sx={{ borderRadius: 16 }}>

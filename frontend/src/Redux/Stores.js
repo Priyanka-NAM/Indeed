@@ -20,7 +20,7 @@ import {
   updateViewCountReducer,
   getTopViewCountReducer,
 } from "./Reducers/AdminReducers";
-import { jobReducer, jobApplicantsReducer } from "./Reducers/JobReducer";
+import { jobReducer, jobApplicantsReducer, updateApplicationReducer } from "./Reducers/JobReducer";
 import { JOBSEEKER_LOGOUT } from "./Constants/UserConstants";
 import { employerJobPostingReducer } from "./Reducers/EmployerJobPostingReducer";
 import { employerJobsReducer } from "./Reducers/EmployerJobsReducer";
@@ -28,6 +28,8 @@ import { employerDetailsReducer } from "./Reducers/EmployerDetailsReducer";
 import { messageReducer } from "./Reducers/MessageReducer";
 import { companySalaryReducer } from "./Reducers/CompanySalaryReducer";
 import { employerReviewReducer } from "./Reducers/EmployerReviewReducer";
+import { userJobReducer } from "./Reducers/UserJobReducer";
+import { employerReportReducer } from "./Reducers/EmployerReportReducer";
 
 const appReducer = combineReducers({
   signup: signUpReducer,
