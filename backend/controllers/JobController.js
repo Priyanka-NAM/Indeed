@@ -32,54 +32,54 @@ const createJob = async (req, res) => {
 /indeed/employer/update-job
 Employer Update Job Route
  */
-const updateJob = async (req, res) => {
-  const {
-    jobId,
-    jobTitle,
-    employerID,
-    companyName,
-    jobLocation,
-    jobType,
-    isRemote,
-    salary,
-    jobDescription,
-  } = req.body; // get the data from request body which is in json and put it in variables called user and password
-  console.log("requestis", req);
-  const jobExists = await Jobs.findOne({ jobId });
-  if (!jobExists) {
-    res.status("400").send("Error");
-  } else {
-    const job = await jobExists.updateOne({
-      jobId,
-      jobTitle,
-      employerID,
-      companyName,
-      jobLocation,
-      jobType,
-      isRemote,
-      salary,
-      jobDescription,
-    });
+// const updateJob = async (req, res) => {
+//   const {
+//     jobId,
+//     jobTitle,
+//     employerID,
+//     companyName,
+//     jobLocation,
+//     jobType,
+//     isRemote,
+//     salary,
+//     jobDescription,
+//   } = req.body; // get the data from request body which is in json and put it in variables called user and password
+//   console.log("requestis", req);
+//   const jobExists = await Jobs.findOne({ jobId });
+//   if (!jobExists) {
+//     res.status("400").send("Error");
+//   } else {
+//     const job = await jobExists.updateOne({
+//       jobId,
+//       jobTitle,
+//       employerID,
+//       companyName,
+//       jobLocation,
+//       jobType,
+//       isRemote,
+//       salary,
+//       jobDescription,
+//     });
 
-    if (job) {
-      console.log("Updated!");
-      res.status(201).json({
-        jobId,
-        jobTitle,
-        employerID,
-        companyName,
-        jobLocation,
-        jobType,
-        isRemote,
-        salary,
-        jobDescription,
-      });
-    } else {
-      res.status("400");
-      throw new Error("400 Bad Request: Please try again later. ");
-    }
-  }
-};
+//     if (job) {
+//       console.log("Updated!");
+//       res.status(201).json({
+//         jobId,
+//         jobTitle,
+//         employerID,
+//         companyName,
+//         jobLocation,
+//         jobType,
+//         isRemote,
+//         salary,
+//         jobDescription,
+//       });
+//     } else {
+//       res.status("400");
+//       throw new Error("400 Bad Request: Please try again later. ");
+//     }
+//   }
+// };
 
 /* 
 @ Get
@@ -242,13 +242,13 @@ const eachJobApplications = async (req, res) => {
       for (let i = 0; i < TotalApplications.length; i++) {
         for (let j = 0; j < processedResult.length; j++) {
           if (processedResult[j].jobId.equals(TotalApplications[i]._id.jobId)) {
-            if (TotalApplications[i]._id.status === "applied") {
+            if (TotalApplications[i]._id.status === "Applied") {
               processedResult[j].applied += TotalApplications[i].count;
             }
-            if (TotalApplications[i]._id.status === "rejected") {
+            if (TotalApplications[i]._id.status === "Rejected") {
               processedResult[j].rejected += TotalApplications[i].count;
             }
-            if (TotalApplications[i]._id.status === "selected") {
+            if (TotalApplications[i]._id.status === "Selected") {
               processedResult[j].selected += TotalApplications[i].count;
             }
           }
@@ -265,7 +265,6 @@ const eachJobApplications = async (req, res) => {
 
 module.exports = {
   createJob,
-  updateJob,
   getAllJobs,
   getJobApplicants,
   jobApplications,
