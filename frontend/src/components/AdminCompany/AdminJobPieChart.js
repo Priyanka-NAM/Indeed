@@ -162,7 +162,7 @@ function AdminJobPiChart(props) {
                   argumentField='_id'
                   name='Applicants Selected'
                 />
-                <Title text='Total Applicants' />
+                <Title text='Total Applicants 2021' />
                 <Animation />
                 <Legend />
               </Chart>
