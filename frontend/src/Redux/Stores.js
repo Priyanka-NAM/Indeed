@@ -28,6 +28,7 @@ import { employerDetailsReducer } from "./Reducers/EmployerDetailsReducer";
 import { messageReducer } from "./Reducers/MessageReducer";
 import { companySalaryReducer } from "./Reducers/CompanySalaryReducer";
 import { employerReviewReducer } from "./Reducers/EmployerReviewReducer";
+import { userJobReducer } from "./Reducers/UserJobReducer";
 
 const appReducer = combineReducers({
   signup: signUpReducer,
@@ -52,8 +53,9 @@ const appReducer = combineReducers({
   updatePhotoStatus: updatePhotoStatusReducer,
   jobApplicants: jobApplicantsReducer,
   salary: companySalaryReducer,
-  updateViewCount:updateViewCountReducer,
-  getTopViewCount:getTopViewCountReducer,
+  updateViewCount: updateViewCountReducer,
+  getTopViewCount: getTopViewCountReducer,
+  userjob: userJobReducer,
 });
 
 // const rootReducer = (state, action) => {
