@@ -1,83 +1,81 @@
-const Employer = require("../Models/EmployerModel");
-const User = require("../Models/UserModel");
+const asyncHandler = require("express-async-handler");
+const kafka = require("../kafka/client");
 
 
-exports.getTopRatedCompanies = async (req, res) => {
-    try {
-      const review = await Employer.find({}).sort({averageRating : -1}).limit(5);
-      if (!review) {
-        return res.status(400).json({
-          error: error,
-        });
-      }
-      res.send(review);
-    } catch (error) {
-      return res.status(400).json({
-        error: error,
-      });
-    }
-  };
+const getTopRatedCompanies = asyncHandler (async (req, res) => {
 
-  exports.getTopReviewedCompanies = async (req, res) => {
-    try {
-      const review = await Employer.find({}).sort({noOfRatings : -1}).limit(5);
-      if (!review) {
-        return res.status(400).json({
-          error: error,
-        });
-      }
-      res.send(review);
-    } catch (error) {
-      return res.status(400).json({
-        error: error,
-      });
-    }
-  };
-  exports.getTopAcceptedReviewUsers = async (req, res) => {
-    try {
-      const review = await User.find({}).sort({noOfAcceptedReviews : -1}).limit(5);
-      if (!review) {
-        return res.status(400).json({
-          error: error,
-        });
-      }
-      res.send(review);
-    } catch (error) {
-      return res.status(400).json({
-        error: error,
-      });
-    }
-  };
+    kafka.make_request('top_rated_companies', req.body, (err, results) => {
+        if (err) {
+            res.status(500).json({
+                error: err
+            })
 
-  exports.getTopRatedCEOs = async (req, res) => {
-    try {
-      const review = await Employer.find({}).sort({averageRating : -1}).limit(10);
-      if (!review) {
-        return res.status(400).json({
-          error: error,
-        });
-      }
-      res.send(review);
-    } catch (error) {
-      return res.status(400).json({
-        error: error,
-      });
-    }
-  };
+        }
+        else {
+            res.status(200).json(results)
+        }
+    })
+});
+
+const getTopReviewedCompanies = asyncHandler(async(req, res) => {
+
+    kafka.make_request('top_reviewed_companies', req.body, (err, results) => {
+        if (err) {
+            res.status(500).json({
+                error: err
+            })
+
+        }
+        else {
+            res.status(200).json(results)
+        }
+    })
+})
+
+const getTopAcceptedReviewUsers = asyncHandler(async(req, res) => {
+
+    kafka.make_request('top_accepted_review_users', req.body, (err, results) => {
+        if (err) {
+            res.status(500).json({
+                error: err
+            })
+
+        }
+        else {
+            res.status(200).json(results)
+        }
+    })
+})
+
+const getTopRatedCEOs = asyncHandler(async(req, res) => {
+
+    kafka.make_request('top_accepted_rated_ceos', req.body, (err, results) => {
+        if (err) {
+            res.status(500).json({
+                error: err
+            })
+
+        }
+        else {
+            res.status(200).json(results)
+        }
+    })
+})
+
+const getAllCompanies = asyncHandler(async(req, res) => {
+
+    kafka.make_request('get_all_companies', req.body, (err, results) => {
+        if (err) {
+            res.status(500).json({
+                error: err
+            })
+
+        }
+        else {
+            res.status(200).json(results)
+        }
+    })
+})
 
 
-  exports.getAllComapnies = async (req, res) => {
-    try {
-      const review = await Employer.find({});
-      if (!review) {
-        return res.status(400).json({
-          error: error,
-        });
-      }
-      res.send(review);
-    } catch (error) {
-      return res.status(400).json({
-        error: error,
-      });
-    }
-  };
+module.exports = { getTopRatedCompanies, getTopReviewedCompanies, getTopAcceptedReviewUsers, getTopRatedCEOs, getAllCompanies }
