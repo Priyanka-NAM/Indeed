@@ -9,6 +9,7 @@ import {
     GET_USER_REVIEWS,
     REVIEW_ERROR,
     APPLY_JOB,
+    JOB_APPLY_ERROR,
     USER_PROFILE,
     USER_ERROR,
     GET_APPLIED_JOBS,
@@ -26,7 +27,8 @@ const initialState = {
     appliedJobs: null,
     reviews: null,
     queriedJobsLength: 0,
-    profile: null
+    profile: null,
+    isApplied: false
 } 
   
 export const jobReducer = (state = initialState, action) => {
@@ -34,12 +36,14 @@ export const jobReducer = (state = initialState, action) => {
         case FETCH_ALL_JOBS:
           return { 
             ...state,
-            allJobs: action.payload  
+            allJobs: action.payload,
+            isApplied: false
           };
         case FETCH_QUERIED_JOBS:
           return { 
             ...state,
             queriedJobs: action.payload,
+            isApplied: false
           };
         case FETCH_Q_JOBS:
           return {
@@ -97,6 +101,11 @@ export const jobReducer = (state = initialState, action) => {
           return {
             ...state,
             successResponse: action.payload
+          }
+        case JOB_APPLY_ERROR:
+          return {
+            ...state,
+            isApplied: true
           }
         case JOB_ERROR:
           return {

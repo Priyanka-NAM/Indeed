@@ -6,6 +6,7 @@ import { NavLink } from 'react-router-dom';
 import { getSavedJobs, applyJobs, getAppliedJobs, getUserProfile } from '../../Redux/Actions/JobsAction';
 import axios from 'axios';
 import { API } from '../../config';
+import { Link, Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles((theme)=>({
     applyButton:{
@@ -48,6 +49,8 @@ function SavedJobs() {
     let sJobs  = useSelector((state) => state.jobs.savedJobs);
     let aJobs  = useSelector((state) => state.jobs.appliedJobs);
     let profile = useSelector(state=>state.jobs.profile);
+    const isAuth = useSelector(state=>state.login.isAuth)
+    
     const [open, setOpen] = useState(false);
     const {email} = userDetails
     const [resumeFile, setResumeFile] = useState(null)
@@ -77,7 +80,7 @@ function SavedJobs() {
                 'content-type': 'multipart/form-data'
             }
         } 
-        axios.post(`${API}/resume/updateResume`, formData, config).then((response) => {
+        axios.post(`${API}/upload/updateResume`, formData, config).then((response) => {
             setFlag(!flag)
             console.log(response)
           }).catch((error) => {
@@ -115,6 +118,7 @@ function SavedJobs() {
     }, [])
     return (
         <Container style={{display:'flex'}}>
+            {!isAuth && <Redirect to='/login'/>}
             <Box>
                 <Typography variant={'h5'} style={{fontSize:'30px',marginBottom:'20px'}}>
                     My Jobs
@@ -185,7 +189,15 @@ function SavedJobs() {
                             <form onSubmit={handleResume}>
                                 <input type="file" name="resume" onChange={handleChange} />
                                 <br />
-                                {profile && profile.resume && profile.resume.split("\\")[2]}
+                                <br />
+                                        {profile && profile.resume && 
+                                        <Link to={"/"+profile.resume.split("\\")[3]} target="_blank" download 
+                                        style={{marginTop:"10px", textDecoration:"none"}}>
+                                        Download your resume here <br />
+                                        {profile.resume.split("\\")[3]+ ' '}
+                                        <i className="fa fa-download"></i>
+                                        </Link>
+                                        }
                                 <br />
                                 <br />
                                 <input type='submit' value='Upload!' style={{width:"100px", backgroundColor:"#2D5DCE"}} />
@@ -197,12 +209,6 @@ function SavedJobs() {
                     </Grid>
                     </Box>
                 </Modal>
-                            <Button className={classes.updateButton}>
-                                Update
-                            </Button>
-                        </Box>
-                        <Box style={{cursor:"pointer",width:"40px",height:'40px',display:'flex',justifyContent:'center',alignItems:'center'}} >
-                            <span style={{fontSize:"20px"}}>X</span>
                         </Box>
                         <hr />
                     </Box>
