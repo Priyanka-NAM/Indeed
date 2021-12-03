@@ -1,13 +1,13 @@
 
 // Method : GET
 // Fetching all the  jobs posted by the employer
-
 const Jobs = require("../Models/JobsModel")
 const redisClient = require('../config/redisClient');
 const { rPopCount } = require("../config/redisClient");
 const { set } = require("mongoose");
 
 const fetchJobs = async (req, res) => {
+
     console.log("req query : ",req.query)
     const job = req.query.job
     const location = req.query.location

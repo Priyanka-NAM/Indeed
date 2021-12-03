@@ -1,8 +1,31 @@
 const Reviews = require("../Models/ReviewsModel");
 const User = require("../Models/UserModel");
+//const asyncHandler = require("express-async-handler");
+const kafka = require("../kafka/client");
 
 const updateUserSavedJobs = async (req, res) => {
-    const {userId, jobId} = req.body
+
+    kafka.make_request('update_user_saved_jobs', req.body, (err, results) => {
+        console.log("Results Updated: ", results)
+        if (err) {
+            res.status(500).json({
+                error: err
+            })
+
+        }
+        else {
+            if(results){
+                res.status(200).send(results)
+            }
+            else{
+                res.status(400).json({
+                    error: "Resource Not Found"
+                })
+            }
+        }
+    })
+
+    /*const {userId, jobId} = req.body
     console.log(userId, jobId)
     try {
         if (userId) {
@@ -22,7 +45,7 @@ const updateUserSavedJobs = async (req, res) => {
         }   
     } catch (error) {
         res.status(500).send("Database error")
-    }
+    }*/
 } 
 
 const deleteUserSavedJobs = async (req, res) => {
