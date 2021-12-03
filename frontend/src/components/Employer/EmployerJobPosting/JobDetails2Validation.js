@@ -9,7 +9,8 @@ export const isInfo = (values) => {
   if (
     !values.jobDescription ||
     !values.jobDescription.compensation ||
-    values.jobDescription.compensation === ""
+    values.jobDescription.compensation === "" ||
+    values.jobDescription.compensation < 0
   ) {
     errors.compensation = "compensation is required";
   }
