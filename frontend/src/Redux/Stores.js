@@ -7,6 +7,7 @@ import {
   CompanyListReviewReducer,
   UpdateReviewStatusReducer,
   UpdateHelpfulCountReducer,
+  getFeaturedReviewsReducer,
 } from "./Reducers/CompanyReducer";
 import { companyReviewReducer } from "./Reducers/CompanyReviewReducer";
 import {
@@ -20,7 +21,7 @@ import {
   updateViewCountReducer,
   getTopViewCountReducer,
 } from "./Reducers/AdminReducers";
-import { jobReducer, jobApplicantsReducer, updateApplicationReducer } from "./Reducers/JobReducer";
+import { jobReducer, jobApplicantsReducer } from "./Reducers/JobReducer";
 import { JOBSEEKER_LOGOUT } from "./Constants/UserConstants";
 import { employerJobPostingReducer } from "./Reducers/EmployerJobPostingReducer";
 import { employerJobsReducer } from "./Reducers/EmployerJobsReducer";
@@ -54,8 +55,11 @@ const appReducer = combineReducers({
   updatePhotoStatus: updatePhotoStatusReducer,
   jobApplicants: jobApplicantsReducer,
   salary: companySalaryReducer,
-  updateViewCount:updateViewCountReducer,
-  getTopViewCount:getTopViewCountReducer,
+  featuredReviews:getFeaturedReviewsReducer,
+  updateViewCount: updateViewCountReducer,
+  getTopViewCount: getTopViewCountReducer,
+  userjob: userJobReducer,
+  employerReport: employerReportReducer,
 });
 
 // const rootReducer = (state, action) => {

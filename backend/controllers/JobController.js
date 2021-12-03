@@ -147,13 +147,17 @@ const jobApplications = async (req, res) => {
   const employerID = mongoose.Types.ObjectId(req.params.id);
   const dateYear = req.params.year;
   let currDate, nextDate;
-  if (dateYear == 1990) {
+  if (dateYear === "1990") {
+    console.log("Current Year ", dateYear);
     currDate = new Date(1990, 0, 1);
     nextDate = new Date();
   } else {
+    console.log("Not Current Year ", dateYear);
     currDate = new Date(dateYear, 0, 1);
     nextDate = new Date(dateYear, 11, 31);
   }
+  console.log("Aggregation Year ", currDate.toString());
+  console.log("Next Aggregation Year ", nextDate.toString());
   console.log("Req.params", employerID);
   try {
     const TotalApplications = await Applications.aggregate([
@@ -188,14 +192,17 @@ const eachJobApplications = async (req, res) => {
   const employerID = mongoose.Types.ObjectId(req.params.id);
   const dateYear = req.params.year;
   let currDate, nextDate;
-  if (dateYear === 1990) {
+  if (dateYear === "1990") {
+    console.log("Current Year ", dateYear);
     currDate = new Date(1990, 0, 1);
     nextDate = new Date();
   } else {
+    console.log("Not Current Year ", dateYear);
     currDate = new Date(dateYear, 0, 1);
     nextDate = new Date(dateYear, 11, 31);
   }
   console.log("Aggregation Year ", currDate.toString());
+  console.log("Next Aggregation Year ", nextDate.toString());
   console.log("Req.params", employerID);
   try {
     const TotalApplications = await Applications.aggregate([

@@ -40,7 +40,7 @@ export function ReviewBox({id, rating, review_title, date, yourReview, pros, con
                 <Grid item>
                     <Typography variant = "head2" style = {{fontWeight: "800"}}>{review_title}</Typography>{'  '}
                     
-                    {isApprovedByAdmin === "NotApproved" ? (<button type="button" disabled='true' class="btn btn-danger" 
+                    {/* {isApprovedByAdmin === "NotApproved" ? (<button type="button" disabled='true' class="btn btn-danger" 
                     style={{height: '26px', fontWeight: '200',fontSize: "small" , padding: '4px'}}
                     >
                         <i class="fa fa-times" aria-hidden="true" style={{color: "white"}}></i>{ ' '}
@@ -48,7 +48,7 @@ export function ReviewBox({id, rating, review_title, date, yourReview, pros, con
                     : 
                     (<button type="button" class="btn btn-success" disabled='true' 
                     style={{height: '26px', fontWeight: '200',fontSize: "small" , padding: '4px'}}>
-                         <i class="fas fa-check" style={{color: "white"}}></i> { ' '} verified</button>) }
+                         <i class="fas fa-check" style={{color: "white"}}></i> { ' '} verified</button>) } */}
                 </Grid>
             </Grid>
             <Grid item container spacing={3}>

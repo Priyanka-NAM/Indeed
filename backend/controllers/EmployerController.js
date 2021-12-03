@@ -9,6 +9,7 @@ const { pool } = require("../config/mysqldb");
 const Employer = require("../Models/EmployerModel");
 const Review = require("../Models/ReviewsModel");
 const bcrypt = require("bcryptjs");
+const redisClient = require('../config/redisClient');
 
 const updateEmployer = async (req, res) => {
   try {
@@ -78,24 +79,28 @@ const companyPicsUpload = async (req, res) => {
 };
 
 const employerReviewUpdate = async (req, res) => {
-  const { _id } = req.body;
-  try {
-    let review = await Review.findOne({ _id: _id });
+  const { _id} = req.body;
 
-    if (!review) {
-      res.status("400").send("Error. Review doesn't Exist.");
-    } else {
-      review.isFeatured = !review.isFeatured;
-      await review.save((err, result) => {
-        if (err) {
-          throw err;
-        } else {
-          res.status(200).send(review);
-        }
-      });
-    }
-  } catch (error) {
-    res.status(500).send("Database error");
+  let review = await Review.findOne({ _id: _id });
+
+  if (!review) {
+    res.status("400").send("Error. Review doesn't Exist.");
+  } else {
+    review.isFeatured = !review.isFeatured;
+    await review.save(async (err, result) => {
+      if (err) {
+        throw err;
+      } else {
+          const key = (req.body.employerId).toString();
+          const updatedReviews = await Review.find({ employerId: req.body.employerId, isFeatured: true })
+          if (updatedReviews) {
+            console.log("set key");
+            redisClient.setEx(key, 36000, JSON.stringify(updatedReviews));
+          }
+       
+        res.status(200).send(review);
+      }
+    });
   }
 };
 
