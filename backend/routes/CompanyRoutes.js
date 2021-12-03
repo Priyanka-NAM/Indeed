@@ -8,6 +8,7 @@ const {
   getCompanyReviews,
   getSpecificCompanyReviews,
   UpdateHelpfulCount,
+  featuredReviewsForSpecificcompany,
 } = require("../controllers/UserReviewController");
 const {
   userSalary,
@@ -21,6 +22,7 @@ router.param("reviewId", findReviewById);
 router.post("/user-review", postUserReview);
 router.get("/user-review", getUserReviews);
 router.get("/company-specific-reviews", getSpecificCompanyReviews);
+router.get("/company-specific-featured-reviews", featuredReviewsForSpecificcompany);
 router.post("/user-salary", userSalary);
 router.get("/user-salary", getUserSalary);
 router.get("/reviews", getAllReviews);

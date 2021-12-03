@@ -34,6 +34,7 @@ import { updateReviewStatus } from "../../Redux/Actions/Company";
 import { employerAllJob } from "../../Redux/Actions/EmployerJobPostingAction";
 import { updateHelpfulCount } from "../../Redux/Actions/Company";
 import { updatePhotoStatus } from "../../Redux/Actions/AdminAction";
+import { getFeaturedReviews } from "../../Redux/Actions/Company";
 import InputGrid from "./InputGrid";
 import JobDescription from "./JobDescription";
 import { timeDifference } from "./timeDifference";
@@ -270,7 +271,9 @@ export default function Review(props) {
   let { companySpecificReviews } = useSelector(
     (state) => state.companyReviewList
   );
-
+  let { getFeaturedReview } = useSelector(
+    (state) => state.featuredReviews
+  );
   const loginReducer = useSelector((state) => state.login);
   const { isAuth, userDetails } = loginReducer;
   const [images, setImage] = useState([]);
@@ -390,11 +393,11 @@ export default function Review(props) {
     setOpen(false);
   };
 
-  let featuredReview = [];
-  if (companySpecificReviews)
-    featuredReview = companySpecificReviews.filter(
-      (val) => val.isFeatured === true
-    );
+  // let featuredReview = [];
+  // if (companySpecificReviews)
+  //   featuredReview = companySpecificReviews.filter(
+  //     (val) => val.isFeatured === true
+  //   );
 
   if (companySpecificReviews) {
     //Filtering reviews Based on the approved and user reviews.
@@ -482,12 +485,14 @@ export default function Review(props) {
       props.match.params.pathname === "photos"
     ) {
       dispatch(getcompaniesDetails({ employerID: props.match.params.id }));
-      dispatch(
-        getCompanySpecificReviews({
-          employerId: props.match.params.id,
-          sort: sortValue,
-        })
-      );
+      // dispatch(
+      //   getCompanySpecificReviews({
+      //     employerId: props.match.params.id,
+      //     sort: sortValue,
+      //   })
+      // );
+      dispatch(getFeaturedReviews({employerId: props.match.params.id}));
+     
     } else if (props.match.params.pathname === "reviews")
       dispatch(
         getCompanySpecificReviews({
@@ -501,7 +506,7 @@ export default function Review(props) {
       dispatch(employerAllJob(props.match.params.id, page, joblimit, isfirst));
     setRating(companyDetails.noOfRatings);
     debugger;
-    if(triggerUpdateViewCount && (!isAuth || (userDetails && (userDetails.userId !== props.match.params.id)))){
+    if(triggerUpdateViewCount && (!isAuth || (userDetails && (userDetails.userId !== props.match.params.id && userDetails.role !== 2)))){
       dispatch(updateViewCount({employerId: props.match.params.id }));
       settriggerUpdateViewCount(false);
     }
@@ -847,8 +852,8 @@ export default function Review(props) {
         <Typography variant="h5" style={{ marginBottom: "50px" }}>
           <b>Featured Reviews</b>
         </Typography>
-        {featuredReview &&
-          featuredReview.map((item) => (
+        {getFeaturedReview &&
+          getFeaturedReview.map((item) => (
             <ReviewBox
               key={item.id}
               rating={item.overallRating}

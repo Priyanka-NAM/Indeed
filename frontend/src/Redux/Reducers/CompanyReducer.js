@@ -9,6 +9,8 @@ import {
   UPDATE_REVIEW_STATUS_FAIL,
   UPDATE_HELPFUL_COUNT_SUCCESS,
   UPDATE_HELPFUL_COUNT_FAIL,
+  COMPANY_LIST_FEATURE_REVIEWS_SUCCESS,
+  COMPANY_LIST_FEATURE_REVIEWS_FAIL,
 } from "../Constants/Company";
 
 const initialState = {
@@ -91,6 +93,29 @@ export const UpdateHelpfulCountReducer = (state = initialState3, action) => {
       return {
         ...state,
         updateHelpfulCountError: action.payload,
+      };
+    default:
+      return { ...state };
+  }
+};
+
+
+const initialState4 = {
+  getFeaturedReview: null,
+  getFeaturedReviewsError: null,
+};
+
+export const getFeaturedReviewsReducer = (state = initialState4, action) => {
+  switch (action.type) {
+    case COMPANY_LIST_FEATURE_REVIEWS_SUCCESS:
+      return {
+        ...state,
+        getFeaturedReview: action.payload,
+      };
+    case COMPANY_LIST_FEATURE_REVIEWS_FAIL:
+      return {
+        ...state,
+        getFeaturedReviewsError: action.payload,
       };
     default:
       return { ...state };

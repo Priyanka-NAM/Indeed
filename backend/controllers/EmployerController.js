@@ -68,7 +68,7 @@ const companyPicsUpload = async (req, res) => {
 };
 
 const employerReviewUpdate = async (req, res) => {
-  const { _id } = req.body;
+  const { _id} = req.body;
 
   let review = await Review.findOne({ _id: _id });
 
@@ -76,10 +76,16 @@ const employerReviewUpdate = async (req, res) => {
     res.status("400").send("Error. Review doesn't Exist.");
   } else {
     review.isFeatured = !review.isFeatured;
-    await review.save((err, result) => {
+    await review.save(async (err, result) => {
       if (err) {
         throw err;
       } else {
+         const key = (req.body.employerId).toString();
+          const updatedReviews = await Reviews.find({ employerId: req.body.employerId, isFeatured: true })
+          if (updatedReviews) {
+            redisClient.setEx(key, 36000, JSON.stringify(updatedReviews));
+          }
+       
         res.status(200).send(review);
       }
     });
