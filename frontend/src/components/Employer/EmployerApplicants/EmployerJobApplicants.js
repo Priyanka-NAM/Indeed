@@ -142,7 +142,7 @@ const EmployerJobApplicants = ({ match }) => {
 
   let rows = [];
 
-  if (applicants.length > 0) {
+  if (!error && applicants && applicants.length > 0) {
     rows = applicants.map((eachApplicant) => {
       return createData(eachApplicant.userId, eachApplicant.emailId, eachApplicant.status, eachApplicant.resume, eachApplicant.cv);
     });

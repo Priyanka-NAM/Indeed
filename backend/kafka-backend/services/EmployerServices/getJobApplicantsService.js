@@ -11,7 +11,7 @@ const handle_request = async(msg, callback) => {
         }
         else{
 
-            callback(null, "No Job Applicants for this job")
+            callback( "No Job Applicants for this job",null)
         }
 
     }

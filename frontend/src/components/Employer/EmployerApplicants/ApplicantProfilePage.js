@@ -17,7 +17,7 @@ const ApplicantProfilePage = ({match, history}) => {
     const [applicationStatus, setApplicationStatus] = React.useState('Applied');
 
     const updateJobApplication = useSelector(state => state.updateJobApplication)
-    const { success } = updateJobApplication
+    const { application,success } = updateJobApplication
 
     const handleChange = (event) => {
         setApplicationStatus(event.target.value);
@@ -33,9 +33,10 @@ const ApplicantProfilePage = ({match, history}) => {
         }
         dispatch(getUserProfile(data))
         if(success){
+            
             history.push(`/employer/applicant-page/${jobId}&${employerId}`)
         }
-    }, [match, success, history])
+    }, [match, history,success])
 
     return(
         <Container>
@@ -65,7 +66,8 @@ const ApplicantProfilePage = ({match, history}) => {
                                 <MenuItem value="Reviewed">Reviewed</MenuItem>
                                 <MenuItem value="InitialScreening">Initial Screening</MenuItem>
                                 <MenuItem value="Interviewing">Interviewing</MenuItem>
-                                <MenuItem value="Hired">Hired</MenuItem>
+                                <MenuItem value="Selected">Selected</MenuItem>
+                                <MenuItem value="Rejected">Choose not to move Forword</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>}
