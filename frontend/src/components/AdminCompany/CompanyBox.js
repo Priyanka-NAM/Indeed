@@ -67,7 +67,7 @@ export function CompanyBox({
         </Grid>
       </Grid>
       <Grid item container style={{ marginTop: "15px", color: "blue"}}>
-        <Grid
+        {/* <Grid
           className={classes.cursorPointer}
           item
           lg={4}
@@ -88,7 +88,7 @@ export function CompanyBox({
           onClick={() => history.push(`/company/${id}/reviews`)}
         >
           Reviews
-        </Grid>
+        </Grid> */}
         <Grid
           className={classes.cursorPointer}
           item
@@ -96,7 +96,7 @@ export function CompanyBox({
           md={4}
           sm={4}
           xs={4}
-          onClick={() => history.push(`/employer/reports`)}
+          onClick={() => history.push(`/indeed/admin/reports/${id}`)}
         >
           Jobs
         </Grid>

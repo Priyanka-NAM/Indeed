@@ -82,6 +82,7 @@ export function CompanyBox({
           md={4}
           sm={4}
           xs={4}
+          onClick={() => history.push(`/company/${id}/salaries`)}
         >
           Salaries
         </Grid>
@@ -92,6 +93,7 @@ export function CompanyBox({
           md={4}
           sm={4}
           xs={4}
+          onClick={() => history.push(`/company/${id}/reviews`)}
         >
           Reviews
         </Grid>
@@ -102,6 +104,7 @@ export function CompanyBox({
           md={4}
           sm={4}
           xs={4}
+          onClick={() => history.push(`/company/${id}/jobs`)}
         >
           Open Jobs
         </Grid>
