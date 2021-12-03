@@ -33,7 +33,7 @@ router.get('/addViewCount/:employerID', async (req, res) => {
         //const result = await employer.views.
     }
     else {
-        const employer = await Employer.updateOne({ employerID: employerID },
+        const employer = await Employer.updateOne({ _id: employerID },
             {
                 $push: {
                     "views":
