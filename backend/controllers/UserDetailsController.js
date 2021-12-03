@@ -1,12 +1,9 @@
 const Reviews = require("../Models/ReviewsModel");
 const User = require("../Models/UserModel");
-//const asyncHandler = require("express-async-handler");
 const kafka = require("../kafka/client");
 
 const updateUserSavedJobs = async (req, res) => {
-
     kafka.make_request('update_user_saved_jobs', req.body, (err, results) => {
-        console.log("Results Updated: ", results)
         if (err) {
             res.status(500).json({
                 error: err
@@ -24,146 +21,102 @@ const updateUserSavedJobs = async (req, res) => {
             }
         }
     })
-
-    /*const {userId, jobId} = req.body
-    console.log(userId, jobId)
-    try {
-        if (userId) {
-            const jobExists = await User.findOne({savedJobs : jobId})
-            if (jobExists) {
-                console.log("jobexists : ", jobExists)
-                return res.status(409).send("Job already added to saved jobs")
-            }
-            const user = await User.findOneAndUpdate({_id: userId}, {$push: {"savedJobs": jobId}}, {new:true})
-            if (user) {
-                res.status(200).send("added job to saved jobs")
-            } else {
-                res.status(404).send("Resource not found")
-            }
-        } else {
-            res.status(401).send("Unauthorized")
-        }   
-    } catch (error) {
-        res.status(500).send("Database error")
-    }*/
 } 
 
 const deleteUserSavedJobs = async (req, res) => {
-    const {userId, jobId} = req.body
-    console.log(userId, jobId)
-    try {
-        if (userId) {
-            const user = await User.findOneAndUpdate({_id: userId}, {$pull: {"savedJobs": jobId}}, {new:true})
-            if (user) {
-                res.status(200).send("removed from saved jobs")
-            } else {
-                res.status(404).send("Resource not found")
-            }
-        } else {
-            res.status(401).send("Unauthorized")
-        }   
-    } catch (error) {
-        res.status(500).send("Database error")
-    }
+    kafka.make_request('delete_user_saved_jobs', req.body, (err, results) => {
+        if (err) {
+            res.status(500).json({
+                error: err
+            })
+        } else if (results == "500") {
+            res.status(500).send("Database error")
+          } else if (results === "404") {
+            res.status(404).send("Resource not found")
+          } else {
+            res.status(200).send("deleted job successfully")
+          }
+    }) 
 }
 
 const getUserSavedJobs = async (req, res) => {
-    const {userId} = req.query
-    console.log(userId)
-    try {
-        if (userId) {
-            const jobs = await User.findOne({_id: userId}, {savedJobs:1, _id:0}).populate('savedJobs')
-            if (jobs) {
-                res.status(200).send(jobs)
-            } else {
-                res.status(404).send("Resource not found")
-            }
-        } else {
-            res.status(401).send("Unauthorized")
-        }   
-    } catch (error) {
-        res.status(500).send("Database error")
-    }
+    kafka.make_request('get_user_saved_jobs', req.query, (err, results) => {
+        if (err) {
+            res.status(500).json({
+                error: err
+            })
+        } else if (results == "500") {
+            res.status(500).send("Database error")
+          } else if (results === "404") {
+            res.status(404).send("Resource not found")
+          } else {
+            res.status(200).send(results)
+          }
+    })
 }
 
 const getUserAppliedJobs = async (req, res) => {
-    const {userId} = req.query
-    console.log(userId)
-    try {
-        if (userId) {
-            const jobs = await User.findOne({_id: userId}, {appliedJobs:1, _id:0}).populate('appliedJobs')
-            if (jobs) {
-                res.status(200).send(jobs)
-            } else {
-                res.status(404).send("Resource not found")
-            }
-        } else {
-            res.status(401).send("Unauthorized")
-        }   
-    } catch (error) {
-        res.status(500).send("Database error")
-    }
+    kafka.make_request('get_user_applied_jobs', req.query, (err, results) => {
+        if (err) {
+            res.status(500).json({
+                error: err
+            })
+        } else if (results == "500") {
+            res.status(500).send("Database error")
+          } else if (results === "404") {
+            res.status(404).send("Resource not found")
+          } else {
+            res.status(200).send(results)
+          }
+    })
 }
 
 const getUserReviews = async (req, res) => {
-    const {userId} = req.query
-    console.log(userId)
-    try {
-        if (userId) {
-            const reviews = await Reviews.find({userId})
-            if (reviews) {
-                res.status(200).send(reviews)
-            } else {
-                res.status(404).send("Resource not found")
-            }
-        } else {
-            res.status(401).send("Unauthorized")
-        }   
-    } catch (error) {
-        res.status(500).send("Database error")
-    }
+    kafka.make_request('get_user_reviews', req.query, (err, results) => {
+        if (err) {
+            res.status(500).json({
+                error: err
+            })
+        } else if (results == "500") {
+            res.status(500).send("Database error")
+          } else if (results === "404") {
+            res.status(404).send("Resource not found")
+          } else {
+            res.status(200).send(results)
+          }
+    })
 }
 
 const getUserProfile = async (req, res) => {
-
-    const {userId} = req.query;
-
-    try {
-        if (userId) {
-            const user = await User.findById({_id:userId})
-            if (user) {
-                console.log(user);
-                res.status(200).send(user)
-            } else {
-                console.log("user");
-                res.status(404).send("Resource not found")
-            }
-        } else {
-            res.status(401).send("Unauthorized")
-        }   
-    } catch (error) {
-        res.status(500).send("Database error")
-    }
+    kafka.make_request('get_user_profile', req.query, (err, results) => {
+        if (err) {
+            res.status(500).json({
+                error: err
+            })
+        } else if (results == "500") {
+            res.status(500).send("Database error")
+          } else if (results === "404") {
+            res.status(404).send("Resource not found")
+          } else {
+            res.status(200).send(results)
+          }
+    })
 }
 
 const updateUserProfile = async (req, res) => {
-    const {userId} = req.body
-    const update = req.body
-    console.log(userId)
-    try {
-        if (userId) {
-            const user = await User.findOneAndUpdate({_id:userId}, update, {new: true})
-            if (user) {
-                res.status(200).send(user)
-            } else {
-                res.status(404).send("Resource not found")
-            }
-        } else {
-            res.status(401).send("Unauthorized")
-        }   
-    } catch (error) {
-        res.status(500).send("Database error")
-    }
+    kafka.make_request('update_user_profile', req.body, (err, results) => {
+        if (err) {
+            res.status(500).json({
+                error: err
+            })
+        } else if (results == "500") {
+            res.status(500).send("Database error")
+          } else if (results === "404") {
+            res.status(404).send("Resource not found")
+          } else {
+            res.status(200).send(results)
+          }
+    })
 }
 
 module.exports = { updateUserSavedJobs, deleteUserSavedJobs, getUserSavedJobs, getUserAppliedJobs, getUserReviews, getUserProfile, updateUserProfile }

@@ -6,10 +6,6 @@ const userSchema = mongoose.Schema({
             required:true,
             unique:true
         },
-        userId: {
-            type: Number,
-            required: true
-        },
         firstName: {
             type: String
         },

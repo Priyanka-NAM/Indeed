@@ -5,93 +5,22 @@ const Jobs = require("../Models/JobsModel")
 const redisClient = require('../config/redisClient');
 const { rPopCount } = require("../config/redisClient");
 const { set } = require("mongoose");
+const kafka = require("../kafka/client");
 
 const fetchJobs = async (req, res) => {
-
-    console.log("req query : ",req.query)
-    const job = req.query.job
-    const location = req.query.location
-    const page = parseInt(req.query.page)
-    const limit = parseInt(req.query.limit)
-    if (job && location) {
-        const query = {$or: [
-            {
-                $and: [
-                    {"jobTitle": job},
-                    {"jobLocation.city": location}
-                ]
-            },
-            {
-                $and: [
-                    {"companyName": job},
-                    {"jobLocation.city": location}
-                ]
-            }
-        ]}
-        paginationFunc(res, page, limit, query)
-    } else if (job) {
-        const query = {$or: [
-            {
-                "jobTitle": job
-            },
-            {
-                "companyName": job
-            }
-        ]}
-        paginationFunc(res, page, limit, query)
-    } else if (location) {
-        const query = {"jobLocation.city":location}
-        paginationFunc(res, page, limit, query)
-    } else {
-        const query = {}
-        paginationFunc(res, page, limit, query)
-    }
-}
-
-const paginationFunc = async (res, page, limit, query) => {
-    console.log("page & limit : ", page, limit)
-    const startIndex = (page - 1) * limit 
-    const endIndex = page * limit
-
-    const results = {}
-    if (page === 0 && limit === 0) { 
-      try {
-        results.results = await Jobs.find(query).populate('employerID')
-        if (results.results) {
-            res.status(200).send(results.results)   
-        } else {
-            res.status(404).send("Resource not found")
-        } 
-      } catch (error) {
+  kafka.make_request('fetch_all_jobs', req.query, (err, results) => {
+    if (err) {
+        res.status(500).json({
+            error: err
+        })
+    } else if (results == "500") {
         res.status(500).send("Database error")
+      } else if (results === "404") {
+        res.status(404).send("Resource not found")
+      } else {
+        res.status(200).send(results)
       }
-    } else {
-      if (endIndex < await Jobs.countDocuments().exec()) {
-        results.next = {
-          page: page + 1,
-          limit: limit
-        }
-      }
-      
-      if (startIndex > 0) {
-        results.previous = {
-          page: page - 1,
-          limit: limit
-        }
-      }
-
-      try {
-        results.results = await Jobs.find(query).limit(limit).skip(startIndex).populate('employerID').exec()
-        if (results.results) {
-            res.status(200).send(results.results)   
-        } else {
-            res.status(404).send("Resource not found")
-        }
-        
-      } catch (e) {
-        res.status(500).send("Database error")
-      }
-    }
+    })
 }
 
 const fetchMostSearchedJobs = async (req, res) => {

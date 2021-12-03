@@ -9,6 +9,13 @@ const get_all_companies = require('./services/AdminServices/getAllCompanies')
 const top_accepted_rated_ceos = require('./services/AdminServices/getTopRatedCEOs')
 const top_accepted_review_users = require('./services/AdminServices/getTopAcceptedReviewUsersService')
 const update_user_saved_jobs = require('./services/UserServices/updateUserSavedJobsService')
+const delete_user_saved_jobs = require('./services/UserServices/deleteUserSavedJobs')
+const get_user_saved_jobs = require('./services/UserServices/getUserSavedJobs')
+const get_user_applied_jobs = require('./services/UserServices/getUserAppliedJobs')
+const get_user_reviews = require('./services/UserServices/getUserReviews')
+const get_user_profile = require('./services/UserServices/getUserProfile')
+const update_user_profile = require('./services/UserServices/updateUserProfile')
+const fetch_all_jobs = require('./services/UserServices/fetchAllJobs')
 
 function handleTopicRequest(topic_name,fname){
     //var topic_name = 'root_topic';
@@ -32,6 +39,9 @@ function handleTopicRequest(topic_name,fname){
                 }
             ];
             producer.send(payloads, function(err, data){
+                if (err) {
+                    console.log(err)
+                }
                 console.log(data);
             });
             return;
@@ -48,5 +58,10 @@ handleTopicRequest('get_all_companies', get_all_companies)
 handleTopicRequest('top_accepted_rated_ceos', top_accepted_rated_ceos)
 handleTopicRequest('top_accepted_review_users',top_accepted_review_users)
 handleTopicRequest('update_user_saved_jobs', update_user_saved_jobs)
-handleTopicRequest('update_user_saved_jobs', update_user_saved_jobs)
-handleTopicRequest('update_user_saved_jobs', update_user_saved_jobs)
+handleTopicRequest('delete_user_saved_jobs', delete_user_saved_jobs)
+handleTopicRequest('get_user_saved_jobs', get_user_saved_jobs)
+handleTopicRequest('get_user_applied_jobs', get_user_applied_jobs)
+handleTopicRequest('get_user_reviews', get_user_reviews)
+handleTopicRequest('get_user_profile', get_user_profile)
+handleTopicRequest('update_user_profile', update_user_profile)
+handleTopicRequest('fetch_all_jobs', fetch_all_jobs)
