@@ -85,6 +85,11 @@ function App() {
           <Route path='/indeed/allcompanies' component={AdminListCompanies} />
           <Route path='/employer/applicant-page/:jobId&:employerId' exact component={EmployerJobApplicants} />
           <Route path='/employer/applicant-profile/:userId&:jobId&:employerId' exact component={ApplicantProfilePage}/>
+          <Route
+            path='/employer/applicant-page/:jobId&:employerId'
+            exact
+            component={EmployerJobApplicants}
+          />
         </Router>
       </div>
     </ThemeProvider>

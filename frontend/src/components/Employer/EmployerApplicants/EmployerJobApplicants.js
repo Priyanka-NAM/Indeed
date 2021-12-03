@@ -262,6 +262,11 @@ const EmployerJobApplicants = ({ match }) => {
                             </Link>
                           </Button>
                         </TableCell>
+                        <TableCell style={{ flex: 1 }}>
+                          <form>
+
+                          </form>
+                        </TableCell>
                       </TableRow>
                     </TableBody>
                   );
