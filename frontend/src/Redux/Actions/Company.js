@@ -118,3 +118,36 @@ export const updateHelpfulCount = (data) => (dispatch) => {
       });
     });
 };
+
+export const useremployerAllJob = (employerID, page, limit) => (dispatch) => {
+  // const { employerID } = JSON.parse(localStorage.getItem("user"));
+  console.log(page, limit);
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  // const newdata = { ...data, employerID: "61a07e89e5d016c47d56338a" };
+  console.log("data", employerID);
+
+  let url = `${API}/company/jobs?employerID=${employerID}`;
+  if (page && limit) {
+    url = url + `&page=${page}&limit=${limit}`;
+    console.log(url);
+  }
+
+  Axios.get(url, config)
+    .then((response) => {
+      dispatch({
+        type: "USER_EMPLOYER_ALL_JOBS",
+        payload: response.data,
+      });
+    })
+    .catch((error) => {
+      console.log("Error from backend", error);
+      dispatch({
+        type: "USER_EMPLOYER_ALL_JOBS_ERROR",
+        payload: error,
+      });
+    });
+};
