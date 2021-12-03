@@ -94,22 +94,22 @@ handleTopicRequest("top_accepted_review_users", top_accepted_review_users);
 // handleTopicRequest("upload_photo_status", upload_photo_status);
 // handleTopicRequest("user_review", user_review);
 handleTopicRequest("update_user_saved_jobs", update_user_saved_jobs);
-// handleTopicRequest("apply_job", apply_job)
-// handleTopicRequest("update_employer", update_employer);
-// handleTopicRequest("get_employer_details", get_employer_details);
-// handleTopicRequest("upload_employer_pics", upload_employer_pics);
+handleTopicRequest("apply_job", apply_job)
+handleTopicRequest("update_employer", update_employer);
+handleTopicRequest("get_employer_details", get_employer_details);
+//handleTopicRequest("upload_employer_pics", upload_employer_pics);
 // handleTopicRequest("employer_review_update", employer_review_update);
-handleTopicRequest("delete_user_saved_jobs", delete_user_saved_jobs);
+// handleTopicRequest("delete_user_saved_jobs", delete_user_saved_jobs);
 handleTopicRequest("get_user_saved_jobs", get_user_saved_jobs);
 handleTopicRequest("get_user_applied_jobs", get_user_applied_jobs);
 handleTopicRequest("get_user_reviews", get_user_reviews);
 handleTopicRequest("get_user_profile", get_user_profile);
 handleTopicRequest("update_user_profile", update_user_profile);
 handleTopicRequest("fetch_all_jobs", fetch_all_jobs);
-// handleTopicRequest('create_job', create_job)
-// handleTopicRequest('get_all_jobs', get_all_jobs)
-// handleTopicRequest('get_job_applicants', get_job_applicants)
-// handleTopicRequest('update_job_application', update_job_application)
+handleTopicRequest('create_job', create_job)
+handleTopicRequest('get_all_jobs', get_all_jobs)
+handleTopicRequest('get_job_applicants', get_job_applicants)
+handleTopicRequest('update_job_application', update_job_application)
 handleTopicRequest('send_message', send_message)
 handleTopicRequest('reply_message', reply_message)
 handleTopicRequest('get_message', get_message)

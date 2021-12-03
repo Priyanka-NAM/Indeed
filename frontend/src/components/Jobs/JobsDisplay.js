@@ -98,8 +98,13 @@ function JobsDisplay(props) {
                                     {job.jobTitle}
                                 </Typography>
                                 <Typography className={classes.job_subTitle}>
-                                    <label style={{cursor:"pointer"}} onClick={() => handleCompany(job.employerID._id)}>{job.companyName}</label> {' '} 
-                                    {/* <label style={{fontSize:"14px", fontWeight:"700"}}>{job.employerID.averageRating && <label>job.employerID.averageRating</label>} <StarIcon fontSize="small" style={{height:"12px"}} /></label> */}
+                                   {job.employerID && <label style={{cursor:"pointer"}} 
+                                   onClick={() => handleCompany(job.employerID._id)}>{job.companyName}</label>} {' '} 
+                                    <label style={{fontSize:"14px", fontWeight:"700"}}>
+                                        {job.employerID && job.employerID.averageRating && 
+                                        <label>{job.employerID.averageRating}</label>} 
+                                        <StarIcon fontSize="small" style={{height:"12px"}} />
+                                        </label>
                                 </Typography>
                                 <Typography className={classes.job_subTitle}>
                                     {job.jobLocation.address}{' '}

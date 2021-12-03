@@ -255,7 +255,7 @@ const EmployerJobApplicants = ({ match }) => {
                             <Link
                               style={{ textDecoration: "none" }}
                               to={{
-                                pathname: "/employer/send-message",
+                                pathname: `/employer/send-message/${row.userId}&${employerId}`,
                                 state: { row },
                               }}>
                               Send Message

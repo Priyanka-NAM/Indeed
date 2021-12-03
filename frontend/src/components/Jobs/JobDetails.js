@@ -170,11 +170,16 @@ function JobDetails({jobData, index}) {
             </Typography>
             <Box style={{marginBottom:'10px'}}>
             <div style={{fontSize:"14px", fontWeight:"700"}}>
-            <label style={{cursor:"pointer"}} onClick={() => handleCompany(jobData.employerID._id)}>{jobData.companyName}</label>{'  '}
-                {/* {jobData.employerID.averageRating} */}
+            <label style={{cursor:"pointer"}} 
+            onClick={() => handleCompany(jobData.employerID._id)}>
+                {jobData.companyName}</label>{'  '}
+                {jobData.employerID && jobData.employerID.averageRating && 
+                <label>{jobData.employerID.averageRating}</label>}
                 <StarIcon fontSize="small" style={{height:"12px"}} />
-                {/* {'  '}<label onClick={() => handleReviews(jobData.employerID._id)}
-                 style={{color:"#3A74F2", cursor:"pointer"}}>{jobData.employerID.noOfRatings + ' reviews'}</label> */}
+                {'  '}<label onClick={() => handleReviews(jobData.employerID._id)}
+                 style={{color:"#3A74F2", cursor:"pointer"}}>
+                     {jobData.employerID && jobData.employerID.noOfRatings &&
+                      <label>{jobData.employerID.noOfRatings+ ' reviews'}</label>}</label>
             </div>
             <div style={{fontWeight:"700"}}>
             {jobData.jobLocation.address}{' '}

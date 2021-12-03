@@ -57,7 +57,7 @@ function App() {
             component={CompanyReviews}
           />
           <Route path='/employer' component={EmployerHeader} />
-          <Route path='/employer/send-message' component={EmployerMessage} />
+          <Route path='/employer/send-message/:userId&:employerId' component={EmployerMessage} />
           <Route path='/employer/postJob' component={EmployerJobPost} />
 
           <Route

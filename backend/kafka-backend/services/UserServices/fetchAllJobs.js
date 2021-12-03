@@ -2,7 +2,6 @@ const Jobs = require('../../../Models/JobsModel')
 const Employer = require('../../../Models/EmployerModel')
 
 const handle_request = async(msg, callback) => {
-    console.log("req query : ",msg)
     const job = msg.job
     const location = msg.location
     const page = parseInt(msg.page)

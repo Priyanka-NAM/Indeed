@@ -55,6 +55,7 @@ const createMongoUser = async (req, res, insertId) => {
   if (userExists) {
     return res.status(409).send("User already exists");
   } else {
+    console.log("in id", insertId)
     const user = await User.create({
       userId: insertId,
       email,
