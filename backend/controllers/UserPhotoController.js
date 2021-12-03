@@ -1,38 +1,27 @@
-const Employer = require("../Models/EmployerModel");
+const kafka = require("../kafka/client");
 exports.uploadPhoto = async (req, res) => {
-  const { userId, employerId, urls } = req.body;
-
-  let emp = await Employer.findById(employerId);
-
-  for (const url of urls) {
-    emp.photos.push({
-      path: url,
-      userId,
-    });
-  }
-
-  await emp.save((err, result) => {
+  console.log("upload photo");
+  kafka.make_request("upload_photo", req.body, (err, results) => {
     if (err) {
-      throw err;
+      res.status(500).json({
+        error: err,
+      });
     } else {
-      res.status(200).send(emp);
+      res.status(200).json(results);
     }
   });
 };
 
 exports.updatePhotoStatus = async (req, res) => {
-try{
-  let emp = await Employer.findOneAndUpdate({_id : req.query.employerId , 
-    "photos._id": req.query.photoId } , {$set: {'photos.$.status': true}});
-   if(emp){
-    res.status(200).send(emp);
-   }
-   
-}
-catch (error) {
-  return res.status(400).json({
-    error: error,
+  console.log("upload photo status");
+
+  kafka.make_request("upload_photo_status", req.query, (err, results) => {
+    if (err) {
+      res.status(500).json({
+        error: err,
+      });
+    } else {
+      res.status(200).json(results);
+    }
   });
-}
- 
-}
+};
