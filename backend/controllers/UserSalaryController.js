@@ -1,40 +1,26 @@
-const Salaries = require("../Models/SalaryModel");
+const kafka = require("../kafka/client");
 
 const userSalary = async (req, res) => {
-  const { jobTitle, currentPay, companyName, isWorking, endDate, jobLocation } =
-    req.body;
-  const usersSalary = await Salaries.create({
-    jobTitle,
-    currentPay,
-    companyName,
-    isWorking,
-    endDate,
-    jobLocation,
+  kafka.make_request("post_salary", req.body, (err, results) => {
+    if (err) {
+      res.status(500).json({
+        error: err,
+      });
+    } else {
+      res.status(200).json(results);
+    }
   });
-  const data = {
-    _id: usersSalary._id,
-    currentPay: usersSalary.currentPay,
-    companyName: usersSalary.companyName,
-  };
-  res.status(200).send(data);
 };
 const getUserSalary = async (req, res) => {
-  console.log("get all reviews");
-  try {
-    const salary = await Salaries.find({}).sort({ currentPay: -1 });
-    if (!salary) {
-      console.log("error");
-      return res.status(400).json({
-        error: error,
+  kafka.make_request("get_salary", req.body, (err, results) => {
+    if (err) {
+      res.status(500).json({
+        error: err,
       });
+    } else {
+      res.status(200).json(results);
     }
-    res.send(salary);
-  } catch (error) {
-    console.log("error");
-    return res.status(400).json({
-      error: error,
-    });
-  }
+  });
 };
 
 module.exports = { userSalary, getUserSalary };

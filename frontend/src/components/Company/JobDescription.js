@@ -8,6 +8,8 @@ import {
   scroller,
 } from "react-scroll";
 import { useSelector, useDispatch } from "react-redux";
+import { applyJobs } from '../../Redux/Actions/JobsAction';
+import { Link, useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -37,10 +39,30 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
+
 function JobDescription({ jobData }) {
   const classes = useStyles();
-  const { companyName, jobLocation, jobTitle, jobDescription, salary } =
-    jobData;
+  const { companyName, jobLocation, jobTitle, jobDescription, salary } = jobData;
+  const {userId, email} = useSelector(state=>state.login.userDetails)
+  const dispatch = useDispatch()
+  const history = useHistory()
+  let profile = useSelector(state=>state.jobs.profile);
+  const isAuth = useSelector(state=>state.login.isAuth)
+  
+  const handleApplyJob = (jobId, employerId) => {
+    if (isAuth) {
+      const data = {
+          "userId": userId,
+          "jobId": jobId,
+          "employerId": employerId,
+          "resume": profile.resume,
+          "email": profile.email
+      }
+      dispatch(applyJobs(data))
+  } else {
+      history.push('/login');
+  }
+  }
 
   return (
     <div>
@@ -102,7 +124,7 @@ function JobDescription({ jobData }) {
               </li>
               <br />
               <li>
-                <Button color={"primary"} variant="contained" type="submit">
+                <Button color={"primary"} variant="contained" type="submit" onClick={() => handleApplyJob(jobData._id,jobData.employerID._id)}>
                   Apply
                 </Button>
               </li>

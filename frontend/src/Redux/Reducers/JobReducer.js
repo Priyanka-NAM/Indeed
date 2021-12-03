@@ -9,13 +9,14 @@ import {
     GET_USER_REVIEWS,
     REVIEW_ERROR,
     APPLY_JOB,
+    JOB_APPLY_ERROR,
     USER_PROFILE,
     USER_ERROR,
     GET_APPLIED_JOBS,
     UPDATE_USER_PROFILE
 } from '../Constants/UserConstants';
 
-import { GET_JOB_APPLICANTS_REQUEST, GET_JOB_APPLICANTS_SUCCESS, GET_JOB_APPLICANTS_RESET, GET_JOB_APPLICANTS_FAIL } from '../Constants/JobConstants';
+import { GET_JOB_APPLICANTS_REQUEST, GET_JOB_APPLICANTS_SUCCESS, GET_JOB_APPLICANTS_RESET, GET_JOB_APPLICANTS_FAIL, UPDATE_APPLICATION_STATUS_REQUEST, UPDATE_APPLICATION_STATUS_FAIL, UPDATE_APPLICATION_STATUS_SUCCESS } from '../Constants/JobConstants';
   
 const initialState = {
     allJobs: null,
@@ -26,7 +27,9 @@ const initialState = {
     appliedJobs: null,
     reviews: null,
     queriedJobsLength: 0,
-    profile: null
+    profile: null,
+    isApplied: false,
+    jobResponse: false
 } 
   
 export const jobReducer = (state = initialState, action) => {
@@ -34,12 +37,14 @@ export const jobReducer = (state = initialState, action) => {
         case FETCH_ALL_JOBS:
           return { 
             ...state,
-            allJobs: action.payload  
+            allJobs: action.payload,
+            isApplied: false
           };
         case FETCH_QUERIED_JOBS:
           return { 
             ...state,
             queriedJobs: action.payload,
+            isApplied: false
           };
         case FETCH_Q_JOBS:
           return {
@@ -96,7 +101,13 @@ export const jobReducer = (state = initialState, action) => {
         case APPLY_JOB:
           return {
             ...state,
-            successResponse: action.payload
+            successResponse: action.payload,
+            jobResponse: true
+          }
+        case JOB_APPLY_ERROR:
+          return {
+            ...state,
+            isApplied: true
           }
         case JOB_ERROR:
           return {
@@ -119,6 +130,21 @@ export const jobApplicantsReducer = (state = {applicants: []}, action) => {
             return { error: action.payload }
         case GET_JOB_APPLICANTS_RESET:
             return { applicants: [] }
+        default:
+            return state
+    }
+}
+
+export const updateApplicationReducer = (state = {applicant: {}}, action) => {
+
+    switch(action.type){
+        case UPDATE_APPLICATION_STATUS_REQUEST:
+            return { applicant: {}}
+        case UPDATE_APPLICATION_STATUS_SUCCESS:
+            console.log(action.payload)
+            return { success: true,  applicant: action.payload }
+        case UPDATE_APPLICATION_STATUS_FAIL:
+            return { success: false, error: action.payload }
         default:
             return state
     }

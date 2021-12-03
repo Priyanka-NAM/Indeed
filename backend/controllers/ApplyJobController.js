@@ -1,53 +1,27 @@
 const Application = require("../Models/ApplicationModel");
 const User = require("../Models/UserModel");
+const kafka = require("../kafka/client");
 
 const postJob = async (req, res) => {
-    const {userId, jobId, employerId, resume} = req.body
-    console.log(userId, jobId, resume)
-    try {
-        if (userId) {
-            const applicationExists = await Application.findOne({$and: [
-                {
-                    "userId": userId
-                },
-                {
-                    "employerId": employerId
-                },
-                {
-                    "jobId": jobId
-                }
-            ]})
-            console.log("app exists", applicationExists)
-            if (applicationExists) {
-                return res.status(409).send("job already applied")
-                // const appResult = await Application.findOneAndUpdate({userId}, {jobId, status:"applied"}, {new:true})
-                // if (appResult) {
-                //     return res.status(200).send("job updated successfully")
-                // } else {
-                //     return res.status(404).send("Resource not found")
-                // }
-            } else {
-                console.log("create else")
-                const appResult = await Application.create({
-                    userId,
-                    jobId,
-                    employerId,
-                    status : "applied",
-                    resume
-                });
-                if (appResult) {
-                    await User.findOneAndUpdate({_id: userId}, {$push: {"appliedJobs": jobId}}, {new:true})
-                    return res.status(200).send("job applied successfully")
-                } else {
-                    return res.status(404).send("Resource not found")
-                }
+
+    kafka.make_request('apply_job', req.body, (err, results) => {
+        if (err) {
+            res.status(500).json({
+                error: err
+            })
+
+        }
+        else {
+            if(results){
+                res.status(200).send(results)
             }
-        } else {
-            res.status(401).send("Unauthorized")
-        }   
-    } catch (error) {
-        res.status(500).send("Database error")
-    }
+            else{
+                res.status(400).json({
+                    error: "Resource Not Found"
+                })
+            }
+        }
+    })
 } 
 
 module.exports = { postJob }

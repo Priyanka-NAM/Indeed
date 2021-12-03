@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Indeed.iml" filepath="$PROJECT_DIR$/.idea/Indeed.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Indeed-Kafka.iml" filepath="$PROJECT_DIR$/.idea/Indeed-Kafka.iml" />
     </modules>
   </component>
 </project>

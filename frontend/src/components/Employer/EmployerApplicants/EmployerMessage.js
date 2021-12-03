@@ -29,20 +29,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function EmployerMessage() {
+function EmployerMessage({match}) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  // let userId = useSelector(state=>state.login.userDetails.userId);
+  //const employerId = useSelector(state=>state.login.userDetails.userId);
   // let employerDetails = useSelector(state=>state.messages.employerDetails)
   let conversation = useSelector((state) => state.messages.conversation);
   let successResponse = useSelector((state) => state.messages.successResponse);
 
   const [text, setText] = useState("");
-
+  const {userId, employerId} = match.params
   useEffect(() => {
     const data = {
-      userId: "61a40bfc844e19451386004d",
-      employerId: "619f0c548188bc6c174294c7",
+      userId: userId,
+      employerId: employerId,
     };
     dispatch(getMessages(data));
   }, [successResponse]);
@@ -64,11 +64,11 @@ function EmployerMessage() {
       await dispatch(replyMessageAction(data));
     } else {
       const data = {
-        userId: "61a40bfc844e19451386004d",
-        employerId: "619f0c548188bc6c174294c7",
+        userId: userId,
+        employerId: employerId,
         message: {
-          from: "619f0c548188bc6c174294c7",
-          to: "61a40bfc844e19451386004d",
+          from: employerId,
+          to: userId,
           messageText: text,
         },
       };
