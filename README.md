@@ -47,7 +47,6 @@ A larger cloud instance (more then t2. micro capacity) would be needed to ensure
 
 ## Future Scope
 Multiple image upload functionality while creating post
-Ability to create subreddits.
 More granularity in Search jobs functionality.
 
 ## ✨ Contributors
