@@ -26,5 +26,33 @@ We have implemented various features present in the original web application lik
 12) The Admin can look into various analytics related to jobs and applications etc
 
 ## How it was built
+1) Designed 3-tier distributed/scalable web application using message queues, caching, and connection pooling to improve throughput by approximately 70% as opposed to traditional backend implementations.
+2) Implemented the Frontend in ReactJS and Redux  
+3) Used React Testing Library to write frontend tests and Mocha to write backend tests to see if system functions as expected.
+4) Deployed the application on AWS EC2 instances to leverage easy scalability the cloud platform has to offer. 
+5) Organized the development lifecycle to mimic real world version control and agile methodologies.
+
+## Features
+
+## Tools used 
+ ReactJS, NodeJS, ExpressJS, Mongo DB, MySQL, HTML5, PassportJS, Apache Kafka, Redis Caching
+
+## Prerequisites
+Before running this locally you must have Node,Apache Kafka (version 2.11),Zookeeper,Redis, MySQL,MongoDB etc.setup.
+
+## Challenges we ran into
+Tricky to implement Kafka for such a large scale application. Multiple zookepers would be needed to ensure smooth functioning.
+Integration of various modules led to various merge conflicts.
+A larger cloud instance (more then t2. micro capacity) would be needed to ensure a decent reponse time from system.
+
+## Future Scope
+Multiple image upload functionality while creating post
+Ability to create subreddits.
+More granularity in Search jobs functionality.
+
+## ✨ Contributors
+<a href="https://github.com/Priyanka-NAM/Indeed/graphs/contributors">
+  <img src="https://github.com/Priyanka-NAM/Indeed/blob/develop/uploads/Contributors.jpg"/>
+</a>  
 
 
